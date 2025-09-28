@@ -1,8 +1,8 @@
 ﻿namespace UI
 {
-    public partial class fLogin : Form
+    public partial class FrmLogin : Form
     {
-        public fLogin()
+        public FrmLogin()
         {
             InitializeComponent();
         }
@@ -28,6 +28,14 @@
                 lblConnectionStatus.Text = "Kết nối thất bại!";
                 lblConnectionStatus.ForeColor = Color.Red;
             }
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            FrmMain frmMain = new FrmMain();
+            this.Hide();
+            frmMain.ShowDialog();
+            this.Close();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace UI
 {
-    partial class fLogin
+    partial class FrmLogin
     {
         /// <summary>
         ///  Required designer variable.
@@ -39,16 +39,19 @@
             label3 = new Label();
             txtUsername = new TextBox();
             lblConnectionStatus = new Label();
+            gradientPanel1 = new UI.UICustom.GradientPanel();
             panel1.SuspendLayout();
+            gradientPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // lblTitle
             // 
             lblTitle.Anchor = AnchorStyles.Top;
             lblTitle.AutoSize = true;
+            lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTitle.ForeColor = Color.White;
-            lblTitle.Location = new Point(117, 34);
+            lblTitle.Location = new Point(116, 28);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(567, 50);
             lblTitle.TabIndex = 0;
@@ -58,9 +61,10 @@
             // 
             label2.Anchor = AnchorStyles.Top;
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
             label2.Font = new Font("Segoe UI", 14F);
             label2.ForeColor = SystemColors.Window;
-            label2.Location = new Point(250, 93);
+            label2.Location = new Point(251, 90);
             label2.Name = "label2";
             label2.Size = new Size(295, 25);
             label2.TabIndex = 1;
@@ -130,6 +134,7 @@
             btnLogin.TabIndex = 3;
             btnLogin.Text = "Đăng nhập";
             btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnLogin_Click;
             // 
             // label4
             // 
@@ -178,32 +183,44 @@
             // 
             lblConnectionStatus.Anchor = AnchorStyles.Bottom;
             lblConnectionStatus.AutoSize = true;
+            lblConnectionStatus.BackColor = Color.Transparent;
             lblConnectionStatus.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblConnectionStatus.ForeColor = SystemColors.Window;
-            lblConnectionStatus.Location = new Point(223, 423);
+            lblConnectionStatus.Location = new Point(223, 431);
             lblConnectionStatus.Name = "lblConnectionStatus";
             lblConnectionStatus.Size = new Size(341, 20);
             lblConnectionStatus.TabIndex = 3;
             lblConnectionStatus.Text = "Đang kiểm tra trạng thái kết nối cơ sở dữ liệu ...";
             lblConnectionStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // fLogin
+            // gradientPanel1
+            // 
+            gradientPanel1.Color1 = Color.FromArgb(52, 152, 219);
+            gradientPanel1.Color2 = Color.LightSkyBlue;
+            gradientPanel1.Controls.Add(lblConnectionStatus);
+            gradientPanel1.Controls.Add(lblTitle);
+            gradientPanel1.Controls.Add(label2);
+            gradientPanel1.Location = new Point(-1, 1);
+            gradientPanel1.Name = "gradientPanel1";
+            gradientPanel1.Size = new Size(785, 462);
+            gradientPanel1.TabIndex = 4;
+            // 
+            // FrmLogin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(52, 152, 219);
             ClientSize = new Size(784, 461);
-            Controls.Add(lblConnectionStatus);
             Controls.Add(panel1);
-            Controls.Add(label2);
-            Controls.Add(lblTitle);
-            Name = "fLogin";
+            Controls.Add(gradientPanel1);
+            Name = "FrmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hệ thống quản lý thư viện - Đăng nhập";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            gradientPanel1.ResumeLayout(false);
+            gradientPanel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -219,5 +236,6 @@
         private Button btnCancel;
         private Label lblConnectionStatus;
         private Button btnTestConnection;
+        private UICustom.GradientPanel gradientPanel1;
     }
 }
