@@ -5,9 +5,9 @@ namespace DAO
 {
     public class DataProvider
     {
-        private static string connectionSTR = "Server=localhost;Database=QuanLyThuVien;Uid=appuser;Pwd=123456;";
+        private static string connectionSTR = "Server=localhost;Database=QuanLyThuVien;Uid=root;Pwd=vinh;";
 
-        private static DataProvider instance;
+        private static DataProvider? instance;
 
         public static DataProvider Instance
         {

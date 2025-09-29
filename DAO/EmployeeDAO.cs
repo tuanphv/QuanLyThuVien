@@ -21,13 +21,13 @@ namespace DAO
                 list.Add(new EmployeeDTO
                 {
                     MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
-                    HoTen = row["HoTen"].ToString() ?? String.Empty,
-                    NgaySinh = Convert.ToDateTime(row["NgaySinh"]),
-                    GioiTinh = row["GioiTinh"].ToString() ?? String.Empty,
-                    DiaChi = row["DiaChi"].ToString() ?? String.Empty,
-                    SoDienThoai = row["SoDienThoai"].ToString() ?? String.Empty,
-                    ChucVu = row["ChucVu"].ToString() ?? String.Empty,
-                    NgayVaoLam = row["NgayVaoLam"].ToString() ?? String.Empty
+                    HoTen = row["HoTen"]?.ToString() ?? String.Empty,
+                    NgaySinh = row["NgaySinh"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NgaySinh"]),
+                    GioiTinh = row["GioiTinh"]?.ToString() ?? String.Empty,
+                    DiaChi = row["DiaChi"]?.ToString() ?? String.Empty,
+                    SoDienThoai = row["SoDienThoai"]?.ToString() ?? String.Empty,
+                    ChucVu = String.Empty, // ChucVu đã bị comment trong database schema
+                    NgayVaoLam = row["NgayVaoLam"] == DBNull.Value ? String.Empty : Convert.ToDateTime(row["NgayVaoLam"]).ToString("dd/MM/yyyy")
                 });
             }
 
