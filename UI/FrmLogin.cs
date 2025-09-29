@@ -1,4 +1,6 @@
 ﻿using UI.UICustom;
+using BUS;
+using UI.Utilities;
 
 namespace UI
 {
@@ -34,21 +36,171 @@ namespace UI
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            FrmMain frmMain = new FrmMain();
-            this.Hide();
-            frmMain.ShowDialog();
-            this.Close();
+            // Kiểm tra kết nối database trước
+            if (!DAO.DataProvider.Instance.TestConnection())
+            {
+                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu!\nVui lòng kiểm tra kết nối.", 
+                    "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Lấy thông tin đăng nhập
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text;
+
+            // Kiểm tra input
+            if (string.IsNullOrEmpty(username))
+            {
+                MessageBox.Show("Vui lòng nhập tên đăng nhập!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtUsername.Focus();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Vui lòng nhập mật khẩu!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword.Focus();
+                return;
+            }
+
+            // Hiển thị loading
+            btnLogin.Enabled = false;
+            btnLogin.Text = "Đang đăng nhập...";
+            this.Cursor = Cursors.WaitCursor;
+
+            try
+            {
+                // Xác thực tài khoản
+                var user = AuthBUS.Login(username, password);
+
+                if (user != null)
+                {
+                    // Đăng nhập thành công
+                    SessionManager.Login(user);
+
+                    MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.HoTen} ({user.VaiTro})", 
+                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Mở form chính và ẩn form login
+                    ShowMainForm();
+                }
+                else
+                {
+                    // Đăng nhập thất bại
+                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!\nVui lòng thử lại.", 
+                        "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    // Xóa mật khẩu và focus lại username
+                    ResetLoginForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi trong quá trình đăng nhập:\n{ex.Message}", 
+                    "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Khôi phục trạng thái ban đầu
+                btnLogin.Enabled = true;
+                btnLogin.Text = "Đăng nhập";
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        private void FrmLogin_Load(object sender, EventArgs e)
+        private void ShowMainForm()
         {
-            txtUsername.Focus();
+            try
+            {
+                // Ẩn form login
+                this.Hide();
 
-            // Test database connection with user-friendly feedback
-            lblConnectionStatus.Text = "Đang kiểm tra cơ sở dữ liệu...";
+                // Tạo và hiển thị form chính
+                using (FrmMain frmMain = new FrmMain())
+                {
+                    DialogResult result = frmMain.ShowDialog(this); // Modal dialog với parent
+
+                    // Khi FrmMain đóng, quay lại form login
+                    this.Show();
+                    this.BringToFront();
+                    this.Focus();
+                    
+                    // Xử lý kết quả từ form chính
+                    if (result == DialogResult.OK)
+                    {
+                        // Đăng xuất bình thường - reset form để sẵn sàng đăng nhập lại
+                        ResetAfterLogout();
+                        ShowLogoutMessage();
+                    }
+                    else if (result == DialogResult.Cancel)
+                    {
+                        // Form đóng bất thường hoặc session error
+                        ResetAfterLogout();
+                        MessageBox.Show("Phiên làm việc đã kết thúc.", "Thông báo", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // Other cases
+                        ResetAfterLogout();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở form chính:\n{ex.Message}", 
+                    "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                // Đảm bảo form login được hiển thị
+                this.Show();
+                this.BringToFront();
+                ResetAfterLogout();
+            }
+        }
+
+        private void ResetLoginForm()
+        {
+            txtPassword.Text = "";
+            txtUsername.Focus();
+            txtUsername.SelectAll();
+        }
+
+        private void ResetAfterLogout()
+        {
+            // Đảm bảo session được clear
+            if (SessionManager.IsLoggedIn)
+            {
+                SessionManager.ForceLogout("Form reset after logout");
+            }
+
+            // Clear form
+            txtUsername.Text = "";
+            txtPassword.Text = "";
+            
+            // Focus username
+            txtUsername.Focus();
+            
+            // Update UI
+            this.Text = "Đăng nhập - Hệ thống Quản lý Thư viện";
+            
+            // Refresh connection status
+            CheckDatabaseConnection();
+        }
+
+        private void ShowLogoutMessage()
+        {
+            // Hiển thị thông báo đăng xuất thành công (tùy chọn)
+            // MessageBox.Show("Bạn đã đăng xuất thành công!", "Thông báo", 
+            //     MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void CheckDatabaseConnection()
+        {
+            lblConnectionStatus.Text = "Đang kiểm tra kết nối...";
             lblConnectionStatus.ForeColor = Color.Blue;
 
-            // Async connection test
             Task.Run(() =>
             {
                 try
@@ -62,14 +214,6 @@ namespace UI
                             lblConnectionStatus.Text = "Không thể kết nối cơ sở dữ liệu!";
                             lblConnectionStatus.ForeColor = Color.Red;
                             btnLogin.Enabled = false;
-
-                            MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu\n\n" +
-                                "Vui lòng kiểm tra:\n" +
-                                "• MySQL Server đã khởi động chưa\n" +
-                                "• Thông tin kết nối trong DataProvider.cs\n" +
-                                "• Thông tin trong .env\n" +
-                                "• Cơ sở dữ liệu QuanLyThuVien đã được tạo chưa",
-                                "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
@@ -86,13 +230,21 @@ namespace UI
                         lblConnectionStatus.Text = "Lỗi kết nối cơ sở dữ liệu!";
                         lblConnectionStatus.ForeColor = Color.Red;
                         btnLogin.Enabled = false;
-
-                        MessageBox.Show($"Lỗi kết nối: {ex.Message}\n\n" +
-                            "Vui lòng kiểm tra cấu hình database.",
-                            "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
                 }
             });
+        }
+
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+            // Đảm bảo không có session cũ
+            if (SessionManager.IsLoggedIn)
+            {
+                SessionManager.ForceLogout("Previous session cleanup on load");
+            }
+
+            txtUsername.Focus();
+            CheckDatabaseConnection();
         }
 
         private void txtPassword_Enter(object sender, EventArgs e)
@@ -107,6 +259,49 @@ namespace UI
             {
                 txt.PasswordChar = '\0'; // Reset to no masking
             }
+        }
+
+        // Hỗ trợ nhấn Enter để đăng nhập
+        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                txtPassword.Focus();
+            }
+        }
+
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLogin_Click(sender, e);
+            }
+        }
+
+        // Xử lý khi form login đóng
+        private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Đảm bảo cleanup session nếu có
+            if (SessionManager.IsLoggedIn)
+            {
+                SessionManager.ForceLogout("Application closing");
+            }
+        }
+
+        // Method để show login form từ external (nếu cần)
+        public void ShowLoginForm()
+        {
+            ResetAfterLogout();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+            this.Focus();
+        }
+
+        private void FrmLogin_Shown(object sender, EventArgs e)
+        {
+            // Đảm bảo form được focus khi hiển thị
+            this.Activate();
+            txtUsername.Focus();
         }
     }
 }
