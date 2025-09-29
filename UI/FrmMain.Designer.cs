@@ -39,6 +39,7 @@
             panel2 = new Panel();
             label1 = new Label();
             panel3 = new Panel();
+            lblUserInfo = new Label();
             lblHeaderTitle = new Label();
             pnlContent = new Panel();
             pnlSidebar.SuspendLayout();
@@ -77,6 +78,7 @@
             btnLogout.TabIndex = 7;
             btnLogout.Text = "Đăng xuất";
             btnLogout.UseVisualStyleBackColor = false;
+            btnLogout.Click += btnLogout_Click;
             // 
             // btnReports
             // 
@@ -210,12 +212,27 @@
             // panel3
             // 
             panel3.BackColor = SystemColors.Window;
+            panel3.Controls.Add(lblUserInfo);
             panel3.Controls.Add(lblHeaderTitle);
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(230, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(921, 52);
+            panel3.Size = new Size(921, 70);
             panel3.TabIndex = 1;
+            // 
+            // lblUserInfo
+            // 
+            lblUserInfo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblUserInfo.AutoSize = true;
+            lblUserInfo.BackColor = Color.Transparent;
+            lblUserInfo.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblUserInfo.ForeColor = Color.DarkGreen;
+            lblUserInfo.Location = new Point(600, 9);
+            lblUserInfo.Name = "lblUserInfo";
+            lblUserInfo.Size = new Size(105, 20);
+            lblUserInfo.TabIndex = 1;
+            lblUserInfo.Text = "Tên (Vai trò)";
+            lblUserInfo.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lblHeaderTitle
             // 
@@ -231,10 +248,10 @@
             // 
             // pnlContent
             // 
-            pnlContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            pnlContent.Location = new Point(230, 52);
+            pnlContent.Dock = DockStyle.Fill;
+            pnlContent.Location = new Point(230, 70);
             pnlContent.Name = "pnlContent";
-            pnlContent.Size = new Size(921, 705);
+            pnlContent.Size = new Size(921, 687);
             pnlContent.TabIndex = 2;
             // 
             // FrmMain
@@ -247,6 +264,8 @@
             Controls.Add(pnlSidebar);
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "Hệ thống Quản lý Thư viện";
+            FormClosing += FrmMain_FormClosing;
             Load += FrmMain_Load;
             pnlSidebar.ResumeLayout(false);
             panel2.ResumeLayout(false);
@@ -270,6 +289,7 @@
         private Panel panel3;
         private Button btnLogout;
         private Label lblHeaderTitle;
+        private Label lblUserInfo;
         private Panel pnlContent;
     }
 }

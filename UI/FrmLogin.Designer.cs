@@ -101,6 +101,7 @@
             txtPassword.Text = "Mật khẩu";
             txtPassword.TextColor = Color.Black;
             txtPassword.Enter += txtPassword_Enter;
+            txtPassword.KeyDown += txtPassword_KeyDown;
             txtPassword.Leave += txtPassword_Leave;
             // 
             // txtUsername
@@ -117,6 +118,7 @@
             txtUsername.TabIndex = 1;
             txtUsername.Text = "Tên đăng nhập";
             txtUsername.TextColor = Color.Black;
+            txtUsername.KeyDown += txtUsername_KeyDown;
             // 
             // btnTestConnection
             // 
@@ -229,7 +231,9 @@
             Name = "FrmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hệ thống quản lý thư viện - Đăng nhập";
+            FormClosing += FrmLogin_FormClosing;
             Load += FrmLogin_Load;
+            Shown += FrmLogin_Shown;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             gradientPanel1.ResumeLayout(false);
