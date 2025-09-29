@@ -45,9 +45,10 @@ Phần mềm giúp **tự động hóa quy trình** và cung cấp giao diện t
 	DB_PASSWORD=
 	```
 
-4. Mở project trong Visual Studio và cài đặt thư viện.
+4. Mở solution trong Visual Studio (chọn file QuanLyThuVien.sln) và cài đặt thư viện.
 - MySql.Data
 - DotNetEnv
+- QRCoder
 
 5. Build và chạy ứng dụng.
 

@@ -12,7 +12,6 @@ USE QuanLyThuVien;
 
 CREATE TABLE DocGia (
     MaDocGia INT PRIMARY KEY AUTO_INCREMENT,
-    TenDangNhap VARCHAR(50) UNIQUE NOT NULL,
     HoTen VARCHAR(100) NOT NULL,
     NgaySinh DATE,
     GioiTinh VARCHAR(10),
@@ -36,7 +35,8 @@ CREATE TABLE NhanVien (
 CREATE TABLE TheThuVien (
     MaThe INT PRIMARY KEY AUTO_INCREMENT,
     MaDocGia INT,
-    NgayTao DATE DEFAULT (CURRENT_DATE),
+    NgayCap DATE DEFAULT (CURRENT_DATE),
+    NgayHetHan DATE,	
     TrangThai VARCHAR(20) DEFAULT 'Hoạt động', -- Hoạt động / Bị khóa
     QRCode VARCHAR(255),
     FOREIGN KEY (MaDocGia) REFERENCES DocGia(MaDocGia)

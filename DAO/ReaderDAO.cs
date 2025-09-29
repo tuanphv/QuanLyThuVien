@@ -1,9 +1,4 @@
 ﻿using DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAO
 {
@@ -17,17 +12,16 @@ namespace DAO
             foreach (System.Data.DataRow row in dt.Rows)
             {
                 list.Add(new ReaderDTO
-                (
-                    Convert.ToInt32(row["MaDocGia"]),
-                    string.Empty, // TenDangNhap không còn trong bảng DocGia
-                    row["HoTen"]?.ToString() ?? String.Empty,
-                    row["NgaySinh"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NgaySinh"]),
-                    row["GioiTinh"]?.ToString() ?? String.Empty,
-                    row["DiaChi"]?.ToString() ?? String.Empty,
-                    row["Email"]?.ToString() ?? String.Empty,
-                    row["SoDienThoai"]?.ToString() ?? String.Empty,
-                    row["NgayDangKy"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(row["NgayDangKy"])
-                ));
+                {
+                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    HoTen = row["HoTen"]?.ToString() ?? String.Empty,
+                    NgaySinh = row["NgaySinh"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["NgaySinh"]),
+                    GioiTinh = row["GioiTinh"]?.ToString() ?? String.Empty,
+                    DiaChi = row["DiaChi"]?.ToString() ?? String.Empty,
+                    Email = row["Email"]?.ToString() ?? String.Empty,
+                    SoDienThoai = row["SoDienThoai"]?.ToString() ?? String.Empty,
+                    NgayDangKy = row["NgayDangKy"] == DBNull.Value ? DateTime.Now : Convert.ToDateTime(row["NgayDangKy"])
+                });
             }
             return list;
         }

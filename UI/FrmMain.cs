@@ -12,13 +12,11 @@ namespace UI
 {
     public partial class FrmMain : Form
     {
-        private Control currentUserControl;
-
-
         public FrmMain()
         {
             InitializeComponent();
         }
+
         private void FrmMain_Load(object sender, EventArgs e)
         {
             HighlightActiveButton(btnOverview);
@@ -55,6 +53,10 @@ namespace UI
             HighlightActiveButton(sender as Button);
         }
 
+        /// <summary>
+        /// Chuyển tất cả các nút menu về trạng thái mặc định, và làm nổi bật nút hiện tại
+        /// </summary>
+        /// <param name="activeButton"></param>
         private void HighlightActiveButton(Button activeButton)
         {
             // Reset all menu buttons
@@ -75,16 +77,13 @@ namespace UI
             }
         }
 
+        /// <summary>
+        /// Load form vào panel
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="title"></param>
         private void LoadEmbeddedForm(Form form, string title)
         {
-            // Clear current content
-            if (currentUserControl != null)
-            {
-                pnlContent.Controls.Remove(currentUserControl);
-                currentUserControl.Dispose();
-                currentUserControl = null;
-            }
-
             // Clear any existing forms
             foreach (Control control in pnlContent.Controls.OfType<Form>().ToArray())
             {

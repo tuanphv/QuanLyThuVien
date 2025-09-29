@@ -5,115 +5,121 @@ using MySql.Data.MySqlClient;
 
 namespace DAO
 {
-    public class DataProvider
+    public sealed class DataProvider
     {
-        private static string? connectionSTR;
+        private static readonly Lazy<DataProvider> instance =
+            new Lazy<DataProvider>(() => new DataProvider());
 
-        private static DataProvider? instance;
+        public static DataProvider Instance => instance.Value;
 
-        public static DataProvider Instance
+        private readonly string connectionSTR;
+
+        private DataProvider()
         {
-            get { if (instance == null) instance = new DataProvider(); return instance; }
-            private set { instance = value; }
-        }
+            try
+            {
+                // Tìm file .env tại solution gốc
+                var solutionDir = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)!
+                                        .Parent!.Parent!.Parent!.Parent!.FullName;
+                var envPath = Path.Combine(solutionDir, ".env");
+                Debug.WriteLine($"Loading .env file from: {envPath}");
 
-        private DataProvider() 
-        {
-            var solutionDir = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName;
-            var envPath = Path.Combine(solutionDir, ".env");
-            Debug.WriteLine($"Loading .env file from: {envPath}");
-            Env.Load(envPath);
-            string server = Env.GetString("DB_SERVER") ?? "localhost";
-            string port = Env.GetString("DB_PORT") ?? "3306";
-            string database = Env.GetString("DB_NAME") ?? "QuanLyThuVien";
-            string uid = Env.GetString("DB_USER") ?? "root";
-            string pwd = Env.GetString("DB_PASSWORD") ?? "";
-            connectionSTR = $"server={server};port={port};database={database};uid={uid};pwd={pwd};";
+                Env.Load(envPath);
+
+                string server = Env.GetString("DB_SERVER") ?? "localhost";
+                string port = Env.GetString("DB_PORT") ?? "3306";
+                string database = Env.GetString("DB_NAME") ?? "QuanLyThuVien";
+                string uid = Env.GetString("DB_USER") ?? "root";
+                string pwd = Env.GetString("DB_PASSWORD") ?? "";
+
+                connectionSTR = $"server={server};port={port};database={database};uid={uid};pwd={pwd};";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DataProvider Init Error] {ex.Message}");
+                throw;
+            }
         }
 
         public bool TestConnection()
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionSTR))
-                {
-                    connection.Open();
-                    return true;
-                }
+                using var connection = new MySqlConnection(connectionSTR);
+                connection.Open();
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine($"[TestConnection] {ex.Message}");
                 return false;
             }
         }
 
+        /// <summary>
+        /// Thực thi truy vấn SELECT và trả về DataTable.
+        /// <para>Ví dụ 1: Không có tham số</para>
+        /// <code>
+        /// DataTable dt = DataProvider.Instance.ExecuteQuery("SELECT * FROM Sach");
+        /// </code>
+        /// <para>Ví dụ 2: có tham số</para>
+        /// <code>
+        /// string sql = "SELECT * FROM DocGia WHERE Email = @Email";
+        /// var param = new MySqlParameter("@Email", "abc@example.com");
+        /// </code>
+        /// </summary>
+        /// <returns>DataTable chứa kết quả truy vấn</returns>
         public DataTable ExecuteQuery(string query, params MySqlParameter[] parameters)
         {
-            DataTable data = new DataTable();
+            var data = new DataTable();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionSTR))
-            {
-                connection.Open();
+            using var connection = new MySqlConnection(connectionSTR);
+            connection.Open();
 
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
+            using var command = new MySqlCommand(query, connection);
+            if (parameters?.Length > 0)
+                command.Parameters.AddRange(parameters);
 
-                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
-                    {
-                        adapter.Fill(data);
-                    }
-                }
-            }
+            using var adapter = new MySqlDataAdapter(command);
+            adapter.Fill(data);
 
             return data;
         }
 
+        /// <summary>
+        /// Thực thi các truy vấn INSERT, UPDATE, DELETE. Trả về số dòng bị ảnh hưởng.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public int ExecuteNonQuery(string query, params MySqlParameter[] parameters)
         {
-            int result = 0;
+            using var connection = new MySqlConnection(connectionSTR);
+            connection.Open();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionSTR))
-            {
-                connection.Open();
+            using var command = new MySqlCommand(query, connection);
+            if (parameters?.Length > 0)
+                command.Parameters.AddRange(parameters);
 
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
-
-                    result = command.ExecuteNonQuery();
-                }
-            }
-
-            return result;
+            return command.ExecuteNonQuery();
         }
 
-        public object ExecuteScalar(string query, params MySqlParameter[] parameters)
+        /// <summary>
+        /// Thực thi truy vấn trả về một giá trị đơn (cột đầu tiên của hàng đầu tiên).
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public object? ExecuteScalar(string query, params MySqlParameter[] parameters)
         {
-            object result;
+            using var connection = new MySqlConnection(connectionSTR);
+            connection.Open();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionSTR))
-            {
-                connection.Open();
+            using var command = new MySqlCommand(query, connection);
+            if (parameters?.Length > 0)
+                command.Parameters.AddRange(parameters);
 
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
-
-                    result = command.ExecuteScalar();
-                }
-            }
-
-            return result;
+            return command.ExecuteScalar();
         }
     }
 }

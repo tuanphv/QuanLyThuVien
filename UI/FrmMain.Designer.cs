@@ -231,7 +231,7 @@
             // 
             // pnlContent
             // 
-            pnlContent.Dock = DockStyle.Fill;
+            pnlContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pnlContent.Location = new Point(230, 52);
             pnlContent.Name = "pnlContent";
             pnlContent.Size = new Size(921, 705);

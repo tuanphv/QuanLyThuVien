@@ -11,20 +11,20 @@ INSERT INTO NhanVien (HoTen, NgaySinh, GioiTinh, DiaChi, SoDienThoai, ChucVu, Ng
 (N'Lê Minh Cường', '1988-11-08', N'Nam', N'789 Nguyễn Huệ, Q1, TP.HCM', '0923456789', N'Nhân viên kỹ thuật', '2022-02-20');
 
 -- Thêm dữ liệu cho bảng DocGia
-INSERT INTO DocGia (TenDangNhap, HoTen, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, NgayDangKy) VALUES
-('docgia001', N'Phạm Văn Đức', '1995-07-12', N'Nam', N'12 Võ Văn Tần, Q3, TP.HCM', 'ducpv@gmail.com', '0934567890', '2023-01-10'),
-('docgia002', N'Nguyễn Thị Esen', '1992-09-25', N'Nữ', N'34 Hai Bà Trưng, Q1, TP.HCM', 'esenngt@gmail.com', '0945678901', '2023-02-15'),
-('docgia003', N'Trần Minh Phúc', '1998-04-03', N'Nam', N'56 Điện Biên Phủ, Q3, TP.HCM', 'phuctm@gmail.com', '0956789012', '2023-03-20'),
-('docgia004', N'Lê Thị Giang', '1996-12-18', N'Nữ', N'78 Cách Mạng Tháng Tám, Q10, TP.HCM', 'gianglt@gmail.com', '0967890123', '2023-04-05'),
-('docgia005', N'Hoàng Văn Hùng', '1994-02-28', N'Nam', N'90 Nam Kỳ Khởi Nghĩa, Q1, TP.HCM', 'hunghv@gmail.com', '0978901234', '2023-05-12');
+INSERT INTO DocGia (HoTen, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, NgayDangKy) VALUES
+(N'Phạm Văn Đức', '1995-07-12', N'Nam', N'12 Võ Văn Tần, Q3, TP.HCM', 'ducpv@gmail.com', '0934567890', '2023-01-10'),
+(N'Nguyễn Thị Esen', '1992-09-25', N'Nữ', N'34 Hai Bà Trưng, Q1, TP.HCM', 'esenngt@gmail.com', '0945678901', '2023-02-15'),
+(N'Trần Minh Phúc', '1998-04-03', N'Nam', N'56 Điện Biên Phủ, Q3, TP.HCM', 'phuctm@gmail.com', '0956789012', '2023-03-20'),
+(N'Lê Thị Giang', '1996-12-18', N'Nữ', N'78 Cách Mạng Tháng Tám, Q10, TP.HCM', 'gianglt@gmail.com', '0967890123', '2023-04-05'),
+(N'Hoàng Văn Hùng', '1994-02-28', N'Nam', N'90 Nam Kỳ Khởi Nghĩa, Q1, TP.HCM', 'hunghv@gmail.com', '0978901234', '2023-05-12');
 
 -- Thêm dữ liệu cho bảng TheThuVien
-INSERT INTO TheThuVien (MaDocGia, NgayTao, TrangThai, QRCode) VALUES
-(1, '2023-01-10', 'Hoạt động', CONCAT('QR001_', UUID())),
-(2, '2023-02-15', 'Hoạt động', CONCAT('QR002_', UUID())),
-(3, '2023-03-20', 'Hoạt động', CONCAT('QR003_', UUID())),
-(4, '2023-04-05', 'Hoạt động', CONCAT('QR004_', UUID())),
-(5, '2023-05-12', 'Bị khóa',   CONCAT('QR005_', UUID()));
+INSERT INTO TheThuVien (MaDocGia, NgayCap, NgayHetHan, TrangThai, QRCode) VALUES
+(1, '2023-01-10', '2025-01-10', 'Hoạt động', CONCAT('QR001_', UUID())),
+(2, '2023-02-15', '2025-02-15', 'Hoạt động', CONCAT('QR002_', UUID())),
+(3, '2023-03-20', '2025-03-20', 'Hoạt động', CONCAT('QR003_', UUID())),
+(4, '2023-04-05', '2025-04-05', 'Hoạt động', CONCAT('QR004_', UUID())),
+(5, '2023-05-12', '2025-05-12', 'Bị khóa',   CONCAT('QR005_', UUID()));
 
 -- Thêm dữ liệu cho bảng TheLoai
 INSERT INTO TheLoai (TenTheLoai, MoTa) VALUES

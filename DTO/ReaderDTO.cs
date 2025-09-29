@@ -9,7 +9,6 @@ namespace DTO
     public class ReaderDTO
     {
         public int MaDocGia { get; set; }
-        public string TenDangNhap { get; set; }
         public string HoTen { get; set; }
         public DateTime NgaySinh { get; set; }
         public string GioiTinh { get; set; }
@@ -21,7 +20,6 @@ namespace DTO
         public ReaderDTO()
         {
             MaDocGia = 0;
-            TenDangNhap = string.Empty;
             HoTen = string.Empty;
             NgaySinh = DateTime.MinValue;
             GioiTinh = string.Empty;
@@ -31,10 +29,9 @@ namespace DTO
             NgayDangKy = DateTime.MinValue;
         }
 
-        public ReaderDTO(int maDocGia, string tenDangNhap, string hoTen, DateTime ngaySinh, string gioiTinh, string diaChi, string email, string soDienThoai, DateTime ngayDangKy)
+        public ReaderDTO(int maDocGia, string hoTen, DateTime ngaySinh, string gioiTinh, string diaChi, string email, string soDienThoai, DateTime ngayDangKy)
         {
             MaDocGia = maDocGia;
-            TenDangNhap = tenDangNhap;
             HoTen = hoTen;
             NgaySinh = ngaySinh;
             GioiTinh = gioiTinh;
