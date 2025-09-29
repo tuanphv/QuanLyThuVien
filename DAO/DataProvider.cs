@@ -1,11 +1,13 @@
 ﻿using System.Data;
+using System.Diagnostics;
+using DotNetEnv;
 using MySql.Data.MySqlClient;
 
 namespace DAO
 {
     public class DataProvider
     {
-        private static string connectionSTR = "Server=localhost;Database=QuanLyThuVien;Uid=root;Pwd=vinh;";
+        private static string? connectionSTR;
 
         private static DataProvider? instance;
 
@@ -15,9 +17,21 @@ namespace DAO
             private set { instance = value; }
         }
 
-        private DataProvider() { }
+        private DataProvider() 
+        {
+            var solutionDir = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName;
+            var envPath = Path.Combine(solutionDir, ".env");
+            Debug.WriteLine($"Loading .env file from: {envPath}");
+            Env.Load(envPath);
+            string server = Env.GetString("DB_SERVER") ?? "localhost";
+            string port = Env.GetString("DB_PORT") ?? "3306";
+            string database = Env.GetString("DB_NAME") ?? "QuanLyThuVien";
+            string uid = Env.GetString("DB_USER") ?? "root";
+            string pwd = Env.GetString("DB_PASSWORD") ?? "";
+            connectionSTR = $"server={server};port={port};database={database};uid={uid};pwd={pwd};";
+        }
 
-        public static bool TestConnection()
+        public bool TestConnection()
         {
             try
             {

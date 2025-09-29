@@ -28,40 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
+            pnlSidebar = new Panel();
             btnLogout = new Button();
-            button5 = new Button();
-            button4 = new Button();
-            button3 = new Button();
-            button2 = new Button();
+            btnReports = new Button();
+            btnBorrowReturn = new Button();
+            btnGenrePublisher = new Button();
+            btnBooks = new Button();
             btnReaders = new Button();
-            btnDashboard = new Button();
+            btnOverview = new Button();
             panel2 = new Panel();
             label1 = new Label();
             panel3 = new Panel();
-            label2 = new Label();
+            lblHeaderTitle = new Label();
             pnlContent = new Panel();
-            panel1.SuspendLayout();
+            pnlSidebar.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             SuspendLayout();
             // 
-            // panel1
+            // pnlSidebar
             // 
-            panel1.BackColor = Color.WhiteSmoke;
-            panel1.Controls.Add(btnLogout);
-            panel1.Controls.Add(button5);
-            panel1.Controls.Add(button4);
-            panel1.Controls.Add(button3);
-            panel1.Controls.Add(button2);
-            panel1.Controls.Add(btnReaders);
-            panel1.Controls.Add(btnDashboard);
-            panel1.Controls.Add(panel2);
-            panel1.Dock = DockStyle.Left;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(230, 757);
-            panel1.TabIndex = 0;
+            pnlSidebar.BackColor = Color.WhiteSmoke;
+            pnlSidebar.Controls.Add(btnLogout);
+            pnlSidebar.Controls.Add(btnReports);
+            pnlSidebar.Controls.Add(btnBorrowReturn);
+            pnlSidebar.Controls.Add(btnGenrePublisher);
+            pnlSidebar.Controls.Add(btnBooks);
+            pnlSidebar.Controls.Add(btnReaders);
+            pnlSidebar.Controls.Add(btnOverview);
+            pnlSidebar.Controls.Add(panel2);
+            pnlSidebar.Dock = DockStyle.Left;
+            pnlSidebar.Location = new Point(0, 0);
+            pnlSidebar.Name = "pnlSidebar";
+            pnlSidebar.Size = new Size(230, 757);
+            pnlSidebar.TabIndex = 0;
             // 
             // btnLogout
             // 
@@ -78,73 +78,77 @@
             btnLogout.Text = "Đăng xuất";
             btnLogout.UseVisualStyleBackColor = false;
             // 
-            // button5
+            // btnReports
             // 
-            button5.Dock = DockStyle.Top;
-            button5.FlatAppearance.BorderSize = 0;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button5.ForeColor = Color.FromArgb(52, 73, 94);
-            button5.Location = new Point(0, 300);
-            button5.Name = "button5";
-            button5.Padding = new Padding(20, 0, 0, 0);
-            button5.Size = new Size(230, 40);
-            button5.TabIndex = 6;
-            button5.Text = "Báo cáo thống kê";
-            button5.TextAlign = ContentAlignment.MiddleLeft;
-            button5.UseMnemonic = false;
-            button5.UseVisualStyleBackColor = true;
+            btnReports.Dock = DockStyle.Top;
+            btnReports.FlatAppearance.BorderSize = 0;
+            btnReports.FlatStyle = FlatStyle.Flat;
+            btnReports.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReports.ForeColor = Color.FromArgb(52, 73, 94);
+            btnReports.Location = new Point(0, 300);
+            btnReports.Name = "btnReports";
+            btnReports.Padding = new Padding(20, 0, 0, 0);
+            btnReports.Size = new Size(230, 40);
+            btnReports.TabIndex = 6;
+            btnReports.Text = "Báo cáo thống kê";
+            btnReports.TextAlign = ContentAlignment.MiddleLeft;
+            btnReports.UseMnemonic = false;
+            btnReports.UseVisualStyleBackColor = true;
+            btnReports.Click += btnReports_Click;
             // 
-            // button4
+            // btnBorrowReturn
             // 
-            button4.Dock = DockStyle.Top;
-            button4.FlatAppearance.BorderSize = 0;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button4.ForeColor = Color.FromArgb(52, 73, 94);
-            button4.Location = new Point(0, 260);
-            button4.Name = "button4";
-            button4.Padding = new Padding(20, 0, 0, 0);
-            button4.Size = new Size(230, 40);
-            button4.TabIndex = 5;
-            button4.Text = "Mượn - Trả sách";
-            button4.TextAlign = ContentAlignment.MiddleLeft;
-            button4.UseMnemonic = false;
-            button4.UseVisualStyleBackColor = true;
+            btnBorrowReturn.Dock = DockStyle.Top;
+            btnBorrowReturn.FlatAppearance.BorderSize = 0;
+            btnBorrowReturn.FlatStyle = FlatStyle.Flat;
+            btnBorrowReturn.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnBorrowReturn.ForeColor = Color.FromArgb(52, 73, 94);
+            btnBorrowReturn.Location = new Point(0, 260);
+            btnBorrowReturn.Name = "btnBorrowReturn";
+            btnBorrowReturn.Padding = new Padding(20, 0, 0, 0);
+            btnBorrowReturn.Size = new Size(230, 40);
+            btnBorrowReturn.TabIndex = 5;
+            btnBorrowReturn.Text = "Mượn - Trả sách";
+            btnBorrowReturn.TextAlign = ContentAlignment.MiddleLeft;
+            btnBorrowReturn.UseMnemonic = false;
+            btnBorrowReturn.UseVisualStyleBackColor = true;
+            btnBorrowReturn.Click += btnBorrowReturn_Click;
             // 
-            // button3
+            // btnGenrePublisher
             // 
-            button3.Dock = DockStyle.Top;
-            button3.FlatAppearance.BorderSize = 0;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button3.ForeColor = Color.FromArgb(52, 73, 94);
-            button3.Location = new Point(0, 220);
-            button3.Name = "button3";
-            button3.Padding = new Padding(20, 0, 0, 0);
-            button3.Size = new Size(230, 40);
-            button3.TabIndex = 4;
-            button3.Text = "Thể loại - NXB";
-            button3.TextAlign = ContentAlignment.MiddleLeft;
-            button3.UseMnemonic = false;
-            button3.UseVisualStyleBackColor = true;
+            btnGenrePublisher.Dock = DockStyle.Top;
+            btnGenrePublisher.FlatAppearance.BorderSize = 0;
+            btnGenrePublisher.FlatStyle = FlatStyle.Flat;
+            btnGenrePublisher.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGenrePublisher.ForeColor = Color.FromArgb(52, 73, 94);
+            btnGenrePublisher.Location = new Point(0, 220);
+            btnGenrePublisher.Name = "btnGenrePublisher";
+            btnGenrePublisher.Padding = new Padding(20, 0, 0, 0);
+            btnGenrePublisher.Size = new Size(230, 40);
+            btnGenrePublisher.TabIndex = 4;
+            btnGenrePublisher.Text = "Thể loại - NXB";
+            btnGenrePublisher.TextAlign = ContentAlignment.MiddleLeft;
+            btnGenrePublisher.UseMnemonic = false;
+            btnGenrePublisher.UseVisualStyleBackColor = true;
+            btnGenrePublisher.Click += btnGenrePublisher_Click;
             // 
-            // button2
+            // btnBooks
             // 
-            button2.Dock = DockStyle.Top;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.ForeColor = Color.FromArgb(52, 73, 94);
-            button2.Location = new Point(0, 180);
-            button2.Name = "button2";
-            button2.Padding = new Padding(20, 0, 0, 0);
-            button2.Size = new Size(230, 40);
-            button2.TabIndex = 3;
-            button2.Text = "Sách";
-            button2.TextAlign = ContentAlignment.MiddleLeft;
-            button2.UseMnemonic = false;
-            button2.UseVisualStyleBackColor = true;
+            btnBooks.Dock = DockStyle.Top;
+            btnBooks.FlatAppearance.BorderSize = 0;
+            btnBooks.FlatStyle = FlatStyle.Flat;
+            btnBooks.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnBooks.ForeColor = Color.FromArgb(52, 73, 94);
+            btnBooks.Location = new Point(0, 180);
+            btnBooks.Name = "btnBooks";
+            btnBooks.Padding = new Padding(20, 0, 0, 0);
+            btnBooks.Size = new Size(230, 40);
+            btnBooks.TabIndex = 3;
+            btnBooks.Text = "Sách";
+            btnBooks.TextAlign = ContentAlignment.MiddleLeft;
+            btnBooks.UseMnemonic = false;
+            btnBooks.UseVisualStyleBackColor = true;
+            btnBooks.Click += btnBooks_Click;
             // 
             // btnReaders
             // 
@@ -164,22 +168,23 @@
             btnReaders.UseVisualStyleBackColor = true;
             btnReaders.Click += btnReaders_Click;
             // 
-            // btnDashboard
+            // btnOverview
             // 
-            btnDashboard.Dock = DockStyle.Top;
-            btnDashboard.FlatAppearance.BorderSize = 0;
-            btnDashboard.FlatStyle = FlatStyle.Flat;
-            btnDashboard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnDashboard.ForeColor = Color.FromArgb(52, 73, 94);
-            btnDashboard.Location = new Point(0, 100);
-            btnDashboard.Name = "btnDashboard";
-            btnDashboard.Padding = new Padding(20, 0, 0, 0);
-            btnDashboard.Size = new Size(230, 40);
-            btnDashboard.TabIndex = 1;
-            btnDashboard.Text = "Tổng quan";
-            btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
-            btnDashboard.UseMnemonic = false;
-            btnDashboard.UseVisualStyleBackColor = true;
+            btnOverview.Dock = DockStyle.Top;
+            btnOverview.FlatAppearance.BorderSize = 0;
+            btnOverview.FlatStyle = FlatStyle.Flat;
+            btnOverview.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnOverview.ForeColor = Color.FromArgb(52, 73, 94);
+            btnOverview.Location = new Point(0, 100);
+            btnOverview.Name = "btnOverview";
+            btnOverview.Padding = new Padding(20, 0, 0, 0);
+            btnOverview.Size = new Size(230, 40);
+            btnOverview.TabIndex = 1;
+            btnOverview.Text = "Tổng quan";
+            btnOverview.TextAlign = ContentAlignment.MiddleLeft;
+            btnOverview.UseMnemonic = false;
+            btnOverview.UseVisualStyleBackColor = true;
+            btnOverview.Click += btnOverview_Click;
             // 
             // panel2
             // 
@@ -205,24 +210,24 @@
             // panel3
             // 
             panel3.BackColor = SystemColors.Window;
-            panel3.Controls.Add(label2);
+            panel3.Controls.Add(lblHeaderTitle);
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(230, 0);
             panel3.Name = "panel3";
             panel3.Size = new Size(921, 52);
             panel3.TabIndex = 1;
             // 
-            // label2
+            // lblHeaderTitle
             // 
-            label2.AutoSize = true;
-            label2.BackColor = Color.Transparent;
-            label2.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.DarkSlateBlue;
-            label2.Location = new Point(20, 9);
-            label2.Name = "label2";
-            label2.Size = new Size(138, 32);
-            label2.TabIndex = 0;
-            label2.Text = "Tổng quan";
+            lblHeaderTitle.AutoSize = true;
+            lblHeaderTitle.BackColor = Color.Transparent;
+            lblHeaderTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblHeaderTitle.ForeColor = Color.DarkSlateBlue;
+            lblHeaderTitle.Location = new Point(20, 9);
+            lblHeaderTitle.Name = "lblHeaderTitle";
+            lblHeaderTitle.Size = new Size(138, 32);
+            lblHeaderTitle.TabIndex = 0;
+            lblHeaderTitle.Text = "Tổng quan";
             // 
             // pnlContent
             // 
@@ -239,10 +244,11 @@
             ClientSize = new Size(1151, 757);
             Controls.Add(pnlContent);
             Controls.Add(panel3);
-            Controls.Add(panel1);
+            Controls.Add(pnlSidebar);
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
-            panel1.ResumeLayout(false);
+            Load += FrmMain_Load;
+            pnlSidebar.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
@@ -252,18 +258,18 @@
 
         #endregion
 
-        private Panel panel1;
-        private Button button5;
-        private Button button4;
-        private Button button3;
-        private Button button2;
+        private Panel pnlSidebar;
+        private Button btnReports;
+        private Button btnBorrowReturn;
+        private Button btnGenrePublisher;
+        private Button btnBooks;
         private Button btnReaders;
-        private Button btnDashboard;
+        private Button btnOverview;
         private Panel panel2;
         private Label label1;
         private Panel panel3;
         private Button btnLogout;
-        private Label label2;
+        private Label lblHeaderTitle;
         private Panel pnlContent;
     }
 }

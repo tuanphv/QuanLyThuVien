@@ -31,13 +31,13 @@
             lblTitle = new Label();
             label2 = new Label();
             panel1 = new Panel();
+            txtPassword = new UI.UICustom.PlaceholderTextBox();
+            txtUsername = new UI.UICustom.PlaceholderTextBox();
             btnTestConnection = new Button();
             btnCancel = new Button();
             btnLogin = new Button();
             label4 = new Label();
-            txtPassword = new TextBox();
             label3 = new Label();
-            txtUsername = new TextBox();
             lblConnectionStatus = new Label();
             gradientPanel1 = new UI.UICustom.GradientPanel();
             panel1.SuspendLayout();
@@ -74,31 +74,65 @@
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             panel1.BackColor = SystemColors.ButtonFace;
+            panel1.Controls.Add(txtPassword);
+            panel1.Controls.Add(txtUsername);
             panel1.Controls.Add(btnTestConnection);
             panel1.Controls.Add(btnCancel);
             panel1.Controls.Add(btnLogin);
             panel1.Controls.Add(label4);
-            panel1.Controls.Add(txtPassword);
             panel1.Controls.Add(label3);
-            panel1.Controls.Add(txtUsername);
             panel1.Location = new Point(204, 142);
             panel1.Name = "panel1";
             panel1.Size = new Size(370, 266);
             panel1.TabIndex = 2;
             // 
+            // txtPassword
+            // 
+            txtPassword.BorderStyle = BorderStyle.None;
+            txtPassword.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtPassword.ForeColor = Color.Gray;
+            txtPassword.Location = new Point(46, 136);
+            txtPassword.Multiline = true;
+            txtPassword.Name = "txtPassword";
+            txtPassword.PlaceholderColor = Color.Gray;
+            txtPassword.PlaceholderText = "Mật khẩu";
+            txtPassword.Size = new Size(279, 35);
+            txtPassword.TabIndex = 2;
+            txtPassword.Text = "Mật khẩu";
+            txtPassword.TextColor = Color.Black;
+            txtPassword.Enter += txtPassword_Enter;
+            txtPassword.Leave += txtPassword_Leave;
+            // 
+            // txtUsername
+            // 
+            txtUsername.BorderStyle = BorderStyle.None;
+            txtUsername.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtUsername.ForeColor = Color.Gray;
+            txtUsername.Location = new Point(46, 52);
+            txtUsername.Multiline = true;
+            txtUsername.Name = "txtUsername";
+            txtUsername.PlaceholderColor = Color.Gray;
+            txtUsername.PlaceholderText = "Tên đăng nhập";
+            txtUsername.Size = new Size(279, 35);
+            txtUsername.TabIndex = 1;
+            txtUsername.Text = "Tên đăng nhập";
+            txtUsername.TextColor = Color.Black;
+            // 
             // btnTestConnection
             // 
             btnTestConnection.BackColor = Color.FromArgb(255, 128, 0);
             btnTestConnection.FlatAppearance.BorderSize = 0;
-            btnTestConnection.FlatAppearance.MouseDownBackColor = Color.FromArgb(137, 152, 153);
-            btnTestConnection.FlatAppearance.MouseOverBackColor = Color.FromArgb(171, 190, 191);
+            btnTestConnection.FlatAppearance.MouseDownBackColor = Color.FromArgb(204, 116, 0);
+            btnTestConnection.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 145, 0);
             btnTestConnection.FlatStyle = FlatStyle.Flat;
-            btnTestConnection.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnTestConnection.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnTestConnection.ForeColor = SystemColors.Window;
             btnTestConnection.Location = new Point(285, 202);
             btnTestConnection.Name = "btnTestConnection";
             btnTestConnection.Size = new Size(40, 40);
             btnTestConnection.TabIndex = 5;
+            btnTestConnection.Text = "🔧";
+            btnTestConnection.TextAlign = ContentAlignment.TopCenter;
             btnTestConnection.UseVisualStyleBackColor = false;
             btnTestConnection.Click += btnTestConnection_Click;
             // 
@@ -147,17 +181,6 @@
             label4.TabIndex = 0;
             label4.Text = "Mật khẩu";
             // 
-            // txtPassword
-            // 
-            txtPassword.BorderStyle = BorderStyle.None;
-            txtPassword.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtPassword.Location = new Point(46, 146);
-            txtPassword.Multiline = true;
-            txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(279, 36);
-            txtPassword.TabIndex = 2;
-            txtPassword.UseSystemPasswordChar = true;
-            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -168,16 +191,6 @@
             label3.Size = new Size(112, 20);
             label3.TabIndex = 0;
             label3.Text = "Tên đăng nhập";
-            // 
-            // txtUsername
-            // 
-            txtUsername.BorderStyle = BorderStyle.None;
-            txtUsername.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtUsername.Location = new Point(46, 62);
-            txtUsername.Multiline = true;
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(279, 36);
-            txtUsername.TabIndex = 1;
             // 
             // lblConnectionStatus
             // 
@@ -216,6 +229,7 @@
             Name = "FrmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hệ thống quản lý thư viện - Đăng nhập";
+            Load += FrmLogin_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             gradientPanel1.ResumeLayout(false);
@@ -229,13 +243,13 @@
         private Label label2;
         private Panel panel1;
         private Label label3;
-        private TextBox txtUsername;
         private Label label4;
-        private TextBox txtPassword;
         private Button btnLogin;
         private Button btnCancel;
         private Label lblConnectionStatus;
         private Button btnTestConnection;
         private UICustom.GradientPanel gradientPanel1;
+        private UICustom.PlaceholderTextBox txtUsername;
+        private UICustom.PlaceholderTextBox txtPassword;
     }
 }
