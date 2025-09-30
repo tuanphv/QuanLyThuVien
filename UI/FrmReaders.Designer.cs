@@ -37,23 +37,27 @@
             btnSearch = new Button();
             txtSearch = new UI.UICustom.PlaceholderTextBox();
             label9 = new Label();
-            panel2 = new Panel();
+            pnlInput = new Panel();
+            dtpRegistrationDate = new DateTimePicker();
+            label13 = new Label();
+            btnCancel = new Button();
+            btnSave = new Button();
             btnDelete = new Button();
             btnEdit = new Button();
             btnAdd = new Button();
-            cbGioiTinh = new ComboBox();
-            dtpNgaySinh = new DateTimePicker();
-            txtSDT = new TextBox();
+            cboGender = new ComboBox();
+            dtpDateOfBirth = new DateTimePicker();
+            txtPhoneNumber = new TextBox();
             label8 = new Label();
             txtEmail = new TextBox();
             label7 = new Label();
-            txtDiaChi = new TextBox();
+            txtAddress = new TextBox();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            txtTenDocGia = new TextBox();
+            txtFullName = new TextBox();
             label3 = new Label();
-            txtMaDocGia = new TextBox();
+            txtReaderID = new TextBox();
             label2 = new Label();
             dgvReaders = new DataGridView();
             panel3 = new Panel();
@@ -90,7 +94,7 @@
             label11 = new Label();
             panel1.SuspendLayout();
             panel5.SuspendLayout();
-            panel2.SuspendLayout();
+            pnlInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReaders).BeginInit();
             panel3.SuspendLayout();
             tbcReaders.SuspendLayout();
@@ -166,31 +170,91 @@
             label9.TabIndex = 0;
             label9.Text = "Tìm kiếm:";
             // 
-            // panel2
+            // pnlInput
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            panel2.BackColor = Color.WhiteSmoke;
-            panel2.Controls.Add(btnDelete);
-            panel2.Controls.Add(btnEdit);
-            panel2.Controls.Add(btnAdd);
-            panel2.Controls.Add(cbGioiTinh);
-            panel2.Controls.Add(dtpNgaySinh);
-            panel2.Controls.Add(txtSDT);
-            panel2.Controls.Add(label8);
-            panel2.Controls.Add(txtEmail);
-            panel2.Controls.Add(label7);
-            panel2.Controls.Add(txtDiaChi);
-            panel2.Controls.Add(label6);
-            panel2.Controls.Add(label5);
-            panel2.Controls.Add(label4);
-            panel2.Controls.Add(txtTenDocGia);
-            panel2.Controls.Add(label3);
-            panel2.Controls.Add(txtMaDocGia);
-            panel2.Controls.Add(label2);
-            panel2.Location = new Point(602, 112);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(371, 521);
-            panel2.TabIndex = 1;
+            pnlInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlInput.BackColor = Color.WhiteSmoke;
+            pnlInput.Controls.Add(dtpRegistrationDate);
+            pnlInput.Controls.Add(label13);
+            pnlInput.Controls.Add(btnCancel);
+            pnlInput.Controls.Add(btnSave);
+            pnlInput.Controls.Add(btnDelete);
+            pnlInput.Controls.Add(btnEdit);
+            pnlInput.Controls.Add(btnAdd);
+            pnlInput.Controls.Add(cboGender);
+            pnlInput.Controls.Add(dtpDateOfBirth);
+            pnlInput.Controls.Add(txtPhoneNumber);
+            pnlInput.Controls.Add(label8);
+            pnlInput.Controls.Add(txtEmail);
+            pnlInput.Controls.Add(label7);
+            pnlInput.Controls.Add(txtAddress);
+            pnlInput.Controls.Add(label6);
+            pnlInput.Controls.Add(label5);
+            pnlInput.Controls.Add(label4);
+            pnlInput.Controls.Add(txtFullName);
+            pnlInput.Controls.Add(label3);
+            pnlInput.Controls.Add(txtReaderID);
+            pnlInput.Controls.Add(label2);
+            pnlInput.Location = new Point(602, 112);
+            pnlInput.Name = "pnlInput";
+            pnlInput.Size = new Size(371, 521);
+            pnlInput.TabIndex = 1;
+            // 
+            // dtpRegistrationDate
+            // 
+            dtpRegistrationDate.Enabled = false;
+            dtpRegistrationDate.Format = DateTimePickerFormat.Short;
+            dtpRegistrationDate.Location = new Point(156, 267);
+            dtpRegistrationDate.Name = "dtpRegistrationDate";
+            dtpRegistrationDate.Size = new Size(121, 23);
+            dtpRegistrationDate.TabIndex = 24;
+            dtpRegistrationDate.Value = new DateTime(2025, 1, 1, 0, 0, 0, 0);
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label13.Location = new Point(23, 267);
+            label13.Name = "label13";
+            label13.Size = new Size(100, 20);
+            label13.TabIndex = 22;
+            label13.Text = "Ngày đăng ký";
+            // 
+            // btnCancel
+            // 
+            btnCancel.BackColor = Color.LightGray;
+            btnCancel.Cursor = Cursors.Hand;
+            btnCancel.FlatAppearance.BorderSize = 0;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCancel.ForeColor = SystemColors.Window;
+            btnCancel.Location = new Point(145, 346);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(85, 30);
+            btnCancel.TabIndex = 21;
+            btnCancel.Text = "Hủy";
+            btnCancel.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Visible = false;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnSave
+            // 
+            btnSave.BackColor = Color.LightGreen;
+            btnSave.Cursor = Cursors.Hand;
+            btnSave.FlatAppearance.BorderSize = 0;
+            btnSave.FlatStyle = FlatStyle.Flat;
+            btnSave.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSave.ForeColor = SystemColors.Window;
+            btnSave.Location = new Point(28, 346);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(85, 30);
+            btnSave.TabIndex = 20;
+            btnSave.Text = "Lưu";
+            btnSave.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnSave.UseVisualStyleBackColor = false;
+            btnSave.Visible = false;
+            btnSave.Click += btnSave_Click;
             // 
             // btnDelete
             // 
@@ -200,13 +264,14 @@
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnDelete.ForeColor = SystemColors.Window;
-            btnDelete.Location = new Point(259, 311);
+            btnDelete.Location = new Point(262, 346);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(85, 30);
             btnDelete.TabIndex = 19;
             btnDelete.Text = "Xóa";
             btnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnEdit
             // 
@@ -217,13 +282,14 @@
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnEdit.ForeColor = SystemColors.Window;
-            btnEdit.Location = new Point(142, 311);
+            btnEdit.Location = new Point(145, 346);
             btnEdit.Name = "btnEdit";
             btnEdit.Size = new Size(85, 30);
             btnEdit.TabIndex = 18;
             btnEdit.Text = "Sửa";
             btnEdit.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnEdit.UseVisualStyleBackColor = false;
+            btnEdit.Click += btnEdit_Click;
             // 
             // btnAdd
             // 
@@ -233,40 +299,44 @@
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnAdd.ForeColor = SystemColors.Window;
-            btnAdd.Location = new Point(25, 311);
+            btnAdd.Location = new Point(28, 346);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(85, 30);
             btnAdd.TabIndex = 17;
             btnAdd.Text = "Thêm";
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += btnAdd_Click;
             // 
-            // cbGioiTinh
+            // cboGender
             // 
-            cbGioiTinh.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cbGioiTinh.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cbGioiTinh.Items.AddRange(new object[] { "Nam", "Nữ", "Khác" });
-            cbGioiTinh.Location = new Point(156, 127);
-            cbGioiTinh.Name = "cbGioiTinh";
-            cbGioiTinh.Size = new Size(121, 23);
-            cbGioiTinh.TabIndex = 16;
+            cboGender.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cboGender.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cboGender.Enabled = false;
+            cboGender.Items.AddRange(new object[] { "Nam", "Nữ", "Khác" });
+            cboGender.Location = new Point(156, 127);
+            cboGender.Name = "cboGender";
+            cboGender.Size = new Size(121, 23);
+            cboGender.TabIndex = 16;
             // 
-            // dtpNgaySinh
+            // dtpDateOfBirth
             // 
-            dtpNgaySinh.Format = DateTimePickerFormat.Short;
-            dtpNgaySinh.Location = new Point(156, 92);
-            dtpNgaySinh.Name = "dtpNgaySinh";
-            dtpNgaySinh.Size = new Size(121, 23);
-            dtpNgaySinh.TabIndex = 15;
-            dtpNgaySinh.Value = new DateTime(2025, 1, 1, 0, 0, 0, 0);
+            dtpDateOfBirth.Enabled = false;
+            dtpDateOfBirth.Format = DateTimePickerFormat.Short;
+            dtpDateOfBirth.Location = new Point(156, 92);
+            dtpDateOfBirth.Name = "dtpDateOfBirth";
+            dtpDateOfBirth.Size = new Size(121, 23);
+            dtpDateOfBirth.TabIndex = 15;
+            dtpDateOfBirth.Value = new DateTime(2025, 1, 1, 0, 0, 0, 0);
             // 
-            // txtSDT
+            // txtPhoneNumber
             // 
-            txtSDT.BorderStyle = BorderStyle.FixedSingle;
-            txtSDT.Location = new Point(156, 232);
-            txtSDT.Name = "txtSDT";
-            txtSDT.Size = new Size(188, 23);
-            txtSDT.TabIndex = 13;
+            txtPhoneNumber.BorderStyle = BorderStyle.FixedSingle;
+            txtPhoneNumber.Location = new Point(156, 232);
+            txtPhoneNumber.Name = "txtPhoneNumber";
+            txtPhoneNumber.ReadOnly = true;
+            txtPhoneNumber.Size = new Size(188, 23);
+            txtPhoneNumber.TabIndex = 13;
             // 
             // label8
             // 
@@ -283,6 +353,7 @@
             txtEmail.BorderStyle = BorderStyle.FixedSingle;
             txtEmail.Location = new Point(156, 197);
             txtEmail.Name = "txtEmail";
+            txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(188, 23);
             txtEmail.TabIndex = 11;
             // 
@@ -296,13 +367,14 @@
             label7.TabIndex = 10;
             label7.Text = "Email:";
             // 
-            // txtDiaChi
+            // txtAddress
             // 
-            txtDiaChi.BorderStyle = BorderStyle.FixedSingle;
-            txtDiaChi.Location = new Point(156, 162);
-            txtDiaChi.Name = "txtDiaChi";
-            txtDiaChi.Size = new Size(188, 23);
-            txtDiaChi.TabIndex = 9;
+            txtAddress.BorderStyle = BorderStyle.FixedSingle;
+            txtAddress.Location = new Point(156, 162);
+            txtAddress.Name = "txtAddress";
+            txtAddress.ReadOnly = true;
+            txtAddress.Size = new Size(188, 23);
+            txtAddress.TabIndex = 9;
             // 
             // label6
             // 
@@ -334,13 +406,14 @@
             label4.TabIndex = 4;
             label4.Text = "Ngày sinh:";
             // 
-            // txtTenDocGia
+            // txtFullName
             // 
-            txtTenDocGia.BorderStyle = BorderStyle.FixedSingle;
-            txtTenDocGia.Location = new Point(156, 57);
-            txtTenDocGia.Name = "txtTenDocGia";
-            txtTenDocGia.Size = new Size(188, 23);
-            txtTenDocGia.TabIndex = 3;
+            txtFullName.BorderStyle = BorderStyle.FixedSingle;
+            txtFullName.Location = new Point(156, 57);
+            txtFullName.Name = "txtFullName";
+            txtFullName.ReadOnly = true;
+            txtFullName.Size = new Size(188, 23);
+            txtFullName.TabIndex = 3;
             // 
             // label3
             // 
@@ -352,13 +425,14 @@
             label3.TabIndex = 2;
             label3.Text = "Họ tên:";
             // 
-            // txtMaDocGia
+            // txtReaderID
             // 
-            txtMaDocGia.BorderStyle = BorderStyle.FixedSingle;
-            txtMaDocGia.Location = new Point(156, 22);
-            txtMaDocGia.Name = "txtMaDocGia";
-            txtMaDocGia.Size = new Size(188, 23);
-            txtMaDocGia.TabIndex = 1;
+            txtReaderID.BorderStyle = BorderStyle.FixedSingle;
+            txtReaderID.Location = new Point(156, 22);
+            txtReaderID.Name = "txtReaderID";
+            txtReaderID.ReadOnly = true;
+            txtReaderID.Size = new Size(188, 23);
+            txtReaderID.TabIndex = 1;
             // 
             // label2
             // 
@@ -404,10 +478,12 @@
             dgvReaders.ReadOnly = true;
             dgvReaders.RowHeadersVisible = false;
             dgvReaders.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dgvReaders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReaders.ShowEditingIcon = false;
             dgvReaders.Size = new Size(557, 481);
             dgvReaders.TabIndex = 2;
             dgvReaders.DataBindingComplete += dtgvReaders_DataBindingComplete;
+            dgvReaders.SelectionChanged += dgvReaders_SelectionChanged;
             // 
             // panel3
             // 
@@ -434,7 +510,7 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(panel2);
+            tabPage1.Controls.Add(pnlInput);
             tabPage1.Controls.Add(panel3);
             tabPage1.Controls.Add(panel1);
             tabPage1.Controls.Add(panel4);
@@ -703,6 +779,7 @@
             dgvLibraryCards.ReadOnly = true;
             dgvLibraryCards.RowHeadersVisible = false;
             dgvLibraryCards.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dgvLibraryCards.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLibraryCards.ShowEditingIcon = false;
             dgvLibraryCards.Size = new Size(557, 480);
             dgvLibraryCards.TabIndex = 2;
@@ -826,8 +903,8 @@
             panel1.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            pnlInput.ResumeLayout(false);
+            pnlInput.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReaders).EndInit();
             panel3.ResumeLayout(false);
             tbcReaders.ResumeLayout(false);
@@ -851,7 +928,7 @@
         #endregion
 
         private Panel panel1;
-        private Panel panel2;
+        private Panel pnlInput;
         private DataGridView dgvReaders;
         private Panel panel3;
         private TabControl tbcReaders;
@@ -861,19 +938,19 @@
         private Label label1;
         private Label lblTitle;
         private Label label2;
-        private TextBox txtMaDocGia;
+        private TextBox txtReaderID;
         private TextBox txtEmail;
         private Label label7;
-        private TextBox txtDiaChi;
+        private TextBox txtAddress;
         private Label label6;
         private Label label5;
         private Label label4;
-        private TextBox txtTenDocGia;
+        private TextBox txtFullName;
         private Label label3;
-        private TextBox txtSDT;
+        private TextBox txtPhoneNumber;
         private Label label8;
-        private DateTimePicker dtpNgaySinh;
-        private ComboBox cbGioiTinh;
+        private DateTimePicker dtpDateOfBirth;
+        private ComboBox cboGender;
         private Button btnDelete;
         private Button btnEdit;
         private Button btnAdd;
@@ -906,5 +983,9 @@
         private Panel panel9;
         private DataGridView dgvLibraryCards;
         private PictureBox pctBoxQRCode;
+        private Button btnCancel;
+        private Button btnSave;
+        private DateTimePicker dtpRegistrationDate;
+        private Label label13;
     }
 }

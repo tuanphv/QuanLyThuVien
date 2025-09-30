@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
+    /// <summary>
+    /// DTO for Reader (DocGia)<br/>
+    /// - MaDocGia: int        <br/>
+    /// - HoTen: string        <br/>
+    /// - NgaySinh: DateTime   <br/>
+    /// - GioiTinh: string     <br/>
+    /// - DiaChi: string       <br/>
+    /// - Email: string        <br/>
+    /// - SoDienThoai: string  <br/>
+    /// - NgayDangKy: DateTime
+    /// </summary>
     public class ReaderDTO
     {
         public int MaDocGia { get; set; }

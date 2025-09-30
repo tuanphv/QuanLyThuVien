@@ -87,54 +87,30 @@ namespace UI
 
         private void ConfigureUserPermissions()
         {
-            if (!SessionManager.IsLoggedIn)
-            {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-                return;
-            }
-
             // Cấu hình quyền truy cập theo vai trò
             if (SessionManager.IsDocGia)
             {
                 // Độc giả chỉ được xem thông tin sách và mượn/trả
-                btnReaders.Enabled = false;
-                btnReaders.Text = "Quản lý độc giả (Không có quyền)";
-                
-                btnGenrePublisher.Enabled = false;
-                btnGenrePublisher.Text = "Thể loại/NXB (Không có quyền)";
-                
-                btnReports.Enabled = false;
-                btnReports.Text = "Báo cáo (Không có quyền)";
+                btnReaders.Visible = false;
+                btnGenrePublisher.Visible = false;
+                btnReports.Visible = false;
 
                 // Có thể truy cập
                 btnBooks.Text = "Xem sách";
                 btnBorrowReturn.Text = "Lịch sử mượn/trả";
             }
-            else if (SessionManager.IsNhanVien)
-            {
-                // Nhân viên có full quyền
-                btnReaders.Enabled = true;
-                btnBooks.Enabled = true;
-                btnGenrePublisher.Enabled = true;
-                btnBorrowReturn.Enabled = true;
-                btnReports.Enabled = true;
-
-                // Reset text về ban đầu
-                btnReaders.Text = "Quản lý độc giả";
-                btnBooks.Text = "Quản lý sách";
-                btnGenrePublisher.Text = "Thể loại & NXB";
-                btnBorrowReturn.Text = "Mượn/Trả sách";
-                btnReports.Text = "Báo cáo";
-            }
+            
+            // Nhân viên có sẵn full quyền
         }
 
         private void btnOverview_Click(object sender, EventArgs e)
         {
             HighlightActiveButton(sender as Button);
+            LoadEmbeddedForm(null, "Tổng quan");
             LoadOverviewInfo();
         }
 
+        // Mấy bạn sửa lại sau nhá, cái này để test thôi
         private void LoadOverviewInfo()
         {
             // Clear current content và hiển thị thông tin tổng quan
@@ -218,38 +194,40 @@ namespace UI
         private void btnBooks_Click(object sender, EventArgs e)
         {
             HighlightActiveButton(sender as Button);
-            string title = SessionManager.HasPermission("manage_books") ? "Quản lý sách" : "Danh sách sách";
-            //LoadEmbeddedForm(new FrmBooks(), title);
+            string title = SessionManager.HasPermission("manage_books") ? "Quản lý sách (Chưa phát triển)" : "Danh sách sách (Chưa phát triển)";
+            LoadEmbeddedForm(null, title); // Thay null bằng form quản lý sách khi phát triển xong
         }
 
         private void btnGenrePublisher_Click(object sender, EventArgs e)
         {
             if (!SessionManager.HasPermission("manage_categories"))
             {
-                MessageBox.Show("Chỉ nhân viên mới có quyền quản lý thể loại và nhà xuất bản!", "Không có quyền", 
+                MessageBox.Show("Bạn không có quyền quản lý thể loại và nhà xuất bản!\n" +
+                    "Liên hệ quản lý để được cấp quyền", "Không có quyền", 
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            LoadEmbeddedForm(null, "Quản lý thể loại & NXB (Chưa phát triển)"); // Thay null bằng form quản lý thể loại & NXB khi phát triển xong
             HighlightActiveButton(sender as Button);
         }
 
         private void btnBorrowReturn_Click(object sender, EventArgs e)
         {
             HighlightActiveButton(sender as Button);
-            string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả" : "Lịch sử mượn/trả";
-            // LoadEmbeddedForm(new FrmBorrowReturn(), title);
+            string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả (Chưa phát triển)" : "Lịch sử mượn/trả (Chưa phát triển)";
+            LoadEmbeddedForm(null, title);
         }
 
         private void btnReports_Click(object sender, EventArgs e)
         {
             if (!SessionManager.HasPermission("manage_reports"))
             {
-                MessageBox.Show("Chỉ nhân viên mới có quyền xem báo cáo!", "Không có quyền", 
+                MessageBox.Show("Bạn không có quyền xem báo cáo!\n" +
+                    "Liên hệ quản lý để được cấp quyền", "Không có quyền", 
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            LoadEmbeddedForm(null, "Báo cáo thống kê (Chưa phát triển)");
             HighlightActiveButton(sender as Button);
         }
 
@@ -365,12 +343,15 @@ namespace UI
                 control.Dispose();
             }
 
-            // Add new form
-            form.TopLevel = false;
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.Dock = DockStyle.Fill;
-            pnlContent.Controls.Add(form);
-            form.Show();
+            // Add new form if not null
+            if (form != null)
+            {
+                form.TopLevel = false;
+                form.FormBorderStyle = FormBorderStyle.None;
+                form.Dock = DockStyle.Fill;
+                pnlContent.Controls.Add(form);
+                form.Show();
+            }
 
             // Update title
             lblHeaderTitle.Text = title;
@@ -393,7 +374,7 @@ namespace UI
                 
                 // Nếu chọn Yes thì logout
                 SessionManager.Logout();
-                this.DialogResult = DialogResult.OK;
+                this.DialogResult = DialogResult.Cancel;
             }
 
             // Cleanup resources
@@ -413,5 +394,14 @@ namespace UI
             }
         }
 
+        private void OnOffSidebarButtons(bool state)
+        {
+            btnOverview.Enabled = state;
+            btnReaders.Enabled = state;
+            btnBooks.Enabled = state;
+            btnGenrePublisher.Enabled = state;
+            btnBorrowReturn.Enabled = state;
+            btnReports.Enabled = state;
+        }
     }
 }

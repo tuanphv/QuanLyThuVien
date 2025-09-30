@@ -1,4 +1,5 @@
 ﻿using DTO;
+using MySql.Data.MySqlClient;
 
 namespace DAO
 {
@@ -24,6 +25,46 @@ namespace DAO
                 });
             }
             return list;
+        }
+
+        public static bool AddReader(ReaderDTO reader)
+        {
+            string query = "INSERT INTO DocGia (HoTen, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, NgayDangKy) " +
+                           "VALUES (@HoTen, @NgaySinh, @GioiTinh, @DiaChi, @Email, @SoDienThoai, @NgayDangKy)";
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@HoTen", reader.HoTen),
+                new MySqlParameter("@NgaySinh", reader.NgaySinh),
+                new MySqlParameter("@GioiTinh", reader.GioiTinh),
+                new MySqlParameter("@DiaChi", reader.DiaChi),
+                new MySqlParameter("@Email", reader.Email),
+                new MySqlParameter("@SoDienThoai", reader.SoDienThoai),
+                new MySqlParameter("@NgayDangKy", reader.NgayDangKy));
+            return result > 0;
+        }
+
+        public static bool UpdateReader(ReaderDTO reader)
+        {
+            string query = "UPDATE DocGia SET HoTen = @HoTen, NgaySinh = @NgaySinh, GioiTinh = @GioiTinh, " +
+                           "DiaChi = @DiaChi, Email = @Email, SoDienThoai = @SoDienThoai, NgayDangKy = @NgayDangKy " +
+                           "WHERE MaDocGia = @MaDocGia";
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@HoTen", reader.HoTen),
+                new MySqlParameter("@NgaySinh", reader.NgaySinh),
+                new MySqlParameter("@GioiTinh", reader.GioiTinh),
+                new MySqlParameter("@DiaChi", reader.DiaChi),
+                new MySqlParameter("@Email", reader.Email),
+                new MySqlParameter("@SoDienThoai", reader.SoDienThoai),
+                new MySqlParameter("@NgayDangKy", reader.NgayDangKy),
+                new MySqlParameter("@MaDocGia", reader.MaDocGia));
+            return result > 0;
+        }
+
+        public static bool DeleteReader(int maDocGia)
+        {
+            string query = "DELETE FROM DocGia WHERE MaDocGia = @MaDocGia";
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@MaDocGia", maDocGia));
+            return result > 0;
         }
     }
 }

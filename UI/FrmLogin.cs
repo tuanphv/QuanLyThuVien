@@ -137,9 +137,10 @@ namespace UI
                     else if (result == DialogResult.Cancel)
                     {
                         // Form đóng bất thường hoặc session error
-                        ResetAfterLogout();
-                        MessageBox.Show("Phiên làm việc đã kết thúc.", "Thông báo", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //ResetAfterLogout();
+                        //MessageBox.Show("Phiên làm việc đã kết thúc.", "Thông báo",
+                        //    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
                     }
                     else
                     {
@@ -275,6 +276,7 @@ namespace UI
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.SuppressKeyPress = true;
                 btnLogin_Click(sender, e);
             }
         }
