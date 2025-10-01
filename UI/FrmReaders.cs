@@ -2,6 +2,7 @@
 using DTO.Enums;
 using QRCoder;
 using UI.Utilities;
+using UI.UICustom; // Add this for modern dialogs
 
 namespace UI
 {
@@ -107,31 +108,31 @@ namespace UI
         {
             if (string.IsNullOrWhiteSpace(txtFullName.Text))
             {
-                MessageBox.Show("Vui lòng nhập họ tên độc giả.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng nhập họ tên độc giả.");
                 txtFullName.Focus();
                 return false;
             }
             if (cboGender.SelectedIndex == -1)
             {
-                MessageBox.Show("Vui lòng chọn giới tính.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn giới tính.");
                 cboGender.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtAddress.Text))
             {
-                MessageBox.Show("Vui lòng nhập địa chỉ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng nhập địa chỉ.");
                 txtAddress.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtEmail.Text))
             {
-                MessageBox.Show("Vui lòng nhập email.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng nhập email.");
                 txtEmail.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtPhoneNumber.Text))
             {
-                MessageBox.Show("Vui lòng nhập số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng nhập số điện thoại.");
                 txtPhoneNumber.Focus();
                 return false;
             }
@@ -172,7 +173,7 @@ namespace UI
         {
             if (dgvReaders.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn độc giả cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn độc giả cần sửa.");
                 return;
             }
             dgvReaders.Enabled = false;
@@ -184,6 +185,8 @@ namespace UI
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!ValidateInput()) return;
+
             var reader = GetReaderFromInput();
             bool success = false;
             if (reader != null)
@@ -199,12 +202,12 @@ namespace UI
             }
             if (success)
             {
-                MessageBox.Show("Lưu thông tin độc giả thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ModernToast.ShowSuccess("Lưu thông tin độc giả thành công.");
                 LoadReaders();
             }
             else
             {
-                MessageBox.Show("Lưu thông tin độc giả thất bại. Vui lòng kiểm tra lại dữ liệu nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError("Lưu thông tin độc giả thất bại. Vui lòng kiểm tra lại dữ liệu nhập.");
                 return; // Không thoát khỏi chế độ chỉnh sửa nếu lưu thất bại
             }
             dgvReaders.Enabled = true;
@@ -255,24 +258,24 @@ namespace UI
             int maDocGia;
             if (int.TryParse(txtReaderID.Text, out maDocGia))
             {
-                var result = MessageBox.Show("Bạn có chắc chắn muốn xóa độc giả này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = ModernConfirmDialog.ShowDelete($"độc giả '{txtFullName.Text}'");
                 if (result == DialogResult.Yes)
                 {
                     bool success = BUS.ReaderBUS.DeleteReader(maDocGia);
                     if (success)
                     {
-                        MessageBox.Show("Xóa độc giả thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ModernToast.ShowSuccess("Xóa độc giả thành công.");
                         LoadReaders();
                     }
                     else
                     {
-                        MessageBox.Show("Xóa độc giả thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ModernToast.ShowError("Xóa độc giả thất bại.");
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn độc giả cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn độc giả cần xóa.");
             }
         }
     }
