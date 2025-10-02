@@ -30,7 +30,7 @@ namespace DAO
                 string port = Env.GetString("DB_PORT") ?? "3306";
                 string database = Env.GetString("DB_NAME") ?? "QuanLyThuVien";
                 string uid = Env.GetString("DB_USER") ?? "root";
-                string pwd = Env.GetString("DB_PASSWORD") ?? "";
+                string pwd = Env.GetString("DB_PASSWORD") ?? "vinh";
 
                 connectionSTR = $"server={server};port={port};database={database};uid={uid};pwd={pwd};";
             }

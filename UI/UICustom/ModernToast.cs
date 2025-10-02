@@ -9,8 +9,8 @@ namespace UI.UICustom
     {
         private System.Windows.Forms.Timer animationTimer;
         private System.Windows.Forms.Timer displayTimer;
-        private int targetY;
-        private int startY;
+        private int targetX;
+        private int startX;
         private bool isClosing = false;
 
         public enum ToastType
@@ -144,10 +144,10 @@ namespace UI.UICustom
             Screen screen = Screen.PrimaryScreen;
             Rectangle workingArea = screen.WorkingArea;
             
-            startY = workingArea.Bottom;
-            targetY = workingArea.Bottom - this.Height - 20;
+            startX = workingArea.Right;
+            targetX = workingArea.Right - this.Width - 20;
             
-            this.Location = new Point(workingArea.Right - this.Width - 20, startY);
+            this.Location = new Point(startX, workingArea.Bottom - this.Height - 20);
         }
 
         private void StartSlideInAnimation()
@@ -160,13 +160,13 @@ namespace UI.UICustom
 
         private void SlideInAnimation_Tick(object sender, EventArgs e)
         {
-            if (this.Top > targetY)
+            if (this.Left > targetX)
             {
-                this.Top -= 8;
+                this.Left -= 8;
             }
             else
             {
-                this.Top = targetY;
+                this.Left = targetX;
                 animationTimer.Stop();
                 animationTimer.Dispose();
             }
@@ -185,9 +185,9 @@ namespace UI.UICustom
 
         private void SlideOutAnimation_Tick(object sender, EventArgs e)
         {
-            if (this.Top < startY)
+            if (this.Left < startX)
             {
-                this.Top += 8;
+                this.Left += 8;
             }
             else
             {
