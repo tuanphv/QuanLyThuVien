@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -24,7 +24,7 @@ namespace UI.UICustom
         private System.Windows.Forms.Timer fadeTimer;
         private double opacity = 0.0;
 
-        public ModernConfirmDialog(string title, string message, string confirmText = "C�", string cancelText = "Kh�ng", Color? accentColor = null)
+        public ModernConfirmDialog(string title, string message, string confirmText = "Có", string cancelText = "Không", Color? accentColor = null)
         {
             InitializeComponent();
             
@@ -48,122 +48,159 @@ namespace UI.UICustom
 
         private void InitializeComponent()
         {
-            this.pnlMain = new Panel();
-            this.pnlHeader = new Panel();
-            this.pnlContent = new Panel();
-            this.pnlButtons = new Panel();
-            this.lblIcon = new Label();
-            this.lblTitle = new Label();
-            this.lblMessage = new Label();
-            this.btnConfirm = new Button();
-            this.btnCancel = new Button();
-
-            this.SuspendLayout();
-
-            // Form
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.BackColor = Color.FromArgb(240, 240, 240);
-            this.ClientSize = new Size(420, 240);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.ShowInTaskbar = false;
-            this.TopMost = true;
-
-            // Add drop shadow effect
-            this.Region = CreateRoundedRegion(this.ClientRectangle, 12);
-
-            // Main Panel
-            this.pnlMain.Dock = DockStyle.Fill;
-            this.pnlMain.BackColor = Color.White;
-            this.pnlMain.Padding = new Padding(1);
-            this.pnlMain.Paint += PnlMain_Paint;
-
-            // Header Panel
-            this.pnlHeader.Dock = DockStyle.Top;
-            this.pnlHeader.Height = 80;
-            this.pnlHeader.BackColor = Color.White;
-            this.pnlHeader.MouseDown += Header_MouseDown;
-            this.pnlHeader.MouseMove += Header_MouseMove;
-            this.pnlHeader.MouseUp += Header_MouseUp;
-
-            // Icon
-            this.lblIcon.Text = "??";
-            this.lblIcon.Font = new Font("Segoe UI Emoji", 24F);
-            this.lblIcon.ForeColor = Color.FromArgb(255, 140, 0);
-            this.lblIcon.AutoSize = true;
-            this.lblIcon.Location = new Point(25, 20);
-
-            // Title
-            this.lblTitle.Text = "X�c nh?n";
-            this.lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            this.lblTitle.ForeColor = Color.FromArgb(51, 51, 51);
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new Point(80, 25);
-
-            // Content Panel
-            this.pnlContent.Dock = DockStyle.Fill;
-            this.pnlContent.BackColor = Color.White;
-            this.pnlContent.Padding = new Padding(25, 10, 25, 10);
-
-            // Message
-            this.lblMessage.Text = "B?n c� ch?c mu?n th?c hi?n h�nh ??ng n�y?";
-            this.lblMessage.Font = new Font("Segoe UI", 11F);
-            this.lblMessage.ForeColor = Color.FromArgb(102, 102, 102);
-            this.lblMessage.AutoSize = false;
-            this.lblMessage.Size = new Size(360, 60);
-            this.lblMessage.Location = new Point(25, 15);
-            this.lblMessage.TextAlign = ContentAlignment.MiddleLeft;
-
-            // Buttons Panel
-            this.pnlButtons.Dock = DockStyle.Bottom;
-            this.pnlButtons.Height = 70;
-            this.pnlButtons.BackColor = Color.FromArgb(250, 250, 250);
-            this.pnlButtons.Padding = new Padding(25, 15, 25, 15);
-
-            // Confirm Button
-            this.btnConfirm.Text = "C�";
-            this.btnConfirm.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            this.btnConfirm.ForeColor = Color.White;
-            this.btnConfirm.BackColor = Color.FromArgb(76, 175, 80);
-            this.btnConfirm.FlatStyle = FlatStyle.Flat;
-            this.btnConfirm.FlatAppearance.BorderSize = 0;
-            this.btnConfirm.Size = new Size(100, 40);
-            this.btnConfirm.Location = new Point(190, 15);
-            this.btnConfirm.Cursor = Cursors.Hand;
-            this.btnConfirm.Click += BtnConfirm_Click;
-            this.btnConfirm.MouseEnter += BtnConfirm_MouseEnter;
-            this.btnConfirm.MouseLeave += BtnConfirm_MouseLeave;
-
-            // Cancel Button
-            this.btnCancel.Text = "Kh�ng";
-            this.btnCancel.Font = new Font("Segoe UI", 10F);
-            this.btnCancel.ForeColor = Color.FromArgb(102, 102, 102);
-            this.btnCancel.BackColor = Color.FromArgb(240, 240, 240);
-            this.btnCancel.FlatStyle = FlatStyle.Flat;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.Size = new Size(100, 40);
-            this.btnCancel.Location = new Point(300, 15);
-            this.btnCancel.Cursor = Cursors.Hand;
-            this.btnCancel.Click += BtnCancel_Click;
-            this.btnCancel.MouseEnter += BtnCancel_MouseEnter;
-            this.btnCancel.MouseLeave += BtnCancel_MouseLeave;
-
-            // Add controls to panels
-            this.pnlHeader.Controls.Add(this.lblIcon);
-            this.pnlHeader.Controls.Add(this.lblTitle);
-            this.pnlContent.Controls.Add(this.lblMessage);
-            this.pnlButtons.Controls.Add(this.btnConfirm);
-            this.pnlButtons.Controls.Add(this.btnCancel);
-
-            // Add panels to main panel
-            this.pnlMain.Controls.Add(this.pnlContent);
-            this.pnlMain.Controls.Add(this.pnlButtons);
-            this.pnlMain.Controls.Add(this.pnlHeader);
-
-            // Add main panel to form
-            this.Controls.Add(this.pnlMain);
-
-            this.ResumeLayout(false);
+            pnlMain = new Panel();
+            pnlContent = new Panel();
+            lblMessage = new Label();
+            pnlButtons = new Panel();
+            btnConfirm = new Button();
+            btnCancel = new Button();
+            pnlHeader = new Panel();
+            lblIcon = new Label();
+            lblTitle = new Label();
+            pnlMain.SuspendLayout();
+            pnlContent.SuspendLayout();
+            pnlButtons.SuspendLayout();
+            pnlHeader.SuspendLayout();
+            SuspendLayout();
+            // 
+            // pnlMain
+            // 
+            pnlMain.BackColor = Color.White;
+            pnlMain.Controls.Add(pnlContent);
+            pnlMain.Controls.Add(pnlButtons);
+            pnlMain.Controls.Add(pnlHeader);
+            pnlMain.Dock = DockStyle.Fill;
+            pnlMain.Location = new Point(0, 0);
+            pnlMain.Name = "pnlMain";
+            pnlMain.Padding = new Padding(1);
+            pnlMain.Size = new Size(420, 240);
+            pnlMain.TabIndex = 0;
+            pnlMain.Paint += PnlMain_Paint;
+            // 
+            // pnlContent
+            // 
+            pnlContent.BackColor = Color.White;
+            pnlContent.Controls.Add(lblMessage);
+            pnlContent.Dock = DockStyle.Fill;
+            pnlContent.Location = new Point(1, 81);
+            pnlContent.Name = "pnlContent";
+            pnlContent.Padding = new Padding(25, 10, 25, 10);
+            pnlContent.Size = new Size(418, 88);
+            pnlContent.TabIndex = 0;
+            // 
+            // lblMessage
+            // 
+            lblMessage.Font = new Font("Segoe UI", 11F);
+            lblMessage.ForeColor = Color.FromArgb(102, 102, 102);
+            lblMessage.Location = new Point(25, 15);
+            lblMessage.Name = "lblMessage";
+            lblMessage.Size = new Size(360, 60);
+            lblMessage.TabIndex = 0;
+            lblMessage.Text = "Bạn có chắc muốn thực hiện hành động này";
+            lblMessage.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // pnlButtons
+            // 
+            pnlButtons.BackColor = Color.FromArgb(250, 250, 250);
+            pnlButtons.Controls.Add(btnConfirm);
+            pnlButtons.Controls.Add(btnCancel);
+            pnlButtons.Dock = DockStyle.Bottom;
+            pnlButtons.Location = new Point(1, 169);
+            pnlButtons.Name = "pnlButtons";
+            pnlButtons.Padding = new Padding(25, 15, 25, 15);
+            pnlButtons.Size = new Size(418, 70);
+            pnlButtons.TabIndex = 1;
+            // 
+            // btnConfirm
+            // 
+            btnConfirm.BackColor = Color.FromArgb(76, 175, 80);
+            btnConfirm.Cursor = Cursors.Hand;
+            btnConfirm.FlatAppearance.BorderSize = 0;
+            btnConfirm.FlatStyle = FlatStyle.Flat;
+            btnConfirm.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnConfirm.ForeColor = Color.White;
+            btnConfirm.Location = new Point(190, 15);
+            btnConfirm.Name = "btnConfirm";
+            btnConfirm.Size = new Size(100, 40);
+            btnConfirm.TabIndex = 0;
+            btnConfirm.Text = "Có";
+            btnConfirm.UseVisualStyleBackColor = false;
+            btnConfirm.Click += BtnConfirm_Click;
+            btnConfirm.MouseEnter += BtnConfirm_MouseEnter;
+            btnConfirm.MouseLeave += BtnConfirm_MouseLeave;
+            // 
+            // btnCancel
+            // 
+            btnCancel.BackColor = Color.FromArgb(240, 240, 240);
+            btnCancel.Cursor = Cursors.Hand;
+            btnCancel.FlatAppearance.BorderSize = 0;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.Font = new Font("Segoe UI", 10F);
+            btnCancel.ForeColor = Color.FromArgb(102, 102, 102);
+            btnCancel.Location = new Point(300, 15);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(100, 40);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "Không";
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Click += BtnCancel_Click;
+            btnCancel.MouseEnter += BtnCancel_MouseEnter;
+            btnCancel.MouseLeave += BtnCancel_MouseLeave;
+            // 
+            // pnlHeader
+            // 
+            pnlHeader.BackColor = Color.White;
+            pnlHeader.Controls.Add(lblIcon);
+            pnlHeader.Controls.Add(lblTitle);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(1, 1);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Size = new Size(418, 80);
+            pnlHeader.TabIndex = 2;
+            pnlHeader.MouseDown += Header_MouseDown;
+            pnlHeader.MouseMove += Header_MouseMove;
+            pnlHeader.MouseUp += Header_MouseUp;
+            // 
+            // lblIcon
+            // 
+            lblIcon.AutoSize = true;
+            lblIcon.Font = new Font("Segoe UI Emoji", 24F);
+            lblIcon.ForeColor = Color.FromArgb(255, 140, 0);
+            lblIcon.Location = new Point(25, 20);
+            lblIcon.Name = "lblIcon";
+            lblIcon.Size = new Size(47, 43);
+            lblIcon.TabIndex = 0;
+            lblIcon.Text = "??";
+            // 
+            // lblTitle
+            // 
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.FromArgb(51, 51, 51);
+            lblTitle.Location = new Point(80, 25);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(107, 30);
+            lblTitle.TabIndex = 1;
+            lblTitle.Text = "Xác nhận";
+            // 
+            // ModernConfirmDialog
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(240, 240, 240);
+            ClientSize = new Size(420, 240);
+            Controls.Add(pnlMain);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "ModernConfirmDialog";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            TopMost = true;
+            pnlMain.ResumeLayout(false);
+            pnlContent.ResumeLayout(false);
+            pnlButtons.ResumeLayout(false);
+            pnlHeader.ResumeLayout(false);
+            pnlHeader.PerformLayout();
+            ResumeLayout(false);
         }
 
         private void FadeTimer_Tick(object sender, EventArgs e)
@@ -266,12 +303,12 @@ namespace UI.UICustom
         // Static helper methods
         public static DialogResult Show(string message)
         {
-            return Show("X�c nh?n", message);
+            return Show("Xác nhận", message);
         }
 
         public static DialogResult Show(string title, string message)
         {
-            return Show(title, message, "C�", "Kh�ng");
+            return Show(title, message, "Có", "Không");
         }
 
         public static DialogResult Show(string title, string message, string confirmText, string cancelText)
@@ -285,11 +322,11 @@ namespace UI.UICustom
 
         public static DialogResult ShowLogout(string userName, string role, TimeSpan sessionDuration)
         {
-            string message = $"B?n c� ch?c mu?n ??ng xu?t?\n\n" +
-                           $"Phi�n l�m vi?c: {sessionDuration.Hours:D2}:{sessionDuration.Minutes:D2}:{sessionDuration.Seconds:D2}\n" +
-                           $"T�i kho?n: {userName} ({role})";
+            string message = $"Bạn có chắc muốn đăng xuất?\n\n" +
+                           $"Phiên làm việc: {sessionDuration.Hours:D2}:{sessionDuration.Minutes:D2}:{sessionDuration.Seconds:D2}\n" +
+                           $"Tài khoản: {userName} ({role})";
             
-            using (var dialog = new ModernConfirmDialog("??ng xu?t", message, "??ng xu?t", "H?y", Color.FromArgb(244, 67, 54)))
+            using (var dialog = new ModernConfirmDialog("Đăng xuất", message, "Đăng xuất", "Hủy", Color.FromArgb(244, 67, 54)))
             {
                 dialog.lblIcon.Text = "??";
                 dialog.lblIcon.ForeColor = Color.FromArgb(244, 67, 54);
@@ -300,9 +337,9 @@ namespace UI.UICustom
 
         public static DialogResult ShowDelete(string itemName)
         {
-            string message = $"B?n c� ch?c ch?n mu?n x�a {itemName}?\n\nH�nh ??ng n�y kh�ng th? ho�n t�c.";
+            string message = $"Bạn có chắc chắn muốn xóa {itemName}?\n\nHành động này không thể hoàn tác.";
             
-            using (var dialog = new ModernConfirmDialog("X�c nh?n x�a", message, "X�a", "H?y", Color.FromArgb(244, 67, 54)))
+            using (var dialog = new ModernConfirmDialog("Xác nhận xóa", message, "Xóa", "Hủy", Color.FromArgb(244, 67, 54)))
             {
                 dialog.lblIcon.Text = "???";
                 dialog.lblIcon.ForeColor = Color.FromArgb(244, 67, 54);
