@@ -13,7 +13,8 @@ namespace UI
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Bạn có chắc muôn thoát?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            var result = ModernConfirmDialog.Show("Thoát ứng dụng", "Bạn có chắc muốn thoát?", "Thoát", "Hủy");
+            if (result == DialogResult.Yes)
             {
                 Application.Exit();
             }
@@ -26,11 +27,13 @@ namespace UI
             {
                 lblConnectionStatus.Text = "Kết nối cơ sở dữ liệu thành công!";
                 lblConnectionStatus.ForeColor = Color.Green;
+                ModernToast.ShowSuccess("Kết nối cơ sở dữ liệu thành công!");
             }
             else
             {
                 lblConnectionStatus.Text = "Kết nối cơ sở dữ liệu thất bại!";
                 lblConnectionStatus.ForeColor = Color.Red;
+                ModernToast.ShowError("Kết nối cơ sở dữ liệu thất bại!");
             }
         }
 
@@ -39,8 +42,7 @@ namespace UI
             // Kiểm tra kết nối database trước
             if (!DAO.DataProvider.Instance.TestConnection())
             {
-                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu!\nVui lòng kiểm tra kết nối.", 
-                    "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError("Không thể kết nối đến cơ sở dữ liệu! Vui lòng kiểm tra kết nối.");
                 return;
             }
 
@@ -51,16 +53,14 @@ namespace UI
             // Kiểm tra input
             if (string.IsNullOrEmpty(username))
             {
-                MessageBox.Show("Vui lòng nhập tên đăng nhập!", "Thông báo", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Vui lòng nhập tên đăng nhập!");
                 txtUsername.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Vui lòng nhập mật khẩu!", "Thông báo", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Vui lòng nhập mật khẩu!");
                 txtPassword.Focus();
                 return;
             }
@@ -80,8 +80,7 @@ namespace UI
                     // Đăng nhập thành công
                     SessionManager.Login(user);
 
-                    MessageBox.Show($"Đăng nhập thành công!\nXin chào {user.HoTen} ({user.VaiTro})", 
-                        "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ModernToast.ShowSuccess($"Đăng nhập thành công! Xin chào {user.HoTen} ({user.VaiTro})");
 
                     // Mở form chính và ẩn form login
                     ShowMainForm();
@@ -89,8 +88,7 @@ namespace UI
                 else
                 {
                     // Đăng nhập thất bại
-                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!\nVui lòng thử lại.", 
-                        "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ModernToast.ShowError("Tên đăng nhập hoặc mật khẩu không đúng!");
                     
                     // Xóa mật khẩu và focus lại username
                     ResetLoginForm();
@@ -98,8 +96,7 @@ namespace UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi trong quá trình đăng nhập:\n{ex.Message}", 
-                    "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError($"Lỗi trong quá trình đăng nhập: {ex.Message}");
             }
             finally
             {
@@ -132,14 +129,11 @@ namespace UI
                     {
                         // Đăng xuất bình thường - reset form để sẵn sàng đăng nhập lại
                         ResetAfterLogout();
-                        ShowLogoutMessage();
+                        // Removed ShowLogoutMessage() as it's now handled by toast in FrmMain
                     }
                     else if (result == DialogResult.Cancel)
                     {
                         // Form đóng bất thường hoặc session error
-                        //ResetAfterLogout();
-                        //MessageBox.Show("Phiên làm việc đã kết thúc.", "Thông báo",
-                        //    MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.Close();
                     }
                     else
@@ -151,8 +145,7 @@ namespace UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi mở form chính:\n{ex.Message}", 
-                    "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError($"Lỗi khi mở form chính: {ex.Message}");
                 
                 // Đảm bảo form login được hiển thị
                 this.Show();
@@ -188,13 +181,6 @@ namespace UI
             
             // Refresh connection status
             CheckDatabaseConnection();
-        }
-
-        private void ShowLogoutMessage()
-        {
-            // Hiển thị thông báo đăng xuất thành công (tùy chọn)
-            // MessageBox.Show("Bạn đã đăng xuất thành công!", "Thông báo", 
-            //     MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void CheckDatabaseConnection()

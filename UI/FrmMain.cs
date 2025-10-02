@@ -8,51 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UI.Utilities;
+using UI.UICustom; // Add this for ModernConfirmDialog and ModernToast
 
 namespace UI
 {
     public partial class FrmMain : Form
     {
         private Control currentUserControl;
-        private System.Windows.Forms.Timer sessionTimer;
         private bool isLoggingOut = false;
 
         public FrmMain()
         {
             InitializeComponent();
-            InitializeSessionTimer();
-        }
-
-        private void InitializeSessionTimer()
-        {
-            // Timer để cập nhật thông tin session
-            sessionTimer = new System.Windows.Forms.Timer();
-            sessionTimer.Interval = 1000; // 1 giây
-            sessionTimer.Tick += SessionTimer_Tick;
-            sessionTimer.Start();
-        }
-
-        private void SessionTimer_Tick(object sender, EventArgs e)
-        {
-            if (!SessionManager.IsLoggedIn)
-            {
-                sessionTimer.Stop();
-                return;
-            }
-
-            // Cập nhật user info với thời gian online
-            UpdateUserInfo();
         }
 
         private void UpdateUserInfo()
         {
             if (SessionManager.IsLoggedIn && lblUserInfo != null)
             {
-                var duration = SessionManager.SessionDuration;
                 var user = SessionManager.CurrentUser;
                 
-                // Hiển thị tên, vai trò và thời gian online
-                lblUserInfo.Text = $"👤 {user?.HoTen} ({user?.VaiTro}) | ⏱️ {duration.Hours:D2}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+                // Chỉ hiển thị tên và vai trò, không có icon và thời gian
+                lblUserInfo.Text = $"{user?.HoTen} ({user?.VaiTro})";
                 
                 // Đổi màu theo vai trò
                 lblUserInfo.ForeColor = SessionManager.IsNhanVien ? Color.DarkBlue : Color.DarkGreen;
@@ -79,7 +56,7 @@ namespace UI
             else
             {
                 // Nếu không có session, đóng form và quay về login
-                MessageBox.Show("Phiên đăng nhập không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError("Phiên đăng nhập không hợp lệ!");
                 this.DialogResult = DialogResult.Cancel;
                 this.Close();
             }
@@ -139,10 +116,10 @@ namespace UI
                 Location = new Point(20, 20)
             };
 
-            // Label thông tin chi tiết
+            // Label thông tin chi tiết (chỉ hiển thị vai trò và thời gian đăng nhập)
             Label lblDetails = new Label
             {
-                Text = SessionManager.GetDetailedUserInfo(),
+                Text = $"Vai trò: {SessionManager.CurrentUser?.VaiTro}\nĐăng nhập lúc: {SessionManager.LoginTime:HH:mm:ss dd/MM/yyyy}",
                 Font = new Font("Microsoft Sans Serif", 11F),
                 ForeColor = Color.DarkSlateGray,
                 AutoSize = true,
@@ -182,8 +159,7 @@ namespace UI
         {
             if (!SessionManager.HasPermission("manage_readers"))
             {
-                MessageBox.Show("Chỉ nhân viên mới có quyền quản lý độc giả!", "Không có quyền", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Chỉ nhân viên mới có quyền quản lý độc giả!");
                 return;
             }
 
@@ -202,9 +178,7 @@ namespace UI
         {
             if (!SessionManager.HasPermission("manage_categories"))
             {
-                MessageBox.Show("Bạn không có quyền quản lý thể loại và nhà xuất bản!\n" +
-                    "Liên hệ quản lý để được cấp quyền", "Không có quyền", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Bạn không có quyền quản lý thể loại và nhà xuất bản!");
                 return;
             }
             LoadEmbeddedForm(null, "Quản lý thể loại & NXB (Chưa phát triển)"); // Thay null bằng form quản lý thể loại & NXB khi phát triển xong
@@ -222,9 +196,7 @@ namespace UI
         {
             if (!SessionManager.HasPermission("manage_reports"))
             {
-                MessageBox.Show("Bạn không có quyền xem báo cáo!\n" +
-                    "Liên hệ quản lý để được cấp quyền", "Không có quyền", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Bạn không có quyền xem báo cáo!");
                 return;
             }
             LoadEmbeddedForm(null, "Báo cáo thống kê (Chưa phát triển)");
@@ -243,13 +215,8 @@ namespace UI
             var user = SessionManager.CurrentUser;
             var sessionDuration = SessionManager.SessionDuration;
 
-            DialogResult result = MessageBox.Show(
-                $"Bạn có chắc muốn đăng xuất?\n\n" +
-                $"Phiên làm việc: {sessionDuration.Hours:D2}:{sessionDuration.Minutes:D2}:{sessionDuration.Seconds:D2}\n" +
-                $"Tài khoản: {user?.HoTen} ({user?.VaiTro})",
-                "Xác nhận đăng xuất", 
-                MessageBoxButtons.YesNo, 
-                MessageBoxIcon.Question);
+            // Use modern confirmation dialog instead of MessageBox
+            DialogResult result = ModernConfirmDialog.ShowLogout(user?.HoTen ?? "Unknown", user?.VaiTro ?? "Unknown", sessionDuration);
 
             if (result == DialogResult.Yes)
             {
@@ -263,9 +230,8 @@ namespace UI
                     // Clear session
                     SessionManager.Logout();
 
-                    // Hiển thị thông báo ngắn gọn
-                    MessageBox.Show("Đăng xuất thành công!", "Thông báo", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Hiển thị thông báo bằng modern toast
+                    ModernToast.ShowSuccess("Đăng xuất thành công!");
 
                     // Set DialogResult để FrmLogin biết là logout thành công
                     this.DialogResult = DialogResult.OK;
@@ -273,8 +239,7 @@ namespace UI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi đăng xuất: {ex.Message}", "Lỗi", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ModernToast.ShowError($"Lỗi khi đăng xuất: {ex.Message}");
                     isLoggingOut = false;
                 }
             }
@@ -282,14 +247,6 @@ namespace UI
 
         private void CleanupResources()
         {
-            // Dừng timer
-            if (sessionTimer != null)
-            {
-                sessionTimer.Stop();
-                sessionTimer.Dispose();
-                sessionTimer = null;
-            }
-
             // Clear current user control
             if (currentUserControl != null)
             {
@@ -363,8 +320,8 @@ namespace UI
             // Nếu không phải đang logout và vẫn còn session thì hỏi xác nhận
             if (!isLoggingOut && SessionManager.IsLoggedIn)
             {
-                var result = MessageBox.Show("Bạn có muốn đăng xuất khỏi hệ thống?", 
-                    "Xác nhận thoát", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = ModernConfirmDialog.Show("Xác nhận thoát", 
+                    "Bạn có muốn đăng xuất khỏi hệ thống?", "Có", "Không");
                 
                 if (result == DialogResult.No)
                 {
@@ -386,8 +343,7 @@ namespace UI
         {
             if (!SessionManager.IsSessionValid())
             {
-                MessageBox.Show("Phiên đăng nhập đã hết hạn hoặc không hợp lệ!", 
-                    "Lỗi bảo mật", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ModernToast.ShowWarning("Phiên đăng nhập đã hết hạn hoặc không hợp lệ!");
                 SessionManager.ForceLogout("Invalid session");
                 this.DialogResult = DialogResult.Cancel;
                 this.Close();
