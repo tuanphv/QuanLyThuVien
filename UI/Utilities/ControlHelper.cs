@@ -1,4 +1,6 @@
-﻿namespace UI.Utilities
+﻿using QRCoder;
+
+namespace UI.Utilities
 {
     public class ControlHelper
     {
@@ -27,6 +29,25 @@
             {
                 btn.Visible = visible;
             }
+        }
+
+        public static Bitmap GenerateQrBitmap(string text, int pixelsPerModule = 20)
+        {
+            using (var qrGenerator = new QRCodeGenerator())
+            using (var qrData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q)) // ECCLevel: L, M, Q, H
+            using (var qrCode = new QRCode(qrData))
+            {
+                return qrCode.GetGraphic(pixelsPerModule); // trả về Bitmap
+            }
+        }
+
+        public static void DisplayQRCode(PictureBox pictureBox, string payload, int pixelsPerModule = 4)
+        {
+            Bitmap bmp = GenerateQrBitmap(payload, pixelsPerModule); // điều chỉnh kích thước qua pixelsPerModule
+            pictureBox.Image = bmp;
+
+            // Lưu file PNG
+            //bmp.Save("qrcode.png", System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }

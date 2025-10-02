@@ -9,17 +9,23 @@
         public string TrangThai { get; set; }
         public string QRCode { get; set; }
 
-        public LibraryCardDTO() { }
+        public LibraryCardDTO() {
+            MaThe = 0;
+            MaDocGia = 0;
+            NgayCap = DateTime.Now;
+            NgayHetHan = DateTime.Now.AddYears(1);
+            TrangThai = string.Empty;
+            QRCode = string.Empty;
+        }
 
-        public LibraryCardDTO(int maThe, int maDocGia, DateTime ngayCap, DateTime ngayHetHan, string trangThai, string qrCode)
+        public LibraryCardDTO(int maThe, int maDocGia, DateTime ngayCap, DateTime ngayHetHan, string trangThai, string qr)
         {
             MaThe = maThe;
             MaDocGia = maDocGia;
             NgayCap = ngayCap;
             NgayHetHan = ngayHetHan;
             TrangThai = trangThai;
-            QRCode = qrCode;
+            QRCode = qr;
         }
-
     }
 }

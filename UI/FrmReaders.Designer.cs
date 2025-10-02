@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
             panel1 = new Panel();
             panel5 = new Panel();
-            btnSearch = new Button();
-            txtSearch = new UI.UICustom.PlaceholderTextBox();
+            btnSearchReader = new Button();
+            txtSearchReader = new UI.UICustom.PlaceholderTextBox();
             label9 = new Label();
-            pnlInput = new Panel();
+            pnlReaderInput = new Panel();
             dtpRegistrationDate = new DateTimePicker();
             label13 = new Label();
             btnCancel = new Button();
@@ -67,41 +67,45 @@
             label1 = new Label();
             lblTitle = new Label();
             tabPage2 = new TabPage();
-            panel10 = new Panel();
+            pnlLibraryCardInput = new Panel();
+            dtpExpiryDate = new DateTimePicker();
+            label14 = new Label();
+            btnCancelCard = new Button();
+            btnSaveCard = new Button();
             pctBoxQRCode = new PictureBox();
-            button3 = new Button();
-            button4 = new Button();
-            button5 = new Button();
-            cbTrangThai = new ComboBox();
-            dateTimePicker1 = new DateTimePicker();
+            btnDeleteCard = new Button();
+            btnEditCard = new Button();
+            btnAddCard = new Button();
+            cboStatus = new ComboBox();
+            dtpIssueDate = new DateTimePicker();
             label15 = new Label();
             label16 = new Label();
             label17 = new Label();
-            textBox4 = new TextBox();
+            txtCardReaderID = new TextBox();
             label18 = new Label();
-            textBox5 = new TextBox();
+            txtCardID = new TextBox();
             label19 = new Label();
             panel9 = new Panel();
             dgvLibraryCards = new DataGridView();
             panel7 = new Panel();
             panel8 = new Panel();
-            button2 = new Button();
+            btnSearchLibraryCard = new Button();
             button1 = new Button();
-            placeholderTextBox1 = new UI.UICustom.PlaceholderTextBox();
+            txtSearchLibraryCard = new UI.UICustom.PlaceholderTextBox();
             label12 = new Label();
             panel6 = new Panel();
             label10 = new Label();
             label11 = new Label();
             panel1.SuspendLayout();
             panel5.SuspendLayout();
-            pnlInput.SuspendLayout();
+            pnlReaderInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReaders).BeginInit();
             panel3.SuspendLayout();
             tbcReaders.SuspendLayout();
             tabPage1.SuspendLayout();
             panel4.SuspendLayout();
             tabPage2.SuspendLayout();
-            panel10.SuspendLayout();
+            pnlLibraryCardInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pctBoxQRCode).BeginInit();
             panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLibraryCards).BeginInit();
@@ -122,8 +126,8 @@
             // 
             // panel5
             // 
-            panel5.Controls.Add(btnSearch);
-            panel5.Controls.Add(txtSearch);
+            panel5.Controls.Add(btnSearchReader);
+            panel5.Controls.Add(txtSearchReader);
             panel5.Controls.Add(label9);
             panel5.Dock = DockStyle.Left;
             panel5.Location = new Point(0, 0);
@@ -131,34 +135,34 @@
             panel5.Size = new Size(600, 50);
             panel5.TabIndex = 0;
             // 
-            // btnSearch
+            // btnSearchReader
             // 
-            btnSearch.Anchor = AnchorStyles.Right;
-            btnSearch.BackColor = Color.DeepSkyBlue;
-            btnSearch.FlatAppearance.BorderSize = 0;
-            btnSearch.FlatStyle = FlatStyle.Flat;
-            btnSearch.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSearch.ForeColor = SystemColors.Window;
-            btnSearch.Location = new Point(490, 12);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(89, 28);
-            btnSearch.TabIndex = 2;
-            btnSearch.Text = "Tìm kiếm";
-            btnSearch.UseVisualStyleBackColor = false;
+            btnSearchReader.Anchor = AnchorStyles.Right;
+            btnSearchReader.BackColor = Color.DeepSkyBlue;
+            btnSearchReader.FlatAppearance.BorderSize = 0;
+            btnSearchReader.FlatStyle = FlatStyle.Flat;
+            btnSearchReader.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearchReader.ForeColor = SystemColors.Window;
+            btnSearchReader.Location = new Point(490, 12);
+            btnSearchReader.Name = "btnSearchReader";
+            btnSearchReader.Size = new Size(89, 28);
+            btnSearchReader.TabIndex = 2;
+            btnSearchReader.Text = "Tìm kiếm";
+            btnSearchReader.UseVisualStyleBackColor = false;
             // 
-            // txtSearch
+            // txtSearchReader
             // 
-            txtSearch.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txtSearch.BorderStyle = BorderStyle.FixedSingle;
-            txtSearch.ForeColor = Color.Gray;
-            txtSearch.Location = new Point(90, 15);
-            txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderColor = Color.Gray;
-            txtSearch.PlaceholderText = "Nhập tên, email, số điện thoại ...";
-            txtSearch.Size = new Size(375, 23);
-            txtSearch.TabIndex = 1;
-            txtSearch.Text = "Nhập tên, email, số điện thoại ...";
-            txtSearch.TextColor = Color.Black;
+            txtSearchReader.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtSearchReader.BorderStyle = BorderStyle.FixedSingle;
+            txtSearchReader.ForeColor = Color.Gray;
+            txtSearchReader.Location = new Point(90, 15);
+            txtSearchReader.Name = "txtSearchReader";
+            txtSearchReader.PlaceholderColor = Color.Gray;
+            txtSearchReader.PlaceholderText = "Nhập tên, email, số điện thoại ...";
+            txtSearchReader.Size = new Size(375, 23);
+            txtSearchReader.TabIndex = 1;
+            txtSearchReader.Text = "Nhập tên, email, số điện thoại ...";
+            txtSearchReader.TextColor = Color.Black;
             // 
             // label9
             // 
@@ -170,35 +174,35 @@
             label9.TabIndex = 0;
             label9.Text = "Tìm kiếm:";
             // 
-            // pnlInput
+            // pnlReaderInput
             // 
-            pnlInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            pnlInput.BackColor = Color.WhiteSmoke;
-            pnlInput.Controls.Add(dtpRegistrationDate);
-            pnlInput.Controls.Add(label13);
-            pnlInput.Controls.Add(btnCancel);
-            pnlInput.Controls.Add(btnSave);
-            pnlInput.Controls.Add(btnDelete);
-            pnlInput.Controls.Add(btnEdit);
-            pnlInput.Controls.Add(btnAdd);
-            pnlInput.Controls.Add(cboGender);
-            pnlInput.Controls.Add(dtpDateOfBirth);
-            pnlInput.Controls.Add(txtPhoneNumber);
-            pnlInput.Controls.Add(label8);
-            pnlInput.Controls.Add(txtEmail);
-            pnlInput.Controls.Add(label7);
-            pnlInput.Controls.Add(txtAddress);
-            pnlInput.Controls.Add(label6);
-            pnlInput.Controls.Add(label5);
-            pnlInput.Controls.Add(label4);
-            pnlInput.Controls.Add(txtFullName);
-            pnlInput.Controls.Add(label3);
-            pnlInput.Controls.Add(txtReaderID);
-            pnlInput.Controls.Add(label2);
-            pnlInput.Location = new Point(602, 112);
-            pnlInput.Name = "pnlInput";
-            pnlInput.Size = new Size(371, 521);
-            pnlInput.TabIndex = 1;
+            pnlReaderInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlReaderInput.BackColor = Color.WhiteSmoke;
+            pnlReaderInput.Controls.Add(dtpRegistrationDate);
+            pnlReaderInput.Controls.Add(label13);
+            pnlReaderInput.Controls.Add(btnCancel);
+            pnlReaderInput.Controls.Add(btnSave);
+            pnlReaderInput.Controls.Add(btnDelete);
+            pnlReaderInput.Controls.Add(btnEdit);
+            pnlReaderInput.Controls.Add(btnAdd);
+            pnlReaderInput.Controls.Add(cboGender);
+            pnlReaderInput.Controls.Add(dtpDateOfBirth);
+            pnlReaderInput.Controls.Add(txtPhoneNumber);
+            pnlReaderInput.Controls.Add(label8);
+            pnlReaderInput.Controls.Add(txtEmail);
+            pnlReaderInput.Controls.Add(label7);
+            pnlReaderInput.Controls.Add(txtAddress);
+            pnlReaderInput.Controls.Add(label6);
+            pnlReaderInput.Controls.Add(label5);
+            pnlReaderInput.Controls.Add(label4);
+            pnlReaderInput.Controls.Add(txtFullName);
+            pnlReaderInput.Controls.Add(label3);
+            pnlReaderInput.Controls.Add(txtReaderID);
+            pnlReaderInput.Controls.Add(label2);
+            pnlReaderInput.Location = new Point(602, 112);
+            pnlReaderInput.Name = "pnlReaderInput";
+            pnlReaderInput.Size = new Size(371, 521);
+            pnlReaderInput.TabIndex = 1;
             // 
             // dtpRegistrationDate
             // 
@@ -313,7 +317,7 @@
             cboGender.AutoCompleteMode = AutoCompleteMode.Suggest;
             cboGender.AutoCompleteSource = AutoCompleteSource.ListItems;
             cboGender.Enabled = false;
-            cboGender.Items.AddRange(new object[] { "Nam", "Nữ", "Khác" });
+            cboGender.Items.AddRange(new object[] { "Nam", "Nữ" });
             cboGender.Location = new Point(156, 127);
             cboGender.Name = "cboGender";
             cboGender.Size = new Size(121, 23);
@@ -454,29 +458,30 @@
             dgvReaders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReaders.BackgroundColor = Color.White;
             dgvReaders.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.White;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvReaders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.White;
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle5.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvReaders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvReaders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvReaders.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.Window;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = Color.Black;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
+            dgvReaders.DefaultCellStyle = dataGridViewCellStyle6;
             dgvReaders.GridColor = Color.White;
             dgvReaders.Location = new Point(20, 20);
             dgvReaders.MultiSelect = false;
             dgvReaders.Name = "dgvReaders";
             dgvReaders.ReadOnly = true;
             dgvReaders.RowHeadersVisible = false;
+            dgvReaders.RowHeadersWidth = 51;
             dgvReaders.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvReaders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReaders.ShowEditingIcon = false;
@@ -510,7 +515,7 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(pnlInput);
+            tabPage1.Controls.Add(pnlReaderInput);
             tabPage1.Controls.Add(panel3);
             tabPage1.Controls.Add(panel1);
             tabPage1.Controls.Add(panel4);
@@ -556,7 +561,7 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(panel10);
+            tabPage2.Controls.Add(pnlLibraryCardInput);
             tabPage2.Controls.Add(panel9);
             tabPage2.Controls.Add(panel7);
             tabPage2.Controls.Add(panel6);
@@ -568,112 +573,176 @@
             tabPage2.Text = "Thẻ thư viện";
             tabPage2.UseVisualStyleBackColor = true;
             // 
-            // panel10
+            // pnlLibraryCardInput
             // 
-            panel10.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            panel10.BackColor = Color.WhiteSmoke;
-            panel10.Controls.Add(pctBoxQRCode);
-            panel10.Controls.Add(button3);
-            panel10.Controls.Add(button4);
-            panel10.Controls.Add(button5);
-            panel10.Controls.Add(cbTrangThai);
-            panel10.Controls.Add(dateTimePicker1);
-            panel10.Controls.Add(label15);
-            panel10.Controls.Add(label16);
-            panel10.Controls.Add(label17);
-            panel10.Controls.Add(textBox4);
-            panel10.Controls.Add(label18);
-            panel10.Controls.Add(textBox5);
-            panel10.Controls.Add(label19);
-            panel10.Location = new Point(602, 112);
-            panel10.Name = "panel10";
-            panel10.Size = new Size(371, 521);
-            panel10.TabIndex = 9;
+            pnlLibraryCardInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            pnlLibraryCardInput.BackColor = Color.WhiteSmoke;
+            pnlLibraryCardInput.Controls.Add(dtpExpiryDate);
+            pnlLibraryCardInput.Controls.Add(label14);
+            pnlLibraryCardInput.Controls.Add(btnCancelCard);
+            pnlLibraryCardInput.Controls.Add(btnSaveCard);
+            pnlLibraryCardInput.Controls.Add(pctBoxQRCode);
+            pnlLibraryCardInput.Controls.Add(btnDeleteCard);
+            pnlLibraryCardInput.Controls.Add(btnEditCard);
+            pnlLibraryCardInput.Controls.Add(btnAddCard);
+            pnlLibraryCardInput.Controls.Add(cboStatus);
+            pnlLibraryCardInput.Controls.Add(dtpIssueDate);
+            pnlLibraryCardInput.Controls.Add(label15);
+            pnlLibraryCardInput.Controls.Add(label16);
+            pnlLibraryCardInput.Controls.Add(label17);
+            pnlLibraryCardInput.Controls.Add(txtCardReaderID);
+            pnlLibraryCardInput.Controls.Add(label18);
+            pnlLibraryCardInput.Controls.Add(txtCardID);
+            pnlLibraryCardInput.Controls.Add(label19);
+            pnlLibraryCardInput.Location = new Point(602, 112);
+            pnlLibraryCardInput.Name = "pnlLibraryCardInput";
+            pnlLibraryCardInput.Size = new Size(371, 521);
+            pnlLibraryCardInput.TabIndex = 9;
+            // 
+            // dtpExpiryDate
+            // 
+            dtpExpiryDate.Enabled = false;
+            dtpExpiryDate.Format = DateTimePickerFormat.Short;
+            dtpExpiryDate.Location = new Point(156, 127);
+            dtpExpiryDate.Name = "dtpExpiryDate";
+            dtpExpiryDate.Size = new Size(121, 23);
+            dtpExpiryDate.TabIndex = 25;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label14.Location = new Point(23, 125);
+            label14.Name = "label14";
+            label14.Size = new Size(75, 20);
+            label14.TabIndex = 24;
+            label14.Text = "Ngày cấp:";
+            // 
+            // btnCancelCard
+            // 
+            btnCancelCard.BackColor = Color.LightGray;
+            btnCancelCard.Cursor = Cursors.Hand;
+            btnCancelCard.FlatAppearance.BorderSize = 0;
+            btnCancelCard.FlatStyle = FlatStyle.Flat;
+            btnCancelCard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCancelCard.ForeColor = SystemColors.Window;
+            btnCancelCard.Location = new Point(144, 395);
+            btnCancelCard.Name = "btnCancelCard";
+            btnCancelCard.Size = new Size(85, 30);
+            btnCancelCard.TabIndex = 23;
+            btnCancelCard.Text = "Hủy";
+            btnCancelCard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnCancelCard.UseVisualStyleBackColor = false;
+            btnCancelCard.Visible = false;
+            btnCancelCard.Click += btnCancelCard_Click;
+            // 
+            // btnSaveCard
+            // 
+            btnSaveCard.BackColor = Color.LightGreen;
+            btnSaveCard.Cursor = Cursors.Hand;
+            btnSaveCard.FlatAppearance.BorderSize = 0;
+            btnSaveCard.FlatStyle = FlatStyle.Flat;
+            btnSaveCard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSaveCard.ForeColor = SystemColors.Window;
+            btnSaveCard.Location = new Point(27, 395);
+            btnSaveCard.Name = "btnSaveCard";
+            btnSaveCard.Size = new Size(85, 30);
+            btnSaveCard.TabIndex = 22;
+            btnSaveCard.Text = "Lưu";
+            btnSaveCard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnSaveCard.UseVisualStyleBackColor = false;
+            btnSaveCard.Visible = false;
+            btnSaveCard.Click += btnSaveCard_Click;
             // 
             // pctBoxQRCode
             // 
             pctBoxQRCode.BackColor = Color.White;
             pctBoxQRCode.BackgroundImage = Properties.Resources.qr_code;
             pctBoxQRCode.BackgroundImageLayout = ImageLayout.Center;
-            pctBoxQRCode.Location = new Point(157, 162);
+            pctBoxQRCode.Location = new Point(156, 197);
             pctBoxQRCode.Name = "pctBoxQRCode";
             pctBoxQRCode.Size = new Size(180, 180);
             pctBoxQRCode.SizeMode = PictureBoxSizeMode.AutoSize;
             pctBoxQRCode.TabIndex = 20;
             pctBoxQRCode.TabStop = false;
             // 
-            // button3
+            // btnDeleteCard
             // 
-            button3.BackColor = Color.Red;
-            button3.Cursor = Cursors.Hand;
-            button3.FlatAppearance.BorderSize = 0;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button3.ForeColor = SystemColors.Window;
-            button3.Location = new Point(262, 366);
-            button3.Name = "button3";
-            button3.Size = new Size(85, 30);
-            button3.TabIndex = 19;
-            button3.Text = "Xóa";
-            button3.TextImageRelation = TextImageRelation.ImageBeforeText;
-            button3.UseVisualStyleBackColor = false;
+            btnDeleteCard.BackColor = Color.Red;
+            btnDeleteCard.Cursor = Cursors.Hand;
+            btnDeleteCard.FlatAppearance.BorderSize = 0;
+            btnDeleteCard.FlatStyle = FlatStyle.Flat;
+            btnDeleteCard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnDeleteCard.ForeColor = SystemColors.Window;
+            btnDeleteCard.Location = new Point(261, 395);
+            btnDeleteCard.Name = "btnDeleteCard";
+            btnDeleteCard.Size = new Size(85, 30);
+            btnDeleteCard.TabIndex = 19;
+            btnDeleteCard.Text = "Xóa";
+            btnDeleteCard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnDeleteCard.UseVisualStyleBackColor = false;
+            btnDeleteCard.Click += btnDeleteCard_Click;
             // 
-            // button4
+            // btnEditCard
             // 
-            button4.BackColor = Color.Orange;
-            button4.BackgroundImageLayout = ImageLayout.Stretch;
-            button4.Cursor = Cursors.Hand;
-            button4.FlatAppearance.BorderSize = 0;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button4.ForeColor = SystemColors.Window;
-            button4.Location = new Point(145, 366);
-            button4.Name = "button4";
-            button4.Size = new Size(85, 30);
-            button4.TabIndex = 18;
-            button4.Text = "Sửa";
-            button4.TextImageRelation = TextImageRelation.ImageBeforeText;
-            button4.UseVisualStyleBackColor = false;
+            btnEditCard.BackColor = Color.Orange;
+            btnEditCard.BackgroundImageLayout = ImageLayout.Stretch;
+            btnEditCard.Cursor = Cursors.Hand;
+            btnEditCard.FlatAppearance.BorderSize = 0;
+            btnEditCard.FlatStyle = FlatStyle.Flat;
+            btnEditCard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEditCard.ForeColor = SystemColors.Window;
+            btnEditCard.Location = new Point(144, 395);
+            btnEditCard.Name = "btnEditCard";
+            btnEditCard.Size = new Size(85, 30);
+            btnEditCard.TabIndex = 18;
+            btnEditCard.Text = "Sửa";
+            btnEditCard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnEditCard.UseVisualStyleBackColor = false;
+            btnEditCard.Click += btnEditCard_Click;
             // 
-            // button5
+            // btnAddCard
             // 
-            button5.BackColor = Color.Green;
-            button5.Cursor = Cursors.Hand;
-            button5.FlatAppearance.BorderSize = 0;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button5.ForeColor = SystemColors.Window;
-            button5.Location = new Point(28, 366);
-            button5.Name = "button5";
-            button5.Size = new Size(85, 30);
-            button5.TabIndex = 17;
-            button5.Text = "Thêm";
-            button5.TextImageRelation = TextImageRelation.ImageBeforeText;
-            button5.UseVisualStyleBackColor = false;
+            btnAddCard.BackColor = Color.Green;
+            btnAddCard.Cursor = Cursors.Hand;
+            btnAddCard.FlatAppearance.BorderSize = 0;
+            btnAddCard.FlatStyle = FlatStyle.Flat;
+            btnAddCard.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnAddCard.ForeColor = SystemColors.Window;
+            btnAddCard.Location = new Point(27, 395);
+            btnAddCard.Name = "btnAddCard";
+            btnAddCard.Size = new Size(85, 30);
+            btnAddCard.TabIndex = 17;
+            btnAddCard.Text = "Thêm";
+            btnAddCard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnAddCard.UseVisualStyleBackColor = false;
+            btnAddCard.Click += btnAddCard_Click;
             // 
-            // cbTrangThai
+            // cboStatus
             // 
-            cbTrangThai.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cbTrangThai.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cbTrangThai.Items.AddRange(new object[] { "Hoạt động", "Bị khóa" });
-            cbTrangThai.Location = new Point(156, 127);
-            cbTrangThai.Name = "cbTrangThai";
-            cbTrangThai.Size = new Size(121, 23);
-            cbTrangThai.TabIndex = 16;
+            cboStatus.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cboStatus.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cboStatus.Enabled = false;
+            cboStatus.Items.AddRange(new object[] { "Hoạt động", "Bị khóa" });
+            cboStatus.Location = new Point(155, 162);
+            cboStatus.Name = "cboStatus";
+            cboStatus.Size = new Size(121, 23);
+            cboStatus.TabIndex = 16;
             // 
-            // dateTimePicker1
+            // dtpIssueDate
             // 
-            dateTimePicker1.Format = DateTimePickerFormat.Short;
-            dateTimePicker1.Location = new Point(156, 92);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(121, 23);
-            dateTimePicker1.TabIndex = 15;
+            dtpIssueDate.Enabled = false;
+            dtpIssueDate.Format = DateTimePickerFormat.Short;
+            dtpIssueDate.Location = new Point(156, 92);
+            dtpIssueDate.Name = "dtpIssueDate";
+            dtpIssueDate.Size = new Size(121, 23);
+            dtpIssueDate.TabIndex = 15;
             // 
             // label15
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label15.Location = new Point(23, 162);
+            label15.Location = new Point(23, 197);
             label15.Name = "label15";
             label15.Size = new Size(71, 20);
             label15.TabIndex = 8;
@@ -683,7 +752,7 @@
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label16.Location = new Point(23, 127);
+            label16.Location = new Point(23, 162);
             label16.Name = "label16";
             label16.Size = new Size(78, 20);
             label16.TabIndex = 6;
@@ -695,17 +764,18 @@
             label17.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label17.Location = new Point(23, 92);
             label17.Name = "label17";
-            label17.Size = new Size(73, 20);
+            label17.Size = new Size(75, 20);
             label17.TabIndex = 4;
-            label17.Text = "Ngày tạo:";
+            label17.Text = "Ngày cấp:";
             // 
-            // textBox4
+            // txtCardReaderID
             // 
-            textBox4.BorderStyle = BorderStyle.FixedSingle;
-            textBox4.Location = new Point(156, 57);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(188, 23);
-            textBox4.TabIndex = 3;
+            txtCardReaderID.BorderStyle = BorderStyle.FixedSingle;
+            txtCardReaderID.Location = new Point(156, 57);
+            txtCardReaderID.Name = "txtCardReaderID";
+            txtCardReaderID.ReadOnly = true;
+            txtCardReaderID.Size = new Size(188, 23);
+            txtCardReaderID.TabIndex = 3;
             // 
             // label18
             // 
@@ -717,13 +787,14 @@
             label18.TabIndex = 2;
             label18.Text = "Mã độc giả:";
             // 
-            // textBox5
+            // txtCardID
             // 
-            textBox5.BorderStyle = BorderStyle.FixedSingle;
-            textBox5.Location = new Point(156, 22);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(188, 23);
-            textBox5.TabIndex = 1;
+            txtCardID.BorderStyle = BorderStyle.FixedSingle;
+            txtCardID.Location = new Point(156, 22);
+            txtCardID.Name = "txtCardID";
+            txtCardID.ReadOnly = true;
+            txtCardID.Size = new Size(188, 23);
+            txtCardID.TabIndex = 1;
             // 
             // label19
             // 
@@ -755,34 +826,37 @@
             dgvLibraryCards.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLibraryCards.BackgroundColor = Color.White;
             dgvLibraryCards.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvLibraryCards.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.White;
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
+            dgvLibraryCards.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             dgvLibraryCards.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Window;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dgvLibraryCards.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = SystemColors.Window;
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle8.ForeColor = Color.Black;
+            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            dgvLibraryCards.DefaultCellStyle = dataGridViewCellStyle8;
             dgvLibraryCards.GridColor = Color.White;
             dgvLibraryCards.Location = new Point(20, 20);
             dgvLibraryCards.MultiSelect = false;
             dgvLibraryCards.Name = "dgvLibraryCards";
             dgvLibraryCards.ReadOnly = true;
             dgvLibraryCards.RowHeadersVisible = false;
+            dgvLibraryCards.RowHeadersWidth = 51;
             dgvLibraryCards.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvLibraryCards.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLibraryCards.ShowEditingIcon = false;
             dgvLibraryCards.Size = new Size(557, 480);
             dgvLibraryCards.TabIndex = 2;
+            dgvLibraryCards.DataBindingComplete += dgvLibraryCards_DataBindingComplete;
+            dgvLibraryCards.SelectionChanged += dgvLibraryCards_SelectionChanged;
             // 
             // panel7
             // 
@@ -796,9 +870,9 @@
             // 
             // panel8
             // 
-            panel8.Controls.Add(button2);
+            panel8.Controls.Add(btnSearchLibraryCard);
             panel8.Controls.Add(button1);
-            panel8.Controls.Add(placeholderTextBox1);
+            panel8.Controls.Add(txtSearchLibraryCard);
             panel8.Controls.Add(label12);
             panel8.Dock = DockStyle.Left;
             panel8.Location = new Point(0, 0);
@@ -806,20 +880,20 @@
             panel8.Size = new Size(600, 50);
             panel8.TabIndex = 0;
             // 
-            // button2
+            // btnSearchLibraryCard
             // 
-            button2.Anchor = AnchorStyles.Right;
-            button2.BackColor = Color.DeepSkyBlue;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.ForeColor = SystemColors.Window;
-            button2.Location = new Point(490, 12);
-            button2.Name = "button2";
-            button2.Size = new Size(89, 28);
-            button2.TabIndex = 8;
-            button2.Text = "Tìm kiếm";
-            button2.UseVisualStyleBackColor = false;
+            btnSearchLibraryCard.Anchor = AnchorStyles.Right;
+            btnSearchLibraryCard.BackColor = Color.DeepSkyBlue;
+            btnSearchLibraryCard.FlatAppearance.BorderSize = 0;
+            btnSearchLibraryCard.FlatStyle = FlatStyle.Flat;
+            btnSearchLibraryCard.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearchLibraryCard.ForeColor = SystemColors.Window;
+            btnSearchLibraryCard.Location = new Point(490, 12);
+            btnSearchLibraryCard.Name = "btnSearchLibraryCard";
+            btnSearchLibraryCard.Size = new Size(89, 28);
+            btnSearchLibraryCard.TabIndex = 8;
+            btnSearchLibraryCard.Text = "Tìm kiếm";
+            btnSearchLibraryCard.UseVisualStyleBackColor = false;
             // 
             // button1
             // 
@@ -836,19 +910,19 @@
             button1.Text = "Tìm kiếm";
             button1.UseVisualStyleBackColor = false;
             // 
-            // placeholderTextBox1
+            // txtSearchLibraryCard
             // 
-            placeholderTextBox1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            placeholderTextBox1.BorderStyle = BorderStyle.FixedSingle;
-            placeholderTextBox1.ForeColor = Color.Gray;
-            placeholderTextBox1.Location = new Point(90, 15);
-            placeholderTextBox1.Name = "placeholderTextBox1";
-            placeholderTextBox1.PlaceholderColor = Color.Gray;
-            placeholderTextBox1.PlaceholderText = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
-            placeholderTextBox1.Size = new Size(375, 23);
-            placeholderTextBox1.TabIndex = 1;
-            placeholderTextBox1.Text = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
-            placeholderTextBox1.TextColor = Color.Black;
+            txtSearchLibraryCard.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtSearchLibraryCard.BorderStyle = BorderStyle.FixedSingle;
+            txtSearchLibraryCard.ForeColor = Color.Gray;
+            txtSearchLibraryCard.Location = new Point(90, 15);
+            txtSearchLibraryCard.Name = "txtSearchLibraryCard";
+            txtSearchLibraryCard.PlaceholderColor = Color.Gray;
+            txtSearchLibraryCard.PlaceholderText = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
+            txtSearchLibraryCard.Size = new Size(375, 23);
+            txtSearchLibraryCard.TabIndex = 1;
+            txtSearchLibraryCard.Text = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
+            txtSearchLibraryCard.TextColor = Color.Black;
             // 
             // label12
             // 
@@ -903,8 +977,8 @@
             panel1.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            pnlInput.ResumeLayout(false);
-            pnlInput.PerformLayout();
+            pnlReaderInput.ResumeLayout(false);
+            pnlReaderInput.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReaders).EndInit();
             panel3.ResumeLayout(false);
             tbcReaders.ResumeLayout(false);
@@ -912,8 +986,8 @@
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             tabPage2.ResumeLayout(false);
-            panel10.ResumeLayout(false);
-            panel10.PerformLayout();
+            pnlLibraryCardInput.ResumeLayout(false);
+            pnlLibraryCardInput.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pctBoxQRCode).EndInit();
             panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvLibraryCards).EndInit();
@@ -928,7 +1002,7 @@
         #endregion
 
         private Panel panel1;
-        private Panel pnlInput;
+        private Panel pnlReaderInput;
         private DataGridView dgvReaders;
         private Panel panel3;
         private TabControl tbcReaders;
@@ -955,30 +1029,30 @@
         private Button btnEdit;
         private Button btnAdd;
         private Panel panel5;
-        private UICustom.PlaceholderTextBox txtSearch;
+        private UICustom.PlaceholderTextBox txtSearchReader;
         private Label label9;
-        private Button btnSearch;
+        private Button btnSearchReader;
         private Panel panel7;
         private Panel panel8;
         private Button button1;
-        private UICustom.PlaceholderTextBox placeholderTextBox1;
+        private UICustom.PlaceholderTextBox txtSearchLibraryCard;
         private Label label12;
         private Panel panel6;
         private Label label10;
         private Label label11;
-        private Button button2;
-        private Panel panel10;
-        private Button button3;
-        private Button button4;
-        private Button button5;
-        private ComboBox cbTrangThai;
-        private DateTimePicker dateTimePicker1;
+        private Button btnSearchLibraryCard;
+        private Panel pnlLibraryCardInput;
+        private Button btnDeleteCard;
+        private Button btnEditCard;
+        private Button btnAddCard;
+        private ComboBox cboStatus;
+        private DateTimePicker dtpIssueDate;
         private Label label15;
         private Label label16;
         private Label label17;
-        private TextBox textBox4;
+        private TextBox txtCardReaderID;
         private Label label18;
-        private TextBox textBox5;
+        private TextBox txtCardID;
         private Label label19;
         private Panel panel9;
         private DataGridView dgvLibraryCards;
@@ -987,5 +1061,9 @@
         private Button btnSave;
         private DateTimePicker dtpRegistrationDate;
         private Label label13;
+        private Button btnCancelCard;
+        private Button btnSaveCard;
+        private DateTimePicker dtpExpiryDate;
+        private Label label14;
     }
 }
