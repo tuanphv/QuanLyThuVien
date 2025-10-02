@@ -15,17 +15,17 @@ namespace UI
 
         private void FrmReaders_Load(object sender, EventArgs e)
         {
-            LoadReaders();
+            LoadAllReadersData();
         }
 
-        private void LoadReaders()
+        private void LoadAllReadersData()
         {
             var readers = BUS.ReaderBUS.GetAllReaders();
             dgvReaders.DataSource = null;
             dgvReaders.DataSource = readers;
         }
 
-        private void LoadLibraryCards()
+        private void LoadAllLibraryCardsData()
         {
             var libraryCards = BUS.LibraryCardBUS.GetAllLibraryCards();
             dgvLibraryCards.DataSource = null;
@@ -38,11 +38,11 @@ namespace UI
             int index = tbcReaders.SelectedIndex;
             if (index == 0)
             {
-                LoadReaders();
+                LoadAllReadersData();
             }
             else if (index == 1)
             {
-                LoadLibraryCards();
+                LoadAllLibraryCardsData();
             }
         }
 
@@ -108,25 +108,25 @@ namespace UI
             int maDocGia;
             if (!int.TryParse(txtCardReaderID.Text, out maDocGia) || maDocGia <= 0)
             {
-                MessageBox.Show("Vui lòng nhập mã độc giả hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng nhập mã độc giả hợp lệ.");
                 txtCardReaderID.Focus();
                 return false;
             }
             if (dtpIssueDate.Value == DateTime.MinValue || dtpIssueDate.Value > DateTime.Now)
             {
-                MessageBox.Show("Vui lòng chọn ngày cấp hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn ngày cấp hợp lệ.");
                 dtpIssueDate.Focus();
                 return false;
             }
             if (dtpExpiryDate.Value == DateTime.MinValue || dtpExpiryDate.Value <= dtpIssueDate.Value)
             {
-                MessageBox.Show("Vui lòng chọn ngày hết hạn hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn ngày hết hạn hợp lệ.");
                 dtpExpiryDate.Focus();
                 return false;
             }
             if (cboStatus.SelectedIndex == -1)
             {
-                MessageBox.Show("Vui lòng chọn trạng thái thẻ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn trạng thái thẻ.");
                 cboStatus.Focus();
                 return false;
             }
@@ -292,7 +292,7 @@ namespace UI
             if (success)
             {
                 ModernToast.ShowSuccess("Lưu thông tin độc giả thành công.");
-                LoadReaders();
+                LoadAllReadersData();
             }
             else
             {
@@ -335,7 +335,7 @@ namespace UI
                     if (success)
                     {
                         ModernToast.ShowSuccess("Xóa độc giả thành công.");
-                        LoadReaders();
+                        LoadAllReadersData();
                     }
                     else
                     {
@@ -368,12 +368,12 @@ namespace UI
             ControlHelper.SetButtonsVisible(false, btnAddCard, btnEditCard, btnDeleteCard);
             ControlHelper.SetButtonsVisible(true, btnSaveCard, btnCancelCard);
         }
-        
+
         private void btnEditCard_Click(object sender, EventArgs e)
         {
             if (dgvLibraryCards.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn thẻ thư viện cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn thẻ thư viện cần sửa.");
                 return;
             }
             dgvLibraryCards.Enabled = false;
@@ -386,32 +386,27 @@ namespace UI
 
         private void btnDeleteCard_Click(object sender, EventArgs e)
         {
-            if (dgvLibraryCards.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Vui lòng chọn thẻ thư viện cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
             int maThe;
             if (int.TryParse(txtCardID.Text, out maThe))
             {
-                var result = MessageBox.Show("Bạn có chắc chắn muốn xóa thẻ thư viện này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = ModernConfirmDialog.ShowDelete($"thẻ thư viện '{txtCardID.Text}'");
                 if (result == DialogResult.Yes)
                 {
                     bool success = BUS.LibraryCardBUS.DeleteLibraryCard(maThe);
                     if (success)
                     {
-                        MessageBox.Show("Xóa thẻ thư viện thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadLibraryCards();
+                        ModernToast.ShowSuccess("Xóa thẻ thư viện thành công.");
+                        LoadAllLibraryCardsData();
                     }
                     else
                     {
-                        MessageBox.Show("Xóa thẻ thư viện thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ModernToast.ShowError("Xóa thẻ thư viện thất bại.");
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn thẻ thư viện cần xóa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowWarning("Vui lòng chọn thẻ thư viện cần xóa.");
             }
         }
 
@@ -435,12 +430,12 @@ namespace UI
             }
             if (success)
             {
-                MessageBox.Show("Lưu thông tin thẻ thư viện thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadLibraryCards();
+                ModernToast.ShowSuccess("Lưu thông tin thẻ thư viện thành công.");
+                LoadAllLibraryCardsData();
             }
             else
             {
-                MessageBox.Show("Lưu thông tin thẻ thư viện thất bại. Vui lòng kiểm tra lại dữ liệu nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ModernToast.ShowError("Lưu thông tin thẻ thư viện thất bại. Vui lòng kiểm tra lại dữ liệu nhập.");
                 return; // Không thoát khỏi chế độ chỉnh sửa nếu lưu thất bại
             }
 
@@ -467,6 +462,74 @@ namespace UI
             currentMode = FormMode.None;
             ControlHelper.SetButtonsVisible(true, btnAddCard, btnEditCard, btnDeleteCard);
             ControlHelper.SetButtonsVisible(false, btnSaveCard, btnCancelCard);
+        }
+        #endregion
+
+        #region Xử lí tìm kiếm
+        private void btnSearchReader_Click(object sender, EventArgs e)
+        {
+            List<ReaderDTO> list;
+
+            if (!txtSearchReader.IsPlaceholderActive)
+            {
+                string text = txtSearchReader.Text;
+                list = BUS.ReaderBUS.SearchReaders(text);
+            }
+            else
+            {
+                list = BUS.ReaderBUS.GetAllReaders();
+            }
+
+            dgvReaders.DataSource = list;
+
+        }
+
+        private void txtSearchReader_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSearchReader_Click(sender, e);
+            }
+        }
+
+
+        private void btnSearchLibraryCard_Click(object sender, EventArgs e)
+        {
+            List<LibraryCardDTO> list;
+
+            if (!txtSearchLibraryCard.IsPlaceholderActive)
+            {
+                string text = txtSearchLibraryCard.Text;
+                list = BUS.LibraryCardBUS.SearchLibraryCards(text);
+            }
+            else
+            {
+                list = BUS.LibraryCardBUS.GetAllLibraryCards();
+            }
+
+            dgvLibraryCards.DataSource = list;
+        }
+
+        private void txtSearchLibraryCard_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSearchLibraryCard_Click(sender, e);
+            }
+        }
+        #endregion
+
+        #region Refresh datagridview
+        private void btnReloadCards_Click(object sender, EventArgs e)
+        {
+            LoadAllLibraryCardsData();
+            txtSearchLibraryCard.ResetPlaceholder();
+        }
+
+        private void btnReloadReaders_Click(object sender, EventArgs e)
+        {
+            LoadAllReadersData();
+            txtSearchReader.ResetPlaceholder();
         }
         #endregion
     }

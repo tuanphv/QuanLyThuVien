@@ -36,5 +36,25 @@
                 return false;
             return true;
         }
+
+        public static List<DTO.LibraryCardDTO> SearchLibraryCards(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return GetAllLibraryCards();
+            List<DTO.LibraryCardDTO> list = GetAllLibraryCards();
+            List<DTO.LibraryCardDTO> result = new List<DTO.LibraryCardDTO>();
+
+            // duyệt từng card, cho vào result những kết quả phù hợp
+            foreach (DTO.LibraryCardDTO card in list)
+            {
+                if (card.MaThe.ToString().Contains(text) ||
+                    card.MaDocGia.ToString().Contains(text) ||
+                    DataProcessing.RemoveDiacritics(card.TrangThai).ToLower().Contains(text.ToLower()))
+                {
+                    result.Add(card);
+                }
+            }
+            return result;
+        }
     }
 }

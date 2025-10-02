@@ -227,9 +227,9 @@
             lblUserInfo.BackColor = Color.Transparent;
             lblUserInfo.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblUserInfo.ForeColor = Color.DarkGreen;
-            lblUserInfo.Location = new Point(600, 9);
+            lblUserInfo.Location = new Point(701, 19);
             lblUserInfo.Name = "lblUserInfo";
-            lblUserInfo.Size = new Size(105, 20);
+            lblUserInfo.Size = new Size(96, 20);
             lblUserInfo.TabIndex = 1;
             lblUserInfo.Text = "Tên (Vai trò)";
             lblUserInfo.TextAlign = ContentAlignment.MiddleRight;
