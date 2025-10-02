@@ -89,7 +89,7 @@ namespace UI
                 {
                     // Đăng nhập thất bại
                     ModernToast.ShowError("Tên đăng nhập hoặc mật khẩu không đúng!");
-                    
+
                     // Xóa mật khẩu và focus lại username
                     ResetLoginForm();
                 }
@@ -123,7 +123,7 @@ namespace UI
                     this.Show();
                     this.BringToFront();
                     this.Focus();
-                    
+
                     // Xử lý kết quả từ form chính
                     if (result == DialogResult.OK)
                     {
@@ -146,7 +146,7 @@ namespace UI
             catch (Exception ex)
             {
                 ModernToast.ShowError($"Lỗi khi mở form chính: {ex.Message}");
-                
+
                 // Đảm bảo form login được hiển thị
                 this.Show();
                 this.BringToFront();
@@ -172,13 +172,13 @@ namespace UI
             // Clear form
             txtUsername.Text = "";
             txtPassword.Text = "";
-            
+
             // Focus username
             txtUsername.Focus();
-            
+
             // Update UI
             this.Text = "Đăng nhập - Hệ thống Quản lý Thư viện";
-            
+
             // Refresh connection status
             CheckDatabaseConnection();
         }
@@ -291,6 +291,11 @@ namespace UI
             // Đảm bảo form được focus khi hiển thị
             this.Activate();
             txtUsername.Focus();
+        }
+
+        private void txtUsername_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -104,10 +104,16 @@ namespace UI.UICustom
             this.pnlMain.Controls.Add(this.btnClose);
             this.Controls.Add(this.pnlMain);
 
-            // Create rounded region
-            this.Region = CreateRoundedRegion(new Rectangle(0, 0, this.Width, this.Height), 8);
+            // Handle Load event to set up the rounded region
+            this.Load += ModernToast_Load;
 
             this.ResumeLayout(false);
+        }
+
+        private void ModernToast_Load(object sender, EventArgs e)
+        {
+            // Create rounded region after the form is loaded
+            this.Region = CreateRoundedRegion(new Rectangle(0, 0, this.Width, this.Height), 8);
         }
 
         private void SetupToast(string message, ToastType type)

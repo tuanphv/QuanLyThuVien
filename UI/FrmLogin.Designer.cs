@@ -51,9 +51,9 @@
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTitle.ForeColor = Color.White;
-            lblTitle.Location = new Point(116, 28);
+            lblTitle.Location = new Point(133, 37);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(567, 50);
+            lblTitle.Size = new Size(723, 62);
             lblTitle.TabIndex = 0;
             lblTitle.Text = "HỆ THỐNG QUẢN LÝ THƯ VIỆN";
             // 
@@ -64,9 +64,9 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Segoe UI", 14F);
             label2.ForeColor = SystemColors.Window;
-            label2.Location = new Point(251, 90);
+            label2.Location = new Point(287, 120);
             label2.Name = "label2";
-            label2.Size = new Size(295, 25);
+            label2.Size = new Size(378, 32);
             label2.TabIndex = 1;
             label2.Text = "Chào mừng bạn đến với hệ thống";
             // 
@@ -81,9 +81,10 @@
             panel1.Controls.Add(btnLogin);
             panel1.Controls.Add(label4);
             panel1.Controls.Add(label3);
-            panel1.Location = new Point(204, 142);
+            panel1.Location = new Point(233, 189);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(370, 266);
+            panel1.Size = new Size(423, 355);
             panel1.TabIndex = 2;
             // 
             // txtPassword
@@ -91,12 +92,13 @@
             txtPassword.BorderStyle = BorderStyle.None;
             txtPassword.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPassword.ForeColor = Color.Gray;
-            txtPassword.Location = new Point(46, 136);
+            txtPassword.Location = new Point(53, 181);
+            txtPassword.Margin = new Padding(3, 4, 3, 4);
             txtPassword.Multiline = true;
             txtPassword.Name = "txtPassword";
             txtPassword.PlaceholderColor = Color.Gray;
             txtPassword.PlaceholderText = "Mật khẩu";
-            txtPassword.Size = new Size(279, 35);
+            txtPassword.Size = new Size(319, 47);
             txtPassword.TabIndex = 2;
             txtPassword.Text = "Mật khẩu";
             txtPassword.TextColor = Color.Black;
@@ -109,15 +111,17 @@
             txtUsername.BorderStyle = BorderStyle.None;
             txtUsername.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtUsername.ForeColor = Color.Gray;
-            txtUsername.Location = new Point(46, 52);
+            txtUsername.Location = new Point(53, 69);
+            txtUsername.Margin = new Padding(3, 4, 3, 4);
             txtUsername.Multiline = true;
             txtUsername.Name = "txtUsername";
             txtUsername.PlaceholderColor = Color.Gray;
             txtUsername.PlaceholderText = "Tên đăng nhập";
-            txtUsername.Size = new Size(279, 35);
+            txtUsername.Size = new Size(319, 47);
             txtUsername.TabIndex = 1;
             txtUsername.Text = "Tên đăng nhập";
             txtUsername.TextColor = Color.Black;
+            txtUsername.TextChanged += txtUsername_TextChanged;
             txtUsername.KeyDown += txtUsername_KeyDown;
             // 
             // btnTestConnection
@@ -129,9 +133,10 @@
             btnTestConnection.FlatStyle = FlatStyle.Flat;
             btnTestConnection.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnTestConnection.ForeColor = SystemColors.Window;
-            btnTestConnection.Location = new Point(285, 202);
+            btnTestConnection.Location = new Point(326, 269);
+            btnTestConnection.Margin = new Padding(3, 4, 3, 4);
             btnTestConnection.Name = "btnTestConnection";
-            btnTestConnection.Size = new Size(40, 40);
+            btnTestConnection.Size = new Size(46, 53);
             btnTestConnection.TabIndex = 5;
             btnTestConnection.Text = "🔧";
             btnTestConnection.TextAlign = ContentAlignment.TopCenter;
@@ -147,9 +152,10 @@
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCancel.ForeColor = SystemColors.Window;
-            btnCancel.Location = new Point(189, 202);
+            btnCancel.Location = new Point(216, 269);
+            btnCancel.Margin = new Padding(3, 4, 3, 4);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(71, 40);
+            btnCancel.Size = new Size(81, 53);
             btnCancel.TabIndex = 4;
             btnCancel.Text = "Thoát";
             btnCancel.UseVisualStyleBackColor = false;
@@ -164,9 +170,10 @@
             btnLogin.FlatStyle = FlatStyle.Flat;
             btnLogin.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnLogin.ForeColor = SystemColors.Window;
-            btnLogin.Location = new Point(46, 202);
+            btnLogin.Location = new Point(53, 269);
+            btnLogin.Margin = new Padding(3, 4, 3, 4);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(112, 40);
+            btnLogin.Size = new Size(128, 53);
             btnLogin.TabIndex = 3;
             btnLogin.Text = "Đăng nhập";
             btnLogin.UseVisualStyleBackColor = false;
@@ -177,9 +184,9 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label4.ForeColor = Color.FromArgb(52, 73, 94);
-            label4.Location = new Point(46, 113);
+            label4.Location = new Point(53, 151);
             label4.Name = "label4";
-            label4.Size = new Size(75, 20);
+            label4.Size = new Size(96, 25);
             label4.TabIndex = 0;
             label4.Text = "Mật khẩu";
             // 
@@ -188,9 +195,9 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label3.ForeColor = Color.FromArgb(52, 73, 94);
-            label3.Location = new Point(46, 29);
+            label3.Location = new Point(53, 39);
             label3.Name = "label3";
-            label3.Size = new Size(112, 20);
+            label3.Size = new Size(144, 25);
             label3.TabIndex = 0;
             label3.Text = "Tên đăng nhập";
             // 
@@ -201,9 +208,9 @@
             lblConnectionStatus.BackColor = Color.Transparent;
             lblConnectionStatus.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblConnectionStatus.ForeColor = SystemColors.Window;
-            lblConnectionStatus.Location = new Point(223, 431);
+            lblConnectionStatus.Location = new Point(255, 575);
             lblConnectionStatus.Name = "lblConnectionStatus";
-            lblConnectionStatus.Size = new Size(341, 20);
+            lblConnectionStatus.Size = new Size(435, 25);
             lblConnectionStatus.TabIndex = 3;
             lblConnectionStatus.Text = "Đang kiểm tra trạng thái kết nối cơ sở dữ liệu ...";
             lblConnectionStatus.TextAlign = ContentAlignment.MiddleCenter;
@@ -216,18 +223,20 @@
             gradientPanel1.Controls.Add(lblTitle);
             gradientPanel1.Controls.Add(label2);
             gradientPanel1.Location = new Point(-1, 1);
+            gradientPanel1.Margin = new Padding(3, 4, 3, 4);
             gradientPanel1.Name = "gradientPanel1";
-            gradientPanel1.Size = new Size(785, 462);
+            gradientPanel1.Size = new Size(897, 616);
             gradientPanel1.TabIndex = 4;
             // 
             // FrmLogin
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(52, 152, 219);
-            ClientSize = new Size(784, 461);
+            ClientSize = new Size(896, 615);
             Controls.Add(panel1);
             Controls.Add(gradientPanel1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "FrmLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hệ thống quản lý thư viện - Đăng nhập";
