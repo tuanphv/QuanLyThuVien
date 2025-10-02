@@ -258,7 +258,32 @@ INSERT INTO DocGia (HoTen, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, NgayD
 (N'Nguyễn Thị Esen', '1992-09-25', N'Nữ', N'34 Hai Bà Trưng, Q1, TP.HCM', 'esenngt@gmail.com', '0945678901', '2023-02-15'),
 (N'Trần Minh Phúc', '1998-04-03', N'Nam', N'56 Điện Biên Phủ, Q3, TP.HCM', 'phuctm@gmail.com', '0956789012', '2023-03-20'),
 (N'Lê Thị Giang', '1996-12-18', N'Nữ', N'78 Cách Mạng Tháng Tám, Q10, TP.HCM', 'gianglt@gmail.com', '0967890123', '2023-04-05'),
-(N'Hoàng Văn Hùng', '1994-02-28', N'Nam', N'90 Nam Kỳ Khởi Nghĩa, Q1, TP.HCM', 'hunghv@gmail.com', '0978901234', '2023-05-12');
+(N'Hoàng Văn Hùng', '1994-02-28', N'Nam', N'90 Nam Kỳ Khởi Nghĩa, Q1, TP.HCM', 'hunghv@gmail.com', '0978901234', '2023-05-12'),
+(N'Nguyễn Văn An', '1990-03-12', 'Nam', N'12 Nguyễn Trãi, Q1, TP.HCM', 'annguyen90@gmail.com', '0912345678', '2023-01-18'),
+(N'Trần Thị Hoa', '1993-07-25', 'Nữ', N'45 Trần Hưng Đạo, Q5, TP.HCM', 'hoatran93@gmail.com', '0923456789', '2023-02-22'),
+(N'Lê Văn Bình', '1997-11-10', 'Nam', N'23 Lê Lai, Q1, TP.HCM', 'binhlv97@gmail.com', '0934567891', '2023-03-05'),
+(N'Phạm Thị Lan', '1995-04-30', 'Nữ', N'67 Hai Bà Trưng, Q3, TP.HCM', 'lanpham95@gmail.com', '0945678901', '2023-03-28'),
+(N'Đỗ Văn Khoa', '1992-09-14', 'Nam', N'89 Võ Thị Sáu, Q3, TP.HCM', 'khoado92@gmail.com', '0956789012', '2023-04-12'),
+(N'Bùi Thị Hạnh', '1996-12-03', 'Nữ', N'101 Lý Thường Kiệt, Q10, TP.HCM', 'hanhbui96@gmail.com', '0967890123', '2023-05-06'),
+(N'Nguyễn Văn Long', '1998-01-20', 'Nam', N'202 Cách Mạng Tháng 8, Q10, TP.HCM', 'longng98@gmail.com', '0978901234', '2023-05-18'),
+(N'Hoàng Thị Mai', '1994-06-15', 'Nữ', N'35 Nguyễn Đình Chiểu, Q3, TP.HCM', 'maih94@gmail.com', '0989012345', '2023-06-22'),
+(N'Trần Văn Sơn', '1991-08-09', 'Nam', N'78 Phạm Ngũ Lão, Q1, TP.HCM', 'sontran91@gmail.com', '0990123456', '2023-07-02'),
+(N'Vũ Thị Ngọc', '1999-02-11', 'Nữ', N'12 Hoàng Hoa Thám, Q5, TP.HCM', 'ngocvu99@gmail.com', '0901234567', '2023-07-28'),
+(N'Đặng Văn Phúc', '1989-10-18', 'Nam', N'45 Nguyễn Thị Minh Khai, Q1, TP.HCM', 'phucdv89@gmail.com', '0913456789', '2023-08-15'),
+(N'Phạm Thị Hương', '1993-05-05', 'Nữ', N'56 Điện Biên Phủ, Q3, TP.HCM', 'huongpt93@gmail.com', '0924567890', '2023-08-29'),
+(N'Nguyễn Văn Hiếu', '1997-12-22', 'Nam', N'78 Trần Quang Khải, Q1, TP.HCM', 'hieunv97@gmail.com', '0935678902', '2023-09-12'),
+(N'Lê Thị Thu', '1996-03-08', 'Nữ', N'90 Võ Văn Tần, Q3, TP.HCM', 'thule96@gmail.com', '0946789013', '2023-09-28'),
+(N'Hồ Văn Tài', '1992-11-16', 'Nam', N'120 Cách Mạng Tháng 8, Q10, TP.HCM', 'taihv92@gmail.com', '0957890124', '2023-10-10'),
+(N'Nguyễn Thị Bích', '1995-01-27', 'Nữ', N'32 Lê Văn Sỹ, Q3, TP.HCM', 'bichnt95@gmail.com', '0968901235', '2023-10-24'),
+(N'Trần Văn Quang', '1998-06-19', 'Nam', N'11 Phan Đăng Lưu, Q3, TP.HCM', 'quangtv98@gmail.com', '0979012346', '2023-11-05'),
+(N'Đỗ Thị Mỹ', '1994-09-07', 'Nữ', N'22 Trương Định, Q3, TP.HCM', 'mydo94@gmail.com', '0980123457', '2023-11-19'),
+(N'Nguyễn Văn Phát', '1991-04-13', 'Nam', N'56 Lê Hồng Phong, Q5, TP.HCM', 'phatnv91@gmail.com', '0991234568', '2023-12-02'),
+(N'Hoàng Thị Lý', '1999-07-30', 'Nữ', N'78 Nguyễn Kiệm, Q.Phú Nhuận, TP.HCM', 'lyhoang99@gmail.com', '0902345678', '2023-12-20'),
+(N'Nguyễn Văn Đức', '1990-05-21', 'Nam', N'23 Nguyễn Huệ, Q1, TP.HCM', 'ducnv90@gmail.com', '0914567890', '2024-01-08'),
+(N'Trần Thị Đào', '1996-10-01', 'Nữ', N'45 Trần Quốc Toản, Q3, TP.HCM', 'daott96@gmail.com', '0925678901', '2024-01-22'),
+(N'Lê Văn Hải', '1992-12-19', 'Nam', N'89 Lê Thánh Tôn, Q1, TP.HCM', 'hailv92@gmail.com', '0936789012', '2024-02-06'),
+(N'Phạm Thị Yến', '1997-08-23', 'Nữ', N'67 Nguyễn Thị Minh Khai, Q3, TP.HCM', 'yenpt97@gmail.com', '0947890123', '2024-02-18'),
+(N'Nguyễn Văn Kiên', '1994-02-14', 'Nam', N'12 Hoàng Diệu, Q4, TP.HCM', 'kiennv94@gmail.com', '0958901234', '2024-03-03');
 
 -- Thêm dữ liệu cho bảng TheThuVien
 INSERT INTO TheThuVien (MaDocGia, NgayCap, NgayHetHan, TrangThai, QRCode) VALUES

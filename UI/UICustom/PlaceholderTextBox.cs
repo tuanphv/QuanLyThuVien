@@ -69,6 +69,11 @@ namespace UI.UICustom
             }
         }
 
+        public void ResetPlaceholder()
+        {
+            SetPlaceholder();
+        }
+
         private void SetPlaceholder()
         {
             _isPlaceholderActive = true;

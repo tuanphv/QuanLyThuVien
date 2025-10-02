@@ -1,4 +1,6 @@
-﻿namespace BUS
+﻿using DTO;
+
+namespace BUS
 {
     public class ReaderBUS
     {
@@ -21,6 +23,30 @@
         {
             return DAO.ReaderDAO.DeleteReader(readerId);
         }
+
+        public static List<DTO.ReaderDTO> SearchReaders(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return GetAllReaders();
+
+            List<ReaderDTO> list = GetAllReaders();
+            List<ReaderDTO> result = new List<ReaderDTO>();
+                
+            // duyệt từng reader, cho vào result những kết quả phù hợp
+            foreach (ReaderDTO reader in list)
+            {
+                if (reader.MaDocGia.ToString().Contains(text) ||
+                    DataProcessing.RemoveDiacritics(reader.HoTen).ToLower().Contains(text.ToLower()) ||
+                    DataProcessing.RemoveDiacritics(reader.DiaChi).ToLower().Contains(text.ToLower()) ||
+                    reader.Email.ToLower().Contains(text.ToLower()) ||
+                    reader.SoDienThoai.Contains(text))
+                {
+                    result.Add(reader);
+                }
+            }
+
+            return result;
+        } 
 
         private static bool ValidateReader(DTO.ReaderDTO reader)
         {

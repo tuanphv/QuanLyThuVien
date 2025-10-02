@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             panel1 = new Panel();
             panel5 = new Panel();
+            btnReloadReaders = new Button();
             btnSearchReader = new Button();
             txtSearchReader = new UI.UICustom.PlaceholderTextBox();
-            label9 = new Label();
             pnlReaderInput = new Panel();
             dtpRegistrationDate = new DateTimePicker();
             label13 = new Label();
@@ -89,10 +89,10 @@
             dgvLibraryCards = new DataGridView();
             panel7 = new Panel();
             panel8 = new Panel();
+            btnReloadCards = new Button();
             btnSearchLibraryCard = new Button();
             button1 = new Button();
             txtSearchLibraryCard = new UI.UICustom.PlaceholderTextBox();
-            label12 = new Label();
             panel6 = new Panel();
             label10 = new Label();
             label11 = new Label();
@@ -126,14 +126,31 @@
             // 
             // panel5
             // 
+            panel5.Controls.Add(btnReloadReaders);
             panel5.Controls.Add(btnSearchReader);
             panel5.Controls.Add(txtSearchReader);
-            panel5.Controls.Add(label9);
             panel5.Dock = DockStyle.Left;
             panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
             panel5.Size = new Size(600, 50);
             panel5.TabIndex = 0;
+            // 
+            // btnReloadReaders
+            // 
+            btnReloadReaders.Anchor = AnchorStyles.Right;
+            btnReloadReaders.BackColor = Color.Transparent;
+            btnReloadReaders.FlatAppearance.BorderSize = 0;
+            btnReloadReaders.FlatStyle = FlatStyle.Flat;
+            btnReloadReaders.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReloadReaders.ForeColor = SystemColors.Window;
+            btnReloadReaders.Image = Properties.Resources.refresh_icon;
+            btnReloadReaders.Location = new Point(500, 10);
+            btnReloadReaders.Name = "btnReloadReaders";
+            btnReloadReaders.Padding = new Padding(2);
+            btnReloadReaders.Size = new Size(28, 28);
+            btnReloadReaders.TabIndex = 3;
+            btnReloadReaders.UseVisualStyleBackColor = false;
+            btnReloadReaders.Click += btnReloadReaders_Click;
             // 
             // btnSearchReader
             // 
@@ -143,36 +160,28 @@
             btnSearchReader.FlatStyle = FlatStyle.Flat;
             btnSearchReader.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSearchReader.ForeColor = SystemColors.Window;
-            btnSearchReader.Location = new Point(490, 12);
+            btnSearchReader.Location = new Point(400, 10);
             btnSearchReader.Name = "btnSearchReader";
-            btnSearchReader.Size = new Size(89, 28);
+            btnSearchReader.Size = new Size(90, 28);
             btnSearchReader.TabIndex = 2;
             btnSearchReader.Text = "Tìm kiếm";
             btnSearchReader.UseVisualStyleBackColor = false;
+            btnSearchReader.Click += btnSearchReader_Click;
             // 
             // txtSearchReader
             // 
             txtSearchReader.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtSearchReader.BorderStyle = BorderStyle.FixedSingle;
             txtSearchReader.ForeColor = Color.Gray;
-            txtSearchReader.Location = new Point(90, 15);
+            txtSearchReader.Location = new Point(20, 12);
             txtSearchReader.Name = "txtSearchReader";
             txtSearchReader.PlaceholderColor = Color.Gray;
             txtSearchReader.PlaceholderText = "Nhập tên, email, số điện thoại ...";
-            txtSearchReader.Size = new Size(375, 23);
+            txtSearchReader.Size = new Size(360, 23);
             txtSearchReader.TabIndex = 1;
             txtSearchReader.Text = "Nhập tên, email, số điện thoại ...";
             txtSearchReader.TextColor = Color.Black;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label9.Location = new Point(15, 15);
-            label9.Name = "label9";
-            label9.Size = new Size(73, 20);
-            label9.TabIndex = 0;
-            label9.Text = "Tìm kiếm:";
+            txtSearchReader.KeyDown += txtSearchReader_KeyDown;
             // 
             // pnlReaderInput
             // 
@@ -458,23 +467,23 @@
             dgvReaders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReaders.BackgroundColor = Color.White;
             dgvReaders.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.White;
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle5.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            dgvReaders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.White;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvReaders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvReaders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Window;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
-            dgvReaders.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvReaders.DefaultCellStyle = dataGridViewCellStyle2;
             dgvReaders.GridColor = Color.White;
             dgvReaders.Location = new Point(20, 20);
             dgvReaders.MultiSelect = false;
@@ -826,23 +835,23 @@
             dgvLibraryCards.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLibraryCards.BackgroundColor = Color.White;
             dgvLibraryCards.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = Color.White;
-            dataGridViewCellStyle7.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
-            dgvLibraryCards.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.White;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvLibraryCards.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvLibraryCards.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = SystemColors.Window;
-            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle8.ForeColor = Color.Black;
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            dgvLibraryCards.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = Color.Black;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvLibraryCards.DefaultCellStyle = dataGridViewCellStyle4;
             dgvLibraryCards.GridColor = Color.White;
             dgvLibraryCards.Location = new Point(20, 20);
             dgvLibraryCards.MultiSelect = false;
@@ -870,15 +879,32 @@
             // 
             // panel8
             // 
+            panel8.Controls.Add(btnReloadCards);
             panel8.Controls.Add(btnSearchLibraryCard);
             panel8.Controls.Add(button1);
             panel8.Controls.Add(txtSearchLibraryCard);
-            panel8.Controls.Add(label12);
             panel8.Dock = DockStyle.Left;
             panel8.Location = new Point(0, 0);
             panel8.Name = "panel8";
             panel8.Size = new Size(600, 50);
             panel8.TabIndex = 0;
+            // 
+            // btnReloadCards
+            // 
+            btnReloadCards.Anchor = AnchorStyles.Right;
+            btnReloadCards.BackColor = Color.Transparent;
+            btnReloadCards.FlatAppearance.BorderSize = 0;
+            btnReloadCards.FlatStyle = FlatStyle.Flat;
+            btnReloadCards.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReloadCards.ForeColor = SystemColors.Window;
+            btnReloadCards.Image = Properties.Resources.refresh_icon;
+            btnReloadCards.Location = new Point(500, 10);
+            btnReloadCards.Name = "btnReloadCards";
+            btnReloadCards.Padding = new Padding(2);
+            btnReloadCards.Size = new Size(28, 28);
+            btnReloadCards.TabIndex = 9;
+            btnReloadCards.UseVisualStyleBackColor = false;
+            btnReloadCards.Click += btnReloadCards_Click;
             // 
             // btnSearchLibraryCard
             // 
@@ -888,12 +914,13 @@
             btnSearchLibraryCard.FlatStyle = FlatStyle.Flat;
             btnSearchLibraryCard.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSearchLibraryCard.ForeColor = SystemColors.Window;
-            btnSearchLibraryCard.Location = new Point(490, 12);
+            btnSearchLibraryCard.Location = new Point(400, 10);
             btnSearchLibraryCard.Name = "btnSearchLibraryCard";
-            btnSearchLibraryCard.Size = new Size(89, 28);
+            btnSearchLibraryCard.Size = new Size(90, 28);
             btnSearchLibraryCard.TabIndex = 8;
             btnSearchLibraryCard.Text = "Tìm kiếm";
             btnSearchLibraryCard.UseVisualStyleBackColor = false;
+            btnSearchLibraryCard.Click += btnSearchLibraryCard_Click;
             // 
             // button1
             // 
@@ -915,24 +942,15 @@
             txtSearchLibraryCard.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtSearchLibraryCard.BorderStyle = BorderStyle.FixedSingle;
             txtSearchLibraryCard.ForeColor = Color.Gray;
-            txtSearchLibraryCard.Location = new Point(90, 15);
+            txtSearchLibraryCard.Location = new Point(20, 12);
             txtSearchLibraryCard.Name = "txtSearchLibraryCard";
             txtSearchLibraryCard.PlaceholderColor = Color.Gray;
             txtSearchLibraryCard.PlaceholderText = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
-            txtSearchLibraryCard.Size = new Size(375, 23);
+            txtSearchLibraryCard.Size = new Size(360, 23);
             txtSearchLibraryCard.TabIndex = 1;
             txtSearchLibraryCard.Text = "Nhập mã thẻ, mã độc giả, ngày tạo ...";
             txtSearchLibraryCard.TextColor = Color.Black;
-            // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label12.Location = new Point(15, 15);
-            label12.Name = "label12";
-            label12.Size = new Size(73, 20);
-            label12.TabIndex = 0;
-            label12.Text = "Tìm kiếm:";
+            txtSearchLibraryCard.KeyDown += txtSearchLibraryCard_KeyDown;
             // 
             // panel6
             // 
@@ -1030,13 +1048,11 @@
         private Button btnAdd;
         private Panel panel5;
         private UICustom.PlaceholderTextBox txtSearchReader;
-        private Label label9;
         private Button btnSearchReader;
         private Panel panel7;
         private Panel panel8;
         private Button button1;
         private UICustom.PlaceholderTextBox txtSearchLibraryCard;
-        private Label label12;
         private Panel panel6;
         private Label label10;
         private Label label11;
@@ -1065,5 +1081,7 @@
         private Button btnSaveCard;
         private DateTimePicker dtpExpiryDate;
         private Label label14;
+        private Button btnReloadReaders;
+        private Button btnReloadCards;
     }
 }

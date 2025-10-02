@@ -27,10 +27,10 @@ namespace UI
             if (SessionManager.IsLoggedIn && lblUserInfo != null)
             {
                 var user = SessionManager.CurrentUser;
-                
+
                 // Chỉ hiển thị tên và vai trò, không có icon và thời gian
                 lblUserInfo.Text = $"{user?.HoTen} ({user?.VaiTro})";
-                
+
                 // Đổi màu theo vai trò
                 lblUserInfo.ForeColor = SessionManager.IsNhanVien ? Color.DarkBlue : Color.DarkGreen;
             }
@@ -49,7 +49,7 @@ namespace UI
             if (SessionManager.IsLoggedIn)
             {
                 UpdateUserInfo();
-                
+
                 // Cập nhật title form
                 this.Text = $"Hệ thống Quản lý Thư viện - {SessionManager.CurrentUser?.HoTen}";
             }
@@ -76,7 +76,7 @@ namespace UI
                 btnBooks.Text = "Xem sách";
                 btnBorrowReturn.Text = "Lịch sử mượn/trả";
             }
-            
+
             // Nhân viên có sẵn full quyền
         }
 
@@ -129,7 +129,7 @@ namespace UI
             // Label quyền hạn
             Label lblPermissions = new Label
             {
-                Text = SessionManager.IsNhanVien ? 
+                Text = SessionManager.IsNhanVien ?
                     "🔓 Bạn có quyền truy cập đầy đủ vào hệ thống:\n" +
                     "• Quản lý độc giả\n" +
                     "• Quản lý sách\n" +
@@ -164,7 +164,7 @@ namespace UI
             }
 
             HighlightActiveButton(sender as Button);
-            LoadEmbeddedForm(new FrmReaders(), "Quản lý độc giả");
+            LoadEmbeddedForm(new FrmReaders(), "Quản lý độc giả và thẻ thư viện");
         }
 
         private void btnBooks_Click(object sender, EventArgs e)
@@ -320,15 +320,15 @@ namespace UI
             // Nếu không phải đang logout và vẫn còn session thì hỏi xác nhận
             if (!isLoggingOut && SessionManager.IsLoggedIn)
             {
-                var result = ModernConfirmDialog.Show("Xác nhận thoát", 
+                var result = ModernConfirmDialog.Show("Xác nhận thoát",
                     "Bạn có muốn đăng xuất khỏi hệ thống?", "Có", "Không");
-                
+
                 if (result == DialogResult.No)
                 {
                     e.Cancel = true;
                     return;
                 }
-                
+
                 // Nếu chọn Yes thì logout
                 SessionManager.Logout();
                 this.DialogResult = DialogResult.Cancel;
