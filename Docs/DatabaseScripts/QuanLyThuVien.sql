@@ -158,7 +158,39 @@ CREATE TABLE DangNhap (
     MaDocGia INT NULL,
     MaNhanVien INT NULL
 );
+-- Bảng Đánh Giá Sách
+CREATE TABLE DanhGiaSach (
+    MaDanhGia INT PRIMARY KEY AUTO_INCREMENT,
+    MaDocGia INT,
+    MaSach INT,
+    SoSao INT CHECK (SoSao BETWEEN 1 AND 5),
+    NhanXet TEXT,
+    NgayDanhGia DATE DEFAULT (CURRENT_DATE),
+    FOREIGN KEY (MaDocGia) REFERENCES DocGia(MaDocGia),
+    FOREIGN KEY (MaSach) REFERENCES Sach(MaSach)
+);
 
+-- Bảng Sự Kiện Thư Viện
+CREATE TABLE SuKienThuVien (
+    MaSuKien INT PRIMARY KEY AUTO_INCREMENT,
+    TenSuKien VARCHAR(200) NOT NULL,
+    MoTa TEXT,
+    NgayBatDau DATE,
+    NgayKetThuc DATE,
+    DiaDiem VARCHAR(200),
+    NguoiPhuTrach INT,
+    FOREIGN KEY (NguoiPhuTrach) REFERENCES NhanVien(MaNhanVien)
+);
+
+-- Bảng Đăng Ký Sự Kiện
+CREATE TABLE DangKySuKien (
+    MaSuKien INT,
+    MaDocGia INT,
+    NgayDangKy DATE DEFAULT (CURRENT_DATE),
+    PRIMARY KEY (MaSuKien, MaDocGia),
+    FOREIGN KEY (MaSuKien) REFERENCES SuKienThuVien(MaSuKien),
+    FOREIGN KEY (MaDocGia) REFERENCES DocGia(MaDocGia)
+);
 
 -- ===================================================
 -- TẠO CÁC RÀNG BUỘC KHÓA NGOẠI
@@ -405,6 +437,28 @@ INSERT INTO DangNhap (TenDangNhap, MatKhau, VaiTro, MaDocGia, MaNhanVien) VALUES
 ('docgia003', '123456', 'DocGia', 3, NULL),
 ('docgia004', '123456', 'DocGia', 4, NULL),
 ('docgia005', '123456', 'DocGia', 5, NULL);
+-- Dữ liệu mẫu cho bảng DanhGiaSach
+INSERT INTO DanhGiaSach (MaDocGia, MaSach, SoSao, NhanXet, NgayDanhGia)
+VALUES
+(1, 2, 5, 'Sách rất hay, nội dung bổ ích và dễ hiểu.', '2025-09-20'),
+(2, 4, 4, 'Trình bày rõ ràng, tuy hơi dài dòng.', '2025-09-22'),
+(3, 1, 3, 'Nội dung ổn nhưng hơi khó đọc.', '2025-09-25'),
+(1, 5, 5, 'Một trong những cuốn sách hay nhất tôi từng đọc.', '2025-09-27');
+-- Dữ liệu mẫu cho bảng SuKienThuVien
+INSERT INTO SuKienThuVien (TenSuKien, MoTa, NgayBatDau, NgayKetThuc, DiaDiem, NguoiPhuTrach)
+VALUES
+('Ngày Hội Đọc Sách', 'Sự kiện khuyến khích thói quen đọc sách cho học sinh, sinh viên.', '2025-10-05', '2025-10-07', 'Hội trường A', 1),
+('Triển Lãm Sách Quý', 'Trưng bày các đầu sách quý hiếm và đặc biệt.', '2025-11-01', '2025-11-03', 'Phòng triển lãm', 2),
+('Hội Thảo Văn Học', 'Gặp gỡ, trao đổi với các nhà văn nổi tiếng.', '2025-12-10', '2025-12-10', 'Phòng họp lớn', 3);
+-- Dữ liệu mẫu cho bảng DangKySuKien
+INSERT INTO DangKySuKien (MaSuKien, MaDocGia, NgayDangKy)
+VALUES
+(1, 1, '2025-10-01'),
+(1, 2, '2025-10-02'),
+(2, 3, '2025-10-25'),
+(3, 1, '2025-12-01'),
+(3, 2, '2025-12-02');
+
 
 -- ===================================================
 -- TRIGGER CẬP NHẬT SỐ LƯỢNG SÁCH
