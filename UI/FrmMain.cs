@@ -359,5 +359,10 @@ namespace UI
             btnBorrowReturn.Enabled = state;
             btnReports.Enabled = state;
         }
+
+        private void pnlContent_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

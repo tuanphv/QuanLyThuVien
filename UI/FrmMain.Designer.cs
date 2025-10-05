@@ -60,8 +60,9 @@
             pnlSidebar.Controls.Add(panel2);
             pnlSidebar.Dock = DockStyle.Left;
             pnlSidebar.Location = new Point(0, 0);
+            pnlSidebar.Margin = new Padding(3, 4, 3, 4);
             pnlSidebar.Name = "pnlSidebar";
-            pnlSidebar.Size = new Size(230, 757);
+            pnlSidebar.Size = new Size(263, 1009);
             pnlSidebar.TabIndex = 0;
             // 
             // btnLogout
@@ -72,9 +73,10 @@
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnLogout.ForeColor = SystemColors.Window;
-            btnLogout.Location = new Point(0, 722);
+            btnLogout.Location = new Point(0, 962);
+            btnLogout.Margin = new Padding(3, 4, 3, 4);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(230, 35);
+            btnLogout.Size = new Size(263, 47);
             btnLogout.TabIndex = 7;
             btnLogout.Text = "Đăng xuất";
             btnLogout.UseVisualStyleBackColor = false;
@@ -87,10 +89,11 @@
             btnReports.FlatStyle = FlatStyle.Flat;
             btnReports.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnReports.ForeColor = Color.FromArgb(52, 73, 94);
-            btnReports.Location = new Point(0, 300);
+            btnReports.Location = new Point(0, 398);
+            btnReports.Margin = new Padding(3, 4, 3, 4);
             btnReports.Name = "btnReports";
-            btnReports.Padding = new Padding(20, 0, 0, 0);
-            btnReports.Size = new Size(230, 40);
+            btnReports.Padding = new Padding(23, 0, 0, 0);
+            btnReports.Size = new Size(263, 53);
             btnReports.TabIndex = 6;
             btnReports.Text = "Báo cáo thống kê";
             btnReports.TextAlign = ContentAlignment.MiddleLeft;
@@ -105,10 +108,11 @@
             btnBorrowReturn.FlatStyle = FlatStyle.Flat;
             btnBorrowReturn.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnBorrowReturn.ForeColor = Color.FromArgb(52, 73, 94);
-            btnBorrowReturn.Location = new Point(0, 260);
+            btnBorrowReturn.Location = new Point(0, 345);
+            btnBorrowReturn.Margin = new Padding(3, 4, 3, 4);
             btnBorrowReturn.Name = "btnBorrowReturn";
-            btnBorrowReturn.Padding = new Padding(20, 0, 0, 0);
-            btnBorrowReturn.Size = new Size(230, 40);
+            btnBorrowReturn.Padding = new Padding(23, 0, 0, 0);
+            btnBorrowReturn.Size = new Size(263, 53);
             btnBorrowReturn.TabIndex = 5;
             btnBorrowReturn.Text = "Mượn - Trả sách";
             btnBorrowReturn.TextAlign = ContentAlignment.MiddleLeft;
@@ -123,10 +127,11 @@
             btnGenrePublisher.FlatStyle = FlatStyle.Flat;
             btnGenrePublisher.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnGenrePublisher.ForeColor = Color.FromArgb(52, 73, 94);
-            btnGenrePublisher.Location = new Point(0, 220);
+            btnGenrePublisher.Location = new Point(0, 292);
+            btnGenrePublisher.Margin = new Padding(3, 4, 3, 4);
             btnGenrePublisher.Name = "btnGenrePublisher";
-            btnGenrePublisher.Padding = new Padding(20, 0, 0, 0);
-            btnGenrePublisher.Size = new Size(230, 40);
+            btnGenrePublisher.Padding = new Padding(23, 0, 0, 0);
+            btnGenrePublisher.Size = new Size(263, 53);
             btnGenrePublisher.TabIndex = 4;
             btnGenrePublisher.Text = "Thể loại - NXB";
             btnGenrePublisher.TextAlign = ContentAlignment.MiddleLeft;
@@ -141,10 +146,11 @@
             btnBooks.FlatStyle = FlatStyle.Flat;
             btnBooks.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnBooks.ForeColor = Color.FromArgb(52, 73, 94);
-            btnBooks.Location = new Point(0, 180);
+            btnBooks.Location = new Point(0, 239);
+            btnBooks.Margin = new Padding(3, 4, 3, 4);
             btnBooks.Name = "btnBooks";
-            btnBooks.Padding = new Padding(20, 0, 0, 0);
-            btnBooks.Size = new Size(230, 40);
+            btnBooks.Padding = new Padding(23, 0, 0, 0);
+            btnBooks.Size = new Size(263, 53);
             btnBooks.TabIndex = 3;
             btnBooks.Text = "Sách";
             btnBooks.TextAlign = ContentAlignment.MiddleLeft;
@@ -159,10 +165,11 @@
             btnReaders.FlatStyle = FlatStyle.Flat;
             btnReaders.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnReaders.ForeColor = Color.FromArgb(52, 73, 94);
-            btnReaders.Location = new Point(0, 140);
+            btnReaders.Location = new Point(0, 186);
+            btnReaders.Margin = new Padding(3, 4, 3, 4);
             btnReaders.Name = "btnReaders";
-            btnReaders.Padding = new Padding(20, 0, 0, 0);
-            btnReaders.Size = new Size(230, 40);
+            btnReaders.Padding = new Padding(23, 0, 0, 0);
+            btnReaders.Size = new Size(263, 53);
             btnReaders.TabIndex = 2;
             btnReaders.Text = "Độc giả";
             btnReaders.TextAlign = ContentAlignment.MiddleLeft;
@@ -177,10 +184,11 @@
             btnOverview.FlatStyle = FlatStyle.Flat;
             btnOverview.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnOverview.ForeColor = Color.FromArgb(52, 73, 94);
-            btnOverview.Location = new Point(0, 100);
+            btnOverview.Location = new Point(0, 133);
+            btnOverview.Margin = new Padding(3, 4, 3, 4);
             btnOverview.Name = "btnOverview";
-            btnOverview.Padding = new Padding(20, 0, 0, 0);
-            btnOverview.Size = new Size(230, 40);
+            btnOverview.Padding = new Padding(23, 0, 0, 0);
+            btnOverview.Size = new Size(263, 53);
             btnOverview.TabIndex = 1;
             btnOverview.Text = "Tổng quan";
             btnOverview.TextAlign = ContentAlignment.MiddleLeft;
@@ -194,8 +202,9 @@
             panel2.Controls.Add(label1);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(230, 100);
+            panel2.Size = new Size(263, 133);
             panel2.TabIndex = 0;
             // 
             // label1
@@ -203,9 +212,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.DarkSlateBlue;
-            label1.Location = new Point(27, 7);
+            label1.Location = new Point(31, 9);
             label1.Name = "label1";
-            label1.Size = new Size(171, 90);
+            label1.Size = new Size(212, 108);
             label1.TabIndex = 0;
             label1.Text = "QUẢN LÝ\r\nTHƯ VIỆN";
             // 
@@ -215,9 +224,10 @@
             panel3.Controls.Add(lblUserInfo);
             panel3.Controls.Add(lblHeaderTitle);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(230, 0);
+            panel3.Location = new Point(263, 0);
+            panel3.Margin = new Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(921, 70);
+            panel3.Size = new Size(1052, 93);
             panel3.TabIndex = 1;
             // 
             // lblUserInfo
@@ -227,9 +237,9 @@
             lblUserInfo.BackColor = Color.Transparent;
             lblUserInfo.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblUserInfo.ForeColor = Color.DarkGreen;
-            lblUserInfo.Location = new Point(701, 19);
+            lblUserInfo.Location = new Point(800, 25);
             lblUserInfo.Name = "lblUserInfo";
-            lblUserInfo.Size = new Size(96, 20);
+            lblUserInfo.Size = new Size(121, 25);
             lblUserInfo.TabIndex = 1;
             lblUserInfo.Text = "Tên (Vai trò)";
             lblUserInfo.TextAlign = ContentAlignment.MiddleRight;
@@ -240,28 +250,31 @@
             lblHeaderTitle.BackColor = Color.Transparent;
             lblHeaderTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblHeaderTitle.ForeColor = Color.DarkSlateBlue;
-            lblHeaderTitle.Location = new Point(20, 9);
+            lblHeaderTitle.Location = new Point(23, 12);
             lblHeaderTitle.Name = "lblHeaderTitle";
-            lblHeaderTitle.Size = new Size(138, 32);
+            lblHeaderTitle.Size = new Size(170, 41);
             lblHeaderTitle.TabIndex = 0;
             lblHeaderTitle.Text = "Tổng quan";
             // 
             // pnlContent
             // 
             pnlContent.Dock = DockStyle.Fill;
-            pnlContent.Location = new Point(230, 70);
+            pnlContent.Location = new Point(263, 93);
+            pnlContent.Margin = new Padding(3, 4, 3, 4);
             pnlContent.Name = "pnlContent";
-            pnlContent.Size = new Size(921, 687);
+            pnlContent.Size = new Size(1052, 916);
             pnlContent.TabIndex = 2;
+            pnlContent.Paint += pnlContent_Paint;
             // 
             // FrmMain
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1151, 757);
+            ClientSize = new Size(1315, 1009);
             Controls.Add(pnlContent);
             Controls.Add(panel3);
             Controls.Add(pnlSidebar);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hệ thống Quản lý Thư viện";
