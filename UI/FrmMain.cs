@@ -189,7 +189,7 @@ namespace UI
         {
             HighlightActiveButton(sender as Button);
             string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả (Chưa phát triển)" : "Lịch sử mượn/trả (Chưa phát triển)";
-            LoadEmbeddedForm(null, title);
+            LoadEmbeddedForm(new FrmLoan(), title);
         }
 
         private void btnReports_Click(object sender, EventArgs e)
@@ -358,7 +358,7 @@ namespace UI
             btnGenrePublisher.Enabled = state;
             btnBorrowReturn.Enabled = state;
             btnReports.Enabled = state;
-        }
+        }        
 
         private void pnlContent_Paint(object sender, PaintEventArgs e)
         {
