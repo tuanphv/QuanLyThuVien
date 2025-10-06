@@ -1,3 +1,5 @@
+using System;
+
 namespace DTO
 {
     public class BookDTO
@@ -12,7 +14,18 @@ namespace DTO
         public int MaNXB { get; set; }
         public int MaTheLoai { get; set; }
 
-        public BookDTO() { }
+        public BookDTO()
+        {
+            MaSach = 0;
+            TieuDe = string.Empty;
+            ISBN = string.Empty;
+            NamXuatBan = 0;
+            GiaSach = 0;
+            SoLuongTong = 0;
+            SoLuongCon = 0;
+            MaNXB = 0;
+            MaTheLoai = 0;
+        }
 
         public BookDTO(int maSach, string tieuDe, string isbn, int namXuatBan,
                        decimal giaSach, int soLuongTong, int soLuongCon,

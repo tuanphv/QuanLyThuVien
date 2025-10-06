@@ -1,19 +1,19 @@
 using DTO;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace DAO
 {
     public class BookDAO
     {
-        // Lấy tất cả sách
-        public List<BookDTO> GetAllBooks()
+        // Lấy danh sách tất cả sách
+        public static List<BookDTO> GetAllBooks()
         {
             List<BookDTO> list = new List<BookDTO>();
-            string query = "SELECT * FROM Sach";
 
+            string query = "SELECT * FROM Sach";
             DataTable dt = DataProvider.Instance.ExecuteQuery(query);
 
             foreach (DataRow row in dt.Rows)
@@ -21,14 +21,14 @@ namespace DAO
                 list.Add(new BookDTO
                 {
                     MaSach = Convert.ToInt32(row["MaSach"]),
-                    TieuDe = row["TieuDe"].ToString() ?? "",
-                    ISBN = row["ISBN"].ToString() ?? "",
-                    NamXuatBan = Convert.ToInt32(row["NamXuatBan"]),
-                    GiaSach = Convert.ToDecimal(row["GiaSach"]),
-                    SoLuongTong = Convert.ToInt32(row["SoLuongTong"]),
-                    SoLuongCon = Convert.ToInt32(row["SoLuongCon"]),
-                    MaNXB = Convert.ToInt32(row["MaNXB"]),
-                    MaTheLoai = Convert.ToInt32(row["MaTheLoai"])
+                    TieuDe = row["TieuDe"]?.ToString() ?? string.Empty,
+                    ISBN = row["ISBN"]?.ToString() ?? string.Empty,
+                    NamXuatBan = row["NamXuatBan"] == DBNull.Value ? 0 : Convert.ToInt32(row["NamXuatBan"]),
+                    GiaSach = row["GiaSach"] == DBNull.Value ? 0 : Convert.ToDecimal(row["GiaSach"]),
+                    SoLuongTong = row["SoLuongTong"] == DBNull.Value ? 0 : Convert.ToInt32(row["SoLuongTong"]),
+                    SoLuongCon = row["SoLuongCon"] == DBNull.Value ? 0 : Convert.ToInt32(row["SoLuongCon"]),
+                    MaNXB = row["MaNXB"] == DBNull.Value ? 0 : Convert.ToInt32(row["MaNXB"]),
+                    MaTheLoai = row["MaTheLoai"] == DBNull.Value ? 0 : Convert.ToInt32(row["MaTheLoai"])
                 });
             }
 
@@ -36,7 +36,7 @@ namespace DAO
         }
 
         // Thêm sách mới
-        public bool AddBook(BookDTO book)
+        public static bool AddBook(BookDTO book)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace DAO
         }
 
         // Cập nhật thông tin sách
-        public bool UpdateBook(BookDTO book)
+        public static bool UpdateBook(BookDTO book)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace DAO
         }
 
         // Xóa sách
-        public bool DeleteBook(int maSach)
+        public static bool DeleteBook(int maSach)
         {
             try
             {

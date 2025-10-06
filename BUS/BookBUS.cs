@@ -1,16 +1,14 @@
 using System.Collections.Generic;
-using DAO;
 using DTO;
+using DAO;
 
 namespace BUS
 {
     public class BookBUS
     {
-        private readonly BookDAO bookDAO = new BookDAO();
-
         public List<BookDTO> GetAllBooks()
         {
-            return bookDAO.GetAllBooks();
+            return BookDAO.GetAllBooks();
         }
 
         public bool AddBook(BookDTO book)
@@ -18,7 +16,7 @@ namespace BUS
             if (string.IsNullOrWhiteSpace(book.TieuDe) || book.GiaSach <= 0)
                 return false;
 
-            return bookDAO.AddBook(book);
+            return BookDAO.AddBook(book);
         }
 
         public bool UpdateBook(BookDTO book)
@@ -26,7 +24,7 @@ namespace BUS
             if (book.MaSach <= 0)
                 return false;
 
-            return bookDAO.UpdateBook(book);
+            return BookDAO.UpdateBook(book);
         }
 
         public bool DeleteBook(int maSach)
@@ -34,7 +32,7 @@ namespace BUS
             if (maSach <= 0)
                 return false;
 
-            return bookDAO.DeleteBook(maSach);
+            return BookDAO.DeleteBook(maSach);
         }
     }
 }
