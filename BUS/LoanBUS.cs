@@ -7,18 +7,20 @@ namespace BUS
 {
     public class LoanBUS
     {
+        private static LoanBUS? instance;
+        public static LoanBUS Instance => instance ??= new LoanBUS();
+
         private readonly LoanDAO loanDAO = new LoanDAO();
 
-        // Lấy danh sách tất cả phiếu mượn
+        private LoanBUS() { }
+
         public List<LoanDTO> GetAllLoans()
         {
             return loanDAO.GetAllLoans();
         }
 
-        // Thêm phiếu mượn mới (kèm chi tiết)
         public bool AddLoan(LoanDTO loan, List<LoanDetailDTO> details, out string message)
         {
-            // 1️⃣ Kiểm tra dữ liệu cơ bản
             if (loan.MaDocGia <= 0)
             {
                 message = "Vui lòng chọn độc giả hợp lệ!";
@@ -37,12 +39,11 @@ namespace BUS
                 return false;
             }
 
-            // Gọi xuống DAO
             bool result = loanDAO.AddLoan(loan, details);
-
-            // Trả thông báo cho UI
             message = result ? "Thêm phiếu mượn thành công!" : "Lỗi khi thêm phiếu mượn!";
             return result;
         }
+        
+
     }
 }
