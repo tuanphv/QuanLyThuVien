@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using LibraryManagement.DTO;
-using LibraryManagement.DAO;
+using DAO;
+using DTO;
 
-namespace LibraryManagement.BUS
+namespace BUS
 {
     public class BookBUS
     {
-        private BookDAO bookDAO = new BookDAO();
+        private readonly BookDAO bookDAO = new BookDAO();
 
         public List<BookDTO> GetAllBooks()
         {
@@ -17,18 +17,23 @@ namespace LibraryManagement.BUS
         {
             if (string.IsNullOrWhiteSpace(book.TieuDe) || book.GiaSach <= 0)
                 return false;
-            return bookDAO.InsertBook(book);
+
+            return bookDAO.AddBook(book);
         }
 
         public bool UpdateBook(BookDTO book)
         {
             if (book.MaSach <= 0)
                 return false;
+
             return bookDAO.UpdateBook(book);
         }
 
         public bool DeleteBook(int maSach)
         {
+            if (maSach <= 0)
+                return false;
+
             return bookDAO.DeleteBook(maSach);
         }
     }

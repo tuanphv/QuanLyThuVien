@@ -1,4 +1,4 @@
-namespace LibraryManagement.DTO
+namespace DTO
 {
     public class BookDTO
     {

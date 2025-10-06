@@ -1,100 +1,121 @@
+using DTO;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using LibraryManagement.DTO;
 
-namespace LibraryManagement.DAO
+namespace DAO
 {
     public class BookDAO
     {
-        private readonly string connectionString = "Data Source=.;Initial Catalog=QLTV;Integrated Security=True";
-
+        // Lấy tất cả sách
         public List<BookDTO> GetAllBooks()
         {
-            List<BookDTO> books = new List<BookDTO>();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "SELECT * FROM Sach";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+            List<BookDTO> list = new List<BookDTO>();
+            string query = "SELECT * FROM Sach";
 
-                while (reader.Read())
+            DataTable dt = DataProvider.Instance.ExecuteQuery(query);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new BookDTO
                 {
-                    BookDTO book = new BookDTO
-                    {
-                        MaSach = (int)reader["MaSach"],
-                        TieuDe = reader["TieuDe"].ToString(),
-                        ISBN = reader["ISBN"].ToString(),
-                        NamXuatBan = (int)reader["NamXuatBan"],
-                        GiaSach = (decimal)reader["GiaSach"],
-                        SoLuongTong = (int)reader["SoLuongTong"],
-                        SoLuongCon = (int)reader["SoLuongCon"],
-                        MaNXB = (int)reader["MaNXB"],
-                        MaTheLoai = (int)reader["MaTheLoai"]
-                    };
-                    books.Add(book);
-                }
+                    MaSach = Convert.ToInt32(row["MaSach"]),
+                    TieuDe = row["TieuDe"].ToString() ?? "",
+                    ISBN = row["ISBN"].ToString() ?? "",
+                    NamXuatBan = Convert.ToInt32(row["NamXuatBan"]),
+                    GiaSach = Convert.ToDecimal(row["GiaSach"]),
+                    SoLuongTong = Convert.ToInt32(row["SoLuongTong"]),
+                    SoLuongCon = Convert.ToInt32(row["SoLuongCon"]),
+                    MaNXB = Convert.ToInt32(row["MaNXB"]),
+                    MaTheLoai = Convert.ToInt32(row["MaTheLoai"])
+                });
             }
-            return books;
+
+            return list;
         }
 
-        public bool InsertBook(BookDTO book)
+        // Thêm sách mới
+        public bool AddBook(BookDTO book)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                conn.Open();
-                string query = @"INSERT INTO Sach (TieuDe, ISBN, NamXuatBan, GiaSach, SoLuongTong, SoLuongCon, MaNXB, MaTheLoai)
-                                 VALUES (@TieuDe, @ISBN, @NamXuatBan, @GiaSach, @SoLuongTong, @SoLuongCon, @MaNXB, @MaTheLoai)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@TieuDe", book.TieuDe);
-                cmd.Parameters.AddWithValue("@ISBN", book.ISBN);
-                cmd.Parameters.AddWithValue("@NamXuatBan", book.NamXuatBan);
-                cmd.Parameters.AddWithValue("@GiaSach", book.GiaSach);
-                cmd.Parameters.AddWithValue("@SoLuongTong", book.SoLuongTong);
-                cmd.Parameters.AddWithValue("@SoLuongCon", book.SoLuongCon);
-                cmd.Parameters.AddWithValue("@MaNXB", book.MaNXB);
-                cmd.Parameters.AddWithValue("@MaTheLoai", book.MaTheLoai);
+                string query = @"
+                    INSERT INTO Sach (TieuDe, ISBN, NamXuatBan, GiaSach, SoLuongTong, SoLuongCon, MaNXB, MaTheLoai)
+                    VALUES (@TieuDe, @ISBN, @NamXuatBan, @GiaSach, @SoLuongTong, @SoLuongCon, @MaNXB, @MaTheLoai)";
 
-                return cmd.ExecuteNonQuery() > 0;
+                int result = DataProvider.Instance.ExecuteNonQuery(query,
+                    new MySqlParameter("@TieuDe", book.TieuDe),
+                    new MySqlParameter("@ISBN", book.ISBN),
+                    new MySqlParameter("@NamXuatBan", book.NamXuatBan),
+                    new MySqlParameter("@GiaSach", book.GiaSach),
+                    new MySqlParameter("@SoLuongTong", book.SoLuongTong),
+                    new MySqlParameter("@SoLuongCon", book.SoLuongCon),
+                    new MySqlParameter("@MaNXB", book.MaNXB),
+                    new MySqlParameter("@MaTheLoai", book.MaTheLoai)
+                );
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi thêm sách: " + ex.Message);
+                return false;
             }
         }
 
+        // Cập nhật thông tin sách
         public bool UpdateBook(BookDTO book)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                conn.Open();
-                string query = @"UPDATE Sach SET 
-                                TieuDe=@TieuDe, ISBN=@ISBN, NamXuatBan=@NamXuatBan, GiaSach=@GiaSach,
-                                SoLuongTong=@SoLuongTong, SoLuongCon=@SoLuongCon, 
-                                MaNXB=@MaNXB, MaTheLoai=@MaTheLoai
-                                WHERE MaSach=@MaSach";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaSach", book.MaSach);
-                cmd.Parameters.AddWithValue("@TieuDe", book.TieuDe);
-                cmd.Parameters.AddWithValue("@ISBN", book.ISBN);
-                cmd.Parameters.AddWithValue("@NamXuatBan", book.NamXuatBan);
-                cmd.Parameters.AddWithValue("@GiaSach", book.GiaSach);
-                cmd.Parameters.AddWithValue("@SoLuongTong", book.SoLuongTong);
-                cmd.Parameters.AddWithValue("@SoLuongCon", book.SoLuongCon);
-                cmd.Parameters.AddWithValue("@MaNXB", book.MaNXB);
-                cmd.Parameters.AddWithValue("@MaTheLoai", book.MaTheLoai);
+                string query = @"
+                    UPDATE Sach SET
+                        TieuDe = @TieuDe,
+                        ISBN = @ISBN,
+                        NamXuatBan = @NamXuatBan,
+                        GiaSach = @GiaSach,
+                        SoLuongTong = @SoLuongTong,
+                        SoLuongCon = @SoLuongCon,
+                        MaNXB = @MaNXB,
+                        MaTheLoai = @MaTheLoai
+                    WHERE MaSach = @MaSach";
 
-                return cmd.ExecuteNonQuery() > 0;
+                int result = DataProvider.Instance.ExecuteNonQuery(query,
+                    new MySqlParameter("@MaSach", book.MaSach),
+                    new MySqlParameter("@TieuDe", book.TieuDe),
+                    new MySqlParameter("@ISBN", book.ISBN),
+                    new MySqlParameter("@NamXuatBan", book.NamXuatBan),
+                    new MySqlParameter("@GiaSach", book.GiaSach),
+                    new MySqlParameter("@SoLuongTong", book.SoLuongTong),
+                    new MySqlParameter("@SoLuongCon", book.SoLuongCon),
+                    new MySqlParameter("@MaNXB", book.MaNXB),
+                    new MySqlParameter("@MaTheLoai", book.MaTheLoai)
+                );
+
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi cập nhật sách: " + ex.Message);
+                return false;
             }
         }
 
+        // Xóa sách
         public bool DeleteBook(int maSach)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                conn.Open();
-                string query = "DELETE FROM Sach WHERE MaSach=@MaSach";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaSach", maSach);
-                return cmd.ExecuteNonQuery() > 0;
+                string query = "DELETE FROM Sach WHERE MaSach = @MaSach";
+                int result = DataProvider.Instance.ExecuteNonQuery(query,
+                    new MySqlParameter("@MaSach", maSach));
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi xóa sách: " + ex.Message);
+                return false;
             }
         }
     }
