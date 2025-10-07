@@ -73,7 +73,6 @@
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.GridColor = Color.White;
             dgvLoanList.Location = new Point(0, 0);
-            dgvLoanList.Margin = new Padding(3, 2, 3, 2);
             dgvLoanList.MultiSelect = false;
             dgvLoanList.Name = "dgvLoanList";
             dgvLoanList.ReadOnly = true;
@@ -82,7 +81,7 @@
             dgvLoanList.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvLoanList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLoanList.ShowEditingIcon = false;
-            dgvLoanList.Size = new Size(528, 412);
+            dgvLoanList.Size = new Size(603, 549);
             dgvLoanList.TabIndex = 0;
             // 
             // panel1
@@ -101,20 +100,22 @@
             panel1.Controls.Add(lblBook);
             panel1.Controls.Add(lblReader);
             panel1.Dock = DockStyle.Right;
-            panel1.Location = new Point(528, 0);
-            panel1.Margin = new Padding(3, 2, 3, 2);
+            panel1.Location = new Point(603, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(306, 412);
+            panel1.Size = new Size(350, 549);
             panel1.TabIndex = 1;
             // 
             // btnReturnBook
             // 
             btnReturnBook.BackColor = Color.FromArgb(255, 128, 0);
+            btnReturnBook.Cursor = Cursors.Hand;
+            btnReturnBook.FlatAppearance.BorderSize = 0;
+            btnReturnBook.FlatStyle = FlatStyle.Flat;
             btnReturnBook.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnReturnBook.Location = new Point(178, 214);
-            btnReturnBook.Margin = new Padding(3, 2, 3, 2);
+            btnReturnBook.ForeColor = Color.White;
+            btnReturnBook.Location = new Point(203, 285);
             btnReturnBook.Name = "btnReturnBook";
-            btnReturnBook.Size = new Size(100, 32);
+            btnReturnBook.Size = new Size(114, 43);
             btnReturnBook.TabIndex = 14;
             btnReturnBook.Text = "Trả sách";
             btnReturnBook.UseVisualStyleBackColor = false;
@@ -123,11 +124,14 @@
             // btnCreateLoan
             // 
             btnCreateLoan.BackColor = Color.FromArgb(0, 192, 0);
+            btnCreateLoan.Cursor = Cursors.Hand;
+            btnCreateLoan.FlatAppearance.BorderSize = 0;
+            btnCreateLoan.FlatStyle = FlatStyle.Flat;
             btnCreateLoan.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnCreateLoan.Location = new Point(28, 214);
-            btnCreateLoan.Margin = new Padding(3, 2, 3, 2);
+            btnCreateLoan.ForeColor = Color.White;
+            btnCreateLoan.Location = new Point(32, 285);
             btnCreateLoan.Name = "btnCreateLoan";
-            btnCreateLoan.Size = new Size(100, 32);
+            btnCreateLoan.Size = new Size(114, 43);
             btnCreateLoan.TabIndex = 13;
             btnCreateLoan.Text = "Tạo Phiếu";
             btnCreateLoan.UseVisualStyleBackColor = false;
@@ -135,12 +139,11 @@
             // 
             // numQuantity
             // 
-            numQuantity.Location = new Point(108, 152);
-            numQuantity.Margin = new Padding(3, 2, 3, 2);
+            numQuantity.Location = new Point(123, 203);
             numQuantity.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             numQuantity.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numQuantity.Name = "numQuantity";
-            numQuantity.Size = new Size(65, 23);
+            numQuantity.Size = new Size(74, 27);
             numQuantity.TabIndex = 11;
             numQuantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -148,28 +151,26 @@
             // 
             dtDueDate.CustomFormat = "dd/MM/yyyy";
             dtDueDate.Format = DateTimePickerFormat.Short;
-            dtDueDate.Location = new Point(108, 119);
-            dtDueDate.Margin = new Padding(3, 2, 3, 2);
+            dtDueDate.Location = new Point(123, 159);
             dtDueDate.Name = "dtDueDate";
-            dtDueDate.Size = new Size(134, 23);
+            dtDueDate.Size = new Size(153, 27);
             dtDueDate.TabIndex = 10;
             // 
             // dtBorrowDate
             // 
             dtBorrowDate.CustomFormat = "dd/MM/yyyy";
             dtBorrowDate.Format = DateTimePickerFormat.Short;
-            dtBorrowDate.Location = new Point(108, 88);
-            dtBorrowDate.Margin = new Padding(3, 2, 3, 2);
+            dtBorrowDate.Location = new Point(123, 117);
             dtBorrowDate.Name = "dtBorrowDate";
-            dtBorrowDate.Size = new Size(134, 23);
+            dtBorrowDate.Size = new Size(153, 27);
             dtBorrowDate.TabIndex = 9;
             // 
             // lblQuantity
             // 
             lblQuantity.AutoSize = true;
-            lblQuantity.Location = new Point(17, 157);
+            lblQuantity.Location = new Point(19, 209);
             lblQuantity.Name = "lblQuantity";
-            lblQuantity.Size = new Size(57, 15);
+            lblQuantity.Size = new Size(72, 20);
             lblQuantity.TabIndex = 8;
             lblQuantity.Text = "Số lượng:";
             // 
@@ -177,28 +178,26 @@
             // 
             cbBook.DropDownStyle = ComboBoxStyle.DropDownList;
             cbBook.FormattingEnabled = true;
-            cbBook.Location = new Point(108, 56);
-            cbBook.Margin = new Padding(3, 2, 3, 2);
+            cbBook.Location = new Point(123, 75);
             cbBook.Name = "cbBook";
-            cbBook.Size = new Size(163, 23);
+            cbBook.Size = new Size(186, 28);
             cbBook.TabIndex = 7;
             // 
             // cbReader
             // 
             cbReader.DropDownStyle = ComboBoxStyle.DropDownList;
             cbReader.FormattingEnabled = true;
-            cbReader.Location = new Point(108, 22);
-            cbReader.Margin = new Padding(3, 2, 3, 2);
+            cbReader.Location = new Point(123, 29);
             cbReader.Name = "cbReader";
-            cbReader.Size = new Size(163, 23);
+            cbReader.Size = new Size(186, 28);
             cbReader.TabIndex = 6;
             // 
             // lblDueDate
             // 
             lblDueDate.AutoSize = true;
-            lblDueDate.Location = new Point(17, 124);
+            lblDueDate.Location = new Point(19, 165);
             lblDueDate.Name = "lblDueDate";
-            lblDueDate.Size = new Size(56, 15);
+            lblDueDate.Size = new Size(71, 20);
             lblDueDate.TabIndex = 5;
             lblDueDate.Text = "Ngày Trả:";
             lblDueDate.Click += lblDueDate_Click;
@@ -206,27 +205,27 @@
             // lblBorrowDate
             // 
             lblBorrowDate.AutoSize = true;
-            lblBorrowDate.Location = new Point(17, 93);
+            lblBorrowDate.Location = new Point(19, 124);
             lblBorrowDate.Name = "lblBorrowDate";
-            lblBorrowDate.Size = new Size(73, 15);
+            lblBorrowDate.Size = new Size(90, 20);
             lblBorrowDate.TabIndex = 4;
             lblBorrowDate.Text = "Ngày mượn:";
             // 
             // lblBook
             // 
             lblBook.AutoSize = true;
-            lblBook.Location = new Point(15, 62);
+            lblBook.Location = new Point(17, 83);
             lblBook.Name = "lblBook";
-            lblBook.Size = new Size(35, 15);
+            lblBook.Size = new Size(43, 20);
             lblBook.TabIndex = 3;
             lblBook.Text = "Sách:";
             // 
             // lblReader
             // 
             lblReader.AutoSize = true;
-            lblReader.Location = new Point(15, 28);
+            lblReader.Location = new Point(17, 37);
             lblReader.Name = "lblReader";
-            lblReader.Size = new Size(50, 15);
+            lblReader.Size = new Size(64, 20);
             lblReader.TabIndex = 2;
             lblReader.Text = "Độc giả:";
             // 
@@ -236,8 +235,9 @@
             panel2.Controls.Add(panel1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 0);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(834, 412);
+            panel2.Size = new Size(953, 549);
             panel2.TabIndex = 2;
             // 
             // panel3
@@ -245,18 +245,18 @@
             panel3.Controls.Add(dgvLoanList);
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 0);
+            panel3.Margin = new Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(528, 412);
+            panel3.Size = new Size(603, 549);
             panel3.TabIndex = 2;
             // 
             // FrmLoan
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(834, 412);
+            ClientSize = new Size(953, 549);
             Controls.Add(panel2);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(3, 2, 3, 2);
             Name = "FrmLoan";
             Text = "FrmLoan";
             ((System.ComponentModel.ISupportInitialize)dgvLoanList).EndInit();

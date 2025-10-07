@@ -97,6 +97,31 @@ namespace DAO
             return list;
         }
 
+        public LoanDTO GetLoanById(int maPhieuMuon)
+        {
+            string query = "SELECT * FROM PhieuMuon WHERE MaPhieuMuon = @id";
+            var dt = DataProvider.Instance.ExecuteQuery(query, new MySql.Data.MySqlClient.MySqlParameter("@id", maPhieuMuon));
+            if (dt.Rows.Count == 0) return null;
+
+            var row = dt.Rows[0];
+            return new LoanDTO
+            {
+                MaPhieuMuon = Convert.ToInt32(row["MaPhieuMuon"]),
+                MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
+                NgayMuon = Convert.ToDateTime(row["NgayMuon"]),
+                HanTra = Convert.ToDateTime(row["HanTra"]),
+                TrangThai = row["TrangThai"].ToString() ?? ""
+            };
+        }
+
+        public void UpdateLoanStatus(int maPhieuMuon, string trangThai)
+        {
+            string query = "UPDATE PhieuMuon SET TrangThai = @trangThai WHERE MaPhieuMuon = @id";
+            DataProvider.Instance.ExecuteNonQuery(query,
+                new MySql.Data.MySqlClient.MySqlParameter("@trangThai", trangThai),
+                new MySql.Data.MySqlClient.MySqlParameter("@id", maPhieuMuon));
+        }
 
     }
 }
