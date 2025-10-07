@@ -19,34 +19,12 @@ namespace UI
         public FrmLoan()
         {
             InitializeComponent();
-            this.TopLevel = false;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.Dock = DockStyle.Fill;
             this.Load += FrmLoan_Load;
         }
         private void FrmLoan_Load(object sender, EventArgs e)
         {
             LoadComboBoxData();
             LoadLoanList();
-            LoadUnreturnedLoans();
-        }
-
-        private void LoadUnreturnedLoans()
-        {
-            var unreturnedLoans = loanBUS.GetUnreturnedLoans();
-            dgvLoanList.DataSource = unreturnedLoans;
-
-            // Cấu hình hiển thị DataGridView
-            //dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            //dgvLoanList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            //dgvLoanList.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-
-            // Đổi tên cột (nếu cần)
-            dgvLoanList.Columns["MaPhieuMuon"].HeaderText = "Mã Phiếu Mượn";
-            dgvLoanList.Columns["MaDocGia"].HeaderText = "Mã Độc Giả";
-            dgvLoanList.Columns["NgayMuon"].HeaderText = "Ngày Mượn";
-            dgvLoanList.Columns["HanTra"].HeaderText = "Hạn Trả";
-            dgvLoanList.Columns["TrangThai"].HeaderText = "Trạng Thái";
         }
 
         private void LoadComboBoxData()
@@ -66,9 +44,16 @@ namespace UI
 
         private void LoadLoanList()
         {
-            var loans = LoanBUS.Instance.GetAllLoans();
+            var loans = loanBUS.GetAllLoans();
+            dgvLoanList.DataSource = null;
             dgvLoanList.DataSource = loans;
-            dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Đổi tên cột (nếu cần)
+            dgvLoanList.Columns["MaPhieuMuon"].HeaderText = "Mã Phiếu Mượn";
+            dgvLoanList.Columns["MaDocGia"].HeaderText = "Mã Độc Giả";
+            dgvLoanList.Columns["NgayMuon"].HeaderText = "Ngày Mượn";
+            dgvLoanList.Columns["HanTra"].HeaderText = "Hạn Trả";
+            dgvLoanList.Columns["TrangThai"].HeaderText = "Trạng Thái";
         }
 
         private void lblDueDate_Click(object sender, EventArgs e)
@@ -115,7 +100,7 @@ namespace UI
             {
                 MessageBox.Show("Lỗi khi tạo phiếu mượn: " + ex.Message);
             }
-        }        
+        }
 
         private void btnReturnBook_Click_1(object sender, EventArgs e)
         {
