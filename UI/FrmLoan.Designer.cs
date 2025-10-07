@@ -49,16 +49,18 @@
             // 
             // dgvLoanList
             // 
+            dgvLoanList.BackgroundColor = Color.White;
             dgvLoanList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.Location = new Point(0, 0);
             dgvLoanList.Name = "dgvLoanList";
             dgvLoanList.RowHeadersWidth = 51;
-            dgvLoanList.Size = new Size(597, 549);
+            dgvLoanList.Size = new Size(953, 549);
             dgvLoanList.TabIndex = 0;
             // 
             // panel1
             // 
+            panel1.BackColor = Color.Silver;
             panel1.Controls.Add(btnReturnBook);
             panel1.Controls.Add(btnCreateLoan);
             panel1.Controls.Add(numQuantity);
@@ -87,6 +89,7 @@
             btnReturnBook.TabIndex = 14;
             btnReturnBook.Text = "Trả sách";
             btnReturnBook.UseVisualStyleBackColor = false;
+            btnReturnBook.Click += btnReturnBook_Click_1;
             // 
             // btnCreateLoan
             // 

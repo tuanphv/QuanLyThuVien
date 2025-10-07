@@ -43,7 +43,11 @@ namespace BUS
             message = result ? "Thêm phiếu mượn thành công!" : "Lỗi khi thêm phiếu mượn!";
             return result;
         }
-        
+
+        public List<LoanDTO> GetUnreturnedLoans()
+        {
+            return loanDAO.GetUnreturnedLoans();
+        }
 
     }
 }

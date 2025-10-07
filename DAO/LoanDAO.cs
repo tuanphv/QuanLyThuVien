@@ -76,7 +76,27 @@ namespace DAO
             return list;
         }
 
-        
+        public List<LoanDTO> GetUnreturnedLoans()
+        {
+            var list = new List<LoanDTO>();
+            string query = "SELECT * FROM PhieuMuon WHERE TrangThai = 'Đang mượn' ORDER BY NgayMuon DESC";
+            DataTable dt = DataProvider.Instance.ExecuteQuery(query);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new LoanDTO
+                {
+                    MaPhieuMuon = Convert.ToInt32(row["MaPhieuMuon"]),
+                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
+                    NgayMuon = Convert.ToDateTime(row["NgayMuon"]),
+                    HanTra = Convert.ToDateTime(row["HanTra"]),
+                    TrangThai = row["TrangThai"].ToString() ?? ""
+                });
+            }
+            return list;
+        }
+
 
     }
 }
