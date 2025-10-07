@@ -58,10 +58,13 @@ namespace BUS
             // Nếu trả trễ
             if (ret.NgayTra > loan.HanTra)
             {
-                int soNgayTre = (ret.NgayTra - loan.HanTra).Days;
-                soTien += soNgayTre * 5000; // ví dụ 5000đ/ngày
-                lyDo += $"Trả trễ {soNgayTre} ngày. ";
-                hasFine = true;
+                int soNgayTre = (ret.NgayTra.Date - loan.HanTra.Date).Days;
+                if (soNgayTre > 0)
+                {
+                    soTien += soNgayTre * 5000; // ví dụ: 5k/ngày trễ
+                    lyDo += $"Trả trễ {soNgayTre} ngày. ";
+                    hasFine = true;
+                }
             }
 
             // Nếu sách hư hỏng

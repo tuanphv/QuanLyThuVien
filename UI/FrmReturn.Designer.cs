@@ -121,7 +121,6 @@
             numFine.Name = "numFine";
             numFine.Size = new Size(150, 27);
             numFine.TabIndex = 7;
-            numFine.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // txtBookCondition
             // 
