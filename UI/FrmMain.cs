@@ -189,7 +189,7 @@ namespace UI
         {
             HighlightActiveButton(sender as Button);
             string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả (Chưa phát triển)" : "Lịch sử mượn/trả (Chưa phát triển)";
-            LoadEmbeddedForm(new FrmLoan(), title);
+            LoadEmbeddedForm(new FrmBorrowReturn(), title);
         }
 
         private void btnReports_Click(object sender, EventArgs e)

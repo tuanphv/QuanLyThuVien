@@ -15,5 +15,15 @@ namespace BUS
         {
             return fineDAO.AddFine(fine);
         }
+        public List<FineDTO> GetAllFines()
+        {
+            return fineDAO.GetAllFines();
+        }
+
+        public List<FineDTO> SearchFinesByReader(string keyword)
+        {
+            return fineDAO.SearchFinesByReader(keyword);
+        }
+
     }
 }

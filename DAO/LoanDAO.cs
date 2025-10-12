@@ -122,6 +122,42 @@ namespace DAO
                 new MySql.Data.MySqlClient.MySqlParameter("@trangThai", trangThai),
                 new MySql.Data.MySqlClient.MySqlParameter("@id", maPhieuMuon));
         }
+        public List<LoanDTO> SearchLoans(string keyword)
+        {
+            string query = @"
+            SELECT DISTINCT pm.*
+            FROM phieumuon pm
+            JOIN docgia dg ON pm.MaDocGia = dg.MaDocGia
+            JOIN chitietmuon ctm ON pm.MaPhieuMuon = ctm.MaPhieuMuon
+            JOIN sach s ON ctm.MaSach = s.MaSach
+            WHERE 
+            CAST(pm.MaPhieuMuon AS CHAR) LIKE @kw OR            
+            pm.TrangThai LIKE @kw OR
+            dg.HoTen LIKE @kw OR
+            s.TieuDe LIKE @kw;";
 
+            MySqlParameter[] parameters = {
+        new MySqlParameter("@kw", "%" + keyword + "%")
+    };
+
+            DataTable dt = DataProvider.Instance.ExecuteQuery(query, parameters);
+
+            List<LoanDTO> loans = new List<LoanDTO>();
+            foreach (DataRow row in dt.Rows)
+            {
+                LoanDTO loan = new LoanDTO
+                {
+                    MaPhieuMuon = Convert.ToInt32(row["MaPhieuMuon"]),
+                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
+                    NgayMuon = Convert.ToDateTime(row["NgayMuon"]),
+                    HanTra = Convert.ToDateTime(row["HanTra"]),
+                    TrangThai = row["TrangThai"].ToString()
+                };
+                loans.Add(loan);
+            }
+
+            return loans;
+        }
     }
 }

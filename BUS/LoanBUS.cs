@@ -48,6 +48,13 @@ namespace BUS
         {
             return loanDAO.GetUnreturnedLoans();
         }
+        public List<LoanDTO> SearchLoans(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return loanDAO.GetAllLoans(); // nếu ô tìm kiếm trống thì trả về toàn bộ danh sách
+
+            return loanDAO.SearchLoans(keyword);
+        }
 
     }
 }
