@@ -45,11 +45,11 @@ namespace DAO
         public List<FineDTO> SearchFinesByReader(string keyword)
         {
             string query = @"
-        SELECT pp.* 
-        FROM PhieuPhat pp
-        JOIN DocGia dg ON pp.MaDocGia = dg.MaDocGia
-        WHERE dg.HoTen LIKE CONCAT('%', @keyword, '%')
-        ORDER BY NgayLap DESC";
+                SELECT pp.* 
+                FROM PhieuPhat pp
+                JOIN DocGia dg ON pp.MaDocGia = dg.MaDocGia
+                WHERE dg.HoTen LIKE CONCAT('%', @keyword, '%')
+                ORDER BY NgayLap DESC";
 
             var dt = DataProvider.Instance.ExecuteQuery(query,
                 new MySql.Data.MySqlClient.MySqlParameter("@keyword", keyword));

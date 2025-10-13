@@ -17,7 +17,8 @@ namespace UI
     {
         private readonly LoanBUS loanBUS = LoanBUS.Instance;
         private readonly BookBUS bookBUS = new BookBUS();
-        private readonly ReturnBUS returnBUS = new ReturnBUS();
+        private readonly ReturnBUS returnBUS = new ReturnBUS(); 
+        private readonly FineBUS fineBUS = new FineBUS();
 
         public FrmBorrowReturn()
         {
@@ -29,6 +30,7 @@ namespace UI
             LoadComboBoxes();
             LoadLoanList();
             LoadReturnTab();
+            LoadFineTab();
         }
         #region tab Borrow
         //LOAD DỮ LIỆU
@@ -176,8 +178,7 @@ namespace UI
                 MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
-
+        // TÌM KIẾM PHIẾU TRẢ
         private void btnSearchReturn_Click(object sender, EventArgs e)
         {
             string keyword = txtSearchReturn.Text.Trim();
@@ -203,6 +204,54 @@ namespace UI
         {
             txtSearchReturn.Clear();
             LoadReturnTab();
+        }
+        #endregion
+        //#region tab Fine
+        private void LoadFineTab()
+        {
+            var fines = fineBUS.GetAllFines();
+            dgvFineList.DataSource = fines;
+
+            // Cấu hình hiển thị
+            dgvFineList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvFineList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgvFineList.ReadOnly = true;
+            dgvFineList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvFineList.RowHeadersVisible = false;
+
+            // Đặt tên cột
+            dgvFineList.Columns["MaPhieuPhat"].HeaderText = "Mã Phiếu Phạt";
+            dgvFineList.Columns["MaDocGia"].HeaderText = "Mã Độc Giả";
+            dgvFineList.Columns["LyDo"].HeaderText = "Lý Do";
+            dgvFineList.Columns["SoTien"].HeaderText = "Số Tiền (VNĐ)";
+            dgvFineList.Columns["NgayLap"].HeaderText = "Ngày Lập";
+        }
+
+        private void btnSearchFine_Click(object sender, EventArgs e)
+        {
+            string keyword = txtSearchFine.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var result = fineBUS.SearchFinesByReader(keyword);
+            dgvFineList.DataSource = result;
+
+            if (result.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy kết quả phù hợp.", "Kết quả tìm kiếm",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnReloadFine_Click(object sender, EventArgs e)
+        {
+            txtSearchFine.Clear();
+            LoadFineTab();
         }
     }
 }

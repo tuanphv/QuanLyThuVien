@@ -392,7 +392,6 @@
             txtSearchLoan.PlaceholderText = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.Size = new Size(411, 27);
             txtSearchLoan.TabIndex = 4;
-            txtSearchLoan.Text = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.TextColor = Color.Black;
             txtSearchLoan.Click += btnSearchLoan_Click;
             // 
@@ -663,7 +662,6 @@
             txtSearchReturn.PlaceholderText = "Nhập tên, email, số điện thoại ...";
             txtSearchReturn.Size = new Size(411, 27);
             txtSearchReturn.TabIndex = 4;
-            txtSearchReturn.Text = "Nhập tên, email, số điện thoại ...";
             txtSearchReturn.TextColor = Color.Black;
             // 
             // panel6
@@ -777,7 +775,6 @@
             txtSearchFine.PlaceholderText = "Nhập tên, email, số điện thoại ...";
             txtSearchFine.Size = new Size(411, 27);
             txtSearchFine.TabIndex = 4;
-            txtSearchFine.Text = "Nhập tên, email, số điện thoại ...";
             txtSearchFine.TextColor = Color.Black;
             // 
             // panel10
