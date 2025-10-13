@@ -17,20 +17,20 @@ namespace UI
     {
         private readonly LoanBUS loanBUS = LoanBUS.Instance;
         private readonly BookBUS bookBUS = new BookBUS();
+        private readonly ReturnBUS returnBUS = new ReturnBUS();
 
         public FrmBorrowReturn()
         {
             InitializeComponent();
             this.Load += FrmBorrowReturn_Load;
         }
-
-        #region tab Borrow
         private void FrmBorrowReturn_Load(object sender, EventArgs e)
         {
             LoadComboBoxes();
             LoadLoanList();
+            LoadReturnTab();
         }
-
+        #region tab Borrow
         //LOAD DỮ LIỆU
         private void LoadComboBoxes()
         {
@@ -124,8 +124,85 @@ namespace UI
             {
                 MessageBox.Show("Lỗi khi tạo phiếu mượn: " + ex.Message);
             }
-            #endregion
+        }
+        #endregion
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #region tab Return
+        private void LoadReturnTab()
+        {
+            // Hiển thị danh sách phiếu mượn chưa trả
+            dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();
+            dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Hiển thị lịch sử phiếu trả
+            dgvReturnHistory.DataSource = returnBUS.GetAllReturns();
+            dgvReturnHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // ComboBox chọn phiếu mượn
+            cbLoan.DataSource = loanBUS.GetUnreturnedLoans();
+            cbLoan.DisplayMember = "MaPhieuMuon";
+            cbLoan.ValueMember = "MaPhieuMuon";
+        }
+
+        private void btnReturn_Click(object sender, EventArgs e)
+        {
+            if (cbLoan.SelectedValue == null)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu mượn!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var ret = new ReturnDTO
+            {
+                MaPhieuMuon = Convert.ToInt32(cbLoan.SelectedValue),
+                NgayTra = dtReturnDate.Value,
+                TinhTrangSach = txtBookCondition.Text,
+                TienPhat = numFine.Value
+            };
+
+            if (returnBUS.AddReturn(ret, out string msg))
+            {
+                MessageBox.Show(msg, "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadReturnTab();
+            }
+            else
+            {
+                MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        private void btnSearchReturn_Click(object sender, EventArgs e)
+        {
+            string keyword = txtSearchReturn.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var result = returnBUS.SearchReturns(keyword);
+            dgvReturnHistory.DataSource = result;
+
+            if (result.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy kết quả phù hợp.", "Kết quả tìm kiếm",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnReloadReturn_Click(object sender, EventArgs e)
+        {
+            txtSearchReturn.Clear();
+            LoadReturnTab();
         }
     }
 }

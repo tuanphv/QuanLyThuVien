@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             tabBorrowReturn = new TabControl();
             tabPage1 = new TabPage();
             panel4 = new Panel();
@@ -55,7 +55,10 @@
             panel1 = new Panel();
             lblTitle = new Label();
             tabPage2 = new TabPage();
+            panel9 = new Panel();
+            dgvReturnHistory = new DataGridView();
             panel8 = new Panel();
+            panel13 = new Panel();
             btnReturn = new Button();
             numFine = new NumericUpDown();
             txtBookCondition = new TextBox();
@@ -65,7 +68,7 @@
             lblCondition = new Label();
             lblReturnDate = new Label();
             lblLoan = new Label();
-            panel9 = new Panel();
+            panel14 = new Panel();
             dgvReturnList = new DataGridView();
             panel7 = new Panel();
             btnReloadReturn = new Button();
@@ -92,9 +95,12 @@
             panel2.SuspendLayout();
             panel1.SuspendLayout();
             tabPage2.SuspendLayout();
-            panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numFine).BeginInit();
             panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvReturnHistory).BeginInit();
+            panel8.SuspendLayout();
+            panel13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numFine).BeginInit();
+            panel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReturnList).BeginInit();
             panel7.SuspendLayout();
             panel6.SuspendLayout();
@@ -114,7 +120,7 @@
             tabBorrowReturn.Location = new Point(0, 0);
             tabBorrowReturn.Name = "tabBorrowReturn";
             tabBorrowReturn.SelectedIndex = 0;
-            tabBorrowReturn.Size = new Size(1006, 591);
+            tabBorrowReturn.Size = new Size(1006, 860);
             tabBorrowReturn.TabIndex = 0;
             // 
             // tabPage1
@@ -125,7 +131,7 @@
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(998, 558);
+            tabPage1.Size = new Size(998, 827);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Mượn sách";
             tabPage1.UseVisualStyleBackColor = true;
@@ -138,7 +144,7 @@
             panel4.Location = new Point(3, 148);
             panel4.Margin = new Padding(3, 4, 3, 4);
             panel4.Name = "panel4";
-            panel4.Size = new Size(992, 407);
+            panel4.Size = new Size(992, 676);
             panel4.TabIndex = 3;
             // 
             // panel5
@@ -148,7 +154,7 @@
             panel5.Location = new Point(0, 0);
             panel5.Margin = new Padding(3, 4, 3, 4);
             panel5.Name = "panel5";
-            panel5.Size = new Size(642, 407);
+            panel5.Size = new Size(642, 676);
             panel5.TabIndex = 2;
             // 
             // dgvLoanList
@@ -160,14 +166,14 @@
             dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLoanList.BackgroundColor = Color.White;
             dgvLoanList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Control;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvLoanList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.GridColor = Color.White;
@@ -180,7 +186,7 @@
             dgvLoanList.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvLoanList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLoanList.ShowEditingIcon = false;
-            dgvLoanList.Size = new Size(642, 407);
+            dgvLoanList.Size = new Size(642, 676);
             dgvLoanList.TabIndex = 0;
             dgvLoanList.CellClick += dgvLoanList_CellClick;
             // 
@@ -202,7 +208,7 @@
             panel3.Dock = DockStyle.Right;
             panel3.Location = new Point(642, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(350, 407);
+            panel3.Size = new Size(350, 676);
             panel3.TabIndex = 1;
             // 
             // btnReturnBook
@@ -383,10 +389,10 @@
             txtSearchLoan.Margin = new Padding(3, 4, 3, 4);
             txtSearchLoan.Name = "txtSearchLoan";
             txtSearchLoan.PlaceholderColor = Color.Gray;
-            txtSearchLoan.PlaceholderText = "Nhập tên, email, số điện thoại ...";
+            txtSearchLoan.PlaceholderText = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.Size = new Size(411, 27);
             txtSearchLoan.TabIndex = 4;
-            txtSearchLoan.Text = "Nhập tên, email, số điện thoại ...";
+            txtSearchLoan.Text = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.TextColor = Color.Black;
             txtSearchLoan.Click += btnSearchLoan_Click;
             // 
@@ -411,35 +417,64 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(panel8);
             tabPage2.Controls.Add(panel9);
+            tabPage2.Controls.Add(panel8);
             tabPage2.Controls.Add(panel7);
             tabPage2.Controls.Add(panel6);
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(998, 558);
+            tabPage2.Size = new Size(998, 827);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Trả sách";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // panel9
+            // 
+            panel9.Controls.Add(dgvReturnHistory);
+            panel9.Dock = DockStyle.Fill;
+            panel9.Location = new Point(3, 550);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(992, 274);
+            panel9.TabIndex = 3;
+            // 
+            // dgvReturnHistory
+            // 
+            dgvReturnHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvReturnHistory.Dock = DockStyle.Fill;
+            dgvReturnHistory.Location = new Point(0, 0);
+            dgvReturnHistory.Name = "dgvReturnHistory";
+            dgvReturnHistory.RowHeadersWidth = 51;
+            dgvReturnHistory.Size = new Size(992, 274);
+            dgvReturnHistory.TabIndex = 0;
+            // 
             // panel8
             // 
-            panel8.BackColor = SystemColors.ActiveBorder;
-            panel8.Controls.Add(btnReturn);
-            panel8.Controls.Add(numFine);
-            panel8.Controls.Add(txtBookCondition);
-            panel8.Controls.Add(dtReturnDate);
-            panel8.Controls.Add(cbLoan);
-            panel8.Controls.Add(lblFine);
-            panel8.Controls.Add(lblCondition);
-            panel8.Controls.Add(lblReturnDate);
-            panel8.Controls.Add(lblLoan);
-            panel8.Dock = DockStyle.Right;
-            panel8.Location = new Point(645, 150);
+            panel8.Controls.Add(panel13);
+            panel8.Controls.Add(panel14);
+            panel8.Dock = DockStyle.Top;
+            panel8.Location = new Point(3, 150);
             panel8.Name = "panel8";
-            panel8.Size = new Size(350, 405);
-            panel8.TabIndex = 3;
+            panel8.Size = new Size(992, 400);
+            panel8.TabIndex = 2;
+            // 
+            // panel13
+            // 
+            panel13.BackColor = SystemColors.ActiveBorder;
+            panel13.Controls.Add(btnReturn);
+            panel13.Controls.Add(numFine);
+            panel13.Controls.Add(txtBookCondition);
+            panel13.Controls.Add(dtReturnDate);
+            panel13.Controls.Add(cbLoan);
+            panel13.Controls.Add(lblFine);
+            panel13.Controls.Add(lblCondition);
+            panel13.Controls.Add(lblReturnDate);
+            panel13.Controls.Add(lblLoan);
+            panel13.Dock = DockStyle.Right;
+            panel13.Location = new Point(642, 0);
+            panel13.Name = "panel13";
+            panel13.Size = new Size(350, 400);
+            panel13.TabIndex = 3;
             // 
             // btnReturn
             // 
@@ -455,6 +490,7 @@
             btnReturn.TabIndex = 8;
             btnReturn.Text = "Xác nhận trả";
             btnReturn.UseVisualStyleBackColor = false;
+            btnReturn.Click += btnReturn_Click;
             // 
             // numFine
             // 
@@ -528,15 +564,15 @@
             lblLoan.TabIndex = 0;
             lblLoan.Text = "Phiếu mượn:";
             // 
-            // panel9
+            // panel14
             // 
-            panel9.Controls.Add(dgvReturnList);
-            panel9.Dock = DockStyle.Fill;
-            panel9.Location = new Point(3, 150);
-            panel9.Margin = new Padding(3, 4, 3, 4);
-            panel9.Name = "panel9";
-            panel9.Size = new Size(992, 405);
-            panel9.TabIndex = 4;
+            panel14.Controls.Add(dgvReturnList);
+            panel14.Dock = DockStyle.Fill;
+            panel14.Location = new Point(0, 0);
+            panel14.Margin = new Padding(3, 4, 3, 4);
+            panel14.Name = "panel14";
+            panel14.Size = new Size(992, 400);
+            panel14.TabIndex = 4;
             // 
             // dgvReturnList
             // 
@@ -547,14 +583,14 @@
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReturnList.BackgroundColor = Color.White;
             dgvReturnList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Control;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Control;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvReturnList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvReturnList.Dock = DockStyle.Fill;
             dgvReturnList.GridColor = Color.White;
@@ -565,7 +601,7 @@
             dgvReturnList.RowHeadersVisible = false;
             dgvReturnList.RowHeadersWidth = 51;
             dgvReturnList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvReturnList.Size = new Size(992, 405);
+            dgvReturnList.Size = new Size(992, 400);
             dgvReturnList.TabIndex = 0;
             // 
             // panel7
@@ -596,6 +632,7 @@
             btnReloadReturn.Size = new Size(32, 37);
             btnReloadReturn.TabIndex = 6;
             btnReloadReturn.UseVisualStyleBackColor = false;
+            btnReloadReturn.Click += btnReloadReturn_Click;
             // 
             // btnSearchReturn
             // 
@@ -612,6 +649,7 @@
             btnSearchReturn.TabIndex = 5;
             btnSearchReturn.Text = "Tìm kiếm";
             btnSearchReturn.UseVisualStyleBackColor = false;
+            btnSearchReturn.Click += btnSearchReturn_Click;
             // 
             // txtSearchReturn
             // 
@@ -646,6 +684,7 @@
             label1.Size = new Size(224, 37);
             label1.TabIndex = 4;
             label1.Text = "Quản lý Trả sách";
+            label1.Click += label1_Click;
             // 
             // tabPage3
             // 
@@ -655,7 +694,7 @@
             tabPage3.Location = new Point(4, 29);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(998, 558);
+            tabPage3.Size = new Size(998, 827);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Phiếu phạt";
             tabPage3.UseVisualStyleBackColor = true;
@@ -666,7 +705,7 @@
             panel12.Dock = DockStyle.Fill;
             panel12.Location = new Point(3, 150);
             panel12.Name = "panel12";
-            panel12.Size = new Size(992, 405);
+            panel12.Size = new Size(992, 674);
             panel12.TabIndex = 2;
             // 
             // dgvFineList
@@ -678,7 +717,7 @@
             dgvFineList.Location = new Point(0, 0);
             dgvFineList.Name = "dgvFineList";
             dgvFineList.RowHeadersWidth = 51;
-            dgvFineList.Size = new Size(992, 405);
+            dgvFineList.Size = new Size(992, 674);
             dgvFineList.TabIndex = 0;
             // 
             // panel11
@@ -764,7 +803,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1006, 591);
+            ClientSize = new Size(1006, 860);
             Controls.Add(tabBorrowReturn);
             Name = "FrmBorrowReturn";
             Text = "FrmBorrowReturn";
@@ -781,10 +820,13 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             tabPage2.ResumeLayout(false);
-            panel8.ResumeLayout(false);
-            panel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numFine).EndInit();
             panel9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvReturnHistory).EndInit();
+            panel8.ResumeLayout(false);
+            panel13.ResumeLayout(false);
+            panel13.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numFine).EndInit();
+            panel14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvReturnList).EndInit();
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
@@ -815,6 +857,20 @@
         private Panel panel4;
         private Panel panel5;
         private DataGridView dgvLoanList;
+        private Panel panel7;
+        private Panel panel6;
+        private Button btnReloadReturn;
+        private Button btnSearchReturn;
+        private UICustom.PlaceholderTextBox txtSearchReturn;
+        private Label label1;
+        private Panel panel12;
+        private Panel panel11;
+        private Panel panel10;
+        private Label label2;
+        private DataGridView dgvFineList;
+        private Button btnReloanFine;
+        private Button btnSearchFine;
+        private UICustom.PlaceholderTextBox txtSearchFine;
         private Panel panel3;
         private Button btnReturnBook;
         private Button btnCreateLoan;
@@ -828,9 +884,10 @@
         private Label lblBorrowDate;
         private Label lblBook;
         private Label lblReader;
-        private Panel panel7;
-        private Panel panel6;
+        private Panel panel9;
         private Panel panel8;
+        private DataGridView dgvReturnHistory;
+        private Panel panel13;
         private Button btnReturn;
         private NumericUpDown numFine;
         private TextBox txtBookCondition;
@@ -840,19 +897,7 @@
         private Label lblCondition;
         private Label lblReturnDate;
         private Label lblLoan;
-        private Panel panel9;
+        private Panel panel14;
         private DataGridView dgvReturnList;
-        private Button btnReloadReturn;
-        private Button btnSearchReturn;
-        private UICustom.PlaceholderTextBox txtSearchReturn;
-        private Label label1;
-        private Panel panel12;
-        private Panel panel11;
-        private Panel panel10;
-        private Label label2;
-        private DataGridView dgvFineList;
-        private Button btnReloanFine;
-        private Button btnSearchFine;
-        private UICustom.PlaceholderTextBox txtSearchFine;
     }
 }

@@ -96,5 +96,9 @@ namespace BUS
 
             return true;
         }
+        public List<ReturnDTO> SearchReturns(string keyword)
+        {
+            return returnDAO.SearchReturns(keyword);
+        }
     }
 }

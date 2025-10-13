@@ -78,23 +78,27 @@ namespace DAO
 
         public List<LoanDTO> GetUnreturnedLoans()
         {
-            var list = new List<LoanDTO>();
-            string query = "SELECT * FROM PhieuMuon WHERE TrangThai = 'Đang mượn' ORDER BY NgayMuon DESC";
+            string query = @"
+                SELECT MaPhieuMuon, MaDocGia, MaNhanVien, NgayMuon, HanTra, TrangThai
+                FROM phieumuon
+                WHERE TrangThai != 'Đã trả';";
+
             DataTable dt = DataProvider.Instance.ExecuteQuery(query);
 
+            List<LoanDTO> loans = new List<LoanDTO>();
             foreach (DataRow row in dt.Rows)
             {
-                list.Add(new LoanDTO
+                loans.Add(new LoanDTO
                 {
                     MaPhieuMuon = Convert.ToInt32(row["MaPhieuMuon"]),
                     MaDocGia = Convert.ToInt32(row["MaDocGia"]),
                     MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
                     NgayMuon = Convert.ToDateTime(row["NgayMuon"]),
                     HanTra = Convert.ToDateTime(row["HanTra"]),
-                    TrangThai = row["TrangThai"].ToString() ?? ""
+                    TrangThai = row["TrangThai"].ToString()
                 });
             }
-            return list;
+            return loans;
         }
 
         public LoanDTO GetLoanById(int maPhieuMuon)
