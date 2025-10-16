@@ -17,7 +17,7 @@ namespace UI
     {
         private readonly LoanBUS loanBUS = LoanBUS.Instance;
         private readonly BookBUS bookBUS = new BookBUS();
-        private readonly ReturnBUS returnBUS = new ReturnBUS(); 
+        private readonly ReturnBUS returnBUS = new ReturnBUS();
         private readonly FineBUS fineBUS = new FineBUS();
 
         public FrmBorrowReturn()
@@ -73,6 +73,14 @@ namespace UI
         private void btnReload_Click(object sender, EventArgs e)
         {
             txtSearchLoan.Clear();
+
+            LoadLoanList();
+            LoadComboBoxes();
+
+            cbReader.SelectedIndex = -1;
+            cbBook.SelectedIndex = 1;
+            dtBorrowDate.Value = DateTime.Now;
+            dtDueDate.Value = DateTime.Now.AddDays(7);
             dgvLoanList.DataSource = loanBUS.GetAllLoans();
         }
 
@@ -81,12 +89,32 @@ namespace UI
         {
             if (e.RowIndex >= 0)
             {
-                var row = dgvLoanList.Rows[e.RowIndex];
-                cbReader.SelectedValue = row.Cells["MaDocGia"].Value;
-                dtBorrowDate.Value = Convert.ToDateTime(row.Cells["NgayMuon"].Value);
-                dtDueDate.Value = Convert.ToDateTime(row.Cells["HanTra"].Value);
+                DataGridViewRow row = dgvLoanList.Rows[e.RowIndex];
+                int maPhieuMuon = Convert.ToInt32(row.Cells["MaPhieuMuon"].Value);
+                int maDocGia = Convert.ToInt32(row.Cells["MaDocGia"].Value);
+                DateTime ngayMuon = Convert.ToDateTime(row.Cells["NgayMuon"].Value);
+                DateTime hanTra = Convert.ToDateTime(row.Cells["HanTra"].Value);
+
+                cbReader.SelectedValue = maDocGia;
+                dtBorrowDate.Value = ngayMuon;
+                dtDueDate.Value = hanTra;
+
+                // Lấy thông tin sách từ ChiTietMuon
+                var loanDetails = LoanDetailBUS.Instance.GetLoanDetailsByLoanId(maPhieuMuon);
+                if (loanDetails.Count > 0)
+                {
+                    var first = loanDetails[0];
+                    cbBook.SelectedValue = first.MaSach;
+                    numQuantity.Value = first.SoLuong;
+                }
+                else
+                {
+                    cbBook.SelectedIndex = -1;
+                    numQuantity.Value = 1;
+                }
             }
         }
+
         //  TẠO PHIẾU MƯỢN 
         private void btnCreateLoan_Click(object sender, EventArgs e)
         {
@@ -252,6 +280,45 @@ namespace UI
         {
             txtSearchFine.Clear();
             LoadFineTab();
+        }
+
+        private void btnDeleteLoan_Click(object sender, EventArgs e)
+        {
+            if (dgvLoanList.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu mượn cần xóa!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int maPhieuMuon = Convert.ToInt32(dgvLoanList.SelectedRows[0].Cells["MaPhieuMuon"].Value);
+            string trangThai = dgvLoanList.SelectedRows[0].Cells["TrangThai"].Value.ToString();
+
+            if (!trangThai.Equals("Đang mượn", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Chỉ có thể xóa phiếu mượn đang trong trạng thái 'Đang mượn'!",
+                    "Không thể xóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show($"Bạn có chắc muốn xóa phiếu mượn {maPhieuMuon} không?",
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                bool result = loanBUS.DeleteLoan(maPhieuMuon);
+                if (result)
+                {
+                    MessageBox.Show("Xóa phiếu mượn thành công!", "Thành công",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadLoanList(); // cập nhật lại danh sách
+                }
+                else
+                {
+                    MessageBox.Show("Không thể xóa phiếu mượn này. Có thể phiếu đã trả hoặc có lỗi hệ thống.",
+                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

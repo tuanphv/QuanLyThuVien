@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             tabBorrowReturn = new TabControl();
             tabPage1 = new TabPage();
             panel4 = new Panel();
             panel5 = new Panel();
             dgvLoanList = new DataGridView();
             panel3 = new Panel();
-            btnReturnBook = new Button();
+            btnDeleteLoan = new Button();
             btnCreateLoan = new Button();
             numQuantity = new NumericUpDown();
             dtDueDate = new DateTimePicker();
@@ -166,14 +166,14 @@
             dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLoanList.BackgroundColor = Color.White;
             dgvLoanList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = SystemColors.Control;
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle5.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dgvLoanList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.GridColor = Color.White;
@@ -193,7 +193,7 @@
             // panel3
             // 
             panel3.BackColor = Color.Silver;
-            panel3.Controls.Add(btnReturnBook);
+            panel3.Controls.Add(btnDeleteLoan);
             panel3.Controls.Add(btnCreateLoan);
             panel3.Controls.Add(numQuantity);
             panel3.Controls.Add(dtDueDate);
@@ -211,20 +211,21 @@
             panel3.Size = new Size(350, 676);
             panel3.TabIndex = 1;
             // 
-            // btnReturnBook
+            // btnDeleteLoan
             // 
-            btnReturnBook.BackColor = Color.FromArgb(255, 128, 0);
-            btnReturnBook.Cursor = Cursors.Hand;
-            btnReturnBook.FlatAppearance.BorderSize = 0;
-            btnReturnBook.FlatStyle = FlatStyle.Flat;
-            btnReturnBook.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnReturnBook.ForeColor = Color.White;
-            btnReturnBook.Location = new Point(203, 285);
-            btnReturnBook.Name = "btnReturnBook";
-            btnReturnBook.Size = new Size(114, 43);
-            btnReturnBook.TabIndex = 14;
-            btnReturnBook.Text = "Trả sách";
-            btnReturnBook.UseVisualStyleBackColor = false;
+            btnDeleteLoan.BackColor = Color.FromArgb(255, 128, 0);
+            btnDeleteLoan.Cursor = Cursors.Hand;
+            btnDeleteLoan.FlatAppearance.BorderSize = 0;
+            btnDeleteLoan.FlatStyle = FlatStyle.Flat;
+            btnDeleteLoan.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnDeleteLoan.ForeColor = Color.White;
+            btnDeleteLoan.Location = new Point(203, 285);
+            btnDeleteLoan.Name = "btnDeleteLoan";
+            btnDeleteLoan.Size = new Size(114, 43);
+            btnDeleteLoan.TabIndex = 14;
+            btnDeleteLoan.Text = "Xóa Phiếu";
+            btnDeleteLoan.UseVisualStyleBackColor = false;
+            btnDeleteLoan.Click += btnDeleteLoan_Click;
             // 
             // btnCreateLoan
             // 
@@ -392,6 +393,7 @@
             txtSearchLoan.PlaceholderText = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.Size = new Size(411, 27);
             txtSearchLoan.TabIndex = 4;
+            txtSearchLoan.Text = "Nhập tên độc giả,tên sách...";
             txtSearchLoan.TextColor = Color.Black;
             txtSearchLoan.Click += btnSearchLoan_Click;
             // 
@@ -582,14 +584,14 @@
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReturnList.BackgroundColor = Color.White;
             dgvReturnList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.Control;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
+            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             dgvReturnList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvReturnList.Dock = DockStyle.Fill;
             dgvReturnList.GridColor = Color.White;
@@ -662,6 +664,7 @@
             txtSearchReturn.PlaceholderText = "Nhập tên, email, số điện thoại ...";
             txtSearchReturn.Size = new Size(411, 27);
             txtSearchReturn.TabIndex = 4;
+            txtSearchReturn.Text = "Nhập tên, email, số điện thoại ...";
             txtSearchReturn.TextColor = Color.Black;
             // 
             // panel6
@@ -775,6 +778,7 @@
             txtSearchFine.PlaceholderText = "Nhập tên, email, số điện thoại ...";
             txtSearchFine.Size = new Size(411, 27);
             txtSearchFine.TabIndex = 4;
+            txtSearchFine.Text = "Nhập tên, email, số điện thoại ...";
             txtSearchFine.TextColor = Color.Black;
             // 
             // panel10
@@ -869,7 +873,7 @@
         private Button btnSearchFine;
         private UICustom.PlaceholderTextBox txtSearchFine;
         private Panel panel3;
-        private Button btnReturnBook;
+        private Button btnDeleteLoan;
         private Button btnCreateLoan;
         private NumericUpDown numQuantity;
         private DateTimePicker dtDueDate;

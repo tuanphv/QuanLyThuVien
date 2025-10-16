@@ -56,5 +56,11 @@ namespace BUS
             return loanDAO.SearchLoans(keyword);
         }
 
+        public bool DeleteLoan(int maPhieuMuon)
+        {
+            return loanDAO.DeleteLoan(maPhieuMuon);
+        }
+
+
     }
 }

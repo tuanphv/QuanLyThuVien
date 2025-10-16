@@ -163,5 +163,47 @@ namespace DAO
 
             return loans;
         }
+
+        public bool DeleteLoan(int maPhieuMuon)
+        {
+            try
+            {
+                // 1️⃣ Kiểm tra xem phiếu mượn có tồn tại và trạng thái
+                string checkQuery = "SELECT TrangThai FROM PhieuMuon WHERE MaPhieuMuon = @MaPhieuMuon";
+                MySqlParameter[] checkParams = { new MySqlParameter("@MaPhieuMuon", maPhieuMuon) };
+
+                object result = DataProvider.Instance.ExecuteScalar(checkQuery, checkParams);
+                if (result == null)
+                    return false; // Không tồn tại phiếu
+
+                string trangThai = result.ToString();
+
+                // 2️⃣ Chỉ cho phép xóa nếu phiếu đang mượn
+                if (!trangThai.Equals("Đang mượn", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                // 3️⃣ Xóa chi tiết phiếu mượn trước để tránh lỗi khóa ngoại
+                string deleteDetailQuery = "DELETE FROM ChiTietMuon WHERE MaPhieuMuon = @MaPhieuMuon";
+                string deleteLoanQuery = "DELETE FROM PhieuMuon WHERE MaPhieuMuon = @MaPhieuMuon";
+
+                MySqlParameter[] parameters = { new MySqlParameter("@MaPhieuMuon", maPhieuMuon) };
+
+                // Thực hiện xóa
+                DataProvider.Instance.ExecuteNonQuery(deleteDetailQuery, parameters);
+                int rowsAffected = DataProvider.Instance.ExecuteNonQuery(deleteLoanQuery, parameters);
+
+                return rowsAffected > 0;
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("❌ Lỗi khi xóa phiếu mượn: " + ex.Message);
+                return false;
+            }
+        }
+
+
+
     }
 }
