@@ -48,7 +48,10 @@ namespace DAO
                 SELECT pp.* 
                 FROM PhieuPhat pp
                 JOIN DocGia dg ON pp.MaDocGia = dg.MaDocGia
-                WHERE dg.HoTen LIKE CONCAT('%', @keyword, '%')
+                WHERE dg.HoTen LIKE CONCAT('%', @keyword, '%') 
+                        OR CAST(MaPhieuPhat AS CHAR) LIKE @kw
+                        OR CAST(MaDocGia AS CHAR) LIKE @kw
+                        OR LyDo LIKE @kw""
                 ORDER BY NgayLap DESC";
 
             var dt = DataProvider.Instance.ExecuteQuery(query,
