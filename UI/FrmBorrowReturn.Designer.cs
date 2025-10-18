@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             tabBorrowReturn = new TabControl();
             tabPage1 = new TabPage();
             panel4 = new Panel();
@@ -166,14 +166,14 @@
             dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLoanList.BackgroundColor = Color.White;
             dgvLoanList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = SystemColors.Control;
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvLoanList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.GridColor = Color.White;
@@ -390,10 +390,10 @@
             txtSearchLoan.Margin = new Padding(3, 4, 3, 4);
             txtSearchLoan.Name = "txtSearchLoan";
             txtSearchLoan.PlaceholderColor = Color.Gray;
-            txtSearchLoan.PlaceholderText = "Nhập tên độc giả,tên sách...";
+            txtSearchLoan.PlaceholderText = "Nhập tên độc giả,tên sách, trạng thái...";
             txtSearchLoan.Size = new Size(411, 27);
             txtSearchLoan.TabIndex = 4;
-            txtSearchLoan.Text = "Nhập tên độc giả,tên sách...";
+            txtSearchLoan.Text = "Nhập tên độc giả,tên sách, trạng thái...";
             txtSearchLoan.TextColor = Color.Black;
             txtSearchLoan.Click += btnSearchLoan_Click;
             // 
@@ -584,14 +584,14 @@
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReturnList.BackgroundColor = Color.White;
             dgvReturnList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Control;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
-            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Control;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvReturnList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvReturnList.Dock = DockStyle.Fill;
             dgvReturnList.GridColor = Color.White;
@@ -661,11 +661,12 @@
             txtSearchReturn.Margin = new Padding(3, 4, 3, 4);
             txtSearchReturn.Name = "txtSearchReturn";
             txtSearchReturn.PlaceholderColor = Color.Gray;
-            txtSearchReturn.PlaceholderText = "Nhập tên, email, số điện thoại ...";
+            txtSearchReturn.PlaceholderText = "Nhập mã phiếu trả ...";
             txtSearchReturn.Size = new Size(411, 27);
             txtSearchReturn.TabIndex = 4;
-            txtSearchReturn.Text = "Nhập tên, email, số điện thoại ...";
+            txtSearchReturn.Text = "Nhập mã phiếu trả ...";
             txtSearchReturn.TextColor = Color.Black;
+            txtSearchReturn.TextChanged += txtSearchReturn_TextChanged;
             // 
             // panel6
             // 
@@ -749,6 +750,7 @@
             btnReloanFine.Size = new Size(32, 37);
             btnReloanFine.TabIndex = 6;
             btnReloanFine.UseVisualStyleBackColor = false;
+            btnReloanFine.Click += btnReloadFine_Click;
             // 
             // btnSearchFine
             // 
@@ -765,6 +767,7 @@
             btnSearchFine.TabIndex = 5;
             btnSearchFine.Text = "Tìm kiếm";
             btnSearchFine.UseVisualStyleBackColor = false;
+            btnSearchFine.Click += btnSearchFine_Click;
             // 
             // txtSearchFine
             // 
@@ -775,10 +778,10 @@
             txtSearchFine.Margin = new Padding(3, 4, 3, 4);
             txtSearchFine.Name = "txtSearchFine";
             txtSearchFine.PlaceholderColor = Color.Gray;
-            txtSearchFine.PlaceholderText = "Nhập tên, email, số điện thoại ...";
+            txtSearchFine.PlaceholderText = "Nhập mã phiếu phạt, mã độc giả, tên độc giả ...";
             txtSearchFine.Size = new Size(411, 27);
             txtSearchFine.TabIndex = 4;
-            txtSearchFine.Text = "Nhập tên, email, số điện thoại ...";
+            txtSearchFine.Text = "Nhập mã phiếu phạt, mã độc giả, tên độc giả ...";
             txtSearchFine.TextColor = Color.Black;
             // 
             // panel10

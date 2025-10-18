@@ -23,6 +23,9 @@ namespace UI
         {
             InitializeComponent();
             this.Load += FrmBorrowReturn_Load;
+            txtSearchLoan.KeyDown += TxtSearch_KeyDown;
+            txtSearchReturn.KeyDown += TxtSearch_KeyDown;
+            txtSearchFine.KeyDown += TxtSearch_KeyDown;
         }
         private void FrmBorrowReturn_Load(object sender, EventArgs e)
         {
@@ -31,7 +34,7 @@ namespace UI
             LoadReturnTab();
             LoadFineTab();
         }
-        #region tab Borrow
+
         //LOAD DỮ LIỆU
         private void LoadComboBoxes()
         {
@@ -45,6 +48,8 @@ namespace UI
             cbBook.DisplayMember = "TieuDe";
             cbBook.ValueMember = "MaSach";
         }
+
+        #region tab Borrow
 
         private void LoadLoanList()
         {
@@ -154,12 +159,46 @@ namespace UI
                 MessageBox.Show("Lỗi khi tạo phiếu mượn: " + ex.Message);
             }
         }
-        #endregion
-
-        private void label1_Click(object sender, EventArgs e)
+        // XÓA PHIẾU MƯỢN
+        private void btnDeleteLoan_Click(object sender, EventArgs e)
         {
+            if (dgvLoanList.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu mượn cần xóa!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            int maPhieuMuon = Convert.ToInt32(dgvLoanList.SelectedRows[0].Cells["MaPhieuMuon"].Value);
+            string trangThai = dgvLoanList.SelectedRows[0].Cells["TrangThai"].Value.ToString();
+
+            if (!trangThai.Equals("Đang mượn", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Chỉ có thể xóa phiếu mượn đang trong trạng thái 'Đang mượn'!",
+                    "Không thể xóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show($"Bạn có chắc muốn xóa phiếu mượn {maPhieuMuon} không?",
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                bool result = loanBUS.DeleteLoan(maPhieuMuon);
+                if (result)
+                {
+                    MessageBox.Show("Xóa phiếu mượn thành công!", "Thành công",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadLoanList(); // cập nhật lại danh sách
+                }
+                else
+                {
+                    MessageBox.Show("Không thể xóa phiếu mượn này. Có thể phiếu đã trả hoặc có lỗi hệ thống.",
+                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
+        #endregion
 
         #region tab Return
         private void LoadReturnTab()
@@ -232,8 +271,10 @@ namespace UI
             txtSearchReturn.Clear();
             LoadReturnTab();
         }
+       
         #endregion
-        //#region tab Fine
+
+        #region tab Fine
         private void LoadFineTab()
         {
             var fines = fineBUS.GetAllFines();
@@ -280,44 +321,34 @@ namespace UI
             txtSearchFine.Clear();
             LoadFineTab();
         }
+        
+        #endregion
 
-        private void btnDeleteLoan_Click(object sender, EventArgs e)
+        #region event handler
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dgvLoanList.SelectedRows.Count == 0)
+            if (e.KeyCode == Keys.Enter)
             {
-                MessageBox.Show("Vui lòng chọn phiếu mượn cần xóa!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int maPhieuMuon = Convert.ToInt32(dgvLoanList.SelectedRows[0].Cells["MaPhieuMuon"].Value);
-            string trangThai = dgvLoanList.SelectedRows[0].Cells["TrangThai"].Value.ToString();
-
-            if (!trangThai.Equals("Đang mượn", StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show("Chỉ có thể xóa phiếu mượn đang trong trạng thái 'Đang mượn'!",
-                    "Không thể xóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var confirm = MessageBox.Show($"Bạn có chắc muốn xóa phiếu mượn {maPhieuMuon} không?",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (confirm == DialogResult.Yes)
-            {
-                bool result = loanBUS.DeleteLoan(maPhieuMuon);
-                if (result)
-                {
-                    MessageBox.Show("Xóa phiếu mượn thành công!", "Thành công",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadLoanList(); // cập nhật lại danh sách
-                }
-                else
-                {
-                    MessageBox.Show("Không thể xóa phiếu mượn này. Có thể phiếu đã trả hoặc có lỗi hệ thống.",
-                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                e.SuppressKeyPress = true; // Ngăn tiếng "ting"
+                if (sender == txtSearchLoan)
+                    btnSearchLoan.PerformClick();
+                else if (sender == txtSearchReturn)
+                    btnSearchReturn.PerformClick();
+                else if (sender == txtSearchFine)
+                    btnSearchFine.PerformClick();
             }
         }
+        #endregion
+
+        #region hong có gì
+        private void txtSearchReturn_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
     }
 }
