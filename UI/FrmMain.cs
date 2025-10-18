@@ -170,8 +170,19 @@ namespace UI
         private void btnBooks_Click(object sender, EventArgs e)
         {
             HighlightActiveButton(sender as Button);
-            string title = SessionManager.HasPermission("manage_books") ? "Quản lý sách (Chưa phát triển)" : "Danh sách sách (Chưa phát triển)";
-            LoadEmbeddedForm(null, title); // Thay null bằng form quản lý sách khi phát triển xong
+            string title;
+            Form form = null;
+            if (SessionManager.HasPermission("manage_books"))
+            {
+                title = "Quản lý sách";
+                form = new FrmBooks();
+            }
+            else
+            {
+                title = "Danh sách sách";
+                form = new FrmBooks();
+            }
+            LoadEmbeddedForm(form, title); // Thay null bằng form quản lý sách khi phát triển xong
         }
 
         private void btnGenrePublisher_Click(object sender, EventArgs e)
@@ -188,7 +199,7 @@ namespace UI
         private void btnBorrowReturn_Click(object sender, EventArgs e)
         {
             HighlightActiveButton(sender as Button);
-            string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả (Chưa phát triển)" : "Lịch sử mượn/trả (Chưa phát triển)";
+            string title = SessionManager.HasPermission("manage_borrow_return") ? "Quản lý mượn/trả" : "Lịch sử mượn/trả (Chưa phát triển)";
             LoadEmbeddedForm(new FrmBorrowReturn(), title);
         }
 

@@ -16,7 +16,6 @@ namespace UI
     public partial class FrmBorrowReturn : Form
     {
         private readonly LoanBUS loanBUS = LoanBUS.Instance;
-        private readonly BookBUS bookBUS = new BookBUS();
         private readonly ReturnBUS returnBUS = new ReturnBUS();
         private readonly FineBUS fineBUS = new FineBUS();
 
@@ -41,7 +40,7 @@ namespace UI
             cbReader.DisplayMember = "HoTen";
             cbReader.ValueMember = "MaDocGia";
 
-            var books = bookBUS.GetAllBooks();
+            var books = BookBUS.GetAllBooks();
             cbBook.DataSource = books;
             cbBook.DisplayMember = "TieuDe";
             cbBook.ValueMember = "MaSach";

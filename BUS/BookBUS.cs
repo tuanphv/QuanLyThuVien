@@ -6,12 +6,12 @@ namespace BUS
 {
     public class BookBUS
     {
-        public List<BookDTO> GetAllBooks()
+        public static List<BookDTO> GetAllBooks()
         {
             return BookDAO.GetAllBooks();
         }
 
-        public bool AddBook(BookDTO book)
+        public static bool AddBook(BookDTO book)
         {
             if (string.IsNullOrWhiteSpace(book.TieuDe) || book.GiaSach <= 0)
                 return false;
@@ -19,7 +19,7 @@ namespace BUS
             return BookDAO.AddBook(book);
         }
 
-        public bool UpdateBook(BookDTO book)
+        public static bool UpdateBook(BookDTO book)
         {
             if (book.MaSach <= 0)
                 return false;
@@ -27,7 +27,7 @@ namespace BUS
             return BookDAO.UpdateBook(book);
         }
 
-        public bool DeleteBook(int maSach)
+        public static bool DeleteBook(int maSach)
         {
             if (maSach <= 0)
                 return false;

@@ -31,6 +31,22 @@ namespace UI.Utilities
             }
         }
 
+        public static void ClearTextBoxes(params TextBox[] textBoxes)
+        {
+            foreach (var txt in textBoxes)
+            {
+                txt.Clear();
+            }
+        }
+
+        public static void SetTextBoxesReadOnly(bool isReadOnly, params TextBox[] textBoxes)
+        {
+            foreach (var txt in textBoxes)
+            {
+                txt.ReadOnly = isReadOnly;
+            }
+        }
+
         public static Bitmap GenerateQrBitmap(string text, int pixelsPerModule = 20)
         {
             using (var qrGenerator = new QRCodeGenerator())
