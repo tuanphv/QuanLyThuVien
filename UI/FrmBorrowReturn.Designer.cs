@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             tabBorrowReturn = new TabControl();
             tabPage1 = new TabPage();
             panel4 = new Panel();
@@ -60,11 +60,9 @@
             panel8 = new Panel();
             panel13 = new Panel();
             btnReturn = new Button();
-            numFine = new NumericUpDown();
             txtBookCondition = new TextBox();
             dtReturnDate = new DateTimePicker();
             cbLoan = new ComboBox();
-            lblFine = new Label();
             lblCondition = new Label();
             lblReturnDate = new Label();
             lblLoan = new Label();
@@ -99,7 +97,6 @@
             ((System.ComponentModel.ISupportInitialize)dgvReturnHistory).BeginInit();
             panel8.SuspendLayout();
             panel13.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numFine).BeginInit();
             panel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvReturnList).BeginInit();
             panel7.SuspendLayout();
@@ -166,14 +163,14 @@
             dgvLoanList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLoanList.BackgroundColor = Color.White;
             dgvLoanList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvLoanList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvLoanList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLoanList.Dock = DockStyle.Fill;
             dgvLoanList.GridColor = Color.White;
@@ -448,6 +445,7 @@
             dgvReturnHistory.RowHeadersWidth = 51;
             dgvReturnHistory.Size = new Size(992, 274);
             dgvReturnHistory.TabIndex = 0;
+            dgvReturnHistory.CellContentClick += dgvReturnHistory_CellContentClick;
             // 
             // panel8
             // 
@@ -463,11 +461,9 @@
             // 
             panel13.BackColor = SystemColors.ActiveBorder;
             panel13.Controls.Add(btnReturn);
-            panel13.Controls.Add(numFine);
             panel13.Controls.Add(txtBookCondition);
             panel13.Controls.Add(dtReturnDate);
             panel13.Controls.Add(cbLoan);
-            panel13.Controls.Add(lblFine);
             panel13.Controls.Add(lblCondition);
             panel13.Controls.Add(lblReturnDate);
             panel13.Controls.Add(lblLoan);
@@ -485,23 +481,13 @@
             btnReturn.FlatStyle = FlatStyle.Flat;
             btnReturn.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnReturn.ForeColor = Color.White;
-            btnReturn.Location = new Point(88, 253);
+            btnReturn.Location = new Point(83, 210);
             btnReturn.Name = "btnReturn";
             btnReturn.Size = new Size(162, 51);
             btnReturn.TabIndex = 8;
             btnReturn.Text = "Xác nhận trả";
             btnReturn.UseVisualStyleBackColor = false;
             btnReturn.Click += btnReturn_Click;
-            // 
-            // numFine
-            // 
-            numFine.DecimalPlaces = 2;
-            numFine.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            numFine.Location = new Point(147, 179);
-            numFine.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            numFine.Name = "numFine";
-            numFine.Size = new Size(150, 27);
-            numFine.TabIndex = 7;
             // 
             // txtBookCondition
             // 
@@ -528,15 +514,6 @@
             cbLoan.Size = new Size(151, 28);
             cbLoan.TabIndex = 4;
             cbLoan.Text = "Chọn phiếu mượn";
-            // 
-            // lblFine
-            // 
-            lblFine.AutoSize = true;
-            lblFine.Location = new Point(19, 185);
-            lblFine.Name = "lblFine";
-            lblFine.Size = new Size(115, 20);
-            lblFine.TabIndex = 3;
-            lblFine.Text = "TIền phạt(VNĐ):";
             // 
             // lblCondition
             // 
@@ -584,14 +561,14 @@
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvReturnList.BackgroundColor = Color.White;
             dgvReturnList.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Control;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Control;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvReturnList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvReturnList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvReturnList.Dock = DockStyle.Fill;
             dgvReturnList.GridColor = Color.White;
@@ -604,6 +581,7 @@
             dgvReturnList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReturnList.Size = new Size(992, 400);
             dgvReturnList.TabIndex = 0;
+            
             // 
             // panel7
             // 
@@ -829,7 +807,6 @@
             panel8.ResumeLayout(false);
             panel13.ResumeLayout(false);
             panel13.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numFine).EndInit();
             panel14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvReturnList).EndInit();
             panel7.ResumeLayout(false);
@@ -893,11 +870,9 @@
         private DataGridView dgvReturnHistory;
         private Panel panel13;
         private Button btnReturn;
-        private NumericUpDown numFine;
         private TextBox txtBookCondition;
         private DateTimePicker dtReturnDate;
         private ComboBox cbLoan;
-        private Label lblFine;
         private Label lblCondition;
         private Label lblReturnDate;
         private Label lblLoan;

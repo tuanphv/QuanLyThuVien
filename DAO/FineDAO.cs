@@ -13,10 +13,10 @@ namespace DAO
     {
         public bool AddFine(FineDTO fine)
         {
-            string query = @"INSERT INTO PhieuPhat (MaDocGia, LyDo, SoTien, NgayLap)
-                             VALUES (@MaDocGia, @LyDo, @SoTien, @NgayLap)";
+            string query = @"INSERT INTO PhieuPhat (MaPhieuTra, LyDo, SoTien, NgayLap)
+                             VALUES (@MaPhieuTra, @LyDo, @SoTien, @NgayLap)";
             int result = DataProvider.Instance.ExecuteNonQuery(query,
-                new MySqlParameter("@MaDocGia", fine.MaDocGia),
+                new MySqlParameter("@MaPhieuTra", fine.MaPhieuTra),
                 new MySqlParameter("@LyDo", fine.LyDo),
                 new MySqlParameter("@SoTien", fine.SoTien),
                 new MySqlParameter("@NgayLap", fine.NgayLap));
@@ -33,7 +33,7 @@ namespace DAO
                 list.Add(new FineDTO
                 {
                     MaPhieuPhat = Convert.ToInt32(row["MaPhieuPhat"]),
-                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    MaPhieuTra = Convert.ToInt32(row["MaPhieuTra"]),
                     LyDo = row["LyDo"].ToString() ?? "",
                     SoTien = Convert.ToDecimal(row["SoTien"]),
                     NgayLap = Convert.ToDateTime(row["NgayLap"])
@@ -63,7 +63,7 @@ namespace DAO
                 list.Add(new FineDTO
                 {
                     MaPhieuPhat = Convert.ToInt32(row["MaPhieuPhat"]),
-                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    MaPhieuTra = Convert.ToInt32(row["MaPhieuTra"]),
                     LyDo = row["LyDo"].ToString() ?? "",
                     SoTien = Convert.ToDecimal(row["SoTien"]),
                     NgayLap = Convert.ToDateTime(row["NgayLap"])

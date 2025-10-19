@@ -204,11 +204,12 @@ namespace UI
         private void LoadReturnTab()
         {
             // Hiển thị danh sách phiếu mượn chưa trả
-            dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();
+            dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();        
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             // Hiển thị lịch sử phiếu trả
             dgvReturnHistory.DataSource = returnBUS.GetAllReturns();
+            dgvReturnHistory.Columns["TienPhat"].Visible = false;
             dgvReturnHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             // ComboBox chọn phiếu mượn
@@ -230,8 +231,7 @@ namespace UI
             {
                 MaPhieuMuon = Convert.ToInt32(cbLoan.SelectedValue),
                 NgayTra = dtReturnDate.Value,
-                TinhTrangSach = txtBookCondition.Text,
-                TienPhat = numFine.Value
+                TinhTrangSach = txtBookCondition.Text
             };
 
             if (returnBUS.AddReturn(ret, out string msg))
@@ -271,7 +271,7 @@ namespace UI
             txtSearchReturn.Clear();
             LoadReturnTab();
         }
-       
+
         #endregion
 
         #region tab Fine
@@ -289,7 +289,7 @@ namespace UI
 
             // Đặt tên cột
             dgvFineList.Columns["MaPhieuPhat"].HeaderText = "Mã Phiếu Phạt";
-            dgvFineList.Columns["MaDocGia"].HeaderText = "Mã Độc Giả";
+            dgvFineList.Columns["MaPhieuTra"].HeaderText = "Mã Phiếu Trả";
             dgvFineList.Columns["LyDo"].HeaderText = "Lý Do";
             dgvFineList.Columns["SoTien"].HeaderText = "Số Tiền (VNĐ)";
             dgvFineList.Columns["NgayLap"].HeaderText = "Ngày Lập";
@@ -321,7 +321,7 @@ namespace UI
             txtSearchFine.Clear();
             LoadFineTab();
         }
-        
+
         #endregion
 
         #region event handler
@@ -349,6 +349,12 @@ namespace UI
         {
 
         }
+        private void dgvReturnHistory_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
         #endregion
+
+
     }
 }
