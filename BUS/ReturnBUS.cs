@@ -32,8 +32,8 @@ namespace BUS
             }
 
             // Thêm phiếu trả
-            bool result = returnDAO.AddReturn(ret);
-            if (!result)
+            int result = returnDAO.AddReturn(ret);
+            if (result <= 0)
             {
                 message = "Lỗi khi thêm phiếu trả!";
                 return false;
@@ -48,7 +48,7 @@ namespace BUS
             }
 
             // Cập nhật trạng thái phiếu mượn
-            loanDAO.UpdateLoanStatus(loan.MaPhieuMuon, "Đã trả");
+            //loanDAO.UpdateLoanStatus(loan.MaPhieuMuon, "Đã trả");
 
             // Xử lý phạt nếu có
             bool hasFine = false;
@@ -80,7 +80,7 @@ namespace BUS
             {
                 var fine = new FineDTO
                 {
-                    MaDocGia = loan.MaDocGia,
+                    MaPhieuTra = result,
                     LyDo = lyDo.Trim(),
                     SoTien = soTien,
                     NgayLap = DateTime.Now

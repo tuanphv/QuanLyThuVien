@@ -34,5 +34,11 @@ namespace BUS
 
             return BookDAO.DeleteBook(maSach);
         }
+
+        //Trí thêm
+        public static BookDTO GetBookById(int maSach)
+        {
+            return BookDAO.GetBookById(maSach);
+        }
     }
 }

@@ -118,5 +118,27 @@ namespace DAO
                 return false;
             }
         }
+
+        // Trí: thêm để lấy mã sách theo ID
+        public static BookDTO GetBookById(int maSach)
+        {
+            string query = "SELECT * FROM Sach WHERE MaSach = @MaSach";
+            MySqlParameter[] parameters = { new MySqlParameter("@MaSach", maSach) };
+
+            DataTable dt = DataProvider.Instance.ExecuteQuery(query, parameters);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+                return new BookDTO
+                {
+                    MaSach = Convert.ToInt32(row["MaSach"]),
+                    TieuDe = row["TieuDe"].ToString(),
+                    //... (thêm các thuộc tính khác như TacGia, NamXuatBan... nếu bạn cần)
+                    GiaSach = Convert.ToDecimal(row["GiaSach"])
+                };
+            }
+            return null; // Trả về null nếu không tìm thấy
+        }
     }
 }

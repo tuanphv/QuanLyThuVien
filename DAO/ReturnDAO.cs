@@ -6,27 +6,32 @@ namespace DAO
 {
     public class ReturnDAO
     {
-        public bool AddReturn(ReturnDTO ret)
+        public int AddReturn(ReturnDTO ret)
         {
             string query = @"
                 INSERT INTO PhieuTra (MaPhieuMuon, NgayTra, TinhTrangSach, TienPhat)
-                VALUES (@MaPhieuMuon, @NgayTra, @TinhTrangSach, @TienPhat);";
+                VALUES (@MaPhieuMuon, @NgayTra, @TinhTrangSach, @TienPhat);
+                SELECT LAST_INSERT_ID();";
 
-            int result = DataProvider.Instance.ExecuteNonQuery(query,
+            object result = DataProvider.Instance.ExecuteScalar(query,
                 new MySqlParameter("@MaPhieuMuon", ret.MaPhieuMuon),
                 new MySqlParameter("@NgayTra", ret.NgayTra),
                 new MySqlParameter("@TinhTrangSach", ret.TinhTrangSach),
                 new MySqlParameter("@TienPhat", ret.TienPhat));
 
-            if (result > 0)
+            if (result != null && result != DBNull.Value)
             {
+                int maPhieuTra = Convert.ToInt32(result);
+
                 // Cập nhật trạng thái phiếu mượn
                 string updateLoan = "UPDATE PhieuMuon SET TrangThai = 'Đã trả' WHERE MaPhieuMuon = @MaPhieuMuon";
                 DataProvider.Instance.ExecuteNonQuery(updateLoan,
                     new MySqlParameter("@MaPhieuMuon", ret.MaPhieuMuon));
+
+                return maPhieuTra; // <-- Trả về mã phiếu trả mới
             }
 
-            return result > 0;
+            return 0;
         }
 
         public List<ReturnDTO> GetAllReturns()

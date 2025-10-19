@@ -59,10 +59,12 @@
             dgvReturnHistory = new DataGridView();
             panel8 = new Panel();
             panel13 = new Panel();
-            btnReturn = new Button();
-            txtBookCondition = new TextBox();
+            cmbBookCondition = new ComboBox();
+            txtTenSach = new TextBox();
+            lblSach = new Label();
+            txtMaPhieuMuon = new TextBox();
+            btnConfirmReturn = new Button();
             dtReturnDate = new DateTimePicker();
-            cbLoan = new ComboBox();
             lblCondition = new Label();
             lblReturnDate = new Label();
             lblLoan = new Label();
@@ -70,8 +72,8 @@
             dgvReturnList = new DataGridView();
             panel7 = new Panel();
             btnReloadReturn = new Button();
-            btnSearchReturn = new Button();
-            txtSearchReturn = new UI.UICustom.PlaceholderTextBox();
+            btnSearchLoanReturn = new Button();
+            txtSearchLoanReturn = new UI.UICustom.PlaceholderTextBox();
             panel6 = new Panel();
             label1 = new Label();
             tabPage3 = new TabPage();
@@ -460,10 +462,12 @@
             // panel13
             // 
             panel13.BackColor = SystemColors.ActiveBorder;
-            panel13.Controls.Add(btnReturn);
-            panel13.Controls.Add(txtBookCondition);
+            panel13.Controls.Add(cmbBookCondition);
+            panel13.Controls.Add(txtTenSach);
+            panel13.Controls.Add(lblSach);
+            panel13.Controls.Add(txtMaPhieuMuon);
+            panel13.Controls.Add(btnConfirmReturn);
             panel13.Controls.Add(dtReturnDate);
-            panel13.Controls.Add(cbLoan);
             panel13.Controls.Add(lblCondition);
             panel13.Controls.Add(lblReturnDate);
             panel13.Controls.Add(lblLoan);
@@ -473,52 +477,68 @@
             panel13.Size = new Size(350, 400);
             panel13.TabIndex = 3;
             // 
-            // btnReturn
+            // cmbBookCondition
             // 
-            btnReturn.BackColor = Color.FromArgb(0, 192, 0);
-            btnReturn.Cursor = Cursors.Hand;
-            btnReturn.FlatAppearance.BorderSize = 0;
-            btnReturn.FlatStyle = FlatStyle.Flat;
-            btnReturn.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnReturn.ForeColor = Color.White;
-            btnReturn.Location = new Point(83, 210);
-            btnReturn.Name = "btnReturn";
-            btnReturn.Size = new Size(162, 51);
-            btnReturn.TabIndex = 8;
-            btnReturn.Text = "Xác nhận trả";
-            btnReturn.UseVisualStyleBackColor = false;
-            btnReturn.Click += btnReturn_Click;
+            cmbBookCondition.FormattingEnabled = true;
+            cmbBookCondition.Items.AddRange(new object[] { "Tốt", "Hư hỏng nhẹ", "Hỏng nặng", "Mất sách" });
+            cmbBookCondition.Location = new Point(147, 169);
+            cmbBookCondition.Name = "cmbBookCondition";
+            cmbBookCondition.Size = new Size(151, 28);
+            cmbBookCondition.TabIndex = 12;
             // 
-            // txtBookCondition
+            // txtTenSach
             // 
-            txtBookCondition.BorderStyle = BorderStyle.FixedSingle;
-            txtBookCondition.Location = new Point(147, 136);
-            txtBookCondition.Name = "txtBookCondition";
-            txtBookCondition.Size = new Size(151, 27);
-            txtBookCondition.TabIndex = 6;
+            txtTenSach.Location = new Point(147, 84);
+            txtTenSach.Name = "txtTenSach";
+            txtTenSach.ReadOnly = true;
+            txtTenSach.Size = new Size(151, 27);
+            txtTenSach.TabIndex = 11;
+            // 
+            // lblSach
+            // 
+            lblSach.AutoSize = true;
+            lblSach.Location = new Point(20, 91);
+            lblSach.Name = "lblSach";
+            lblSach.Size = new Size(68, 20);
+            lblSach.TabIndex = 10;
+            lblSach.Text = "Tên sách:";
+            // 
+            // txtMaPhieuMuon
+            // 
+            txtMaPhieuMuon.Location = new Point(147, 42);
+            txtMaPhieuMuon.Name = "txtMaPhieuMuon";
+            txtMaPhieuMuon.ReadOnly = true;
+            txtMaPhieuMuon.Size = new Size(151, 27);
+            txtMaPhieuMuon.TabIndex = 9;
+            // 
+            // btnConfirmReturn
+            // 
+            btnConfirmReturn.BackColor = Color.FromArgb(0, 192, 0);
+            btnConfirmReturn.Cursor = Cursors.Hand;
+            btnConfirmReturn.FlatAppearance.BorderSize = 0;
+            btnConfirmReturn.FlatStyle = FlatStyle.Flat;
+            btnConfirmReturn.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnConfirmReturn.ForeColor = Color.White;
+            btnConfirmReturn.Location = new Point(83, 244);
+            btnConfirmReturn.Name = "btnConfirmReturn";
+            btnConfirmReturn.Size = new Size(162, 51);
+            btnConfirmReturn.TabIndex = 8;
+            btnConfirmReturn.Text = "Xác nhận trả";
+            btnConfirmReturn.UseVisualStyleBackColor = false;
+            btnConfirmReturn.Click += btnConfirmReturn_Click;
             // 
             // dtReturnDate
             // 
             dtReturnDate.Format = DateTimePickerFormat.Short;
-            dtReturnDate.Location = new Point(147, 92);
+            dtReturnDate.Location = new Point(147, 126);
             dtReturnDate.Name = "dtReturnDate";
             dtReturnDate.Size = new Size(114, 27);
             dtReturnDate.TabIndex = 5;
             // 
-            // cbLoan
-            // 
-            cbLoan.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            cbLoan.FormattingEnabled = true;
-            cbLoan.Location = new Point(147, 45);
-            cbLoan.Name = "cbLoan";
-            cbLoan.Size = new Size(151, 28);
-            cbLoan.TabIndex = 4;
-            cbLoan.Text = "Chọn phiếu mượn";
-            // 
             // lblCondition
             // 
             lblCondition.AutoSize = true;
-            lblCondition.Location = new Point(19, 143);
+            lblCondition.Location = new Point(19, 177);
             lblCondition.Name = "lblCondition";
             lblCondition.Size = new Size(112, 20);
             lblCondition.TabIndex = 2;
@@ -527,7 +547,7 @@
             // lblReturnDate
             // 
             lblReturnDate.AutoSize = true;
-            lblReturnDate.Location = new Point(19, 97);
+            lblReturnDate.Location = new Point(19, 131);
             lblReturnDate.Name = "lblReturnDate";
             lblReturnDate.Size = new Size(69, 20);
             lblReturnDate.TabIndex = 1;
@@ -581,14 +601,14 @@
             dgvReturnList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReturnList.Size = new Size(992, 400);
             dgvReturnList.TabIndex = 0;
-            
+            dgvReturnList.CellClick += dgvReturnList_CellClick;
             // 
             // panel7
             // 
             panel7.BackColor = Color.LightGray;
             panel7.Controls.Add(btnReloadReturn);
-            panel7.Controls.Add(btnSearchReturn);
-            panel7.Controls.Add(txtSearchReturn);
+            panel7.Controls.Add(btnSearchLoanReturn);
+            panel7.Controls.Add(txtSearchLoanReturn);
             panel7.Dock = DockStyle.Top;
             panel7.Location = new Point(3, 83);
             panel7.Name = "panel7";
@@ -613,38 +633,38 @@
             btnReloadReturn.UseVisualStyleBackColor = false;
             btnReloadReturn.Click += btnReloadReturn_Click;
             // 
-            // btnSearchReturn
+            // btnSearchLoanReturn
             // 
-            btnSearchReturn.Anchor = AnchorStyles.Right;
-            btnSearchReturn.BackColor = Color.DeepSkyBlue;
-            btnSearchReturn.FlatAppearance.BorderSize = 0;
-            btnSearchReturn.FlatStyle = FlatStyle.Flat;
-            btnSearchReturn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSearchReturn.ForeColor = SystemColors.Window;
-            btnSearchReturn.Location = new Point(453, 17);
-            btnSearchReturn.Margin = new Padding(3, 4, 3, 4);
-            btnSearchReturn.Name = "btnSearchReturn";
-            btnSearchReturn.Size = new Size(103, 37);
-            btnSearchReturn.TabIndex = 5;
-            btnSearchReturn.Text = "Tìm kiếm";
-            btnSearchReturn.UseVisualStyleBackColor = false;
-            btnSearchReturn.Click += btnSearchReturn_Click;
+            btnSearchLoanReturn.Anchor = AnchorStyles.Right;
+            btnSearchLoanReturn.BackColor = Color.DeepSkyBlue;
+            btnSearchLoanReturn.FlatAppearance.BorderSize = 0;
+            btnSearchLoanReturn.FlatStyle = FlatStyle.Flat;
+            btnSearchLoanReturn.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearchLoanReturn.ForeColor = SystemColors.Window;
+            btnSearchLoanReturn.Location = new Point(453, 17);
+            btnSearchLoanReturn.Margin = new Padding(3, 4, 3, 4);
+            btnSearchLoanReturn.Name = "btnSearchLoanReturn";
+            btnSearchLoanReturn.Size = new Size(103, 37);
+            btnSearchLoanReturn.TabIndex = 5;
+            btnSearchLoanReturn.Text = "Tìm kiếm";
+            btnSearchLoanReturn.UseVisualStyleBackColor = false;
+            btnSearchLoanReturn.Click += btnSearchLoanReturn_Click;
             // 
-            // txtSearchReturn
+            // txtSearchLoanReturn
             // 
-            txtSearchReturn.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txtSearchReturn.BorderStyle = BorderStyle.FixedSingle;
-            txtSearchReturn.ForeColor = Color.Gray;
-            txtSearchReturn.Location = new Point(19, 20);
-            txtSearchReturn.Margin = new Padding(3, 4, 3, 4);
-            txtSearchReturn.Name = "txtSearchReturn";
-            txtSearchReturn.PlaceholderColor = Color.Gray;
-            txtSearchReturn.PlaceholderText = "Nhập mã phiếu trả ...";
-            txtSearchReturn.Size = new Size(411, 27);
-            txtSearchReturn.TabIndex = 4;
-            txtSearchReturn.Text = "Nhập mã phiếu trả ...";
-            txtSearchReturn.TextColor = Color.Black;
-            txtSearchReturn.TextChanged += txtSearchReturn_TextChanged;
+            txtSearchLoanReturn.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtSearchLoanReturn.BorderStyle = BorderStyle.FixedSingle;
+            txtSearchLoanReturn.ForeColor = Color.Gray;
+            txtSearchLoanReturn.Location = new Point(19, 20);
+            txtSearchLoanReturn.Margin = new Padding(3, 4, 3, 4);
+            txtSearchLoanReturn.Name = "txtSearchLoanReturn";
+            txtSearchLoanReturn.PlaceholderColor = Color.Gray;
+            txtSearchLoanReturn.PlaceholderText = "Nhập mã phiếu trả, tên sách ...";
+            txtSearchLoanReturn.Size = new Size(411, 27);
+            txtSearchLoanReturn.TabIndex = 4;
+            txtSearchLoanReturn.Text = "Nhập mã phiếu trả, tên sách ...";
+            txtSearchLoanReturn.TextColor = Color.Black;
+            txtSearchLoanReturn.TextChanged += txtSearchReturn_TextChanged;
             // 
             // panel6
             // 
@@ -841,8 +861,8 @@
         private Panel panel7;
         private Panel panel6;
         private Button btnReloadReturn;
-        private Button btnSearchReturn;
-        private UICustom.PlaceholderTextBox txtSearchReturn;
+        private Button btnSearchLoanReturn;
+        private UICustom.PlaceholderTextBox txtSearchLoanReturn;
         private Label label1;
         private Panel panel12;
         private Panel panel11;
@@ -869,14 +889,16 @@
         private Panel panel8;
         private DataGridView dgvReturnHistory;
         private Panel panel13;
-        private Button btnReturn;
-        private TextBox txtBookCondition;
+        private Button btnConfirmReturn;
         private DateTimePicker dtReturnDate;
-        private ComboBox cbLoan;
         private Label lblCondition;
         private Label lblReturnDate;
         private Label lblLoan;
         private Panel panel14;
         private DataGridView dgvReturnList;
+        private TextBox txtMaPhieuMuon;
+        private TextBox txtTenSach;
+        private Label lblSach;
+        private ComboBox cmbBookCondition;
     }
 }

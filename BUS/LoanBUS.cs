@@ -61,6 +61,16 @@ namespace BUS
             return loanDAO.DeleteLoan(maPhieuMuon);
         }
 
+        public List<LoanDTO> SearchUnreturnedLoans(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                // Nếu ô tìm kiếm trống, trả về TẤT CẢ phiếu chưa trả
+                return loanDAO.GetUnreturnedLoans();
+            }
 
+            // Nếu có từ khóa, gọi hàm tìm kiếm mới
+            return loanDAO.SearchUnreturnedLoans(keyword);
+        }
     }
 }

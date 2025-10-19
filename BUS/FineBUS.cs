@@ -20,9 +20,9 @@ namespace BUS
             return fineDAO.GetAllFines();
         }
 
-        public List<FineDTO> SearchFinesByReader(string keyword)
+        public List<FineDTO> SearchFines(string keyword)
         {
-            return fineDAO.SearchFinesByReader(keyword);
+            return fineDAO.SearchFines(keyword);
         }
 
     }

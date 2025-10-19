@@ -24,7 +24,7 @@ namespace UI
             InitializeComponent();
             this.Load += FrmBorrowReturn_Load;
             txtSearchLoan.KeyDown += TxtSearch_KeyDown;
-            txtSearchReturn.KeyDown += TxtSearch_KeyDown;
+            txtSearchLoanReturn.KeyDown += TxtSearch_KeyDown;
             txtSearchFine.KeyDown += TxtSearch_KeyDown;
         }
         private void FrmBorrowReturn_Load(object sender, EventArgs e)
@@ -204,40 +204,48 @@ namespace UI
         private void LoadReturnTab()
         {
             // Hiển thị danh sách phiếu mượn chưa trả
-            dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();        
+            dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();
             dgvReturnList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             // Hiển thị lịch sử phiếu trả
             dgvReturnHistory.DataSource = returnBUS.GetAllReturns();
-            dgvReturnHistory.Columns["TienPhat"].Visible = false;
+            if (dgvReturnHistory.Columns.Contains("TienPhat"))
+            {
+                dgvReturnHistory.Columns["TienPhat"].Visible = false;
+            }
             dgvReturnHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            // ComboBox chọn phiếu mượn
-            cbLoan.DataSource = loanBUS.GetUnreturnedLoans();
-            cbLoan.DisplayMember = "MaPhieuMuon";
-            cbLoan.ValueMember = "MaPhieuMuon";
+            ClearReturnForm();
+        }
+        private void ClearReturnForm()
+        {
+            txtMaPhieuMuon.Clear(); // Dùng TextBox mới
+            dtReturnDate.Value = DateTime.Now;
+            cmbBookCondition.Text = "Tốt"; // Dùng ComboBox mới
         }
 
-        private void btnReturn_Click(object sender, EventArgs e)
+        private void btnConfirmReturn_Click(object sender, EventArgs e)
         {
-            if (cbLoan.SelectedValue == null)
+            if (string.IsNullOrEmpty(txtMaPhieuMuon.Text))
             {
-                MessageBox.Show("Vui lòng chọn phiếu mượn!", "Thông báo",
+                MessageBox.Show("Vui lòng tìm và chọn một phiếu mượn để trả!", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var ret = new ReturnDTO
             {
-                MaPhieuMuon = Convert.ToInt32(cbLoan.SelectedValue),
+                // Lấy từ TextBox
+                MaPhieuMuon = Convert.ToInt32(txtMaPhieuMuon.Text),
                 NgayTra = dtReturnDate.Value,
-                TinhTrangSach = txtBookCondition.Text
+                TinhTrangSach = cmbBookCondition.Text // Lấy từ ComboBox mới
             };
 
             if (returnBUS.AddReturn(ret, out string msg))
             {
                 MessageBox.Show(msg, "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadReturnTab();
+                LoadReturnTab(); 
+                LoadFineTab();   
             }
             else
             {
@@ -245,21 +253,22 @@ namespace UI
             }
         }
         // TÌM KIẾM PHIẾU TRẢ
-        private void btnSearchReturn_Click(object sender, EventArgs e)
+        private void btnSearchLoanReturn_Click(object sender, EventArgs e)
         {
-            string keyword = txtSearchReturn.Text.Trim();
+            string keyword = txtSearchLoanReturn.Text.Trim(); 
 
             if (string.IsNullOrEmpty(keyword))
             {
-                MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Nếu ô tìm kiếm trống, tải lại toàn bộ danh sách chưa trả
+                dgvReturnList.DataSource = loanBUS.GetUnreturnedLoans();
                 return;
             }
 
-            var result = returnBUS.SearchReturns(keyword);
-            dgvReturnHistory.DataSource = result;
+            // Gọi hàm SearchUnreturnedLoans mới 
+            var result = loanBUS.SearchUnreturnedLoans(keyword);
+            dgvReturnList.DataSource = result; 
 
-            if (result.Count == 0)
+            if (result.Count == 0) 
             {
                 MessageBox.Show("Không tìm thấy kết quả phù hợp.", "Kết quả tìm kiếm",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -268,8 +277,55 @@ namespace UI
 
         private void btnReloadReturn_Click(object sender, EventArgs e)
         {
-            txtSearchReturn.Clear();
+            txtSearchLoanReturn.Clear(); 
             LoadReturnTab();
+        }
+        private void dgvReturnList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) // Đảm bảo nhấn vào một dòng hợp lệ
+            {
+                DataGridViewRow row = dgvReturnList.Rows[e.RowIndex];
+
+                // Lấy MaPhieuMuon từ dòng được chọn
+                string maPhieuMuonStr = row.Cells["MaPhieuMuon"].Value.ToString();
+                int maPhieuMuon = Convert.ToInt32(maPhieuMuonStr);
+
+                // Điền vào form bên phải
+                txtMaPhieuMuon.Text = maPhieuMuonStr;
+                dtReturnDate.Value = DateTime.Now;
+                cmbBookCondition.Text = "Tốt"; // Đặt lại về mặc định
+                try
+                {
+                    // Lấy chi tiết mượn
+                    var loanDetails = LoanDetailBUS.Instance.GetLoanDetailsByLoanId(maPhieuMuon);
+
+                    if (loanDetails.Count > 0)
+                    {
+                        // Chỉ lấy cuốn sách đầu tiên (giống Tab Mượn)
+                        int maSach = loanDetails[0].MaSach;
+
+                        // Lấy thông tin sách
+                        var book = BookBUS.GetBookById(maSach); 
+                        if (book != null)
+                        {                      
+                            txtTenSach.Text = book.TieuDe;
+                        }
+                        else
+                        {
+                            txtTenSach.Text = "Không tìm thấy sách";
+                        }
+                    }
+                    else
+                    {
+                        txtTenSach.Text = "Không có chi tiết";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    txtTenSach.Text = "Lỗi";
+                    MessageBox.Show("Lỗi khi lấy tên sách: " + ex.Message);
+                }
+            }
         }
 
         #endregion
@@ -306,7 +362,7 @@ namespace UI
                 return;
             }
 
-            var result = fineBUS.SearchFinesByReader(keyword);
+            var result = fineBUS.SearchFines(keyword);
             dgvFineList.DataSource = result;
 
             if (result.Count == 0)
@@ -332,8 +388,10 @@ namespace UI
                 e.SuppressKeyPress = true; // Ngăn tiếng "ting"
                 if (sender == txtSearchLoan)
                     btnSearchLoan.PerformClick();
-                else if (sender == txtSearchReturn)
-                    btnSearchReturn.PerformClick();
+               
+                else if (sender == txtSearchLoanReturn) // Đổi từ txtSearchReturn
+                    btnSearchLoanReturn.PerformClick(); // Đổi từ btnSearchReturn
+
                 else if (sender == txtSearchFine)
                     btnSearchFine.PerformClick();
             }
@@ -353,8 +411,7 @@ namespace UI
         {
 
         }
-        #endregion
-
-
+        #endregion   
+        
     }
 }

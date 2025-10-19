@@ -203,7 +203,44 @@ namespace DAO
             }
         }
 
+        public List<LoanDTO> SearchUnreturnedLoans(string keyword)
+        {
+            // Câu lệnh này dựa trên hàm SearchLoans có sẵn của bạn
+            // nhưng thêm điều kiện "pm.TrangThai != 'Đã trả'"
+            string query = @"
+                    SELECT DISTINCT pm.*
+                    FROM phieumuon pm
+                    LEFT JOIN docgia dg ON pm.MaDocGia = dg.MaDocGia
+                    LEFT JOIN chitietmuon ctm ON pm.MaPhieuMuon = ctm.MaPhieuMuon
+                    LEFT JOIN sach s ON ctm.MaSach = s.MaSach
+                    WHERE 
+                    pm.TrangThai != 'Đã trả' AND
+                    (
+                        CAST(pm.MaPhieuMuon AS CHAR) LIKE @kw OR            
+                        dg.HoTen LIKE @kw OR
+                        s.TieuDe LIKE @kw
+                    );";
 
+            MySqlParameter[] parameters = {new MySqlParameter("@kw", "%" + keyword + "%")};
+
+            DataTable dt = DataProvider.Instance.ExecuteQuery(query, parameters);
+
+            List<LoanDTO> loans = new List<LoanDTO>();
+            foreach (DataRow row in dt.Rows)
+            {
+                LoanDTO loan = new LoanDTO
+                {
+                    MaPhieuMuon = Convert.ToInt32(row["MaPhieuMuon"]),
+                    MaDocGia = Convert.ToInt32(row["MaDocGia"]),
+                    MaNhanVien = Convert.ToInt32(row["MaNhanVien"]),
+                    NgayMuon = Convert.ToDateTime(row["NgayMuon"]),
+                    HanTra = Convert.ToDateTime(row["HanTra"]),
+                    TrangThai = row["TrangThai"].ToString()
+                };
+                loans.Add(loan);
+            }
+            return loans;
+        }
 
     }
 }

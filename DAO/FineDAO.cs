@@ -42,22 +42,20 @@ namespace DAO
             return list;
         }
 
-        public List<FineDTO> SearchFinesByReader(string keyword)
+        public List<FineDTO> SearchFines(string keyword)
         {
             string query = @"
-                SELECT pp.* 
-                FROM PhieuPhat pp
-                JOIN DocGia dg ON pp.MaDocGia = dg.MaDocGia
-                WHERE dg.HoTen LIKE CONCAT('%', @keyword, '%') 
-                        OR CAST(MaPhieuPhat AS CHAR) LIKE @kw
-                        OR CAST(MaDocGia AS CHAR) LIKE @kw
-                        OR LyDo LIKE @kw""
-                ORDER BY NgayLap DESC";
+                SELECT pp.* FROM PhieuPhat pp
+                JOIN PhieuTra pt ON pp.MaPhieuTra = pt.MaPhieuTra
+                JOIN PhieuMuon pm ON pt.MaPhieuMuon = pm.MaPhieuMuon
+                JOIN DocGia dg ON pm.MaDocGia = dg.MaDocGia
+                WHERE (dg.MaDocGia LIKE @kw OR dg.HoTen LIKE @kw OR pp.MaPhieuPhat LIKE @kw)";
 
-            var dt = DataProvider.Instance.ExecuteQuery(query,
-                new MySql.Data.MySqlClient.MySqlParameter("@keyword", keyword));
+            MySqlParameter[] parameters = { new MySqlParameter("@kw", "%" + keyword + "%") };
 
+            var dt = DataProvider.Instance.ExecuteQuery(query, parameters);
             var list = new List<FineDTO>();
+
             foreach (DataRow row in dt.Rows)
             {
                 list.Add(new FineDTO
