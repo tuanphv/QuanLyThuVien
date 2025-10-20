@@ -242,5 +242,19 @@ namespace DAO
             return loans;
         }
 
+        public bool ExtendDueDate(int maPhieuMuon, DateTime newDueDate)
+        {
+            // Cập nhật Hạn Trả và reset Trạng Thái về 'Đang mượn'
+            string query = @"
+                UPDATE PhieuMuon 
+                SET HanTra = @HanTra, TrangThai = 'Đang mượn' 
+                WHERE MaPhieuMuon = @MaPhieuMuon";
+
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@HanTra", newDueDate),
+                new MySqlParameter("@MaPhieuMuon", maPhieuMuon)
+            );
+            return result > 0;
+        }
     }
 }

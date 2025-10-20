@@ -85,6 +85,7 @@
             txtSearchFine = new UI.UICustom.PlaceholderTextBox();
             panel10 = new Panel();
             label2 = new Label();
+            btnExtendLoan = new Button();
             tabBorrowReturn.SuspendLayout();
             tabPage1.SuspendLayout();
             panel4.SuspendLayout();
@@ -192,6 +193,7 @@
             // panel3
             // 
             panel3.BackColor = Color.Silver;
+            panel3.Controls.Add(btnExtendLoan);
             panel3.Controls.Add(btnDeleteLoan);
             panel3.Controls.Add(btnCreateLoan);
             panel3.Controls.Add(numQuantity);
@@ -212,15 +214,15 @@
             // 
             // btnDeleteLoan
             // 
-            btnDeleteLoan.BackColor = Color.FromArgb(255, 128, 0);
+            btnDeleteLoan.BackColor = Color.Red;
             btnDeleteLoan.Cursor = Cursors.Hand;
             btnDeleteLoan.FlatAppearance.BorderSize = 0;
             btnDeleteLoan.FlatStyle = FlatStyle.Flat;
             btnDeleteLoan.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnDeleteLoan.ForeColor = Color.White;
-            btnDeleteLoan.Location = new Point(203, 285);
+            btnDeleteLoan.Location = new Point(130, 285);
             btnDeleteLoan.Name = "btnDeleteLoan";
-            btnDeleteLoan.Size = new Size(114, 43);
+            btnDeleteLoan.Size = new Size(92, 43);
             btnDeleteLoan.TabIndex = 14;
             btnDeleteLoan.Text = "Xóa Phiếu";
             btnDeleteLoan.UseVisualStyleBackColor = false;
@@ -234,9 +236,9 @@
             btnCreateLoan.FlatStyle = FlatStyle.Flat;
             btnCreateLoan.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCreateLoan.ForeColor = Color.White;
-            btnCreateLoan.Location = new Point(32, 285);
+            btnCreateLoan.Location = new Point(17, 285);
             btnCreateLoan.Name = "btnCreateLoan";
-            btnCreateLoan.Size = new Size(114, 43);
+            btnCreateLoan.Size = new Size(92, 43);
             btnCreateLoan.TabIndex = 13;
             btnCreateLoan.Text = "Tạo Phiếu";
             btnCreateLoan.UseVisualStyleBackColor = false;
@@ -801,6 +803,22 @@
             label2.TabIndex = 4;
             label2.Text = "Quản lý Phiếu phạt";
             // 
+            // btnExtendLoan
+            // 
+            btnExtendLoan.BackColor = Color.DarkGray;
+            btnExtendLoan.Cursor = Cursors.Hand;
+            btnExtendLoan.FlatAppearance.BorderSize = 0;
+            btnExtendLoan.FlatStyle = FlatStyle.Flat;
+            btnExtendLoan.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnExtendLoan.ForeColor = Color.White;
+            btnExtendLoan.Location = new Point(244, 285);
+            btnExtendLoan.Name = "btnExtendLoan";
+            btnExtendLoan.Size = new Size(92, 43);
+            btnExtendLoan.TabIndex = 15;
+            btnExtendLoan.Text = "Gia Hạn";
+            btnExtendLoan.UseVisualStyleBackColor = false;
+            btnExtendLoan.Click += btnExtendLoan_Click;
+            // 
             // FrmBorrowReturn
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -900,5 +918,6 @@
         private TextBox txtTenSach;
         private Label lblSach;
         private ComboBox cmbBookCondition;
+        private Button btnExtendLoan;
     }
 }

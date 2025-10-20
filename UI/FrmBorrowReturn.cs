@@ -244,8 +244,8 @@ namespace UI
             if (returnBUS.AddReturn(ret, out string msg))
             {
                 MessageBox.Show(msg, "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadReturnTab(); 
-                LoadFineTab();   
+                LoadReturnTab();
+                LoadFineTab();
             }
             else
             {
@@ -255,7 +255,7 @@ namespace UI
         // TÌM KIẾM PHIẾU TRẢ
         private void btnSearchLoanReturn_Click(object sender, EventArgs e)
         {
-            string keyword = txtSearchLoanReturn.Text.Trim(); 
+            string keyword = txtSearchLoanReturn.Text.Trim();
 
             if (string.IsNullOrEmpty(keyword))
             {
@@ -266,9 +266,9 @@ namespace UI
 
             // Gọi hàm SearchUnreturnedLoans mới 
             var result = loanBUS.SearchUnreturnedLoans(keyword);
-            dgvReturnList.DataSource = result; 
+            dgvReturnList.DataSource = result;
 
-            if (result.Count == 0) 
+            if (result.Count == 0)
             {
                 MessageBox.Show("Không tìm thấy kết quả phù hợp.", "Kết quả tìm kiếm",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -277,7 +277,7 @@ namespace UI
 
         private void btnReloadReturn_Click(object sender, EventArgs e)
         {
-            txtSearchLoanReturn.Clear(); 
+            txtSearchLoanReturn.Clear();
             LoadReturnTab();
         }
         private void dgvReturnList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -305,9 +305,9 @@ namespace UI
                         int maSach = loanDetails[0].MaSach;
 
                         // Lấy thông tin sách
-                        var book = BookBUS.GetBookById(maSach); 
+                        var book = BookBUS.GetBookById(maSach);
                         if (book != null)
-                        {                      
+                        {
                             txtTenSach.Text = book.TieuDe;
                         }
                         else
@@ -388,7 +388,7 @@ namespace UI
                 e.SuppressKeyPress = true; // Ngăn tiếng "ting"
                 if (sender == txtSearchLoan)
                     btnSearchLoan.PerformClick();
-               
+
                 else if (sender == txtSearchLoanReturn) // Đổi từ txtSearchReturn
                     btnSearchLoanReturn.PerformClick(); // Đổi từ btnSearchReturn
 
@@ -411,7 +411,36 @@ namespace UI
         {
 
         }
-        #endregion   
-        
+        #endregion
+
+        private void btnExtendLoan_Click(object sender, EventArgs e)
+        {
+            // 1. Kiểm tra xem người dùng đã chọn phiếu mượn chưa
+            if (dgvLoanList.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn một phiếu mượn từ danh sách để gia hạn.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Lấy MaPhieuMuon từ dòng đã chọn
+            int maPhieuMuon = Convert.ToInt32(dgvLoanList.SelectedRows[0].Cells["MaPhieuMuon"].Value);
+
+            // 3. Lấy Hạn Trả MỚI từ DateTimePicker
+            DateTime newDueDate = dtDueDate.Value;
+
+            // 4. Gọi BUS để thực hiện gia hạn
+            string message;
+            bool success = loanBUS.ExtendDueDate(maPhieuMuon, newDueDate, out message);
+
+            // 5. Hiển thị thông báo và tải lại danh sách
+            MessageBox.Show(message, success ? "Thành công" : "Lỗi",
+                MessageBoxButtons.OK, success ? MessageBoxIcon.Information : MessageBoxIcon.Error);
+
+            if (success)
+            {
+                LoadLoanList(); // Tải lại danh sách phiếu mượn
+            }
+        }
     }
 }
