@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using DTO;
 using DAO;
+using System.ComponentModel;
 
 namespace BUS
 {
     public class BookBUS
     {
-        public static List<BookDTO> GetAllBooks()
+        public static BindingList<BookDTO> GetAllBooks()
         {
             return BookDAO.GetAllBooks();
         }

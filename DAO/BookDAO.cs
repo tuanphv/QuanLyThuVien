@@ -3,15 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.ComponentModel;
 
 namespace DAO
 {
     public class BookDAO
     {
         // Lấy danh sách tất cả sách
-        public static List<BookDTO> GetAllBooks()
+        public static BindingList<BookDTO> GetAllBooks()
         {
-            List<BookDTO> list = new List<BookDTO>();
+            BindingList<BookDTO> list = new BindingList<BookDTO>();
 
             string query = "SELECT * FROM Sach";
             DataTable dt = DataProvider.Instance.ExecuteQuery(query);

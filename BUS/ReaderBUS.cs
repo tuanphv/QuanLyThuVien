@@ -1,17 +1,18 @@
 ﻿using DTO;
+using System.ComponentModel;
 
 namespace BUS
 {
     public class ReaderBUS
     {
-        public static List<DTO.ReaderDTO> GetAllReaders()
+        public static BindingList<DTO.ReaderDTO> GetAllReaders()
         {
             return DAO.ReaderDAO.GetAllReaders();
         }
 
-        public static bool AddReader(DTO.ReaderDTO reader)
+        public static int AddReader(DTO.ReaderDTO reader)
         {
-            return ValidateReader(reader) &&  DAO.ReaderDAO.AddReader(reader);
+            return DAO.ReaderDAO.AddReader(reader);
         }
 
         public static bool UpdateReader(DTO.ReaderDTO reader)
@@ -24,13 +25,12 @@ namespace BUS
             return DAO.ReaderDAO.DeleteReader(readerId);
         }
 
-        public static List<DTO.ReaderDTO> SearchReaders(string text)
+        public static BindingList<DTO.ReaderDTO> SearchReaders(BindingList<ReaderDTO> list, string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return GetAllReaders();
 
-            List<ReaderDTO> list = GetAllReaders();
-            List<ReaderDTO> result = new List<ReaderDTO>();
+            BindingList<ReaderDTO> result = new BindingList<ReaderDTO>();
                 
             // duyệt từng reader, cho vào result những kết quả phù hợp
             foreach (ReaderDTO reader in list)

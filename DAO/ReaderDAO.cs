@@ -1,13 +1,14 @@
 ﻿using DTO;
 using MySql.Data.MySqlClient;
 
+using System.ComponentModel;
 namespace DAO
 {
     public class ReaderDAO
     {
-        public static List<ReaderDTO> GetAllReaders()
+        public static BindingList<ReaderDTO> GetAllReaders()
         {
-            List<ReaderDTO> list = new List<ReaderDTO>();
+            BindingList<ReaderDTO> list = new BindingList<ReaderDTO>();
             string query = "SELECT * FROM DocGia";
             System.Data.DataTable dt = DataProvider.Instance.ExecuteQuery(query);
             foreach (System.Data.DataRow row in dt.Rows)
@@ -27,11 +28,13 @@ namespace DAO
             return list;
         }
 
-        public static bool AddReader(ReaderDTO reader)
+        public static int AddReader(ReaderDTO reader)
         {
             string query = "INSERT INTO DocGia (HoTen, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, NgayDangKy) " +
-                           "VALUES (@HoTen, @NgaySinh, @GioiTinh, @DiaChi, @Email, @SoDienThoai, @NgayDangKy)";
-            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                           "VALUES (@HoTen, @NgaySinh, @GioiTinh, @DiaChi, @Email, @SoDienThoai, @NgayDangKy); " +
+                           "SELECT LAST_INSERT_ID();";
+
+            object result = DataProvider.Instance.ExecuteScalar(query,
                 new MySqlParameter("@HoTen", reader.HoTen),
                 new MySqlParameter("@NgaySinh", reader.NgaySinh),
                 new MySqlParameter("@GioiTinh", reader.GioiTinh),
@@ -39,7 +42,8 @@ namespace DAO
                 new MySqlParameter("@Email", reader.Email),
                 new MySqlParameter("@SoDienThoai", reader.SoDienThoai),
                 new MySqlParameter("@NgayDangKy", reader.NgayDangKy));
-            return result > 0;
+
+            return Convert.ToInt32(result);
         }
 
         public static bool UpdateReader(ReaderDTO reader)

@@ -1,12 +1,15 @@
 ﻿using DTO;
 using DTO.Enums;
 using UI.Utilities;
-using UI.UICustom; // Add this for modern dialogs
+using UI.UICustom;
+using System.ComponentModel;
 
 namespace UI
 {
     public partial class FrmReaders : Form
     {
+        private BindingList<ReaderDTO> list = BUS.ReaderBUS.GetAllReaders();
+
         private FormMode currentMode = FormMode.None;
         public FrmReaders()
         {
@@ -20,9 +23,7 @@ namespace UI
 
         private void LoadAllReadersData()
         {
-            var readers = BUS.ReaderBUS.GetAllReaders();
-            dgvReaders.DataSource = null;
-            dgvReaders.DataSource = readers;
+            dgvReaders.DataSource = list;
         }
 
         private void LoadAllLibraryCardsData()
@@ -277,22 +278,36 @@ namespace UI
             if (!ValidateInputReader())
                 return;
             var reader = GetReaderFromInput();
+            int maDocGia = -1;
             bool success = false;
             if (reader != null)
             {
                 if (currentMode == FormMode.Add)
                 {
-                    success = BUS.ReaderBUS.AddReader(reader);
+                    maDocGia = BUS.ReaderBUS.AddReader(reader);
                 }
                 else if (currentMode == FormMode.Edit)
                 {
                     success = BUS.ReaderBUS.UpdateReader(reader);
                 }
             }
-            if (success)
+            if (maDocGia != -1)
             {
-                ModernToast.ShowSuccess("Lưu thông tin độc giả thành công.");
-                LoadAllReadersData();
+                ModernToast.ShowSuccess("Thêm thông tin độc giả thành công.");
+                reader.MaDocGia = maDocGia;
+                list.Add(reader);
+            }
+            else if (success)
+            {
+                ModernToast.ShowSuccess("Chỉnh sửa thông tin độc giả thành công.");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].MaDocGia == reader.MaDocGia)
+                    {
+                        list[i] = reader;
+                        break;
+                    }
+                }
             }
             else
             {
@@ -335,7 +350,14 @@ namespace UI
                     if (success)
                     {
                         ModernToast.ShowSuccess("Xóa độc giả thành công.");
-                        LoadAllReadersData();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            if (list[i].MaDocGia == maDocGia)
+                            {
+                                list.RemoveAt(i);
+                                break;
+                            }
+                        }
                     }
                     else
                     {
@@ -468,20 +490,15 @@ namespace UI
         #region Xử lí tìm kiếm
         private void btnSearchReader_Click(object sender, EventArgs e)
         {
-            List<ReaderDTO> list;
-
             if (!txtSearchReader.IsPlaceholderActive)
             {
                 string text = txtSearchReader.Text;
-                list = BUS.ReaderBUS.SearchReaders(text);
+                dgvReaders.DataSource = BUS.ReaderBUS.SearchReaders(list, text);
             }
             else
             {
-                list = BUS.ReaderBUS.GetAllReaders();
+                dgvReaders.DataSource = list;
             }
-
-            dgvReaders.DataSource = list;
-
         }
 
         private void txtSearchReader_KeyDown(object sender, KeyEventArgs e)
@@ -528,9 +545,10 @@ namespace UI
 
         private void btnReloadReaders_Click(object sender, EventArgs e)
         {
-            LoadAllReadersData();
             txtSearchReader.ResetPlaceholder();
+            LoadAllReadersData();
         }
+
         #endregion
     }
 }

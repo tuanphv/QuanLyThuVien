@@ -144,7 +144,7 @@ CREATE TABLE PhieuTra (
 -- Bảng Phiếu phạt
 CREATE TABLE PhieuPhat (
     MaPhieuPhat INT PRIMARY KEY AUTO_INCREMENT,
-    MaDocGia INT,
+    MaPhieuTra INT,
     LyDo VARCHAR(200),
     SoTien DECIMAL(10,2),
     NgayLap DATE DEFAULT (CURRENT_DATE)
@@ -263,7 +263,7 @@ FOREIGN KEY (MaPhieuMuon) REFERENCES PhieuMuon(MaPhieuMuon);
 -- Khóa ngoại cho bảng PhieuPhat
 ALTER TABLE PhieuPhat
 ADD CONSTRAINT FK_PhieuPhat_DocGia
-FOREIGN KEY (MaDocGia) REFERENCES DocGia(MaDocGia);
+FOREIGN KEY (MaPhieuTra) REFERENCES PhieuTra(MaPhieuTra);
 
 -- Khóa ngoại cho bảng DangNhap
 ALTER TABLE DangNhap
@@ -420,12 +420,13 @@ INSERT INTO ChiTietMuon (MaPhieuMuon, MaSach, SoLuong) VALUES
 
 -- Thêm dữ liệu cho bảng PhieuTra
 INSERT INTO PhieuTra (MaPhieuMuon, NgayTra, TinhTrangSach, TienPhat) VALUES
-(1, '2023-06-14', N'Tốt', 0); -- Trả đúng hạn
+(1, '2023-06-14', N'Tốt', 0),
+(2, '2023-06-14', N'Tốt', 0); -- Trả đúng hạn
 
 -- Thêm dữ liệu cho bảng PhieuPhat
-INSERT INTO PhieuPhat (MaDocGia, LyDo, SoTien, NgayLap) VALUES
-(4, N'Trả sách quá hạn 5 ngày', 50000, '2023-07-01'),
-(5, N'Làm hỏng sách', 120000, '2023-06-25');
+INSERT INTO PhieuPhat (MaPhieuTra, LyDo, SoTien, NgayLap) VALUES
+(1, N'Trả sách quá hạn 5 ngày', 50000, '2023-07-01'),
+(2, N'Làm hỏng sách', 120000, '2023-06-25');
 
 -- Thêm dữ liệu cho bảng DangNhap
 INSERT INTO DangNhap (TenDangNhap, MatKhau, VaiTro, MaDocGia, MaNhanVien) VALUES
