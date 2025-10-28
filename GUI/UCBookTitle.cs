@@ -4,23 +4,26 @@ using System.ComponentModel;
 
 namespace GUI
 {
-    public partial class UCManageBook : UserControl
+    public partial class UCBookTitle : UserControl
     {
-        private BindingList<BookDTO> list = new BindingList<BookDTO>();
-        public UCManageBook()
+        private BindingList<TuaSachDTO> list = new BindingList<TuaSachDTO>();
+        public UCBookTitle()
         {
             InitializeComponent();
 
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
                 return;
 
-            list = BUS.BookBUS.GetAllBooks();
+            list = BUS.TuaSachBUS.GetAll();
             dgvBooks.AutoGenerateColumns = false;
             LoadBookList();
 
+            AddTag("Demo Tag");
+            AddTag("Click X to Remove");
             AddTag("Science Fiction");
             AddTag("Fantasy");
             AddTag("Mystery");
+            AddTag("Romance");
         }
 
         private void LoadBookList()

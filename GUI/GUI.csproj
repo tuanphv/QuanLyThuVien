@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\QuanLyThuVien\BUS\BUS.csproj" />
     <ProjectReference Include="..\..\QuanLyThuVien\DTO\DTO.csproj" />
-    <ProjectReference Include="..\UI\UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

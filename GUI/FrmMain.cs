@@ -1,34 +1,40 @@
 ﻿using GUI.Helpers;
+using System.Data;
+using System.Windows.Forms;
 namespace GUI
 {
     public partial class FrmMain : Form
     {
         private SidebarMenuItem[] menuItems;
+        private UCPlaceHolder placeholderControl = new UCPlaceHolder();
         public FrmMain()
         {
             InitializeComponent();
             menuItems = new SidebarMenuItem[]
             {
-                new SidebarMenuItem(btnDashboard),
-                new SidebarMenuItem(btnBook, new UCManageBook())
+                new SidebarMenuItem(btnDashboard, new UCDashboard()),
+                new SidebarMenuItem(btnBookTitle, new UCBookTitle())
                 //new SidebarMenuItem
             };
         }
 
         #region Expand/Collapse Menus
         bool menuCatalogExpanded = true;
+        bool menuInventoryExpanded = true;
         bool menuCirculationExpanded = true;
         bool menuUserExpanded = true;
         bool sidebarExpanded = true;
+        int buttonHeight = 40;
 
         private void menuCatalogTransition_Tick(object sender, EventArgs e)
         {
+            int buttonCount = 5;
             if (menuCatalogExpanded)
             {
                 pnlMenuCatalog.Height -= 10;
-                if (pnlMenuCatalog.Height <= 50)
+                if (pnlMenuCatalog.Height <= buttonHeight)
                 {
-                    pnlMenuCatalog.Height = 50;
+                    pnlMenuCatalog.Height = buttonHeight;
                     menuCatalogTransition.Stop();
                     menuCatalogExpanded = false;
                 }
@@ -36,23 +42,49 @@ namespace GUI
             else
             {
                 pnlMenuCatalog.Height += 10;
-                if (pnlMenuCatalog.Height >= 250)
+                if (pnlMenuCatalog.Height >= buttonHeight * buttonCount)
                 {
-                    pnlMenuCatalog.Height = 250;
+                    pnlMenuCatalog.Height = buttonHeight * buttonCount;
                     menuCatalogTransition.Stop();
                     menuCatalogExpanded = true;
                 }
             }
         }
 
+        private void menuInventoryTransition_Tick(object sender, EventArgs e)
+        {
+            int buttonCount = 4;
+            if (menuInventoryExpanded)
+            {
+                pnlMenuInventory.Height -= 10;
+                if (pnlMenuInventory.Height <= buttonHeight)
+                {
+                    pnlMenuInventory.Height = buttonHeight;
+                    menuInventoryTransition.Stop();
+                    menuInventoryExpanded = false;
+                }
+            }
+            else
+            {
+                pnlMenuInventory.Height += 10;
+                if (pnlMenuInventory.Height >= buttonHeight * buttonCount)
+                {
+                    pnlMenuInventory.Height = buttonHeight * buttonCount;
+                    menuInventoryTransition.Stop();
+                    menuInventoryExpanded = true;
+                }
+            }
+        }
+
         private void menuCirculationTransition_Tick(object sender, EventArgs e)
         {
+            int buttonCount = 5;
             if (menuCirculationExpanded)
             {
                 pnlMenuCirculation.Height -= 10;
-                if (pnlMenuCirculation.Height <= 50)
+                if (pnlMenuCirculation.Height <= buttonHeight)
                 {
-                    pnlMenuCirculation.Height = 50;
+                    pnlMenuCirculation.Height = buttonHeight;
                     menuCirculationTransition.Stop();
                     menuCirculationExpanded = false;
                 }
@@ -60,9 +92,9 @@ namespace GUI
             else
             {
                 pnlMenuCirculation.Height += 10;
-                if (pnlMenuCirculation.Height >= 200)
+                if (pnlMenuCirculation.Height >= buttonHeight * buttonCount)
                 {
-                    pnlMenuCirculation.Height = 200;
+                    pnlMenuCirculation.Height = buttonHeight * buttonCount;
                     menuCirculationTransition.Stop();
                     menuCirculationExpanded = true;
                 }
@@ -70,21 +102,23 @@ namespace GUI
         }
         private void menuUserTransition_Tick(object sender, EventArgs e)
         {
+            int buttonCount = 4;
             if (menuUserExpanded)
             {
                 pnlMenuUser.Height -= 10;
-                if (pnlMenuUser.Height <= 50)
+                if (pnlMenuUser.Height <= buttonHeight)
                 {
-                    pnlMenuUser.Height = 50;
+                    pnlMenuUser.Height = buttonHeight;
                     menuUserTransition.Stop();
                     menuUserExpanded = false;
                 }
-            } else
+            }
+            else
             {
                 pnlMenuUser.Height += 10;
-                if (pnlMenuUser.Height >= 200)
+                if (pnlMenuUser.Height >= buttonHeight * buttonCount)
                 {
-                    pnlMenuUser.Height = 200;
+                    pnlMenuUser.Height = buttonHeight * buttonCount;
                     menuUserTransition.Stop();
                     menuUserExpanded = true;
                 }
@@ -96,9 +130,9 @@ namespace GUI
             if (sidebarExpanded)
             {
                 pnlSidebar.Width -= 15;
-                if (pnlSidebar.Width <= 62)
+                if (pnlSidebar.Width <= 54)
                 {
-                    pnlSidebar.Width = 62;
+                    pnlSidebar.Width = 54;
                     sidebarTransition.Stop();
                     sidebarExpanded = false;
                 }
@@ -125,12 +159,17 @@ namespace GUI
             menuCatalogTransition.Start();
         }
 
-        private void btnCirculation_Click(object sender, EventArgs e)
+        private void btnMenuInventory_Click(object sender, EventArgs e)
+        {
+            menuInventoryTransition.Start();
+        }
+
+        private void btnMenuCirculation_Click(object sender, EventArgs e)
         {
             menuCirculationTransition.Start();
         }
 
-        private void btnUser_Click(object sender, EventArgs e)
+        private void btnMenuUser_Click(object sender, EventArgs e)
         {
             menuUserTransition.Start();
         }
@@ -159,34 +198,34 @@ namespace GUI
         {
             foreach (Button btn in btns)
             {
-                btn.BackColor = btn.Font.SizeInPoints == 12 ? Color.FromArgb(50, 0, 0, 0) : Color.Transparent;
+                btn.BackColor = (btn.Tag != null && btn.Tag.ToString() == "subItem") ? Color.FromArgb(50, 0, 0, 0) : Color.Transparent;
             }
-            clickedButton.BackColor = Color.FromArgb(70, 255, 255, 255);
+            clickedButton.BackColor = Color.FromArgb(90, 255, 255, 255);
 
             foreach (SidebarMenuItem item in menuItems)
             {
                 if (item.Button == clickedButton)
                 {
-                    SwitchUserControl(pnlMainContent, item.TargetControl ?? new UCPlaceHolder());
+                    SwitchUserControl(pnlMainContent, item.TargetControl ?? placeholderControl);
                     return;
                 }
             }
-            SwitchUserControl(pnlMainContent, new UCPlaceHolder());
+            SwitchUserControl(pnlMainContent, placeholderControl);
         }
         #endregion
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
             List<Button> allButtons = FindAllButtonsRecursive(this);
-            allButtons.Remove(btnMenuCatalog);
-            allButtons.Remove(btnCirculation);
-            allButtons.Remove(btnUser);
 
             foreach (Button btn in allButtons)
             {
+                if (btn.Tag != null && btn.Tag.ToString() == "menu")
+                {
+                    continue; // Skip menu buttons
+                }
                 btn.Click += (sender, e) =>
                 {
-
                     SetActiveButton((Button)sender, allButtons);
                 };
             }
@@ -196,22 +235,35 @@ namespace GUI
 
         private void SwitchUserControl(Panel containerPanel, UserControl userControlToLoad)
         {
-            foreach (Control control in containerPanel.Controls)
+            // Nếu chưa có control nào trong containerPanel, thêm control mới vào và hiển thị nó
+            if (containerPanel.Controls.Count == 0)
             {
-                control.Visible = false;
+                userControlToLoad.Dock = DockStyle.Fill;
+                containerPanel.Controls.Add(userControlToLoad);
+                return;
             }
 
+            var currentControl = containerPanel.Controls[containerPanel.Controls.Count - 1];
+
+            // Nếu control hiện tại chính là control cần load → không làm gì
+            if (currentControl == userControlToLoad)
+                return;
+
+            // Ẩn control hiện tại
+            currentControl.Visible = false;
+
+            // Nếu UserControl đã tồn tại trong containerPanel, chỉ cần hiển thị nó
             if (containerPanel.Controls.Contains(userControlToLoad))
             {
                 userControlToLoad.Visible = true;
                 userControlToLoad.BringToFront();
-                return;
             }
-
-            userControlToLoad.Dock = DockStyle.Fill;
-            containerPanel.Controls.Add(userControlToLoad);
+            else // Nếu chưa tồn tại, thêm nó vào containerPanel và hiển thị
+            {
+                userControlToLoad.Dock = DockStyle.Fill;
+                containerPanel.Controls.Add(userControlToLoad);
+                userControlToLoad.BringToFront();
+            }  
         }
-
-
     }
 }

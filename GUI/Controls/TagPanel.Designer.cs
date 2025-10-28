@@ -37,8 +37,8 @@
             lblTagText.AutoSize = true;
             lblTagText.BackColor = Color.Transparent;
             lblTagText.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblTagText.Location = new Point(0, 3);
-            lblTagText.Margin = new Padding(0, 3, 20, 4);
+            lblTagText.Location = new Point(3, 4);
+            lblTagText.Margin = new Padding(3, 3, 20, 4);
             lblTagText.Name = "lblTagText";
             lblTagText.Size = new Size(52, 21);
             lblTagText.TabIndex = 0;
@@ -51,11 +51,11 @@
             btnXmark.FlatAppearance.BorderSize = 0;
             btnXmark.FlatAppearance.MouseOverBackColor = Color.FromArgb(150, 255, 255, 255);
             btnXmark.FlatStyle = FlatStyle.Flat;
-            btnXmark.Location = new Point(49, 4);
+            btnXmark.Location = new Point(51, 4);
             btnXmark.Margin = new Padding(0);
             btnXmark.Name = "btnXmark";
             btnXmark.Size = new Size(20, 20);
-            btnXmark.TabIndex = 1;
+            btnXmark.TabIndex = 10;
             btnXmark.UseVisualStyleBackColor = false;
             btnXmark.Click += btnX_Click;
             // 
@@ -66,9 +66,10 @@
             AutoSize = true;
             Controls.Add(btnXmark);
             Controls.Add(lblTagText);
+            ImeMode = ImeMode.NoControl;
             Margin = new Padding(5);
             Name = "TagPanel";
-            Size = new Size(73, 28);
+            Size = new Size(75, 29);
             ResumeLayout(false);
             PerformLayout();
         }

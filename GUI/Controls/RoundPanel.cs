@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace GUI.Controls
 {
-    public class RoundedPanel : Panel
+    public class RoundPanel : Panel
     {
         public int BorderRadius { get; set; } = 10;
 
@@ -35,6 +35,18 @@ namespace GUI.Controls
             path.CloseFigure();
 
             return path;
+        }
+
+        protected override void OnResize(EventArgs eventargs)
+        {
+            base.OnResize(eventargs);
+            this.Invalidate(); // Redraw on resize to maintain rounded corners
+        }
+
+        protected override void OnAutoSizeChanged(EventArgs e)
+        {
+            base.OnAutoSizeChanged(e);
+            this.Invalidate(); // Redraw on autosize change to maintain rounded corners
         }
     }
 }
