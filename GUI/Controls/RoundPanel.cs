@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RoundButton.Extensions;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -7,46 +8,105 @@ namespace GUI.Controls
 {
     public class RoundPanel : Panel
     {
-        public int BorderRadius { get; set; } = 10;
+        private int _radius = 10;
+        public int BorderRadius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
+                Invalidate();
+            }
+        }
+
+        private SolidBrush _backgroundBrush = new SolidBrush(SystemColors.Control);
+        private Color _backgroundColor = SystemColors.Control;
+        public Color BackgroundColor
+        {
+            get { return _backgroundColor; }
+            set
+            {
+                _backgroundBrush = new SolidBrush(_backgroundColor = value);
+                Invalidate();
+            }
+        }
+
+        private Color _borderColor = SystemColors.ControlDark;
+        private Pen _borderPen = new Pen(SystemColors.ControlDark, 1.0f);
+        public Color BorderColor
+        {
+            get { return _borderColor; }
+            set
+            {
+                _borderColor = value;
+                _borderPen = new Pen(_borderColor, _borderWidth);
+                Invalidate();
+            }
+        }
+
+        private float _borderWidth = 1.0f;
+        public float BorderWidth
+        {
+            get { return _borderWidth; }
+            set
+            {
+                _borderWidth = value;
+                _borderPen = new Pen(_borderColor, _borderWidth);
+                Invalidate();
+            }
+        }
+
+        public RoundPanel()
+        {
+            // Bật double buffer để vẽ mượt
+            this.SetStyle(ControlStyles.UserPaint |
+                          ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.ResizeRedraw, true);
+            this.DoubleBuffered = true;
+            this.BackColor = Color.Transparent;
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            Invalidate();
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // Create rounded rectangle path
-            using (GraphicsPath path = GetRoundedRectanglePath(ClientRectangle, BorderRadius))
-            {
-                // Set the region for rounded corners
-                this.Region = new Region(path);
-            }
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // Vẽ nền trước
+            drawBackground(g);
+
+            // Vẽ viền sau
+            drawBorder(g);
         }
 
-        private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius)
+        private void drawBorder(Graphics g)
         {
-            GraphicsPath path = new GraphicsPath();
-            float diameter = radius * 2;
-
-            // Add arcs and lines to create rounded rectangle
-            path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
-            path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
-            path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
-            path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
-            path.CloseFigure();
-
-            return path;
+            RectangleF rect = new RectangleF(
+                _borderWidth / 2,
+                _borderWidth / 2,
+                Width - _borderWidth,
+                Height - _borderWidth
+            );
+            g.DrawRoundedRectangle(_borderPen, rect.X, rect.Y, rect.Width, rect.Height, _radius);
         }
 
-        protected override void OnResize(EventArgs eventargs)
+        private void drawBackground(Graphics g)
         {
-            base.OnResize(eventargs);
-            this.Invalidate(); // Redraw on resize to maintain rounded corners
-        }
-
-        protected override void OnAutoSizeChanged(EventArgs e)
-        {
-            base.OnAutoSizeChanged(e);
-            this.Invalidate(); // Redraw on autosize change to maintain rounded corners
+            RectangleF rect = new RectangleF(
+                _borderWidth / 2,
+                _borderWidth / 2,
+                Width - _borderWidth,
+                Height - _borderWidth
+            );
+            g.FillRoundedRectangle(_backgroundBrush, rect.X, rect.Y, rect.Width, rect.Height, _radius);
         }
     }
 }

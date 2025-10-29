@@ -120,6 +120,7 @@
             pnlMenuCirculation.Controls.Add(btnReportDebt);
             pnlMenuCirculation.Dock = DockStyle.Top;
             pnlMenuCirculation.Location = new Point(0, 480);
+            pnlMenuCirculation.Margin = new Padding(0);
             pnlMenuCirculation.Name = "pnlMenuCirculation";
             pnlMenuCirculation.Size = new Size(250, 200);
             pnlMenuCirculation.TabIndex = 0;
@@ -275,8 +276,6 @@
             // 
             // pnlSidebar
             // 
-            pnlSidebar.Color1 = Color.FromArgb(42, 42, 128);
-            pnlSidebar.Color2 = Color.FromArgb(191, 144, 205);
             pnlSidebar.Controls.Add(flowLayoutPanel3);
             pnlSidebar.Controls.Add(pnlMenuUser);
             pnlSidebar.Controls.Add(pnlMenuCirculation);
@@ -286,7 +285,13 @@
             pnlSidebar.Controls.Add(flowLayoutPanel1);
             pnlSidebar.Controls.Add(panel1);
             pnlSidebar.Dock = DockStyle.Left;
+            pnlSidebar.GradientColors = new Color[]
+    {
+    Color.FromArgb(42, 42, 128),
+    Color.FromArgb(191, 144, 205)
+    };
             pnlSidebar.Location = new Point(0, 0);
+            pnlSidebar.Margin = new Padding(0);
             pnlSidebar.Name = "pnlSidebar";
             pnlSidebar.Size = new Size(250, 1020);
             pnlSidebar.TabIndex = 0;
@@ -333,6 +338,7 @@
             pnlMenuUser.Controls.Add(btnPermissions);
             pnlMenuUser.Dock = DockStyle.Top;
             pnlMenuUser.Location = new Point(0, 680);
+            pnlMenuUser.Margin = new Padding(0);
             pnlMenuUser.Name = "pnlMenuUser";
             pnlMenuUser.Size = new Size(250, 160);
             pnlMenuUser.TabIndex = 11;
@@ -440,6 +446,7 @@
             pnlMenuInventory.Dock = DockStyle.Top;
             pnlMenuInventory.FlowDirection = FlowDirection.TopDown;
             pnlMenuInventory.Location = new Point(0, 320);
+            pnlMenuInventory.Margin = new Padding(0);
             pnlMenuInventory.Name = "pnlMenuInventory";
             pnlMenuInventory.Size = new Size(250, 160);
             pnlMenuInventory.TabIndex = 2;
@@ -543,6 +550,7 @@
             flowLayoutPanel2.Controls.Add(btnLogout);
             flowLayoutPanel2.Dock = DockStyle.Bottom;
             flowLayoutPanel2.Location = new Point(0, 980);
+            flowLayoutPanel2.Margin = new Padding(0);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(250, 40);
             flowLayoutPanel2.TabIndex = 10;
@@ -579,6 +587,7 @@
             pnlMenuCatalog.Controls.Add(btnSupplier);
             pnlMenuCatalog.Dock = DockStyle.Top;
             pnlMenuCatalog.Location = new Point(0, 120);
+            pnlMenuCatalog.Margin = new Padding(0);
             pnlMenuCatalog.Name = "pnlMenuCatalog";
             pnlMenuCatalog.Size = new Size(250, 200);
             pnlMenuCatalog.TabIndex = 2;

@@ -28,8 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ThongKe.BarDataPoint barDataPoint1 = new ThongKe.BarDataPoint();
+            ThongKe.BarDataPoint barDataPoint2 = new ThongKe.BarDataPoint();
+            ThongKe.BarDataPoint barDataPoint3 = new ThongKe.BarDataPoint();
             panel1 = new Panel();
             label1 = new Label();
+            panel9 = new Panel();
+            cbTimeInterval = new ComboBox();
+            panel10 = new Panel();
+            dateTimePicker2 = new DateTimePicker();
+            button5 = new Button();
+            dateTimePicker1 = new DateTimePicker();
+            label12 = new Label();
+            label11 = new Label();
             roundedPanel1 = new GUI.Controls.RoundPanel();
             lblTotalBooks = new Label();
             label2 = new Label();
@@ -64,6 +75,7 @@
             metricPanel1 = new GUI.Controls.MetricPanel();
             label7 = new Label();
             roundedPanel6 = new GUI.Controls.RoundPanel();
+            barChartControl1 = new GUI.ThongKe.BarChartControl();
             panel2 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             panel3 = new Panel();
@@ -79,6 +91,8 @@
             metricPanel9 = new GUI.Controls.MetricPanel();
             label16 = new Label();
             panel1.SuspendLayout();
+            panel9.SuspendLayout();
+            panel10.SuspendLayout();
             roundedPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             roundedPanel2.SuspendLayout();
@@ -93,6 +107,7 @@
             panel4.SuspendLayout();
             panel7.SuspendLayout();
             panel5.SuspendLayout();
+            roundedPanel6.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             panel3.SuspendLayout();
@@ -123,10 +138,109 @@
             label1.TabIndex = 0;
             label1.Text = "Tổng Quan";
             // 
+            // panel9
+            // 
+            panel9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel9.Controls.Add(cbTimeInterval);
+            panel9.Controls.Add(panel10);
+            panel9.Location = new Point(426, 20);
+            panel9.Margin = new Padding(0, 20, 20, 0);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(624, 35);
+            panel9.TabIndex = 5;
+            // 
+            // cbTimeInterval
+            // 
+            cbTimeInterval.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbTimeInterval.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbTimeInterval.FormattingEnabled = true;
+            cbTimeInterval.Items.AddRange(new object[] { "Tháng", "Quý", "Chọn khoảng" });
+            cbTimeInterval.Location = new Point(500, 3);
+            cbTimeInterval.Name = "cbTimeInterval";
+            cbTimeInterval.Size = new Size(121, 29);
+            cbTimeInterval.TabIndex = 6;
+            cbTimeInterval.Text = "Tháng";
+            cbTimeInterval.SelectedIndexChanged += cbTimeInterval_SelectedIndexChanged;
+            // 
+            // panel10
+            // 
+            panel10.Controls.Add(dateTimePicker2);
+            panel10.Controls.Add(button5);
+            panel10.Controls.Add(dateTimePicker1);
+            panel10.Controls.Add(label12);
+            panel10.Controls.Add(label11);
+            panel10.Dock = DockStyle.Left;
+            panel10.Location = new Point(0, 0);
+            panel10.Margin = new Padding(0, 0, 60, 0);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(436, 35);
+            panel10.TabIndex = 5;
+            // 
+            // dateTimePicker2
+            // 
+            dateTimePicker2.Font = new Font("Segoe UI", 12F);
+            dateTimePicker2.Format = DateTimePickerFormat.Short;
+            dateTimePicker2.Location = new Point(49, 3);
+            dateTimePicker2.Name = "dateTimePicker2";
+            dateTimePicker2.Size = new Size(110, 29);
+            dateTimePicker2.TabIndex = 3;
+            // 
+            // button5
+            // 
+            button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button5.BackColor = Color.DeepSkyBlue;
+            button5.FlatAppearance.BorderColor = Color.DeepSkyBlue;
+            button5.FlatAppearance.BorderSize = 0;
+            button5.FlatStyle = FlatStyle.Flat;
+            button5.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button5.ForeColor = Color.White;
+            button5.Location = new Point(373, 3);
+            button5.Name = "button5";
+            button5.Size = new Size(60, 29);
+            button5.TabIndex = 2;
+            button5.Text = "LỌC";
+            button5.UseVisualStyleBackColor = false;
+            // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            dateTimePicker1.Font = new Font("Segoe UI", 12F);
+            dateTimePicker1.Format = DateTimePickerFormat.Short;
+            dateTimePicker1.Location = new Point(257, 3);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(110, 29);
+            dateTimePicker1.TabIndex = 3;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
+            label12.Location = new Point(5, 5);
+            label12.Margin = new Padding(5);
+            label12.Name = "label12";
+            label12.Size = new Size(36, 25);
+            label12.TabIndex = 4;
+            label12.Text = "Từ";
+            // 
+            // label11
+            // 
+            label11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
+            label11.Location = new Point(201, 5);
+            label11.Margin = new Padding(5);
+            label11.Name = "label11";
+            label11.Size = new Size(48, 25);
+            label11.TabIndex = 4;
+            label11.Text = "Đến";
+            // 
             // roundedPanel1
             // 
-            roundedPanel1.BackColor = Color.White;
+            roundedPanel1.BackColor = Color.Transparent;
+            roundedPanel1.BackgroundColor = Color.White;
+            roundedPanel1.BorderColor = Color.White;
             roundedPanel1.BorderRadius = 10;
+            roundedPanel1.BorderWidth = 0F;
             roundedPanel1.Controls.Add(lblTotalBooks);
             roundedPanel1.Controls.Add(label2);
             roundedPanel1.Controls.Add(pictureBox1);
@@ -177,8 +291,11 @@
             // 
             // roundedPanel2
             // 
-            roundedPanel2.BackColor = Color.White;
+            roundedPanel2.BackColor = Color.Transparent;
+            roundedPanel2.BackgroundColor = Color.White;
+            roundedPanel2.BorderColor = Color.White;
             roundedPanel2.BorderRadius = 10;
+            roundedPanel2.BorderWidth = 0F;
             roundedPanel2.Controls.Add(lblTotalBooksBorrow);
             roundedPanel2.Controls.Add(label3);
             roundedPanel2.Controls.Add(pictureBox2);
@@ -229,8 +346,11 @@
             // 
             // roundedPanel3
             // 
-            roundedPanel3.BackColor = Color.White;
+            roundedPanel3.BackColor = Color.Transparent;
+            roundedPanel3.BackgroundColor = Color.White;
+            roundedPanel3.BorderColor = Color.White;
             roundedPanel3.BorderRadius = 10;
+            roundedPanel3.BorderWidth = 0F;
             roundedPanel3.Controls.Add(lblTotalReaders);
             roundedPanel3.Controls.Add(label4);
             roundedPanel3.Controls.Add(pictureBox3);
@@ -281,8 +401,11 @@
             // 
             // roundedPanel4
             // 
-            roundedPanel4.BackColor = Color.White;
+            roundedPanel4.BackColor = Color.Transparent;
+            roundedPanel4.BackgroundColor = Color.White;
+            roundedPanel4.BorderColor = Color.White;
             roundedPanel4.BorderRadius = 10;
+            roundedPanel4.BorderWidth = 0F;
             roundedPanel4.Controls.Add(lblTotalDebt);
             roundedPanel4.Controls.Add(label5);
             roundedPanel4.Controls.Add(pictureBox4);
@@ -334,8 +457,11 @@
             // 
             // roundedPanel5
             // 
-            roundedPanel5.BackColor = Color.White;
+            roundedPanel5.BackColor = Color.Transparent;
+            roundedPanel5.BackgroundColor = Color.White;
+            roundedPanel5.BorderColor = Color.White;
             roundedPanel5.BorderRadius = 10;
+            roundedPanel5.BorderWidth = 0F;
             roundedPanel5.Controls.Add(panel8);
             roundedPanel5.Controls.Add(panel6);
             roundedPanel5.Controls.Add(label6);
@@ -366,8 +492,11 @@
             metricPanel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel4.AutoSize = true;
             metricPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel4.BackColor = Color.FromArgb(184, 223, 255);
+            metricPanel4.BackColor = Color.Transparent;
+            metricPanel4.BackgroundColor = Color.FromArgb(184, 223, 255);
+            metricPanel4.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel4.BorderRadius = 15;
+            metricPanel4.BorderWidth = 0F;
             metricPanel4.Location = new Point(406, 9);
             metricPanel4.Margin = new Padding(0, 9, 0, 0);
             metricPanel4.Name = "metricPanel4";
@@ -406,8 +535,11 @@
             metricPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel2.AutoSize = true;
             metricPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel2.BackColor = Color.FromArgb(184, 223, 255);
+            metricPanel2.BackColor = Color.Transparent;
+            metricPanel2.BackgroundColor = Color.FromArgb(184, 223, 255);
+            metricPanel2.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel2.BorderRadius = 15;
+            metricPanel2.BorderWidth = 0F;
             metricPanel2.Location = new Point(406, 9);
             metricPanel2.Margin = new Padding(0, 9, 0, 0);
             metricPanel2.Name = "metricPanel2";
@@ -459,8 +591,11 @@
             lblBorrowCount1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblBorrowCount1.AutoSize = true;
             lblBorrowCount1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            lblBorrowCount1.BackColor = Color.FromArgb(184, 223, 255);
+            lblBorrowCount1.BackColor = Color.Transparent;
+            lblBorrowCount1.BackgroundColor = Color.FromArgb(184, 223, 255);
+            lblBorrowCount1.BorderColor = Color.FromArgb(184, 223, 255);
             lblBorrowCount1.BorderRadius = 15;
+            lblBorrowCount1.BorderWidth = 0F;
             lblBorrowCount1.Location = new Point(406, 9);
             lblBorrowCount1.Margin = new Padding(0, 9, 0, 0);
             lblBorrowCount1.Name = "lblBorrowCount1";
@@ -499,8 +634,11 @@
             metricPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel3.AutoSize = true;
             metricPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel3.BackColor = Color.FromArgb(184, 223, 255);
+            metricPanel3.BackColor = Color.Transparent;
+            metricPanel3.BackgroundColor = Color.FromArgb(184, 223, 255);
+            metricPanel3.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel3.BorderRadius = 15;
+            metricPanel3.BorderWidth = 0F;
             metricPanel3.Location = new Point(406, 9);
             metricPanel3.Margin = new Padding(0, 9, 0, 0);
             metricPanel3.Name = "metricPanel3";
@@ -539,8 +677,11 @@
             metricPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel1.AutoSize = true;
             metricPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel1.BackColor = Color.FromArgb(184, 223, 255);
+            metricPanel1.BackColor = Color.Transparent;
+            metricPanel1.BackgroundColor = Color.FromArgb(184, 223, 255);
+            metricPanel1.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel1.BorderRadius = 15;
+            metricPanel1.BorderWidth = 0F;
             metricPanel1.Location = new Point(406, 9);
             metricPanel1.Margin = new Padding(0, 9, 0, 0);
             metricPanel1.Name = "metricPanel1";
@@ -565,13 +706,38 @@
             // roundedPanel6
             // 
             roundedPanel6.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            roundedPanel6.BackColor = Color.White;
+            roundedPanel6.BackColor = Color.Transparent;
+            roundedPanel6.BackgroundColor = Color.White;
+            roundedPanel6.BorderColor = Color.White;
             roundedPanel6.BorderRadius = 10;
+            roundedPanel6.BorderWidth = 0F;
+            roundedPanel6.Controls.Add(barChartControl1);
+            roundedPanel6.Controls.Add(panel9);
             roundedPanel6.Location = new Point(20, 150);
             roundedPanel6.Margin = new Padding(20, 10, 10, 20);
             roundedPanel6.Name = "roundedPanel6";
             roundedPanel6.Size = new Size(1070, 760);
             roundedPanel6.TabIndex = 1;
+            // 
+            // barChartControl1
+            // 
+            barChartControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            barChartControl1.BackColor = Color.White;
+            barChartControl1.BorderStyle = BorderStyle.FixedSingle;
+            barDataPoint1.Label = "Tháng 1";
+            barDataPoint1.Value = 200D;
+            barDataPoint2.Label = "Tháng 2";
+            barDataPoint2.Value = 250D;
+            barDataPoint3.Label = "Tháng 3";
+            barDataPoint3.Value = 100D;
+            barChartControl1.Data.Add(barDataPoint1);
+            barChartControl1.Data.Add(barDataPoint2);
+            barChartControl1.Data.Add(barDataPoint3);
+            barChartControl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            barChartControl1.Location = new Point(20, 69);
+            barChartControl1.Name = "barChartControl1";
+            barChartControl1.Size = new Size(1030, 371);
+            barChartControl1.TabIndex = 6;
             // 
             // panel2
             // 
@@ -621,8 +787,11 @@
             // 
             // roundPanel1
             // 
-            roundPanel1.BackColor = Color.White;
+            roundPanel1.BackColor = Color.Transparent;
+            roundPanel1.BackgroundColor = Color.White;
+            roundPanel1.BorderColor = Color.Transparent;
             roundPanel1.BorderRadius = 10;
+            roundPanel1.BorderWidth = 0F;
             roundPanel1.Controls.Add(label13);
             roundPanel1.Controls.Add(panel11);
             roundPanel1.Controls.Add(panel12);
@@ -664,8 +833,11 @@
             metricPanel7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel7.AutoSize = true;
             metricPanel7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel7.BackColor = Color.FromArgb(255, 192, 128);
+            metricPanel7.BackColor = Color.Transparent;
+            metricPanel7.BackgroundColor = Color.FromArgb(255, 192, 128);
+            metricPanel7.BorderColor = Color.FromArgb(255, 192, 128);
             metricPanel7.BorderRadius = 15;
+            metricPanel7.BorderWidth = 0F;
             metricPanel7.ForeColor = Color.FromArgb(192, 64, 0);
             metricPanel7.Location = new Point(392, 9);
             metricPanel7.Margin = new Padding(0, 9, 0, 0);
@@ -705,8 +877,11 @@
             metricPanel8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel8.AutoSize = true;
             metricPanel8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel8.BackColor = Color.FromArgb(255, 192, 128);
+            metricPanel8.BackColor = Color.Transparent;
+            metricPanel8.BackgroundColor = Color.FromArgb(255, 192, 128);
+            metricPanel8.BorderColor = Color.FromArgb(255, 192, 128);
             metricPanel8.BorderRadius = 15;
+            metricPanel8.BorderWidth = 0F;
             metricPanel8.ForeColor = Color.FromArgb(192, 64, 0);
             metricPanel8.Location = new Point(392, 9);
             metricPanel8.Margin = new Padding(0, 9, 0, 0);
@@ -746,8 +921,11 @@
             metricPanel9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             metricPanel9.AutoSize = true;
             metricPanel9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            metricPanel9.BackColor = Color.FromArgb(255, 192, 128);
+            metricPanel9.BackColor = Color.Transparent;
+            metricPanel9.BackgroundColor = Color.FromArgb(255, 192, 128);
+            metricPanel9.BorderColor = Color.FromArgb(255, 192, 128);
             metricPanel9.BorderRadius = 15;
+            metricPanel9.BorderWidth = 0F;
             metricPanel9.ForeColor = Color.FromArgb(192, 64, 0);
             metricPanel9.Location = new Point(392, 9);
             metricPanel9.Margin = new Padding(0, 9, 0, 0);
@@ -778,11 +956,15 @@
             Controls.Add(panel2);
             Controls.Add(panel3);
             Controls.Add(panel1);
+            DoubleBuffered = true;
             Name = "UCDashboard";
             Size = new Size(1670, 1000);
             Load += UCDashboard_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel9.ResumeLayout(false);
+            panel10.ResumeLayout(false);
+            panel10.PerformLayout();
             roundedPanel1.ResumeLayout(false);
             roundedPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -807,6 +989,7 @@
             panel7.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
+            roundedPanel6.ResumeLayout(false);
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             panel3.ResumeLayout(false);
@@ -873,5 +1056,14 @@
         private Panel panel13;
         private Controls.MetricPanel metricPanel9;
         private Label label16;
+        private Label label11;
+        private DateTimePicker dateTimePicker1;
+        private Label label12;
+        private DateTimePicker dateTimePicker2;
+        private Button button5;
+        private Panel panel9;
+        private ComboBox cbTimeInterval;
+        private Panel panel10;
+        private ThongKe.BarChartControl barChartControl1;
     }
 }
