@@ -8,26 +8,21 @@ namespace DTO
 {
     public class TuaSachDTO
     {
-        public int Id { get; set; }
-        public string MaTuaSach { get; set; }
-        public string TenTuaSach { get; set; }
-        public byte[]? AnhBia { get; set; }
-        public int DaAn { get; set; }
-        public TuaSachDTO()
-        {
-            Id = 0;
-            MaTuaSach = string.Empty;
-            TenTuaSach = string.Empty;
-            AnhBia = null;
-            DaAn = 0;
-        }
-        public TuaSachDTO(int id, string maTuaSach, string tenTuaSach, byte[]? anh, int daAn)
+        public int Id { get; set; } = 0;
+        public string MaTuaSach { get; set; } = string.Empty;
+        public string TenTuaSach { get; set; } = string.Empty;
+        public byte[]? AnhBia { get; set; } = null;
+        public string TheLoai { get; set; } = string.Empty;
+        public string TacGia { get; set; } = string.Empty;
+
+        public TuaSachDTO(int id, string maTuaSach, string tenTuaSach, byte[]? anh, string theLoai, string tacGia)
         {
             Id = id;
             MaTuaSach = maTuaSach;
             TenTuaSach = tenTuaSach;
             AnhBia = anh;
-            DaAn = daAn;
+            TheLoai = theLoai;
+            TacGia = tacGia;
         }
     }
 }

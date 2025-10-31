@@ -12,8 +12,29 @@ namespace GUI.Controls
 {
     public partial class TagPanel : UserControl
     {
-        public Color TagBackColor { get; set; } = Color.LightBlue;
-        public Color TagForeColor { get; set; } = Color.DarkBlue;
+        public Color TagBackColor {
+            get => BackColor;
+            set => BackColor = value;
+        }
+        public Color TagForeColor
+        {
+            get => lblTagText.ForeColor;
+            set
+            {
+                if (lblTagText.ForeColor != value)
+                {
+                    lblTagText.ForeColor = value;
+
+                    // Cập nhật lại icon với màu mới
+                    btnXmark.Image = Helpers.SvgHelper.LoadSvgAndChangeColor(
+                        Properties.Resources.xmark,
+                        value,
+                        width: 10,
+                        height: 12
+                    );
+                }
+            }
+        }
 
         public string TagText
         {
@@ -24,15 +45,16 @@ namespace GUI.Controls
         public TagPanel()
         {
             InitializeComponent();
-            btnXmark.Image = Helpers.SvgHelper.LoadSvgAndChangeColor(Properties.Resources.xmark, TagForeColor, 10, 12);
-            lblTagText.ForeColor = TagForeColor;
-            this.BackColor = TagBackColor;
+            TagForeColor = Color.DarkBlue;
+            TagBackColor = Color.LightBlue;
         }
 
         public TagPanel(string tagText) : this()
         {
             TagText = tagText;
         }
+
+
 
         private void btnX_Click(object sender, EventArgs e)
         {
