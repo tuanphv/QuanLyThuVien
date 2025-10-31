@@ -26,17 +26,6 @@ namespace GUI
             cbTimeInterval.ValueMember = "Value";
             cbTimeInterval.SelectedIndex = 1; // Mặc định chọn "Theo tháng"
 
-            var quarterlyData = new List<BarDataPoint>
-                {
-                    new BarDataPoint("Q1", 450),
-                    new BarDataPoint("Q2", 520),
-                    new BarDataPoint("Q3", 380),
-                    new BarDataPoint("Q4", 610)
-                };
-
-            // Gán vào BarChartControl
-            barChartControl1.Data = quarterlyData;
-
             lblBorrowCount1.TextValue = "1200000 lượt";
         }
 
