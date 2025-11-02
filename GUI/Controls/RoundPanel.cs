@@ -65,6 +65,7 @@ namespace GUI.Controls
                           ControlStyles.ResizeRedraw, true);
             this.DoubleBuffered = true;
             this.BackColor = Color.Transparent;
+            this.Margin = new Padding(0);
         }
 
         protected override void OnResize(EventArgs e)

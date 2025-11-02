@@ -12,9 +12,9 @@ namespace GUI
             InitializeComponent();
             menuItems = new SidebarMenuItem[]
             {
-                new SidebarMenuItem(btnDashboard, new UCDashboard()),
-                new SidebarMenuItem(btnBookTitle, new UCBookTitle())
-                //new SidebarMenuItem
+                new SidebarMenuItem(btnDashboard, new ThongKe.UCDashboard()),
+                new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle()),
+                new SidebarMenuItem(btnPermissions, new PhanQuyen.UCPermissions()),
             };
         }
 

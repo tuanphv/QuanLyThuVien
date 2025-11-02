@@ -122,7 +122,7 @@ CREATE TABLE SACH
 	SoLuongConLai INT NOT NULL,
 	DonGia INT,
 	NamXB INT NOT NULL,
-	NhaXB VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
+	IDNhaXuatBan INT NOT NULL,
 	DaAn INT NOT NULL DEFAULT 0,
 	FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID)
 );
@@ -136,6 +136,14 @@ CREATE TABLE CUONSACH
 	TinhTrang INT NOT NULL DEFAULT 1, -- (0: Đang mượn, 1: Sẵn sàng, 2: Không khả dụng, bị ẩn)
 	DaAn INT NOT NULL DEFAULT 0,
 	FOREIGN KEY (IDSach) REFERENCES SACH(ID)
+);
+
+-- Bảng NHAXUATBAN (Nhà xuất bản sách)
+CREATE TABLE NHAXUATBAN
+(
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+    TenNXB VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
+	DiaChi VARCHAR(255) CHARACTER SET UTF8MB4
 );
 
 -- Bảng PHIEUMUON (Phiếu tổng)
@@ -500,17 +508,20 @@ INSERT INTO CT_TACGIA VALUES (4, 4);
 
 -- 6. NHẬP SÁCH & TỒN KHO
 INSERT INTO NHACUNGCAP (TenNCC, DiaChi)
-VALUES ('NXB Tổng Hợp', 'HCM'), ('Sách Ngoại Văn A', 'Hà Nội');
+VALUES ('Vinabook', 'HCM'), ('Fahasa', 'Hà Nội');
 
 INSERT INTO PHIEUNHAPSACH (IDNhaCungCap, NgayNhap)
 VALUES (1, '2025-01-10 09:00:00'), -- ID = 1
        (2, '2025-01-15 14:30:00'); -- ID = 2
+       
+INSERT INTO NHAXUATBAN (TenNXB, DiaChi)
+VALUES ('NXB Trẻ', 'HCM'), ('NXB Giáo dục Việt Nam', 'Hà Nội');
 
 -- Lô sách (SACH) - SoLuongTong/ConLai ban đầu bằng 0, được cập nhật bởi Trigger CT_PHIEUNHAP
-INSERT INTO SACH (IDTuaSach, SoLuongTong, SoLuongConLai, DonGia, NamXB, NhaXB)
-VALUES (1, 0, 0, 80000, 2020, 'NXB Tổng Hợp'), -- ID = 1 (CSDL Nâng cao)
-       (2, 0, 0, 120000, 2023, 'NXB Tổng Hợp'), -- ID = 2 (Data Mining)
-       (3, 0, 0, 65000, 2024, 'Sách Ngoại Văn A'); -- ID = 3 (Ông Già Và Biển Cả)
+INSERT INTO SACH (IDTuaSach, SoLuongTong, SoLuongConLai, DonGia, NamXB, IDNhaXuatBan)
+VALUES (1, 0, 0, 80000, 2020, 1), -- ID = 1 (CSDL Nâng cao)
+       (2, 0, 0, 120000, 2023, 1), -- ID = 2 (Data Mining)
+       (3, 0, 0, 65000, 2024, 2); -- ID = 3 (Ông Già Và Biển Cả)
 
 -- Chi tiết Phiếu Nhập (Trigger cập nhật SACH và TongTien PHIEUNHAPSACH)
 INSERT INTO CT_PHIEUNHAP (IDPhieuNhap, IDSach, SoLuongNhap, DonGiaNhap)

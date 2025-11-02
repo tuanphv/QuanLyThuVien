@@ -14,9 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.env = .env
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		Docs\QuanLyThuVien.sql = Docs\QuanLyThuVien.sql
 		README.md = README.md
-		Docs\SQL_DEMO.sql = Docs\SQL_DEMO.sql
+		Docs\SQL_QLTV.sql = Docs\SQL_QLTV.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{36600325-0560-EFB1-C079-4E957C39FC52}"

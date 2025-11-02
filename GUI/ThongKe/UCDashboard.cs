@@ -1,7 +1,7 @@
 ﻿using GUI.ThongKe;
 using System.Data;
 
-namespace GUI
+namespace GUI.ThongKe
 {
     public partial class UCDashboard : UserControl
     {

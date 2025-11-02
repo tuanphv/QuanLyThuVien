@@ -8,7 +8,7 @@ namespace DTO
 {
     public class TuaSachDTO
     {
-        public int Id { get; set; } = 0;
+        public int ID { get; set; } = 0;
         public string MaTuaSach { get; set; } = string.Empty;
         public string TenTuaSach { get; set; } = string.Empty;
         public byte[]? AnhBia { get; set; } = null;
@@ -17,7 +17,7 @@ namespace DTO
 
         public TuaSachDTO(int id, string maTuaSach, string tenTuaSach, byte[]? anh, string theLoai, string tacGia)
         {
-            Id = id;
+            ID= id;
             MaTuaSach = maTuaSach;
             TenTuaSach = tenTuaSach;
             AnhBia = anh;

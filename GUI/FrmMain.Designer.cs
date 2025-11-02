@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             pictureBox1 = new PictureBox();
             pnlMainContent = new Panel();
-            ucDashboard1 = new UCDashboard();
+            ucDashboard1 = new GUI.ThongKe.UCDashboard();
             pnlMenuCirculation = new FlowLayoutPanel();
             btnCirculation = new Button();
             btnBorrow = new Button();
@@ -751,6 +752,7 @@
             ClientSize = new Size(1904, 1020);
             Controls.Add(pnlMainContent);
             Controls.Add(pnlSidebar);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
@@ -772,9 +774,6 @@
 
         #endregion
         private Panel pnlMainContent;
-        private UCBookTitle ucManageBook1;
-        private UCBookTitle ucManageBook2;
-        private UCBookTitle ucManageBook3;
         private Controls.GradientPanel pnlSidebar;
         private FlowLayoutPanel flowLayoutPanel1;
         private Panel panel1;
@@ -809,7 +808,7 @@
         private System.Windows.Forms.Timer menuInventoryTransition;
         private System.Windows.Forms.Timer menuCirculationTransition;
         private System.Windows.Forms.Timer menuUserTransition;
-        private UCDashboard ucDashboard1;
+        private ThongKe.UCDashboard ucDashboard1;
         private FlowLayoutPanel flowLayoutPanel3;
         private Button button2;
     }

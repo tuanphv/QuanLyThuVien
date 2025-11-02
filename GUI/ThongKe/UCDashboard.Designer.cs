@@ -1,4 +1,4 @@
-﻿namespace GUI
+﻿namespace GUI.ThongKe
 {
     partial class UCDashboard
     {
