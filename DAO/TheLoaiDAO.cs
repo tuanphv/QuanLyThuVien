@@ -1,122 +1,94 @@
-﻿using MySql.Data.MySqlClient;
+﻿using DTO;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using DTO;
 
 namespace DAO
 {
     public class TheLoaiDAO
-    {     
-        private static TheLoaiDAO instance;
-
-        public static TheLoaiDAO Instance
+    {
+        // 1. Lấy tất cả
+        public static BindingList<TheLoaiDTO> GetAll()
         {
-            get { if (instance == null) instance = new TheLoaiDAO(); return instance; }
-            private set { instance = value; }
-        }
-
-        private TheLoaiDAO() { }
-        public List<TheLoaiDTO> GetAllTheLoai()
-        {
-            List<TheLoaiDTO> listTheLoai = new List<TheLoaiDTO>();
-
-            // Câu lệnh SQL
+            BindingList<TheLoaiDTO> list = new BindingList<TheLoaiDTO>();
             string query = "SELECT ID, MaTheLoai, TenTheLoai FROM THELOAI";
 
-            // Dùng DataProvider để thực thi
             DataTable data = DataProvider.Instance.ExecuteQuery(query);
-
-            // Duyệt qua từng dòng trong DataTable
-            foreach (DataRow row in data.Rows)
+            foreach (DataRow item in data.Rows)
             {
-                // Tạo đối tượng DTO từ dữ liệu đọc được
-                TheLoaiDTO theLoai = new TheLoaiDTO
-                {
-                    ID = (int)row["ID"],
-                    MaTheLoai = row["MaTheLoai"].ToString(),
-                    TenTheLoai = row["TenTheLoai"].ToString()
-                };
-                listTheLoai.Add(theLoai);
+                TheLoaiDTO theLoai = new TheLoaiDTO(
+                    Convert.ToInt32(item["ID"]),
+                    item["MaTheLoai"].ToString() ?? string.Empty,
+                    item["TenTheLoai"].ToString() ?? string.Empty
+                );
+                list.Add(theLoai);
             }
-
-            return listTheLoai;
+            return list;
         }
 
-        // 3. Phương thức THÊM thể loại mới
-        // Lưu ý: ID và MaTheLoai đã được CSDL tự động tạo (trigger)
-        public bool InsertTheLoai(string tenTheLoai)
+        // 2. Thêm mới 
+        public static string Add(TheLoaiDTO theLoai)
         {
-            // Câu lệnh SQL với tham số @TenTheLoai
-            string query = "INSERT INTO THELOAI (TenTheLoai) VALUES (@TenTheLoai)";
+            string query = @"
+                INSERT INTO THELOAI (TenTheLoai)
+                VALUES (@TenTheLoai);
 
-            // Tạo mảng MySqlParameter
-            MySqlParameter[] parameters = new MySqlParameter[1];
-            parameters[0] = new MySqlParameter("@TenTheLoai", MySqlDbType.VarChar) { Value = tenTheLoai };
+                SELECT MaTheLoai 
+                FROM THELOAI 
+                WHERE ID = LAST_INSERT_ID();
+            ";
+            string? maTheLoaiMoi = DataProvider.Instance.ExecuteScalar(query,
+                new MySqlParameter("@TenTheLoai", theLoai.TenTheLoai)
+            )?.ToString();
 
-            // Gọi DataProvider.ExecuteNonQuery để thực thi
-            // (Giả sử DataProvider của bạn có phương thức ExecuteNonQuery nhận tham số)
-            int result = DataProvider.Instance.ExecuteNonQuery(query, parameters);
-
-            // Trả về true nếu có 1 dòng bị ảnh hưởng (thêm thành công)
-            return result > 0;
+            return maTheLoaiMoi ?? string.Empty;
         }
 
-        // 4. Phương thức CẬP NHẬT thể loại
-        public bool UpdateTheLoai(int id, string tenTheLoai)
+        // 3. Cập nhật
+        public static bool Update(TheLoaiDTO theLoai)
         {
-            string query = "UPDATE THELOAI SET TenTheLoai = @TenTheLoai WHERE ID = @ID";
+            string query = @"
+                UPDATE THELOAI
+                SET TenTheLoai = @TenTheLoai
+                WHERE MaTheLoai = @MaTheLoai
+            ";
+            int count = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@TenTheLoai", theLoai.TenTheLoai),
+                new MySqlParameter("@MaTheLoai", theLoai.MaTheLoai)
+            );
 
-            MySqlParameter[] parameters = new MySqlParameter[2];
-            parameters[0] = new MySqlParameter("@TenTheLoai", MySqlDbType.VarChar) { Value = tenTheLoai };
-            parameters[1] = new MySqlParameter("@ID", MySqlDbType.Int32) { Value = id };
-
-            int result = DataProvider.Instance.ExecuteNonQuery(query, parameters);
-
-            return result > 0;
+            return count > 0;
         }
 
-        // 5. Phương thức XÓA thể loại
-        public bool DeleteTheLoai(int id)
+        // 4. Xóa 
+        public static bool Delete(string maTheLoai)
         {
-            // Cân nhắc: Nên làm "ẩn" (đặt cờ DaAn = 1) thay vì xóa vĩnh viễn
-            // Nhưng theo CSDL của bạn, bảng THELOAI không có cột DaAn nên ta sẽ XÓA
-            string query = "DELETE FROM THELOAI WHERE ID = @ID";
-
-            MySqlParameter[] parameters = new MySqlParameter[1];
-            parameters[0] = new MySqlParameter("@ID", MySqlDbType.Int32) { Value = id };
-
-            int result = DataProvider.Instance.ExecuteNonQuery(query, parameters);
-
-            return result > 0;
+            string query = @"
+                DELETE FROM THELOAI
+                WHERE MaTheLoai = @MaTheLoai
+            ";
+            int count = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@MaTheLoai", maTheLoai)
+            );
+            return count > 0;
         }
 
-        // (Tùy chọn) 6. Phương thức TÌM KIẾM (nếu form của bạn có chức năng tìm kiếm)
-        public List<TheLoaiDTO> SearchTheLoai(string keyword)
+        // 5. Kiểm tra trùng tên 
+        public static bool IsNameExist(string name, string ma = "")
         {
-            List<TheLoaiDTO> listTheLoai = new List<TheLoaiDTO>();
-
-            // Tìm kiếm theo cả Mã và Tên
-            string query = "SELECT ID, MaTheLoai, TenTheLoai FROM THELOAI WHERE TenTheLoai LIKE @keyword OR MaTheLoai LIKE @keyword";
-
-            MySqlParameter[] parameters = new MySqlParameter[1];
-            // Thêm dấu % để tìm kiếm tương đối
-            parameters[0] = new MySqlParameter("@keyword", MySqlDbType.VarChar) { Value = "%" + keyword + "%" };
-
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, parameters);
-
-            foreach (DataRow row in data.Rows)
-            {
-                TheLoaiDTO theLoai = new TheLoaiDTO
-                {
-                    ID = (int)row["ID"],
-                    MaTheLoai = row["MaTheLoai"].ToString(),
-                    TenTheLoai = row["TenTheLoai"].ToString()
-                };
-                listTheLoai.Add(theLoai);
-            }
-
-            return listTheLoai;
+            string query = @"
+                SELECT COUNT(*)
+                FROM THELOAI
+                WHERE LOWER(TenTheLoai) = LOWER(@ten)
+                AND (@ma = '' OR MaTheLoai <> @ma)
+            ";
+            int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(query,
+                new MySqlParameter("@ten", name),
+                new MySqlParameter("@ma", ma)
+            ));
+            return count > 0;
         }
     }
 }

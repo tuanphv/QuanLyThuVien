@@ -9,16 +9,22 @@ namespace DTO
     public class TheLoaiDTO
     {
         public int ID { get; set; }
-        public string MaTheLoai { get; set; } = string.Empty;
-        public string TenTheLoai { get; set; } = string.Empty;
-       
-        public TheLoaiDTO() { }
+        public string MaTheLoai { get; set; }
+        public string TenTheLoai { get; set; }
 
+        // Constructor để GetAll() trong DAO sử dụng
         public TheLoaiDTO(int id, string maTheLoai, string tenTheLoai)
         {
-            this.ID = id;
-            this.MaTheLoai = maTheLoai;
-            this.TenTheLoai = tenTheLoai;
+            ID = id;
+            MaTheLoai = maTheLoai;
+            TenTheLoai = tenTheLoai;
+        }
+
+        // Constructor để BUS sử dụng khi Thêm/Sửa
+        public TheLoaiDTO(string tenTheLoai, string maTheLoai = "")
+        {
+            TenTheLoai = tenTheLoai;
+            MaTheLoai = maTheLoai;
         }
     }
 }
