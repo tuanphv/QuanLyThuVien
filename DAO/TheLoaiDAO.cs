@@ -90,5 +90,29 @@ namespace DAO
             ));
             return count > 0;
         }
+
+        // 6. Kiểm tra xem thể loại có đang được sử dụng trong CT_THELOAI không
+        public static bool IsInUse(string maTheLoai)
+        {
+            // Lấy ID của thể loại từ MaTheLoai
+            string queryGetId = "SELECT ID FROM THELOAI WHERE MaTheLoai = @MaTheLoai";
+            object? result = DataProvider.Instance.ExecuteScalar(queryGetId, new MySqlParameter("@MaTheLoai", maTheLoai));
+
+            if (result == null || result == DBNull.Value)
+            {
+                // Không tìm thấy thể loại (lỗi lạ, nhưng cứ coi như là không dùng)
+                return false;
+            }
+
+            int idTheLoai = Convert.ToInt32(result);
+
+            // Đếm xem ID này xuất hiện bao nhiêu lần trong bảng CT_THELOAI
+            string queryCheckUse = "SELECT COUNT(*) FROM CT_THELOAI WHERE IDTheLoai = @IDTheLoai";
+            int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(queryCheckUse,
+                new MySqlParameter("@IDTheLoai", idTheLoai)
+            ));
+
+            return count > 0;
+        }
     }
 }

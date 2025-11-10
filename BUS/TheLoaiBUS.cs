@@ -46,11 +46,11 @@ namespace BUS
 
         public static bool Delete(string maTheLoai)
         {
-            // TODO: (Nâng cao) Có thể kiểm tra xem Thể loại này
-            // có đang được sử dụng trong bảng CT_THELOAI không trước khi xóa.
-            // Nếu có thì nên ném ra Exception "Không thể xóa thể loại đang được sử dụng"
-            // Hiện tại, Database của bạn đang để ON DELETE CASCADE (tự động xóa liên kết)
-            // nên việc xóa này là an toàn.
+            if (TheLoaiDAO.IsInUse(maTheLoai))
+            {
+                // Nếu có, ném ra lỗi nghiệp vụ, không cho xóa
+                throw new Exception("Không thể xóa thể loại này.\nThể loại đang được gán cho các tựa sách hiện có.");
+            }
             return TheLoaiDAO.Delete(maTheLoai);
         }
     }
