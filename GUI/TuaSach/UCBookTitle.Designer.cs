@@ -46,8 +46,8 @@
             btnSearch = new Button();
             textBox1 = new TextBox();
             label4 = new Label();
-            comboBox2 = new ComboBox();
-            comboBox1 = new ComboBox();
+            cbTacGia = new ComboBox();
+            cbTheLoai = new ComboBox();
             label7 = new Label();
             panel1.SuspendLayout();
             roundedPanel1.SuspendLayout();
@@ -64,16 +64,16 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 1;
             // 
             // label6
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(23, 27);
+            label6.Location = new Point(20, 20);
             label6.Name = "label6";
-            label6.Size = new Size(291, 46);
+            label6.Size = new Size(233, 37);
             label6.TabIndex = 0;
             label6.Text = "Quản lý Tựa sách";
             // 
@@ -89,13 +89,13 @@
             roundedPanel1.Controls.Add(btnAddBookTitle);
             roundedPanel1.Controls.Add(panel3);
             roundedPanel1.Controls.Add(label4);
-            roundedPanel1.Controls.Add(comboBox2);
-            roundedPanel1.Controls.Add(comboBox1);
+            roundedPanel1.Controls.Add(cbTacGia);
+            roundedPanel1.Controls.Add(cbTheLoai);
             roundedPanel1.Controls.Add(label7);
-            roundedPanel1.Location = new Point(23, 120);
-            roundedPanel1.Margin = new Padding(23, 27, 23, 27);
+            roundedPanel1.Location = new Point(20, 90);
+            roundedPanel1.Margin = new Padding(20, 20, 20, 20);
             roundedPanel1.Name = "roundedPanel1";
-            roundedPanel1.Size = new Size(1821, 859);
+            roundedPanel1.Size = new Size(1593, 644);
             roundedPanel1.TabIndex = 6;
             // 
             // dgvBookTitles
@@ -131,8 +131,8 @@
             dgvBookTitles.DefaultCellStyle = dataGridViewCellStyle4;
             dgvBookTitles.EnableHeadersVisualStyles = false;
             dgvBookTitles.GridColor = SystemColors.ControlLight;
-            dgvBookTitles.Location = new Point(23, 92);
-            dgvBookTitles.Margin = new Padding(23, 27, 23, 27);
+            dgvBookTitles.Location = new Point(20, 69);
+            dgvBookTitles.Margin = new Padding(20, 20, 20, 20);
             dgvBookTitles.Name = "dgvBookTitles";
             dgvBookTitles.ReadOnly = true;
             dgvBookTitles.RowHeadersVisible = false;
@@ -147,14 +147,13 @@
             dgvBookTitles.ShowEditingIcon = false;
             dgvBookTitles.ShowRowErrors = false;
             dgvBookTitles.ShowViewButton = true;
-            dgvBookTitles.Size = new Size(1773, 740);
+            dgvBookTitles.Size = new Size(1551, 555);
             dgvBookTitles.TabIndex = 14;
             // 
             // BookTitleID
             // 
             BookTitleID.DataPropertyName = "MaTuaSach";
             BookTitleID.HeaderText = "Mã tựa sách";
-            BookTitleID.MinimumWidth = 6;
             BookTitleID.Name = "BookTitleID";
             BookTitleID.ReadOnly = true;
             // 
@@ -162,7 +161,6 @@
             // 
             BookTitleName.DataPropertyName = "TenTuaSach";
             BookTitleName.HeaderText = "Tên tựa sách";
-            BookTitleName.MinimumWidth = 6;
             BookTitleName.Name = "BookTitleName";
             BookTitleName.ReadOnly = true;
             // 
@@ -171,7 +169,6 @@
             Image.DataPropertyName = "AnhBia";
             Image.HeaderText = "Ảnh bìa";
             Image.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            Image.MinimumWidth = 6;
             Image.Name = "Image";
             Image.ReadOnly = true;
             // 
@@ -181,7 +178,6 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             Genres.DefaultCellStyle = dataGridViewCellStyle2;
             Genres.HeaderText = "Thể loại";
-            Genres.MinimumWidth = 6;
             Genres.Name = "Genres";
             Genres.ReadOnly = true;
             // 
@@ -191,7 +187,6 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             Authors.DefaultCellStyle = dataGridViewCellStyle3;
             Authors.HeaderText = "Tác giả";
-            Authors.MinimumWidth = 6;
             Authors.Name = "Authors";
             Authors.ReadOnly = true;
             // 
@@ -205,11 +200,11 @@
             btnAddBookTitle.ForeColor = Color.White;
             btnAddBookTitle.Image = Properties.Resources.plus;
             btnAddBookTitle.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAddBookTitle.Location = new Point(1635, 27);
-            btnAddBookTitle.Margin = new Padding(23, 27, 23, 27);
+            btnAddBookTitle.Location = new Point(1431, 20);
+            btnAddBookTitle.Margin = new Padding(20, 20, 20, 20);
             btnAddBookTitle.Name = "btnAddBookTitle";
-            btnAddBookTitle.Padding = new Padding(3, 4, 3, 4);
-            btnAddBookTitle.Size = new Size(160, 40);
+            btnAddBookTitle.Padding = new Padding(3, 3, 3, 3);
+            btnAddBookTitle.Size = new Size(140, 30);
             btnAddBookTitle.TabIndex = 13;
             btnAddBookTitle.Text = "  Thêm Tựa sách";
             btnAddBookTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -223,10 +218,10 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(textBox1);
-            panel3.Location = new Point(967, 27);
-            panel3.Margin = new Padding(23, 27, 23, 27);
+            panel3.Location = new Point(846, 20);
+            panel3.Margin = new Padding(20, 20, 20, 20);
             panel3.Name = "panel3";
-            panel3.Size = new Size(623, 39);
+            panel3.Size = new Size(545, 30);
             panel3.TabIndex = 12;
             // 
             // btnSearch
@@ -239,11 +234,11 @@
             btnSearch.ForeColor = Color.White;
             btnSearch.Image = Properties.Resources.search;
             btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.Location = new Point(539, 0);
-            btnSearch.Margin = new Padding(0, 27, 23, 0);
+            btnSearch.Location = new Point(471, 0);
+            btnSearch.Margin = new Padding(0, 20, 20, 0);
             btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2, 3, 2, 3);
-            btnSearch.Size = new Size(82, 37);
+            btnSearch.Padding = new Padding(2, 2, 2, 2);
+            btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
             btnSearch.TextAlign = ContentAlignment.MiddleLeft;
@@ -255,10 +250,10 @@
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(6, 7);
-            textBox1.Margin = new Padding(6, 7, 6, 7);
+            textBox1.Location = new Point(5, 5);
+            textBox1.Margin = new Padding(5, 5, 5, 5);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(527, 22);
+            textBox1.Size = new Size(461, 18);
             textBox1.TabIndex = 0;
             // 
             // label4
@@ -266,62 +261,63 @@
             label4.AutoSize = true;
             label4.BackColor = Color.White;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(23, 32);
+            label4.Location = new Point(20, 24);
             label4.Name = "label4";
-            label4.Size = new Size(93, 28);
+            label4.Size = new Size(75, 21);
             label4.TabIndex = 0;
             label4.Text = "Thể loại:";
             label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // comboBox2
+            // cbTacGia
             // 
-            comboBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "Tất cả", "Tác giả 1", "Tác giả 2", "Tác giả 3" });
-            comboBox2.Location = new Point(378, 27);
-            comboBox2.Margin = new Padding(23, 27, 23, 27);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(164, 36);
-            comboBox2.TabIndex = 11;
-            comboBox2.Text = "Tất cả";
+            cbTacGia.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbTacGia.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbTacGia.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbTacGia.FormattingEnabled = true;
+            cbTacGia.Items.AddRange(new object[] { "Tất cả", "Tác giả 1", "Tác giả 2", "Tác giả 3" });
+            cbTacGia.Location = new Point(455, 20);
+            cbTacGia.Margin = new Padding(18, 15, 18, 15);
+            cbTacGia.Name = "cbTacGia";
+            cbTacGia.Size = new Size(200, 29);
+            cbTacGia.TabIndex = 11;
+            cbTacGia.Text = "Tất cả";
             // 
-            // comboBox1
+            // cbTheLoai
             // 
-            comboBox1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            comboBox1.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Tất cả", "Thể loại A", "Thể loại B", "Thể loại C" });
-            comboBox1.Location = new Point(114, 27);
-            comboBox1.Margin = new Padding(23, 27, 23, 27);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(139, 36);
-            comboBox1.Sorted = true;
-            comboBox1.TabIndex = 11;
-            comboBox1.Text = "Tất cả";
+            cbTheLoai.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbTheLoai.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbTheLoai.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbTheLoai.FormattingEnabled = true;
+            cbTheLoai.Items.AddRange(new object[] { "Tất cả", "Thể loại A", "Thể loại B", "Thể loại C" });
+            cbTheLoai.Location = new Point(116, 21);
+            cbTheLoai.Margin = new Padding(18, 15, 18, 15);
+            cbTheLoai.Name = "cbTheLoai";
+            cbTheLoai.Size = new Size(200, 29);
+            cbTheLoai.Sorted = true;
+            cbTheLoai.TabIndex = 11;
+            cbTheLoai.Text = "Tất cả";
             // 
             // label7
             // 
             label7.AutoSize = true;
             label7.BackColor = Color.White;
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(293, 32);
+            label7.Location = new Point(363, 24);
             label7.Name = "label7";
-            label7.Size = new Size(89, 28);
+            label7.Size = new Size(71, 21);
             label7.TabIndex = 0;
             label7.Text = "Tác giả: ";
             label7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // UCBookTitle
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundedPanel1);
             Controls.Add(panel1);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "UCBookTitle";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCBookTitle_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -338,8 +334,8 @@
         private Panel panel1;
         private Controls.RoundPanel roundedPanel1;
         private Label label6;
-        private ComboBox comboBox2;
-        private ComboBox comboBox1;
+        private ComboBox cbTacGia;
+        private ComboBox cbTheLoai;
         private Panel panel3;
         private Button btnSearch;
         private TextBox textBox1;

@@ -12,6 +12,12 @@ namespace DTO
         public string MaTacGia { get; set; }
         public string TenTacGia { get; set; }
 
+        public TacGiaDTO()
+        {
+            ID = 0;
+            MaTacGia = string.Empty;
+            TenTacGia = string.Empty;
+        }
         // Constructor để GetAll() trong DAO sử dụng
         public TacGiaDTO(int id, string maTacGia, string tenTacGia)
         {

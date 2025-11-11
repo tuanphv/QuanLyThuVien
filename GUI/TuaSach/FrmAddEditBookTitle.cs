@@ -110,17 +110,8 @@ namespace GUI.TuaSach
             txtNhap.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
             AutoCompleteStringCollection suggestList = new AutoCompleteStringCollection();
-            suggestList.AddRange(new string[]
-            {
-                "Văn học",
-                "Kinh tế",
-                "Tâm lý học",
-                "Khoa học",
-                "Công nghệ thông tin",
-                "Lịch sử",
-                "Trinh thám",
-                "Kinh dị"
-            });
+
+            BUS.TheLoaiBUS.GetAll().ToList().ForEach(tl => suggestList.Add(tl.TenTheLoai));
 
             // Cấu hình TextBox
             txtNhap.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -132,6 +123,28 @@ namespace GUI.TuaSach
             {
                 if (ev.KeyCode == Keys.Enter)
                 {
+                    var text = txtNhap.Text.Trim();
+                    bool text_found = false;
+                    // Tự động hoàn thành nếu có trong gợi ý
+                    foreach (string suggestion in txtNhap.AutoCompleteCustomSource)
+                    {
+                        if (string.Equals(suggestion, text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            txtNhap.Text = suggestion;
+                            txtNhap.SelectionStart = txtNhap.Text.Length;
+                            ev.Handled = true;
+                            ev.SuppressKeyPress = true;
+                            text_found = true;
+                            break;
+                        }
+                    }
+                    if (!text_found)
+                    {
+                        // Nếu không tìm thấy trong gợi ý, thông báo lỗi
+                        MessageBox.Show("Không tìm thấy thông tin Thể loại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     string theLoaiMoi = txtNhap.Text.Trim();
                     if (!string.IsNullOrEmpty(theLoaiMoi))
                     {
@@ -168,30 +181,7 @@ namespace GUI.TuaSach
             txtNhap.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
 
             AutoCompleteStringCollection suggestList = new AutoCompleteStringCollection();
-            suggestList.AddRange(new string[]
-            {
-                "Nguyễn Nhật Ánh",
-                "Nam Cao",
-                "Tô Hoài",
-                "Hồ Biểu Chánh",
-                "Victor Hugo",
-                "J. K. Rowling",
-                "George Orwell",
-                "Ernest Hemingway",
-                "Haruki Murakami",
-                "Paulo Coelho",
-                "Dan Brown",
-                "Antoine de Saint-Exupéry",
-                "Jane Austen",
-                "Leo Tolstoy",
-                "Fyodor Dostoevsky",
-                "Khaled Hosseini",
-                "Gabriel García Márquez",
-                "Albert Camus",
-                "Nguyễn Huy Thiệp",
-                "Kim Dung"
-            });
-
+            BUS.TacGiaBUS.GetAll().ToList().ForEach(tg => suggestList.Add(tg.TenTacGia));
 
             // Cấu hình TextBox
             txtNhap.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -203,6 +193,28 @@ namespace GUI.TuaSach
             {
                 if (ev.KeyCode == Keys.Enter)
                 {
+                    var text = txtNhap.Text.Trim();
+                    bool text_found = false;
+                    // Tự động hoàn thành nếu có trong gợi ý
+                    foreach (string suggestion in txtNhap.AutoCompleteCustomSource)
+                    {
+                        if (string.Equals(suggestion, text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            txtNhap.Text = suggestion;
+                            txtNhap.SelectionStart = txtNhap.Text.Length;
+                            ev.Handled = true;
+                            ev.SuppressKeyPress = true;
+                            text_found = true;
+                            break;
+                        }
+                    }
+                    if (!text_found)
+                    {
+                        // Nếu không tìm thấy trong gợi ý, thông báo lỗi
+                        MessageBox.Show("Không tìm thấy thông tin Tác giả.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     string tacGiaMoi = txtNhap.Text.Trim();
                     if (!string.IsNullOrEmpty(tacGiaMoi))
                     {
