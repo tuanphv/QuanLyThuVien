@@ -122,7 +122,7 @@
             dgvTheLoai.ReadOnly = true;
             dgvTheLoai.RowHeadersVisible = false;
             dgvTheLoai.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dgvTheLoai.RowTemplate.Height = 80;
+            dgvTheLoai.RowTemplate.Height = 40;
             dgvTheLoai.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTheLoai.ShowCellErrors = false;
             dgvTheLoai.ShowCellToolTips = false;
