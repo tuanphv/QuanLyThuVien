@@ -93,7 +93,7 @@
             roundedPanel1.Controls.Add(cbTheLoai);
             roundedPanel1.Controls.Add(label7);
             roundedPanel1.Location = new Point(20, 90);
-            roundedPanel1.Margin = new Padding(20);
+            roundedPanel1.Margin = new Padding(20, 20, 20, 20);
             roundedPanel1.Name = "roundedPanel1";
             roundedPanel1.Size = new Size(1593, 644);
             roundedPanel1.TabIndex = 6;
@@ -132,10 +132,11 @@
             dgvBookTitles.EnableHeadersVisualStyles = false;
             dgvBookTitles.GridColor = SystemColors.ControlLight;
             dgvBookTitles.Location = new Point(20, 69);
-            dgvBookTitles.Margin = new Padding(20);
+            dgvBookTitles.Margin = new Padding(20, 20, 20, 20);
             dgvBookTitles.Name = "dgvBookTitles";
             dgvBookTitles.ReadOnly = true;
             dgvBookTitles.RowHeadersVisible = false;
+            dgvBookTitles.RowHeadersWidth = 51;
             dgvBookTitles.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvBookTitles.RowTemplate.Height = 80;
             dgvBookTitles.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -200,9 +201,9 @@
             btnAddBookTitle.Image = Properties.Resources.plus;
             btnAddBookTitle.ImageAlign = ContentAlignment.MiddleLeft;
             btnAddBookTitle.Location = new Point(1431, 20);
-            btnAddBookTitle.Margin = new Padding(20);
+            btnAddBookTitle.Margin = new Padding(20, 20, 20, 20);
             btnAddBookTitle.Name = "btnAddBookTitle";
-            btnAddBookTitle.Padding = new Padding(3);
+            btnAddBookTitle.Padding = new Padding(3, 3, 3, 3);
             btnAddBookTitle.Size = new Size(140, 30);
             btnAddBookTitle.TabIndex = 13;
             btnAddBookTitle.Text = "  Thêm Tựa sách";
@@ -218,7 +219,7 @@
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(textBox1);
             panel3.Location = new Point(846, 20);
-            panel3.Margin = new Padding(20);
+            panel3.Margin = new Padding(20, 20, 20, 20);
             panel3.Name = "panel3";
             panel3.Size = new Size(545, 30);
             panel3.TabIndex = 12;
@@ -236,7 +237,7 @@
             btnSearch.Location = new Point(471, 0);
             btnSearch.Margin = new Padding(0, 20, 20, 0);
             btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2);
+            btnSearch.Padding = new Padding(2, 2, 2, 2);
             btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
@@ -250,7 +251,7 @@
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBox1.Location = new Point(5, 5);
-            textBox1.Margin = new Padding(5);
+            textBox1.Margin = new Padding(5, 5, 5, 5);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(461, 18);
             textBox1.TabIndex = 0;
@@ -274,8 +275,8 @@
             cbTacGia.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbTacGia.FormattingEnabled = true;
             cbTacGia.Items.AddRange(new object[] { "Tất cả", "Tác giả 1", "Tác giả 2", "Tác giả 3" });
-            cbTacGia.Location = new Point(398, 19);
-            cbTacGia.Margin = new Padding(20);
+            cbTacGia.Location = new Point(455, 20);
+            cbTacGia.Margin = new Padding(18, 15, 18, 15);
             cbTacGia.Name = "cbTacGia";
             cbTacGia.Size = new Size(200, 29);
             cbTacGia.TabIndex = 11;
@@ -288,8 +289,8 @@
             cbTheLoai.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbTheLoai.FormattingEnabled = true;
             cbTheLoai.Items.AddRange(new object[] { "Tất cả", "Thể loại A", "Thể loại B", "Thể loại C" });
-            cbTheLoai.Location = new Point(100, 20);
-            cbTheLoai.Margin = new Padding(20);
+            cbTheLoai.Location = new Point(116, 21);
+            cbTheLoai.Margin = new Padding(18, 15, 18, 15);
             cbTheLoai.Name = "cbTheLoai";
             cbTheLoai.Size = new Size(200, 29);
             cbTheLoai.Sorted = true;
@@ -301,7 +302,7 @@
             label7.AutoSize = true;
             label7.BackColor = Color.White;
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(323, 23);
+            label7.Location = new Point(363, 24);
             label7.Name = "label7";
             label7.Size = new Size(71, 21);
             label7.TabIndex = 0;
