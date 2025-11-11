@@ -1,38 +1,39 @@
-﻿using DTO;
+﻿using DAO;
+using DTO;
 using GUI.Controls;
 using System.Data;
 
-namespace GUI.TheLoai 
+namespace GUI.TacGia
 {
-    public partial class FrmAddEditTheLoai : Form
+    public partial class FrmAddEditTacGia : Form
     {
         private bool _isEditMode = false;
-        private TheLoaiDTO _theLoaiDTO;
+        private TacGiaDTO _tacgiaDTO;
 
         // Property để truyền DTO vào và lấy DTO ra
-        public TheLoaiDTO TheLoai
+        public TacGiaDTO TacGia
         {
             get
             {
                 // Lấy dữ liệu từ control
-                _theLoaiDTO.TenTheLoai = txtTenTheLoai.Text.Trim();
-                _theLoaiDTO.MaTheLoai = txtMaTheLoai.Text;
-                return _theLoaiDTO;
+                _tacgiaDTO.TenTacGia = txtTenTacGia.Text.Trim();
+                _tacgiaDTO.MaTacGia = txtMaTacGia.Text;
+                return _tacgiaDTO;
             }
             set
             {
                 // Gán DTO vào control
-                _theLoaiDTO = value;
-                txtMaTheLoai.Text = _theLoaiDTO.MaTheLoai;
-                txtTenTheLoai.Text = _theLoaiDTO.TenTheLoai;
+                _tacgiaDTO = value;
+                txtMaTacGia.Text = _tacgiaDTO.MaTacGia;
+                txtTenTacGia.Text = _tacgiaDTO.TenTacGia;
                 _isEditMode = true;
             }
         }
 
-        public FrmAddEditTheLoai()
+        public FrmAddEditTacGia()
         {
             InitializeComponent();
-            _theLoaiDTO = new TheLoaiDTO("", ""); // Khởi tạo DTO rỗng
+            _tacgiaDTO = new TacGiaDTO("", ""); // Khởi tạo DTO rỗng
         }
 
         // Xử lý logic chính khi đóng form (bấm Lưu hoặc Thoát)
@@ -66,11 +67,11 @@ namespace GUI.TheLoai
 
         private bool ValidateInputs()
         {
-            if (string.IsNullOrWhiteSpace(txtTenTheLoai.Text))
+            if (string.IsNullOrWhiteSpace(txtTenTacGia.Text))
             {
                 MessageBox.Show("Tên thể loại không được để trống.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtTenTheLoai.Focus();
+                txtTenTacGia.Focus();
                 return false;
             }
             return true;
@@ -81,18 +82,18 @@ namespace GUI.TheLoai
             try
             {
                 // Lấy DTO từ property (nó sẽ gọi 'get' block)
-                var dto = this.TheLoai;
+                var dto = this.TacGia;
 
                 // Gọi BUS và nhận lại Mã mới
-                string newMa = BUS.TheLoaiBUS.Add(dto);
+                string newMa = BUS.TacGiaBUS.Add(dto);
                 if (string.IsNullOrEmpty(newMa))
                 {
                     throw new Exception("Không nhận được mã thể loại sau khi thêm.");
                 }
 
                 // Cập nhật lại MaTheLoai cho DTO và control
-                _theLoaiDTO.MaTheLoai = newMa;
-                txtMaTheLoai.Text = newMa;
+                _tacgiaDTO.MaTacGia = newMa;
+                txtMaTacGia.Text = newMa;
 
                 MessageBox.Show("Thêm thể loại thành công.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -111,10 +112,10 @@ namespace GUI.TheLoai
             try
             {
                 // Lấy DTO từ property (nó sẽ gọi 'get' block)
-                var dto = this.TheLoai;
+                var dto = this.TacGia;
 
                 // Gọi BUS
-                BUS.TheLoaiBUS.Update(dto);
+                BUS.TacGiaBUS.Update(dto);
 
                 MessageBox.Show("Cập nhật thể loại thành công.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);

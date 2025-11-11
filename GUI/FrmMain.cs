@@ -1,5 +1,6 @@
 ﻿using GUI.Helpers;
 using GUI.TheLoai;
+using GUI.TacGia;
 using System.Data;
 using System.Windows.Forms;
 namespace GUI
@@ -16,7 +17,8 @@ namespace GUI
                 new SidebarMenuItem(btnDashboard, new ThongKe.UCDashboard()),
                 new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle()),
                 new SidebarMenuItem(btnPermissions, new PhanQuyen.UCPermissions()),
-                new SidebarMenuItem(btnGenre, new UCTheLoai())
+                new SidebarMenuItem(btnGenre, new UCTheLoai()),
+                new SidebarMenuItem(btnAuthor, new UCTacGia())
             };
         }
 
