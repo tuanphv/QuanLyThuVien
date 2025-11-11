@@ -315,11 +315,9 @@
             // 
             // FrmAddEditBookTitle
             // 
-            AcceptButton = btnSave;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            CancelButton = btnCancel;
             ClientSize = new Size(867, 564);
             ControlBox = false;
             Controls.Add(panel1);

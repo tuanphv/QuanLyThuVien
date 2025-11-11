@@ -20,6 +20,19 @@ namespace GUI.TuaSach
 
             dgvBookTitles.EditButtonClicked += EditButtonClicked;
             dgvBookTitles.DeleteButtonClicked += DeleteButtonClicked;
+
+            // Load thể loại vào combobox
+            var listTheLoai = BUS.TheLoaiBUS.GetAll();
+            listTheLoai.Insert(0, new TheLoaiDTO { ID = 0, TenTheLoai = "-- Tất cả --" });
+            cbTheLoai.DataSource = listTheLoai;
+            cbTheLoai.DisplayMember = "TenTheLoai";
+            cbTheLoai.ValueMember = "ID";
+            // Load tác giả vào combobox
+            var listTacGia = BUS.TacGiaBUS.GetAll();
+            listTacGia.Insert(0, new TacGiaDTO { ID = 0, TenTacGia = "-- Tất cả --" });
+            cbTacGia.DataSource = listTacGia;
+            cbTacGia.DisplayMember = "TenTacGia";
+            cbTacGia.ValueMember = "ID";
         }
 
         private void EditButtonClicked(object? sender, int index)

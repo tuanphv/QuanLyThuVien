@@ -46,21 +46,92 @@ namespace DAO
 
         public static string AddBookTitle(TuaSachDTO tuaSach)
         {
-            string query = @"
+            // Thêm Tựa sách và lấy ID + mã vừa tạo
+            string insertQuery = @"
                 INSERT INTO TuaSach (TenTuaSach, AnhBia)
                 VALUES (@TenTuaSach, @AnhBia);
 
-                SELECT MaTuaSach 
-                FROM TuaSach 
-                WHERE ID = LAST_INSERT_ID();
+                SELECT ID, MaTuaSach FROM TuaSach WHERE ID = LAST_INSERT_ID();
             ";
-            string? maTuaSachMoi = DataProvider.Instance.ExecuteScalar(query,
+
+            DataTable result = DataProvider.Instance.ExecuteQuery(insertQuery,
                 new MySqlParameter("@TenTuaSach", tuaSach.TenTuaSach),
                 new MySqlParameter("@AnhBia", tuaSach.AnhBia ?? (object)DBNull.Value)
-            )?.ToString();
+            );
 
-            return maTuaSachMoi ?? String.Empty;
+            if (result.Rows.Count == 0)
+                return string.Empty;
+
+            int idTuaSach = Convert.ToInt32(result.Rows[0]["ID"]);
+            string maTuaSachMoi = result.Rows[0]["MaTuaSach"].ToString() ?? string.Empty;
+
+            // Thêm Thể loại (nếu có)
+            if (!string.IsNullOrWhiteSpace(tuaSach.TheLoai))
+            {
+                foreach (string theLoai in tuaSach.TheLoai.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    InsertBookTitleGenre(theLoai, idTuaSach);
+                }
+            }
+
+            // Thêm Tác giả (nếu có)
+            if (!string.IsNullOrWhiteSpace(tuaSach.TacGia))
+            {
+                foreach (string tacGia in tuaSach.TacGia.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    InsertBookTitleAuthor(tacGia, idTuaSach);
+                }
+            }
+
+            return maTuaSachMoi;
         }
+
+
+        private static bool InsertBookTitleGenre(string genre, int idTuaSach)
+        {
+            string queryGetGenreID = "SELECT ID FROM TheLoai WHERE TenTheLoai = @TenTheLoai";
+            object? genreResult = DataProvider.Instance.ExecuteScalar(queryGetGenreID,
+                new MySqlParameter("@TenTheLoai", genre)
+            );
+            if (genreResult == null) return false;
+
+            int idTheLoai = Convert.ToInt32(genreResult);
+
+            string queryInsert = @"
+                INSERT INTO CT_TheLoai (IDTuaSach, IDTheLoai)
+                VALUES (@IDTuaSach, @IDTheLoai)
+            ";
+            int count = DataProvider.Instance.ExecuteNonQuery(queryInsert,
+                new MySqlParameter("@IDTuaSach", idTuaSach),
+                new MySqlParameter("@IDTheLoai", idTheLoai)
+            );
+
+            return count > 0;
+        }
+
+
+        private static bool InsertBookTitleAuthor(string author, int idTuaSach)
+        {
+            string queryGetAuthorID = "SELECT ID FROM TacGia WHERE TenTacGia = @TenTacGia";
+            object? authorResult = DataProvider.Instance.ExecuteScalar(queryGetAuthorID,
+                new MySqlParameter("@TenTacGia", author)
+            );
+            if (authorResult == null) return false;
+
+            int idTacGia = Convert.ToInt32(authorResult);
+
+            string queryInsert = @"
+                INSERT INTO CT_TacGia (IDTuaSach, IDTacGia)
+                VALUES (@IDTuaSach, @IDTacGia)
+            ";
+            int count = DataProvider.Instance.ExecuteNonQuery(queryInsert,
+                new MySqlParameter("@IDTuaSach", idTuaSach),
+                new MySqlParameter("@IDTacGia", idTacGia)
+            );
+
+            return count > 0;
+        }
+
 
         public static bool IsNameExist(string name, string ma = "")
         {

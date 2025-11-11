@@ -36,19 +36,19 @@
             label6 = new Label();
             roundedPanel1 = new GUI.Controls.RoundPanel();
             dgvBookTitles = new GUI.Controls.ActionDataGridView();
-            btnAddBookTitle = new Button();
-            panel3 = new Panel();
-            btnSearch = new Button();
-            textBox1 = new TextBox();
-            label4 = new Label();
-            comboBox2 = new ComboBox();
-            comboBox1 = new ComboBox();
-            label7 = new Label();
             BookTitleID = new DataGridViewTextBoxColumn();
             BookTitleName = new DataGridViewTextBoxColumn();
             Image = new DataGridViewImageColumn();
             Genres = new DataGridViewTextBoxColumn();
             Authors = new DataGridViewTextBoxColumn();
+            btnAddBookTitle = new Button();
+            panel3 = new Panel();
+            btnSearch = new Button();
+            textBox1 = new TextBox();
+            label4 = new Label();
+            cbTacGia = new ComboBox();
+            cbTheLoai = new ComboBox();
+            label7 = new Label();
             panel1.SuspendLayout();
             roundedPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvBookTitles).BeginInit();
@@ -89,8 +89,8 @@
             roundedPanel1.Controls.Add(btnAddBookTitle);
             roundedPanel1.Controls.Add(panel3);
             roundedPanel1.Controls.Add(label4);
-            roundedPanel1.Controls.Add(comboBox2);
-            roundedPanel1.Controls.Add(comboBox1);
+            roundedPanel1.Controls.Add(cbTacGia);
+            roundedPanel1.Controls.Add(cbTheLoai);
             roundedPanel1.Controls.Add(label7);
             roundedPanel1.Location = new Point(20, 90);
             roundedPanel1.Margin = new Padding(20);
@@ -148,6 +148,46 @@
             dgvBookTitles.ShowViewButton = true;
             dgvBookTitles.Size = new Size(1551, 555);
             dgvBookTitles.TabIndex = 14;
+            // 
+            // BookTitleID
+            // 
+            BookTitleID.DataPropertyName = "MaTuaSach";
+            BookTitleID.HeaderText = "Mã tựa sách";
+            BookTitleID.Name = "BookTitleID";
+            BookTitleID.ReadOnly = true;
+            // 
+            // BookTitleName
+            // 
+            BookTitleName.DataPropertyName = "TenTuaSach";
+            BookTitleName.HeaderText = "Tên tựa sách";
+            BookTitleName.Name = "BookTitleName";
+            BookTitleName.ReadOnly = true;
+            // 
+            // Image
+            // 
+            Image.DataPropertyName = "AnhBia";
+            Image.HeaderText = "Ảnh bìa";
+            Image.ImageLayout = DataGridViewImageCellLayout.Zoom;
+            Image.Name = "Image";
+            Image.ReadOnly = true;
+            // 
+            // Genres
+            // 
+            Genres.DataPropertyName = "TheLoai";
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            Genres.DefaultCellStyle = dataGridViewCellStyle2;
+            Genres.HeaderText = "Thể loại";
+            Genres.Name = "Genres";
+            Genres.ReadOnly = true;
+            // 
+            // Authors
+            // 
+            Authors.DataPropertyName = "TacGia";
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            Authors.DefaultCellStyle = dataGridViewCellStyle3;
+            Authors.HeaderText = "Tác giả";
+            Authors.Name = "Authors";
+            Authors.ReadOnly = true;
             // 
             // btnAddBookTitle
             // 
@@ -227,84 +267,46 @@
             label4.Text = "Thể loại:";
             label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // comboBox2
+            // cbTacGia
             // 
-            comboBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "Tất cả", "Tác giả 1", "Tác giả 2", "Tác giả 3" });
-            comboBox2.Location = new Point(331, 20);
-            comboBox2.Margin = new Padding(20);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(144, 29);
-            comboBox2.TabIndex = 11;
-            comboBox2.Text = "Tất cả";
+            cbTacGia.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbTacGia.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbTacGia.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbTacGia.FormattingEnabled = true;
+            cbTacGia.Items.AddRange(new object[] { "Tất cả", "Tác giả 1", "Tác giả 2", "Tác giả 3" });
+            cbTacGia.Location = new Point(398, 19);
+            cbTacGia.Margin = new Padding(20);
+            cbTacGia.Name = "cbTacGia";
+            cbTacGia.Size = new Size(200, 29);
+            cbTacGia.TabIndex = 11;
+            cbTacGia.Text = "Tất cả";
             // 
-            // comboBox1
+            // cbTheLoai
             // 
-            comboBox1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            comboBox1.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Tất cả", "Thể loại A", "Thể loại B", "Thể loại C" });
-            comboBox1.Location = new Point(100, 20);
-            comboBox1.Margin = new Padding(20);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(122, 29);
-            comboBox1.Sorted = true;
-            comboBox1.TabIndex = 11;
-            comboBox1.Text = "Tất cả";
+            cbTheLoai.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cbTheLoai.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbTheLoai.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbTheLoai.FormattingEnabled = true;
+            cbTheLoai.Items.AddRange(new object[] { "Tất cả", "Thể loại A", "Thể loại B", "Thể loại C" });
+            cbTheLoai.Location = new Point(100, 20);
+            cbTheLoai.Margin = new Padding(20);
+            cbTheLoai.Name = "cbTheLoai";
+            cbTheLoai.Size = new Size(200, 29);
+            cbTheLoai.Sorted = true;
+            cbTheLoai.TabIndex = 11;
+            cbTheLoai.Text = "Tất cả";
             // 
             // label7
             // 
             label7.AutoSize = true;
             label7.BackColor = Color.White;
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(256, 24);
+            label7.Location = new Point(323, 23);
             label7.Name = "label7";
             label7.Size = new Size(71, 21);
             label7.TabIndex = 0;
             label7.Text = "Tác giả: ";
             label7.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // BookTitleID
-            // 
-            BookTitleID.DataPropertyName = "MaTuaSach";
-            BookTitleID.HeaderText = "Mã tựa sách";
-            BookTitleID.Name = "BookTitleID";
-            BookTitleID.ReadOnly = true;
-            // 
-            // BookTitleName
-            // 
-            BookTitleName.DataPropertyName = "TenTuaSach";
-            BookTitleName.HeaderText = "Tên tựa sách";
-            BookTitleName.Name = "BookTitleName";
-            BookTitleName.ReadOnly = true;
-            // 
-            // Image
-            // 
-            Image.DataPropertyName = "AnhBia";
-            Image.HeaderText = "Ảnh bìa";
-            Image.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            Image.Name = "Image";
-            Image.ReadOnly = true;
-            // 
-            // Genres
-            // 
-            Genres.DataPropertyName = "TheLoai";
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            Genres.DefaultCellStyle = dataGridViewCellStyle2;
-            Genres.HeaderText = "Thể loại";
-            Genres.Name = "Genres";
-            Genres.ReadOnly = true;
-            // 
-            // Authors
-            // 
-            Authors.DataPropertyName = "TacGia";
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            Authors.DefaultCellStyle = dataGridViewCellStyle3;
-            Authors.HeaderText = "Tác giả";
-            Authors.Name = "Authors";
-            Authors.ReadOnly = true;
             // 
             // UCBookTitle
             // 
@@ -331,8 +333,8 @@
         private Panel panel1;
         private Controls.RoundPanel roundedPanel1;
         private Label label6;
-        private ComboBox comboBox2;
-        private ComboBox comboBox1;
+        private ComboBox cbTacGia;
+        private ComboBox cbTheLoai;
         private Panel panel3;
         private Button btnSearch;
         private TextBox textBox1;

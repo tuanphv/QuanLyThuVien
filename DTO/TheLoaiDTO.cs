@@ -13,6 +13,12 @@ namespace DTO
         public string TenTheLoai { get; set; }
 
         // Constructor để GetAll() trong DAO sử dụng
+        public TheLoaiDTO()
+        {
+            ID = 0;
+            MaTheLoai = string.Empty;
+            TenTheLoai = string.Empty;
+        }
         public TheLoaiDTO(int id, string maTheLoai, string tenTheLoai)
         {
             ID = id;
