@@ -40,15 +40,10 @@
             panel2 = new Panel();
             button2 = new Button();
             txtSearch = new TextBox();
-            btnThemTheLoai = new Button();
-            panel3 = new Panel();
-            btnSearch = new Button();
-            txtTimKiem = new TextBox();
             panel1.SuspendLayout();
             roundPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTacGia).BeginInit();
             panel2.SuspendLayout();
-            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -82,8 +77,6 @@
             roundPanel1.Controls.Add(dgvTacGia);
             roundPanel1.Controls.Add(btnAdd);
             roundPanel1.Controls.Add(panel2);
-            roundPanel1.Controls.Add(btnThemTheLoai);
-            roundPanel1.Controls.Add(panel3);
             roundPanel1.Location = new Point(23, 120);
             roundPanel1.Margin = new Padding(23, 27, 23, 27);
             roundPanel1.Name = "roundPanel1";
@@ -223,70 +216,6 @@
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtTimKiem_TextChanged;
             // 
-            // btnThemTheLoai
-            // 
-            btnThemTheLoai.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnThemTheLoai.BackColor = Color.DeepSkyBlue;
-            btnThemTheLoai.FlatAppearance.BorderSize = 0;
-            btnThemTheLoai.FlatStyle = FlatStyle.Flat;
-            btnThemTheLoai.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnThemTheLoai.ForeColor = Color.White;
-            btnThemTheLoai.Image = Properties.Resources.plus;
-            btnThemTheLoai.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThemTheLoai.Location = new Point(2556, 28);
-            btnThemTheLoai.Margin = new Padding(23, 27, 23, 27);
-            btnThemTheLoai.Name = "btnThemTheLoai";
-            btnThemTheLoai.Padding = new Padding(3, 4, 3, 4);
-            btnThemTheLoai.Size = new Size(87, 40);
-            btnThemTheLoai.TabIndex = 14;
-            btnThemTheLoai.Text = "Thêm";
-            btnThemTheLoai.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnThemTheLoai.UseVisualStyleBackColor = false;
-            // 
-            // panel3
-            // 
-            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel3.BorderStyle = BorderStyle.FixedSingle;
-            panel3.Controls.Add(btnSearch);
-            panel3.Controls.Add(txtTimKiem);
-            panel3.Location = new Point(2045, 29);
-            panel3.Margin = new Padding(23, 27, 23, 27);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(465, 39);
-            panel3.TabIndex = 13;
-            // 
-            // btnSearch
-            // 
-            btnSearch.BackColor = Color.DarkTurquoise;
-            btnSearch.Dock = DockStyle.Right;
-            btnSearch.FlatAppearance.BorderSize = 0;
-            btnSearch.FlatStyle = FlatStyle.Flat;
-            btnSearch.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSearch.ForeColor = Color.White;
-            btnSearch.Image = Properties.Resources.search;
-            btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.Location = new Point(381, 0);
-            btnSearch.Margin = new Padding(0, 27, 23, 0);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2, 3, 2, 3);
-            btnSearch.Size = new Size(82, 37);
-            btnSearch.TabIndex = 1;
-            btnSearch.Text = "  Tìm";
-            btnSearch.TextAlign = ContentAlignment.MiddleLeft;
-            btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnSearch.UseVisualStyleBackColor = false;
-            // 
-            // txtTimKiem
-            // 
-            txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtTimKiem.BorderStyle = BorderStyle.None;
-            txtTimKiem.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.Location = new Point(6, 7);
-            txtTimKiem.Margin = new Padding(6, 7, 6, 7);
-            txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.Size = new Size(632, 22);
-            txtTimKiem.TabIndex = 0;
-            // 
             // UCTacGia
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -303,8 +232,6 @@
             ((System.ComponentModel.ISupportInitialize)dgvTacGia).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -313,10 +240,6 @@
         private Panel panel1;
         private Label label1;
         private Controls.RoundPanel roundPanel1;
-        private Button btnThemTheLoai;
-        private Panel panel3;
-        private Button btnSearch;
-        private TextBox txtTimKiem;
         private Button btnAdd;
         private Panel panel2;
         private Button button2;
