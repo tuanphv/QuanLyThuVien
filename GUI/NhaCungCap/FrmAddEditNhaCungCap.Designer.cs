@@ -1,6 +1,6 @@
-﻿namespace GUI.NhaXuatBan
+﻿namespace GUI.NhaCungCap
 {
-    partial class FrmAddEditNhaXuatBan
+    partial class FrmAddEditNhaCungCap
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAddEditNhaXuatBan));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAddEditNhaCungCap));
             btnThoat = new Button();
             btnLuu = new Button();
             txtDiaChi = new TextBox();
-            txtTenNXB = new TextBox();
+            txtTenNCC = new TextBox();
             label2 = new Label();
             label1 = new Label();
             SuspendLayout();
@@ -49,7 +49,7 @@
             btnThoat.Location = new Point(284, 171);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(92, 41);
-            btnThoat.TabIndex = 17;
+            btnThoat.TabIndex = 23;
             btnThoat.Text = "Thoát";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThoat.UseVisualStyleBackColor = false;
@@ -67,7 +67,7 @@
             btnLuu.Location = new Point(105, 171);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(92, 41);
-            btnLuu.TabIndex = 16;
+            btnLuu.TabIndex = 22;
             btnLuu.Text = "Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;
@@ -79,16 +79,16 @@
             txtDiaChi.Location = new Point(212, 106);
             txtDiaChi.Name = "txtDiaChi";
             txtDiaChi.Size = new Size(175, 27);
-            txtDiaChi.TabIndex = 15;
+            txtDiaChi.TabIndex = 21;
             // 
-            // txtTenNXB
+            // txtTenNCC
             // 
-            txtTenNXB.BorderStyle = BorderStyle.FixedSingle;
-            txtTenNXB.Location = new Point(212, 40);
-            txtTenNXB.Name = "txtTenNXB";
-            txtTenNXB.ReadOnly = true;
-            txtTenNXB.Size = new Size(175, 27);
-            txtTenNXB.TabIndex = 14;
+            txtTenNCC.BorderStyle = BorderStyle.FixedSingle;
+            txtTenNCC.Location = new Point(212, 40);
+            txtTenNCC.Name = "txtTenNCC";
+            txtTenNCC.ReadOnly = true;
+            txtTenNCC.Size = new Size(175, 27);
+            txtTenNCC.TabIndex = 20;
             // 
             // label2
             // 
@@ -97,7 +97,7 @@
             label2.Location = new Point(92, 106);
             label2.Name = "label2";
             label2.Size = new Size(70, 23);
-            label2.TabIndex = 13;
+            label2.TabIndex = 19;
             label2.Text = "Địa chỉ:";
             // 
             // label1
@@ -106,9 +106,9 @@
             label1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
             label1.Location = new Point(92, 40);
             label1.Name = "label1";
-            label1.Size = new Size(82, 23);
-            label1.TabIndex = 12;
-            label1.Text = "Tên NXB:";
+            label1.Size = new Size(81, 23);
+            label1.TabIndex = 18;
+            label1.Text = "Tên NCC:";
             // 
             // FrmAddEditNhaXuatBan
             // 
@@ -118,13 +118,13 @@
             Controls.Add(btnThoat);
             Controls.Add(btnLuu);
             Controls.Add(txtDiaChi);
-            Controls.Add(txtTenNXB);
+            Controls.Add(txtTenNCC);
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "FrmAddEditNhaXuatBan";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "FrmAddEditNhaXuatBan";
-            Load += FrmAddEditNhaXuatBan_Load;
+            Load += FrmAddEditNhaCungCap_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -134,7 +134,7 @@
         private Button btnThoat;
         private Button btnLuu;
         private TextBox txtDiaChi;
-        private TextBox txtTenNXB;
+        private TextBox txtTenNCC;
         private Label label2;
         private Label label1;
     }
