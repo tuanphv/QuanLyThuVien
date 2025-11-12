@@ -177,5 +177,105 @@ namespace DAO
             );
             return count > 0;
         }
+
+        //Trí thêm hàm lấy tựa sách theo mã thể loại
+        public static List<TuaSachDTO> GetByMaTheLoai(string maTheLoai)
+        {
+            List<TuaSachDTO> list = new List<TuaSachDTO>();
+
+            // Câu truy vấn: Join qua bảng trung gian CT_TheLoai và TheLoai để lọc theo MaTheLoai
+            // Vẫn giữ các LEFT JOIN khác để lấy đầy đủ tên Tác giả hiển thị lên Grid
+            string query = @"
+                            SELECT 
+                                TS.*,
+                                GROUP_CONCAT(DISTINCT TL.TenTheLoai SEPARATOR ', ') AS TheLoai,
+                                GROUP_CONCAT(DISTINCT TG.TenTacGia SEPARATOR ', ') AS TacGia
+                            FROM TuaSach AS TS
+                            JOIN 
+                                CT_TheLoai AS CT_TL_Filter ON TS.ID = CT_TL_Filter.IDTuaSach
+                            JOIN 
+                                TheLoai AS TL_Filter ON CT_TL_Filter.IDTheLoai = TL_Filter.ID
+                            LEFT JOIN
+                                CT_TheLoai AS CT_TL ON TS.ID = CT_TL.IDTuaSach
+                            LEFT JOIN
+                                TheLoai AS TL ON CT_TL.IDTheLoai = TL.ID
+                            LEFT JOIN 
+                                CT_TacGia AS CT_TG ON TS.ID = CT_TG.IDTuaSach
+                            LEFT JOIN
+                                TacGia AS TG ON CT_TG.IDTacGia = TG.ID
+                            WHERE TL_Filter.MaTheLoai = @MaTheLoai 
+                              AND TS.DaAn = 0
+                            GROUP BY TS.ID
+                        ";
+            // Thực thi truy vấn với tham số @MaTheLoai
+            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@MaTheLoai", maTheLoai));
+
+            // Chuyển đổi dữ liệu từ DataTable sang List<TuaSachDTO>
+            foreach (DataRow item in data.Rows)
+            {
+                TuaSachDTO tuaSach = new TuaSachDTO(
+                    Convert.ToInt32(item["ID"]),
+                    item["MaTuaSach"].ToString() ?? string.Empty,
+                    item["TenTuaSach"].ToString() ?? string.Empty,
+                    item["AnhBia"] != DBNull.Value ? (byte[])item["AnhBia"] : null,
+                    item["TheLoai"].ToString() ?? string.Empty,
+                    item["TacGia"].ToString() ?? string.Empty
+                );
+                list.Add(tuaSach);
+            }
+
+            return list;
+        }
+
+        // Trí thêm hàm lấy tựa sách theo mã tác giả
+        public static List<TuaSachDTO> GetByMaTacGia(string maTacGia)
+        {
+            List<TuaSachDTO> list = new List<TuaSachDTO>();
+
+            // SQL: Lọc theo Tác giả (Filter), nhưng vẫn lấy kèm thông tin Thể loại để hiển thị
+            string query = @"
+                            SELECT 
+                                TS.*,
+                                GROUP_CONCAT(DISTINCT TL.TenTheLoai SEPARATOR ', ') AS TheLoai,
+                                GROUP_CONCAT(DISTINCT TG.TenTacGia SEPARATOR ', ') AS TacGia
+                            FROM TuaSach AS TS
+                            -- JOIN đoạn này để LỌC theo mã tác giả được chọn
+                            JOIN 
+                                CT_TacGia AS CT_TG_Filter ON TS.ID = CT_TG_Filter.IDTuaSach
+                            JOIN 
+                                TacGia AS TG_Filter ON CT_TG_Filter.IDTacGia = TG_Filter.ID
+        
+                            -- LEFT JOIN đoạn này để LẤY DỮ LIỆU hiển thị (Thể loại, Tác giả khác nếu có)
+                            LEFT JOIN
+                                CT_TheLoai AS CT_TL ON TS.ID = CT_TL.IDTuaSach
+                            LEFT JOIN
+                                TheLoai AS TL ON CT_TL.IDTheLoai = TL.ID
+                            LEFT JOIN 
+                                CT_TacGia AS CT_TG ON TS.ID = CT_TG.IDTuaSach
+                            LEFT JOIN
+                                TacGia AS TG ON CT_TG.IDTacGia = TG.ID
+            
+                            WHERE TG_Filter.MaTacGia = @MaTacGia 
+                              AND TS.DaAn = 0
+                            GROUP BY TS.ID
+                        ";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@MaTacGia", maTacGia));
+
+            foreach (DataRow item in data.Rows)
+            {
+                TuaSachDTO tuaSach = new TuaSachDTO(
+                    Convert.ToInt32(item["ID"]),
+                    item["MaTuaSach"].ToString() ?? string.Empty,
+                    item["TenTuaSach"].ToString() ?? string.Empty,
+                    item["AnhBia"] != DBNull.Value ? (byte[])item["AnhBia"] : null,
+                    item["TheLoai"].ToString() ?? string.Empty, // Đã lấy được tên thể loại ở đây
+                    item["TacGia"].ToString() ?? string.Empty
+                );
+                list.Add(tuaSach);
+            }
+
+            return list;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DTO;
+using System.ComponentModel;
 
 namespace BUS
 {
@@ -30,6 +31,18 @@ namespace BUS
         public static bool DeleteBookTitle(int id)
         {
             return DAO.TuaSachDAO.DeleteBookTitle(id);
+        }
+
+        //Trí thêm hàm lấy tựa sách theo mã thể loại
+        public static List<TuaSachDTO> GetByMaTheLoai(string maTheLoai)
+        {
+            return DAO.TuaSachDAO.GetByMaTheLoai(maTheLoai);
+        }
+
+        //Trí thêm hàm lấy tựa sách theo mã tác giả
+        public static List<DTO.TuaSachDTO> GetByMaTacGia(string maTacGia)
+        {
+            return DAO.TuaSachDAO.GetByMaTacGia(maTacGia);
         }
     }
 }

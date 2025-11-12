@@ -25,6 +25,12 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
             // Gán sự kiện cho các nút Sửa/Xóa trong DataGridView
             dgvTacGia.EditButtonClicked += EditButtonClicked;
             dgvTacGia.DeleteButtonClicked += DeleteButtonClicked;
+            dgvTacGia.ViewButtonClicked += ViewButtonClicked;
+        }
+
+        private void DgvTacGia_ViewButtonClicked(object? sender, int e)
+        {
+            throw new NotImplementedException();
         }
 
         private void btnThemTacGia_Click(object sender, EventArgs e)
@@ -93,6 +99,22 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
             }
         }
 
+        private void ViewButtonClicked(object? sender, int index)
+        {
+            if (index < 0 || index >= list.Count) return;
+
+            // Lấy tác giả được chọn
+            TacGiaDTO selectedTacGia = list[index];
+
+            // Mở form danh sách sách, truyền Mã và Tên tác giả sang
+            FrmDanhSachSachTheoTacGia frm = new FrmDanhSachSachTheoTacGia(
+                selectedTacGia.MaTacGia,
+                selectedTacGia.TenTacGia
+            );
+
+            frm.StartPosition = FormStartPosition.CenterParent; // Căn giữa cho đẹp
+            frm.ShowDialog();
+        }
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
         {            
             if (list == null) return;
