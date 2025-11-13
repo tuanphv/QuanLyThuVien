@@ -32,9 +32,9 @@
             btnThoat = new Button();
             btnLuu = new Button();
             txtDiaChi = new TextBox();
-            txtTenNCC = new TextBox();
             label2 = new Label();
             label1 = new Label();
+            txtTenNCC = new TextBox();
             SuspendLayout();
             // 
             // btnThoat
@@ -81,15 +81,6 @@
             txtDiaChi.Size = new Size(175, 27);
             txtDiaChi.TabIndex = 21;
             // 
-            // txtTenNCC
-            // 
-            txtTenNCC.BorderStyle = BorderStyle.FixedSingle;
-            txtTenNCC.Location = new Point(212, 40);
-            txtTenNCC.Name = "txtTenNCC";
-            txtTenNCC.ReadOnly = true;
-            txtTenNCC.Size = new Size(175, 27);
-            txtTenNCC.TabIndex = 20;
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -110,20 +101,28 @@
             label1.TabIndex = 18;
             label1.Text = "Tên NCC:";
             // 
-            // FrmAddEditNhaXuatBan
+            // txtTenNCC
+            // 
+            txtTenNCC.BorderStyle = BorderStyle.FixedSingle;
+            txtTenNCC.Location = new Point(212, 39);
+            txtTenNCC.Name = "txtTenNCC";
+            txtTenNCC.Size = new Size(175, 27);
+            txtTenNCC.TabIndex = 24;
+            // 
+            // FrmAddEditNhaCungCap
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(478, 252);
+            Controls.Add(txtTenNCC);
             Controls.Add(btnThoat);
             Controls.Add(btnLuu);
             Controls.Add(txtDiaChi);
-            Controls.Add(txtTenNCC);
             Controls.Add(label2);
             Controls.Add(label1);
-            Name = "FrmAddEditNhaXuatBan";
+            Name = "FrmAddEditNhaCungCap";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "FrmAddEditNhaXuatBan";
+            Text = "FrmAddEditNhaCungCap";
             Load += FrmAddEditNhaCungCap_Load;
             ResumeLayout(false);
             PerformLayout();

@@ -53,5 +53,10 @@ namespace BUS
             }
             return TheLoaiDAO.Delete(maTheLoai);
         }
+
+        public static string GetNewMaTheLoai()
+        {
+            return TheLoaiDAO.TaoMaMoi();
+        }
     }
 }

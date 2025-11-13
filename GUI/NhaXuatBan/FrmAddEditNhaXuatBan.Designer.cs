@@ -32,9 +32,9 @@
             btnThoat = new Button();
             btnLuu = new Button();
             txtDiaChi = new TextBox();
-            txtTenNXB = new TextBox();
             label2 = new Label();
             label1 = new Label();
+            txtTenNXB = new TextBox();
             SuspendLayout();
             // 
             // btnThoat
@@ -58,7 +58,6 @@
             // btnLuu
             // 
             btnLuu.BackColor = Color.DarkTurquoise;
-            btnLuu.DialogResult = DialogResult.OK;
             btnLuu.FlatAppearance.BorderSize = 0;
             btnLuu.FlatStyle = FlatStyle.Flat;
             btnLuu.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
@@ -81,15 +80,6 @@
             txtDiaChi.Size = new Size(175, 27);
             txtDiaChi.TabIndex = 15;
             // 
-            // txtTenNXB
-            // 
-            txtTenNXB.BorderStyle = BorderStyle.FixedSingle;
-            txtTenNXB.Location = new Point(212, 40);
-            txtTenNXB.Name = "txtTenNXB";
-            txtTenNXB.ReadOnly = true;
-            txtTenNXB.Size = new Size(175, 27);
-            txtTenNXB.TabIndex = 14;
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -110,15 +100,23 @@
             label1.TabIndex = 12;
             label1.Text = "Tên NXB:";
             // 
+            // txtTenNXB
+            // 
+            txtTenNXB.BorderStyle = BorderStyle.FixedSingle;
+            txtTenNXB.Location = new Point(212, 39);
+            txtTenNXB.Name = "txtTenNXB";
+            txtTenNXB.Size = new Size(175, 27);
+            txtTenNXB.TabIndex = 18;
+            // 
             // FrmAddEditNhaXuatBan
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(478, 252);
+            Controls.Add(txtTenNXB);
             Controls.Add(btnThoat);
             Controls.Add(btnLuu);
             Controls.Add(txtDiaChi);
-            Controls.Add(txtTenNXB);
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "FrmAddEditNhaXuatBan";
@@ -134,8 +132,8 @@
         private Button btnThoat;
         private Button btnLuu;
         private TextBox txtDiaChi;
-        private TextBox txtTenNXB;
         private Label label2;
         private Label label1;
+        private TextBox txtTenNXB;
     }
 }

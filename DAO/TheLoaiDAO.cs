@@ -29,21 +29,48 @@ namespace DAO
         }
 
         // 2. Thêm mới 
+        public static string TaoMaMoi()
+        {
+            // Lấy mã thể loại cuối cùng (sắp xếp giảm dần để lấy cái lớn nhất)
+            string query = "SELECT MaTheLoai FROM THELOAI ORDER BY ID DESC LIMIT 1";
+            object result = DataProvider.Instance.ExecuteScalar(query);
+
+            // Nếu bảng chưa có dữ liệu thì trả về mã đầu tiên
+            if (result == null || result == DBNull.Value)
+            {
+                return "TL0001";
+            }
+
+            string maCuoi = result.ToString(); // Ví dụ: "TL0005"
+
+            // Xử lý tách số: Bỏ 2 ký tự đầu "TL", lấy phần số còn lại
+            string phanSo = maCuoi.Substring(2);
+            int so = int.Parse(phanSo);
+
+            // Tăng lên 1
+            so++;
+
+            // Ghép lại thành mã mới: "TL" + số (định dạng 4 chữ số)
+            return "TL" + so.ToString("D4");
+        }
         public static string Add(TheLoaiDTO theLoai)
         {
+            // Bước 1: Tạo mã mới trước
+            string maMoi = TaoMaMoi();
+
+            // Bước 2: Insert cả Mã và Tên vào Database
             string query = @"
-                INSERT INTO THELOAI (TenTheLoai)
-                VALUES (@TenTheLoai);
-
-                SELECT MaTheLoai 
-                FROM THELOAI 
-                WHERE ID = LAST_INSERT_ID();
+                INSERT INTO THELOAI (MaTheLoai, TenTheLoai)
+                VALUES (@MaTheLoai, @TenTheLoai);
             ";
-            string? maTheLoaiMoi = DataProvider.Instance.ExecuteScalar(query,
-                new MySqlParameter("@TenTheLoai", theLoai.TenTheLoai)
-            )?.ToString();
 
-            return maTheLoaiMoi ?? string.Empty;
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@MaTheLoai", maMoi),
+                new MySqlParameter("@TenTheLoai", theLoai.TenTheLoai)
+            );
+
+            // Nếu insert thành công (result > 0) thì trả về mã mới, ngược lại trả về rỗng
+            return result > 0 ? maMoi : string.Empty;
         }
 
         // 3. Cập nhật

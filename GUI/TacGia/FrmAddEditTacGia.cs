@@ -17,14 +17,14 @@ namespace GUI.TacGia
             {
                 // Lấy dữ liệu từ control
                 _tacgiaDTO.TenTacGia = txtTenTacGia.Text.Trim();
-                _tacgiaDTO.MaTacGia = txtMaTacGia.Text;
+                //_tacgiaDTO.MaTacGia = txtMaTacGia.Text;
                 return _tacgiaDTO;
             }
             set
             {
                 // Gán DTO vào control
                 _tacgiaDTO = value;
-                txtMaTacGia.Text = _tacgiaDTO.MaTacGia;
+                //txtMaTacGia.Text = _tacgiaDTO.MaTacGia;
                 txtTenTacGia.Text = _tacgiaDTO.TenTacGia;
                 _isEditMode = true;
             }
@@ -37,39 +37,37 @@ namespace GUI.TacGia
         }
 
         // Xử lý logic chính khi đóng form (bấm Lưu hoặc Thoát)
-        private void FrmAddEditTheLoai_FormClosing(object sender, FormClosingEventArgs e)
+        private void btnLuu_Click(object sender, EventArgs e)
         {
-            if (this.DialogResult == DialogResult.Cancel)
+            // Bước 1: Kiểm tra dữ liệu đầu vào
+            if (!ValidateInputs())
             {
-                // Không cần làm gì nếu bấm Thoát
-                return;
+                return; // Nếu lỗi thì dừng lại, không làm gì cả
             }
 
-            if (this.DialogResult == DialogResult.OK)
-            {
-                // Nếu bấm Lưu, kiểm tra dữ liệu
-                if (!ValidateInputs())
-                {
-                    e.Cancel = true; // Hủy việc đóng Form
-                    this.DialogResult = DialogResult.None; // Reset DialogResult
-                    return;
-                }
+            // Bước 2: Thực hiện Thêm hoặc Sửa
+            // Hàm AddTheLoai/UpdateTheLoai của bạn đã có sẵn try-catch và MessageBox rồi
+            bool success = _isEditMode ? UpdateTheLoai() : AddTheLoai();
 
-                // Thực hiện nghiệp vụ Add hoặc Update
-                bool success = _isEditMode ? UpdateTheLoai() : AddTheLoai();
-                if (!success)
-                {
-                    e.Cancel = true; // Hủy việc đóng Form nếu lỗi
-                    this.DialogResult = DialogResult.None;
-                }
+            // Bước 3: Nếu thành công thì mới đóng Form và trả về OK
+            if (success)
+            {
+                this.DialogResult = DialogResult.OK; // Dòng này báo cho Form cha biết là "Đã Lưu Xong"
+                this.Close(); // Đóng form lại
             }
         }
+
+        private void btnThoat_Click(object sender, EventArgs e) // (Nếu bạn có nút Thoát)
+        {
+            this.Close();
+        }
+
 
         private bool ValidateInputs()
         {
             if (string.IsNullOrWhiteSpace(txtTenTacGia.Text))
             {
-                MessageBox.Show("Tên thể loại không được để trống.", "Lỗi",
+                MessageBox.Show("Tên tác giả không được để trống.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtTenTacGia.Focus();
                 return false;
@@ -88,14 +86,14 @@ namespace GUI.TacGia
                 string newMa = BUS.TacGiaBUS.Add(dto);
                 if (string.IsNullOrEmpty(newMa))
                 {
-                    throw new Exception("Không nhận được mã thể loại sau khi thêm.");
+                    throw new Exception("Không nhận được mã tác giả sau khi thêm.");
                 }
 
                 // Cập nhật lại MaTheLoai cho DTO và control
                 _tacgiaDTO.MaTacGia = newMa;
-                txtMaTacGia.Text = newMa;
+                //txtMaTacGia.Text = newMa;
 
-                MessageBox.Show("Thêm thể loại thành công.", "Thông báo",
+                MessageBox.Show("Thêm tác giả thành công.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -117,7 +115,7 @@ namespace GUI.TacGia
                 // Gọi BUS
                 BUS.TacGiaBUS.Update(dto);
 
-                MessageBox.Show("Cập nhật thể loại thành công.", "Thông báo",
+                MessageBox.Show("Cập nhật tác giả thành công.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -130,6 +128,11 @@ namespace GUI.TacGia
         }
 
         private void txtTenTheLoai_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTenTacGia_TextChanged(object sender, EventArgs e)
         {
 
         }

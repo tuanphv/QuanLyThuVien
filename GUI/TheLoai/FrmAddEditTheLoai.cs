@@ -16,7 +16,7 @@ namespace GUI.TheLoai
             {
                 // Lấy dữ liệu từ control
                 _theLoaiDTO.TenTheLoai = txtTenTheLoai.Text.Trim();
-                _theLoaiDTO.MaTheLoai = txtMaTheLoai.Text;
+                //_theLoaiDTO.MaTheLoai = txtMaTheLoai.Text;
                 return _theLoaiDTO;
             }
             set
@@ -36,33 +36,31 @@ namespace GUI.TheLoai
         }
 
         // Xử lý logic chính khi đóng form (bấm Lưu hoặc Thoát)
-        private void FrmAddEditTheLoai_FormClosing(object sender, FormClosingEventArgs e)
+        private void btnLuu_Click(object sender, EventArgs e)
         {
-            if (this.DialogResult == DialogResult.Cancel)
+            // Bước 1: Kiểm tra dữ liệu đầu vào
+            if (!ValidateInputs())
             {
-                // Không cần làm gì nếu bấm Thoát
-                return;
+                return; // Nếu lỗi thì dừng lại, không làm gì cả
             }
 
-            if (this.DialogResult == DialogResult.OK)
-            {
-                // Nếu bấm Lưu, kiểm tra dữ liệu
-                if (!ValidateInputs())
-                {
-                    e.Cancel = true; // Hủy việc đóng Form
-                    this.DialogResult = DialogResult.None; // Reset DialogResult
-                    return;
-                }
+            // Bước 2: Thực hiện Thêm hoặc Sửa
+            // Hàm AddTheLoai/UpdateTheLoai của bạn đã có sẵn try-catch và MessageBox rồi
+            bool success = _isEditMode ? UpdateTheLoai() : AddTheLoai();
 
-                // Thực hiện nghiệp vụ Add hoặc Update
-                bool success = _isEditMode ? UpdateTheLoai() : AddTheLoai();
-                if (!success)
-                {
-                    e.Cancel = true; // Hủy việc đóng Form nếu lỗi
-                    this.DialogResult = DialogResult.None;
-                }
+            // Bước 3: Nếu thành công thì mới đóng Form và trả về OK
+            if (success)
+            {
+                this.DialogResult = DialogResult.OK; // Dòng này báo cho Form cha biết là "Đã Lưu Xong"
+                this.Close(); // Đóng form lại
             }
         }
+
+        private void btnThoat_Click(object sender, EventArgs e) // (Nếu bạn có nút Thoát)
+        {
+            this.Close();
+        }
+        
 
         private bool ValidateInputs()
         {
@@ -128,9 +126,27 @@ namespace GUI.TheLoai
             }
         }
 
-        private void txtTenTheLoai_TextChanged(object sender, EventArgs e)
+        private void FrmAddEditTheLoai_Load(object sender, EventArgs e)
         {
+            // Kiểm tra: Nếu ô Mã đang trống (tức là đang THÊM MỚI)
+            if (string.IsNullOrEmpty(txtMaTheLoai.Text))
+            {
+                try
+                {
+                    // Gọi BUS lấy mã mới và hiển thị lên màn hình
+                    txtMaTheLoai.Text = BUS.TheLoaiBUS.GetNewMaTheLoai();
 
+                    // Gán luôn vào DTO tạm thời (để không bị lỗi validate nếu có)
+                    _theLoaiDTO.MaTheLoai = txtMaTheLoai.Text;
+
+                    // Khóa ô mã lại không cho sửa (chỉ cho xem)
+                    txtMaTheLoai.Enabled = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi lấy mã mới: " + ex.Message);
+                }
+            }
         }
     }
 }
