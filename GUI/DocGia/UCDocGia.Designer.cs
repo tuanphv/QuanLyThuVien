@@ -56,7 +56,7 @@
             label1.Name = "label1";
             label1.Size = new Size(275, 46);
             label1.TabIndex = 0;
-            label1.Text = "Quản lý tác giả";
+            label1.Text = "Quản lý độc giả";
             // 
             // roundPanel1
             // 

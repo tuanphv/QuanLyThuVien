@@ -1,4 +1,4 @@
-using DTO;
+ï»¿using DTO;
 
 namespace GUI.DocGia
 {
@@ -56,10 +56,8 @@ namespace GUI.DocGia
 
         private void FrmAddEditDocGia_Load(object sender, EventArgs e)
         {
-            // Load danh sách ng??i dùng ch?a là ??c gi?
             LoadNguoiDung();
 
-            // N?u là ch? ?? thêm m?i, l?y mã m?i
             if (string.IsNullOrEmpty(txtMaDocGia.Text))
             {
                 try
@@ -68,20 +66,19 @@ namespace GUI.DocGia
                     _docGiaDTO.MaDocGia = txtMaDocGia.Text;
                     txtMaDocGia.Enabled = false;
 
-                    // Thi?t l?p giá tr? m?c ??nh
+                  
                     dtpNgayLapThe.Value = DateTime.Now;
-                    dtpNgayHetHan.Value = DateTime.Now.AddMonths(6); // Th? có h?n 6 tháng
+                    dtpNgayHetHan.Value = DateTime.Now.AddMonths(6); 
                     txtTongNo.Text = "0";
                     txtTongNo.Enabled = false;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("L?i l?y mã m?i: " + ex.Message);
+                    MessageBox.Show("Lá»—i láº¥y mÃ£ má»›i: " + ex.Message);
                 }
             }
             else
             {
-                // Ch? ?? s?a - khóa m?t s? tr??ng
                 txtTongNo.Enabled = false;
             }
         }
@@ -92,10 +89,9 @@ namespace GUI.DocGia
             {
                 var listNguoiDung = BUS.DocGiaBUS.GetNguoiDungChuaLaDocGia();
                 
-                // Thêm option "Không có" vào ??u danh sách
                 var emptyItem = new NguoiDungDTO();
                 emptyItem.ID = 0;
-                emptyItem.TenNguoiDung = "-- Không gán tài kho?n --";
+                emptyItem.TenNguoiDung = "-- KhÃ´ng gÃ¡n tÃ i khoáº£n --";
                 listNguoiDung.Insert(0, emptyItem);
 
                 cboNguoiDung.DataSource = listNguoiDung;
@@ -104,7 +100,7 @@ namespace GUI.DocGia
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi t?i ng??i dùng: " + ex.Message, "L?i",
+                MessageBox.Show("Lá»—i khi táº£i ngÆ°á»i dÃ¹ng: " + ex.Message, "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -134,7 +130,7 @@ namespace GUI.DocGia
         {
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
             {
-                MessageBox.Show("H? tên không ???c ?? tr?ng.", "L?i",
+                MessageBox.Show("Há» tÃªn khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng.", "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtHoTen.Focus();
                 return false;
@@ -142,7 +138,7 @@ namespace GUI.DocGia
 
             if (dtpNgaySinh.Value >= DateTime.Now)
             {
-                MessageBox.Show("Ngày sinh không h?p l?.", "L?i",
+                MessageBox.Show("NgÃ y sinh khÃ´ng há»£p lá»‡.", "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 dtpNgaySinh.Focus();
                 return false;
@@ -154,7 +150,7 @@ namespace GUI.DocGia
 
             if (tuoi < 18 || tuoi > 55)
             {
-                MessageBox.Show("?? tu?i c?a ??c gi? ph?i t? 18 ??n 55.", "L?i",
+                MessageBox.Show("Tuá»•i cá»§a Ä‘á»™c gia pháº£i tá»« 18 Ä‘áº¿n 55.", "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 dtpNgaySinh.Focus();
                 return false;
@@ -162,7 +158,7 @@ namespace GUI.DocGia
 
             if (dtpNgayHetHan.Value <= dtpNgayLapThe.Value)
             {
-                MessageBox.Show("Ngày h?t h?n ph?i sau ngày l?p th?.", "L?i",
+                MessageBox.Show("NgÃ y háº¿t háº¡n pháº£i sau ngÃ y láº­p thá»ƒ.", "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 dtpNgayHetHan.Focus();
                 return false;
@@ -180,19 +176,19 @@ namespace GUI.DocGia
 
                 if (string.IsNullOrEmpty(newMa))
                 {
-                    throw new Exception("Không nh?n ???c mã ??c gi? sau khi thêm.");
+                    throw new Exception("KhÃ´ng nháº­n Ä‘Æ°á»£c mÃ£ tÃ¡c giáº£ sau khi thÃªm.");
                 }
 
                 _docGiaDTO.MaDocGia = newMa;
                 txtMaDocGia.Text = newMa;
 
-                MessageBox.Show("Thêm ??c gi? thành công.", "Thông báo",
+                MessageBox.Show("ThÃªm tÃ¡c giáº£ thÃ nh cÃ´ng.", "ThÃ´ng bÃ¡o",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "L?i",
+                MessageBox.Show(ex.Message, "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -205,13 +201,13 @@ namespace GUI.DocGia
                 var dto = this.DocGia;
                 BUS.DocGiaBUS.Update(dto);
 
-                MessageBox.Show("C?p nh?t ??c gi? thành công.", "Thông báo",
+                MessageBox.Show("Cáº­p nháº­t tÃ¡c giáº£ thÃ nh cÃ´ng.", "ThÃ´ng bÃ¡o",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "L?i",
+                MessageBox.Show(ex.Message, "Lá»—i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -219,7 +215,6 @@ namespace GUI.DocGia
 
         private void dtpNgayLapThe_ValueChanged(object sender, EventArgs e)
         {
-            // T? ??ng c?p nh?t ngày h?t h?n (6 tháng sau ngày l?p th?)
             if (!_isEditMode)
             {
                 dtpNgayHetHan.Value = dtpNgayLapThe.Value.AddMonths(6);

@@ -87,7 +87,7 @@ namespace GUI.NguoiDung
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi tải nhóm người dùng: " + ex.Message, "L?i",
+                MessageBox.Show("Lỗi khi tải nhóm người dùng: " + ex.Message, "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -117,7 +117,7 @@ namespace GUI.NguoiDung
         {
             if (string.IsNullOrWhiteSpace(txtTenNguoiDung.Text))
             {
-                MessageBox.Show("Tên người dùng không được để trống.", "L?i",
+                MessageBox.Show("Tên người dùng không được để trống.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtTenNguoiDung.Focus();
                 return false;
@@ -125,7 +125,7 @@ namespace GUI.NguoiDung
 
             if (string.IsNullOrWhiteSpace(txtTenDangNhap.Text))
             {
-                MessageBox.Show("Tên đăng nhập không được để trống.", "L?i",
+                MessageBox.Show("Tên đăng nhập không được để trống.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtTenDangNhap.Focus();
                 return false;

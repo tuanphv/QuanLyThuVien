@@ -9,7 +9,6 @@ namespace DAO
 {
     public class NguoiDungDAO
     {
-        // 1. L?y t?t c? ng??i dùng
         public static BindingList<NguoiDungDTO> GetAll()
         {
             BindingList<NguoiDungDTO> list = new BindingList<NguoiDungDTO>();
@@ -48,7 +47,7 @@ namespace DAO
             return list;
         }
 
-        // 2. T?o mã m?i
+ 
         public static string TaoMaMoi()
         {
             string query = "SELECT MaNguoiDung FROM NGUOIDUNG ORDER BY ID DESC LIMIT 1";
@@ -59,7 +58,7 @@ namespace DAO
                 return "ND0001";
             }
 
-            string maCuoi = result.ToString(); // Ví d?: "ND0005"
+            string maCuoi = result.ToString(); 
             string phanSo = maCuoi.Substring(2);
             int so = int.Parse(phanSo);
             so++;
@@ -67,7 +66,6 @@ namespace DAO
             return "ND" + so.ToString("D4");
         }
 
-        // 3. Thêm m?i ng??i dùng
         public static string Add(NguoiDungDTO nguoiDung)
         {
             string maMoi = TaoMaMoi();
@@ -92,7 +90,6 @@ namespace DAO
             return result > 0 ? maMoi : string.Empty;
         }
 
-        // 4. C?p nh?t ng??i dùng
         public static bool Update(NguoiDungDTO nguoiDung)
         {
             string query = @"
@@ -119,7 +116,6 @@ namespace DAO
             return count > 0;
         }
 
-        // 5. Xóa ng??i dùng
         public static bool Delete(string maNguoiDung)
         {
             string query = "DELETE FROM NGUOIDUNG WHERE MaNguoiDung = @MaNguoiDung";
@@ -129,7 +125,7 @@ namespace DAO
             return count > 0;
         }
 
-        // 6. Ki?m tra tên ??ng nh?p ?ã t?n t?i
+
         public static bool IsTenDangNhapExist(string tenDangNhap, string maNguoiDung = "")
         {
             string query = @"
@@ -145,7 +141,6 @@ namespace DAO
             return count > 0;
         }
 
-        // 7. Ki?m tra ng??i dùng có ?ang ???c s? d?ng không (có liên k?t v?i ??c gi?)
         public static bool IsInUse(string maNguoiDung)
         {
             string queryGetId = "SELECT ID FROM NGUOIDUNG WHERE MaNguoiDung = @MaNguoiDung";
@@ -167,7 +162,6 @@ namespace DAO
             return count > 0;
         }
 
-        // 8. ??ng nh?p
         public static NguoiDungDTO? Login(string tenDangNhap, string matKhau)
         {
             string query = @"

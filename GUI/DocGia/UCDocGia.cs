@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using System.ComponentModel;
 
 namespace GUI.DocGia
@@ -16,10 +16,10 @@ namespace GUI.DocGia
         {
             dgvDocGia.AutoGenerateColumns = false;
 
-            // T?i d? li?u
+ 
             LoadData();
 
-            // G�n s? ki?n cho c�c n�t S?a/X�a trong DataGridView
+
             dgvDocGia.EditButtonClicked += EditButtonClicked;
             dgvDocGia.DeleteButtonClicked += DeleteButtonClicked;
         }
@@ -33,7 +33,7 @@ namespace GUI.DocGia
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi t?i d? li?u: " + ex.Message, "L?i",
+                MessageBox.Show("Lỗi khi tải dữ liệu: " + ex.Message, "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -41,7 +41,7 @@ namespace GUI.DocGia
         private void btnThemDocGia_Click(object sender, EventArgs e)
         {
             FrmAddEditDocGia frm = new FrmAddEditDocGia();
-            frm.Text = "Th�m ??c gi?";
+            frm.Text = "Thêm độc giả";
             var result = frm.ShowDialog();
 
             if (result == DialogResult.OK)
@@ -57,7 +57,7 @@ namespace GUI.DocGia
             DocGiaDTO selectedDocGia = list[index];
 
             FrmAddEditDocGia frm = new FrmAddEditDocGia();
-            frm.Text = "Ch?nh s?a ??c gi?";
+            frm.Text = "Chỉnh sữa độc giả";
             frm.DocGia = selectedDocGia;
 
             var result = frm.ShowDialog();
@@ -74,8 +74,8 @@ namespace GUI.DocGia
 
             DocGiaDTO selectedDocGia = list[index];
 
-            var confirm = MessageBox.Show($"B?n c� ch?c ch?n mu?n x�a ??c gi? '{selectedDocGia.HoTen}'?",
-                "X�c nh?n x�a", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show($"Bạn có chắc muốn xóa độc giả '{selectedDocGia.HoTen}'?",
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
@@ -84,13 +84,13 @@ namespace GUI.DocGia
                     if (BUS.DocGiaBUS.Delete(selectedDocGia.MaDocGia))
                     {
                         list.RemoveAt(index);
-                        MessageBox.Show("X�a th�nh c�ng.", "Th�ng b�o",
+                        MessageBox.Show("Xóa thành công.", "Thông báo",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "L?i",
+                    MessageBox.Show(ex.Message, "lỗi",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

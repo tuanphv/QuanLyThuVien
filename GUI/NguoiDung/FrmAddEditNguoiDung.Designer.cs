@@ -183,7 +183,7 @@
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(110, 45);
             btnLuu.TabIndex = 14;
-            btnLuu.Text = "  L?u";
+            btnLuu.Text = "  Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;
             btnLuu.Click += btnLuu_Click;
