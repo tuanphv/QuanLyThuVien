@@ -3,6 +3,8 @@ using GUI.TheLoai;
 using GUI.TacGia;
 using GUI.NhaXuatBan;
 using GUI.NhaCungCap;
+using GUI.NguoiDung;
+using GUI.DocGia;
 using System.Data;
 using System.Windows.Forms;
 namespace GUI
@@ -23,6 +25,8 @@ namespace GUI
                 new SidebarMenuItem(btnAuthor, new UCTacGia()),
                 new SidebarMenuItem(btnPublisher, new UCNhaXuatBan()),
                 new SidebarMenuItem(btnSupplier, new UCNhaCungCap()),
+                new SidebarMenuItem(btnUsers, new UCNguoiDung()),
+                new SidebarMenuItem(btnReaders, new UCDocGia()),
             };
         }
 
