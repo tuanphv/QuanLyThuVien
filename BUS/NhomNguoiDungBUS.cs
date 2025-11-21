@@ -10,6 +10,11 @@ namespace BUS
 {
     public class NhomNguoiDungBUS
     {
+        public static BindingList<NhomNguoiDungDTO> GetAll()
+        {
+            return DAO.NhomNguoiDungDAO.GetAllNhomNguoiDung();
+        }
+
         public static BindingList<NhomNguoiDungDTO> GetAllNhomNguoiDung()
         {
             return DAO.NhomNguoiDungDAO.GetAllNhomNguoiDung();

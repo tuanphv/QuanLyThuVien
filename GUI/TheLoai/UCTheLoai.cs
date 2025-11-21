@@ -24,6 +24,7 @@ namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
             // Gán sự kiện cho các nút Sửa/Xóa trong DataGridView
             dgvTheLoai.EditButtonClicked += EditButtonClicked;
             dgvTheLoai.DeleteButtonClicked += DeleteButtonClicked;
+            dgvTheLoai.ViewButtonClicked += ViewButtonClicked;
         }
 
         private void btnThemTheLoai_Click(object sender, EventArgs e)
@@ -90,6 +91,24 @@ namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void ViewButtonClicked(object? sender, int index)
+        {
+            // 1. Kiểm tra index hợp lệ
+            if (index < 0 || index >= list.Count) return;
+
+            // 2. Lấy thể loại được chọn từ 'list' (BindingList)
+            TheLoaiDTO selectedTheLoai = list[index];
+
+            // 3. Tạo và mở Form mới, truyền Mã và Tên thể loại qua
+            FrmDanhSachSachTheoTheLoai frm = new FrmDanhSachSachTheoTheLoai(
+                selectedTheLoai.MaTheLoai,
+                selectedTheLoai.TenTheLoai
+            );
+
+            // 4. Dùng ShowDialog() để mở form
+            frm.ShowDialog();
         }
 
         private void txtTimKiem_TextChanged(object sender, EventArgs e)

@@ -581,3 +581,246 @@ VALUES (3, NOW(), DATE_ADD(NOW(), INTERVAL 4 DAY)); -- ID = 3
 -- Chi tiết Mượn
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (3, 3);
 -- Cuốn sách 3 (CS0003) đang ở trạng thái 0 (Đang mượn). SoLuongConLai của S1 (CSDL Nâng cao) giảm 1.
+-- =========================================================================
+-- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
+-- Mục đích: Tạo dữ liệu phong phú để demo chức năng báo cáo/thống kê
+-- =========================================================================
+
+--USE QLTV;
+
+-- =========================================================================
+-- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
+-- Mục đích: Tạo dữ liệu phong phú để demo chức năng báo cáo/thống kê
+-- =========================================================================
+
+-- =========================================================================
+-- 1. THÊM SÁCH MỚI (để có nhiều tựa sách cho thống kê)
+-- =========================================================================
+
+-- Thêm tựa sách mới
+INSERT INTO TUASACH (TenTuaSach)
+VALUES 
+    ('Lập trình C# cơ bản'),           -- ID = 5
+    ('Cấu trúc dữ liệu và giải thuật'), -- ID = 6
+    ('Thiết kế hệ thống phân tán'),     -- ID = 7
+    ('Trí tuệ nhân tạo'),              -- ID = 8
+    ('Học máy (Machine Learning)'),    -- ID = 9
+    ('An toàn thông tin'),             -- ID = 10
+    ('Mạng máy tính'),                 -- ID = 11
+    ('Lập trình Python'),              -- ID = 12
+    ('Toán rời rạc'),                  -- ID = 13
+    ('Đại số tuyến tính');             -- ID = 14
+
+-- Liên kết thể loại cho sách mới
+INSERT INTO CT_THELOAI VALUES 
+    (5, 1), (6, 1), (7, 1), (8, 1), (9, 1),
+    (10, 1), (11, 1), (12, 1), (13, 1), (14, 1);
+
+-- Liên kết tác giả (dùng tác giả có sẵn)
+INSERT INTO CT_TACGIA VALUES 
+    (1, 5), (1, 6), (1, 7), (2, 8), (2, 9),
+    (2, 10), (1, 11), (2, 12), (1, 13), (2, 14);
+
+-- Thêm lô sách mới
+INSERT INTO SACH (IDTuaSach, SoLuongTong, SoLuongConLai, DonGia, NamXB, IDNhaXuatBan)
+VALUES 
+    (5, 0, 0, 95000, 2023, 1),  -- ID = 4 (Lập trình C#)
+    (6, 0, 0, 110000, 2022, 1), -- ID = 5 (Cấu trúc DL)
+    (7, 0, 0, 130000, 2024, 2), -- ID = 6 (Hệ thống phân tán)
+    (8, 0, 0, 140000, 2024, 1), -- ID = 7 (AI)
+    (9, 0, 0, 150000, 2024, 1), -- ID = 8 (ML)
+    (10, 0, 0, 105000, 2023, 2), -- ID = 9 (An toàn TT)
+    (11, 0, 0, 98000, 2023, 1),  -- ID = 10 (Mạng MT)
+    (12, 0, 0, 88000, 2024, 1),  -- ID = 11 (Python)
+    (13, 0, 0, 92000, 2022, 2),  -- ID = 12 (Toán rời rạc)
+    (14, 0, 0, 90000, 2023, 2);  -- ID = 13 (Đại số tuyến tính)
+
+-- Tạo phiếu nhập cho sách mới
+INSERT INTO PHIEUNHAPSACH (IDNhaCungCap, NgayNhap)
+VALUES 
+    (1, '2025-01-20 10:00:00'), -- ID = 3
+    (2, '2025-02-01 14:00:00'); -- ID = 4
+
+-- Chi tiết phiếu nhập
+INSERT INTO CT_PHIEUNHAP (IDPhieuNhap, IDSach, SoLuongNhap, DonGiaNhap)
+VALUES 
+    (3, 4, 8, 85000),   -- C# (8 cuốn)
+    (3, 5, 10, 100000), -- CTDL (10 cuốn)
+    (3, 6, 6, 120000),  -- Phân tán (6 cuốn)
+    (4, 7, 12, 130000), -- AI (12 cuốn)
+    (4, 8, 10, 140000), -- ML (10 cuốn)
+    (4, 9, 8, 95000),   -- An toàn (8 cuốn)
+    (4, 10, 10, 88000), -- Mạng (10 cuốn)
+    (4, 11, 15, 80000), -- Python (15 cuốn)
+    (4, 12, 10, 85000), -- Toán rời rạc (10 cuốn)
+    (4, 13, 10, 85000); -- Đại số (10 cuốn)
+
+-- Thêm cuốn sách vật lý (ID từ 31-129)
+-- C# (8 cuốn): 31-38
+INSERT INTO CUONSACH (IDSach) VALUES (4), (4), (4), (4), (4), (4), (4), (4);
+-- CTDL (10 cuốn): 39-48
+INSERT INTO CUONSACH (IDSach) VALUES (5), (5), (5), (5), (5), (5), (5), (5), (5), (5);
+-- Phân tán (6 cuốn): 49-54
+INSERT INTO CUONSACH (IDSach) VALUES (6), (6), (6), (6), (6), (6);
+-- AI (12 cuốn): 55-66
+INSERT INTO CUONSACH (IDSach) VALUES (7), (7), (7), (7), (7), (7), (7), (7), (7), (7), (7), (7);
+-- ML (10 cuốn): 67-76
+INSERT INTO CUONSACH (IDSach) VALUES (8), (8), (8), (8), (8), (8), (8), (8), (8), (8);
+-- An toàn (8 cuốn): 77-84
+INSERT INTO CUONSACH (IDSach) VALUES (9), (9), (9), (9), (9), (9), (9), (9);
+-- Mạng (10 cuốn): 85-94
+INSERT INTO CUONSACH (IDSach) VALUES (10), (10), (10), (10), (10), (10), (10), (10), (10), (10);
+-- Python (15 cuốn): 95-109
+INSERT INTO CUONSACH (IDSach) VALUES (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11);
+-- Toán rời rạc (10 cuốn): 110-119
+INSERT INTO CUONSACH (IDSach) VALUES (12), (12), (12), (12), (12), (12), (12), (12), (12), (12);
+-- Đại số (10 cuốn): 120-129
+INSERT INTO CUONSACH (IDSach) VALUES (13), (13), (13), (13), (13), (13), (13), (13), (13), (13);
+
+-- =========================================================================
+-- 2. THÊM PHIẾU MƯỢN LỊCH SỬ (trải đều qua các tháng)
+-- =========================================================================
+
+-- THÁNG 1/2025 (5 phiếu mượn)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES 
+    (1, '2025-01-05 09:00:00', '2025-01-09 09:00:00', 0), -- PM000004
+    (2, '2025-01-10 10:30:00', '2025-01-14 10:30:00', 0), -- PM000005
+    (3, '2025-01-15 14:00:00', '2025-01-19 14:00:00', 0), -- PM000006
+    (4, '2025-01-20 11:00:00', '2025-01-24 11:00:00', 0), -- PM000007
+    (1, '2025-01-25 15:30:00', '2025-01-29 15:30:00', 0); -- PM000008
+
+-- Chi tiết mượn tháng 1
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
+VALUES 
+    (4, 31, '2025-01-09 08:00:00', 0, 0),  -- DG1 mượn C#
+    (4, 39, '2025-01-09 08:00:00', 0, 0),  -- DG1 mượn CTDL
+    (5, 55, '2025-01-15 09:00:00', 1, 1000), -- DG2 mượn AI (trễ 1 ngày)
+    (5, 67, '2025-01-15 09:00:00', 1, 1000), -- DG2 mượn ML (trễ 1 ngày)
+    (6, 95, '2025-01-19 10:00:00', 0, 0),  -- DG3 mượn Python
+    (6, 110, '2025-01-19 10:00:00', 0, 0), -- DG3 mượn Toán rời rạc
+    (7, 85, '2025-01-24 13:00:00', 0, 0),  -- DG4 mượn Mạng
+    (8, 120, '2025-01-29 16:00:00', 0, 0); -- DG1 mượn Đại số
+
+-- THÁNG 2/2025 (8 phiếu mượn)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES 
+    (2, '2025-02-02 09:00:00', '2025-02-06 09:00:00', 0), -- PM000009
+    (3, '2025-02-05 10:00:00', '2025-02-09 10:00:00', 0), -- PM000010
+    (4, '2025-02-08 11:00:00', '2025-02-12 11:00:00', 0), -- PM000011
+    (1, '2025-02-12 13:00:00', '2025-02-16 13:00:00', 0), -- PM000012
+    (2, '2025-02-15 14:00:00', '2025-02-19 14:00:00', 0), -- PM000013
+    (3, '2025-02-18 15:00:00', '2025-02-22 15:00:00', 0), -- PM000014
+    (4, '2025-02-22 09:30:00', '2025-02-26 09:30:00', 0), -- PM000015
+    (1, '2025-02-25 10:30:00', '2025-03-01 10:30:00', 0); -- PM000016
+
+-- Chi tiết mượn tháng 2
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
+VALUES 
+    (9, 32, '2025-02-06 08:00:00', 0, 0),   -- DG2 mượn C#
+    (9, 96, '2025-02-06 08:00:00', 0, 0),   -- DG2 mượn Python
+    (10, 40, '2025-02-09 09:00:00', 0, 0),  -- DG3 mượn CTDL
+    (10, 111, '2025-02-09 09:00:00', 0, 0), -- DG3 mượn Toán rời rạc
+    (11, 56, '2025-02-12 10:00:00', 0, 0),  -- DG4 mượn AI
+    (11, 68, '2025-02-12 10:00:00', 0, 0),  -- DG4 mượn ML
+    (12, 97, '2025-02-16 12:00:00', 0, 0),  -- DG1 mượn Python
+    (12, 121, '2025-02-16 12:00:00', 0, 0), -- DG1 mượn Đại số
+    (13, 33, '2025-02-19 13:00:00', 0, 0),  -- DG2 mượn C#
+    (13, 57, '2025-02-19 13:00:00', 0, 0),  -- DG2 mượn AI
+    (14, 98, '2025-02-22 14:00:00', 0, 0),  -- DG3 mượn Python
+    (14, 112, '2025-02-22 14:00:00', 0, 0), -- DG3 mượn Toán rời rạc
+    (15, 69, '2025-02-26 08:30:00', 0, 0),  -- DG4 mượn ML
+    (15, 86, '2025-02-26 08:30:00', 0, 0),  -- DG4 mượn Mạng
+    (16, 99, '2025-03-01 09:30:00', 0, 0),  -- DG1 mượn Python
+    (16, 122, '2025-03-01 09:30:00', 0, 0); -- DG1 mượn Đại số
+
+-- THÁNG 3/2025 (thêm 5 phiếu nữa, ngoài 3 phiếu có sẵn)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES 
+    (2, '2025-03-03 09:00:00', '2025-03-07 09:00:00', 0), -- PM000017
+    (3, '2025-03-08 10:00:00', '2025-03-12 10:00:00', 0), -- PM000018
+    (4, '2025-03-12 11:00:00', '2025-03-16 11:00:00', 0), -- PM000019
+    (1, '2025-03-17 13:00:00', '2025-03-21 13:00:00', 0), -- PM000020
+    (2, '2025-03-22 14:00:00', '2025-03-26 14:00:00', 0); -- PM000021
+
+-- Chi tiết mượn tháng 3
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
+VALUES 
+    (17, 34, '2025-03-07 08:00:00', 0, 0),   -- DG2 mượn C#
+    (17, 100, '2025-03-07 08:00:00', 0, 0),  -- DG2 mượn Python
+    (18, 41, '2025-03-12 09:00:00', 0, 0),   -- DG3 mượn CTDL
+    (18, 113, '2025-03-12 09:00:00', 0, 0),  -- DG3 mượn Toán rời rạc
+    (19, 58, '2025-03-16 10:00:00', 0, 0),   -- DG4 mượn AI
+    (19, 70, '2025-03-16 10:00:00', 0, 0),   -- DG4 mượn ML
+    (20, 101, '2025-03-21 12:00:00', 0, 0),  -- DG1 mượn Python
+    (20, 123, '2025-03-21 12:00:00', 0, 0),  -- DG1 mượn Đại số
+    (21, 35, '2025-03-26 13:00:00', 0, 0),   -- DG2 mượn C#
+    (21, 59, '2025-03-26 13:00:00', 0, 0);   -- DG2 mượn AI
+
+-- =========================================================================
+-- 3. KẾT QUẢ THỐNG KÊ SAU KHI CHẠY SCRIPT
+-- =========================================================================
+-- 
+-- ✅ Tổng sách: ~129 cuốn
+-- ✅ Sách đang mượn: 1 cuốn (từ phiếu mượn gốc PM000003)
+-- ✅ Tổng độc giả: 4 người
+-- ✅ Tổng nợ: ~6000 VND (4000 + 2000 từ tháng 1)
+--
+-- ✅ Top 5 sách mượn nhiều:
+--    1. Python: 8 lượt
+--    2. Đại số tuyến tính: 5 lượt
+--    3. Toán rời rạc: 5 lượt
+--    4. C#: 5 lượt
+--    5. AI: 5 lượt
+--
+-- ✅ Top 3 độc giả tích cực:
+--    1. Nguyễn Mai Anh (DG1): 8 lượt
+--    2. Lê Thành Đô (DG2): 8 lượt
+--    3. Huỳnh Hồng Thu Giang (DG3): 6 lượt
+--
+-- ✅ Biểu đồ theo tháng:
+--    - Tháng 1: 8 lượt
+--    - Tháng 2: 16 lượt
+--    - Tháng 3: 15 lượt (bao gồm 2 lượt từ phiếu gốc + 10 lượt mới)
+--
+-- =========================================================================
+
+-- Kiểm tra kết quả
+SELECT '=== KIỂM TRA KẾT QUẢ ===' AS Info;
+
+SELECT 'Tổng sách:' AS ThongKe, COUNT(*) AS GiaTri FROM CUONSACH
+UNION ALL
+SELECT 'Sách đang mượn:', COUNT(*) FROM CUONSACH WHERE TinhTrang = 0
+UNION ALL
+SELECT 'Tổng độc giả:', COUNT(*) FROM DOCGIA
+UNION ALL
+SELECT 'Tổng nợ:', COALESCE(SUM(TongNoHienTai), 0) FROM DOCGIA;
+
+SELECT 'Top 5 sách mượn nhiều:' AS Info;
+SELECT ts.TenTuaSach, COUNT(cp.IDPhieuMuon) as SoLuotMuon
+FROM CT_PHIEUMUON cp
+INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
+INNER JOIN SACH s ON cs.IDSach = s.ID
+INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+GROUP BY ts.ID, ts.TenTuaSach
+ORDER BY SoLuotMuon DESC
+LIMIT 5;
+
+SELECT 'Top 3 độc giả tích cực:' AS Info;
+SELECT dg.HoTen, COUNT(cp.IDPhieuMuon) as SoLuotMuon
+FROM CT_PHIEUMUON cp
+INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
+GROUP BY dg.ID, dg.HoTen
+ORDER BY SoLuotMuon DESC
+LIMIT 3;
+
+SELECT 'Thống kê theo tháng năm 2025:' AS Info;
+SELECT MONTH(p.NgayMuon) as Thang, COUNT(cp.IDPhieuMuon) as SoLuotMuon
+FROM CT_PHIEUMUON cp
+INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+WHERE YEAR(p.NgayMuon) = 2025
+GROUP BY MONTH(p.NgayMuon)
+ORDER BY Thang;
+
+

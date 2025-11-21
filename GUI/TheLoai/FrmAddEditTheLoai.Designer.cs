@@ -73,12 +73,10 @@
             txtTenTheLoai.Name = "txtTenTheLoai";
             txtTenTheLoai.Size = new Size(175, 27);
             txtTenTheLoai.TabIndex = 3;
-            txtTenTheLoai.TextChanged += txtTenTheLoai_TextChanged;
             // 
             // btnLuu
             // 
             btnLuu.BackColor = Color.DarkTurquoise;
-            btnLuu.DialogResult = DialogResult.OK;
             btnLuu.FlatAppearance.BorderSize = 0;
             btnLuu.FlatStyle = FlatStyle.Flat;
             btnLuu.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
@@ -91,11 +89,11 @@
             btnLuu.Text = "Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;
+            btnLuu.Click += btnLuu_Click;
             // 
             // btnThoat
             // 
             btnThoat.BackColor = Color.Tomato;
-            btnThoat.DialogResult = DialogResult.Cancel;
             btnThoat.FlatAppearance.BorderSize = 0;
             btnThoat.FlatStyle = FlatStyle.Flat;
             btnThoat.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
@@ -108,6 +106,7 @@
             btnThoat.Text = "Thoát";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThoat.UseVisualStyleBackColor = false;
+            btnThoat.Click += btnThoat_Click;
             // 
             // FrmAddEditTheLoai
             // 
@@ -123,6 +122,7 @@
             Name = "FrmAddEditTheLoai";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Thêm thể loại";
+            Load += FrmAddEditTheLoai_Load;
             ResumeLayout(false);
             PerformLayout();
         }

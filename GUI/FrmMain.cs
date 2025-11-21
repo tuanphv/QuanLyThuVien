@@ -1,6 +1,11 @@
 ﻿using GUI.Helpers;
 using GUI.TheLoai;
 using GUI.TacGia;
+using GUI.NhaXuatBan;
+using GUI.NhaCungCap;
+using GUI.NguoiDung;
+using GUI.DocGia;
+using GUI.BaoCao;
 using System.Data;
 using System.Windows.Forms;
 namespace GUI
@@ -18,7 +23,12 @@ namespace GUI
                 new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle()),
                 new SidebarMenuItem(btnPermissions, new PhanQuyen.UCPermissions()),
                 new SidebarMenuItem(btnGenre, new UCTheLoai()),
-                new SidebarMenuItem(btnAuthor, new UCTacGia())
+                new SidebarMenuItem(btnAuthor, new UCTacGia()),
+                new SidebarMenuItem(btnPublisher, new UCNhaXuatBan()),
+                new SidebarMenuItem(btnSupplier, new UCNhaCungCap()),
+                new SidebarMenuItem(btnUsers, new UCNguoiDung()),
+                new SidebarMenuItem(btnReaders, new UCDocGia()),
+                new SidebarMenuItem(button2, new UCBaoCao()), // Thêm nút Báo cáo
             };
         }
 
