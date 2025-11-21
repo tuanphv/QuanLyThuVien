@@ -417,9 +417,7 @@ VALUES ('TQUAN', 'Tổng quan/Báo cáo nhanh'),	-- ID = 1
        ('BCQH', 'Báo cáo quá hạn/phạt'),       	-- ID = 10
        ('ND', 'Người dùng (Tài khoản)'),      	-- ID = 11
        ('DG', 'Độc giả'),        				-- ID = 12
-       ('PQ', 'Phân quyền'),                   	-- ID = 13
-       ('GDG', 'Giao diện độc giả');			-- ID = 14
-
+       ('PQ', 'Phân quyền');                   	-- ID = 13
 
 -- 3. PHÂN QUYỀN (PHANQUYEN)
 -- Gán quyền cho Admin (ID=1) - Toàn quyền trên mọi module (1-13)
@@ -456,10 +454,20 @@ VALUES
 (2, 10, 'XEM');
 
 
--- Gán quyền cho Độc giả (ID=3) - Quyền xem thông tin cá nhân/lịch sử
-INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong)
-VALUES
-(3, 14, 'XEM');   -- Xem giao diện của độc giả
+-- Gán quyền cho Độc giả (ID=3)
+INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) VALUES
+-- Quyền XEM (VIEW)
+(3, 1, 'XEM'), -- Tổng quan/Báo cáo nhanh
+(3, 2, 'XEM'), -- Thể loại
+(3, 3, 'XEM'), -- Tác giả
+(3, 4, 'XEM'), -- Nhà cung cấp (Tùy chọn)
+(3, 5, 'XEM'), -- Tựa sách (Rất quan trọng)
+(3, 6, 'XEM'), -- Lô sách & Cuốn sách
+(3, 8, 'XEM'), -- Phiếu mượn/Trả sách (Xem lịch sử)
+(3, 10, 'XEM'), -- Báo cáo quá hạn/phạt
+
+-- Quyền THÊM (ADD) cho Phiếu mượn (đặt mượn sách)
+(3, 8, 'THEM');
 
 -- 4. NGƯỜI DÙNG (NGUOIDUNG) & ĐỘC GIẢ (DOCGIA)
 -- Tài khoản hệ thống
@@ -586,7 +594,7 @@ INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (3, 3);
 -- Mục đích: Tạo dữ liệu phong phú để demo chức năng báo cáo/thống kê
 -- =========================================================================
 
---USE QLTV;
+-- USE QLTV;
 
 -- =========================================================================
 -- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ

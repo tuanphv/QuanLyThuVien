@@ -15,8 +15,8 @@
 
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             panel1 = new Panel();
             label1 = new Label();
             roundPanel1 = new GUI.Controls.RoundPanel();
@@ -41,17 +41,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8F, FontStyle.Bold);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(327, 46);
+            label1.Size = new Size(270, 37);
             label1.TabIndex = 0;
             label1.Text = "Quản lý người dùng";
             // 
@@ -66,9 +67,10 @@
             roundPanel1.Controls.Add(dgvNguoiDung);
             roundPanel1.Controls.Add(btnThemNguoiDung);
             roundPanel1.Controls.Add(panel3);
-            roundPanel1.Location = new Point(23, 120);
+            roundPanel1.Location = new Point(20, 90);
+            roundPanel1.Margin = new Padding(0);
             roundPanel1.Name = "roundPanel1";
-            roundPanel1.Size = new Size(1821, 859);
+            roundPanel1.Size = new Size(1593, 644);
             roundPanel1.TabIndex = 1;
             // 
             // dgvNguoiDung
@@ -82,29 +84,30 @@
             dgvNguoiDung.BackgroundColor = Color.White;
             dgvNguoiDung.BorderStyle = BorderStyle.None;
             dgvNguoiDung.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvNguoiDung.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvNguoiDung.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvNguoiDung.ColumnHeadersHeight = 40;
             dgvNguoiDung.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvNguoiDung.Columns.AddRange(new DataGridViewColumn[] { MaNguoiDung, TenNguoiDung, TenDangNhap, TenNhomNguoiDung });
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 12F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(5);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvNguoiDung.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 12F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new Padding(5);
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvNguoiDung.DefaultCellStyle = dataGridViewCellStyle4;
             dgvNguoiDung.EnableHeadersVisualStyles = false;
             dgvNguoiDung.GridColor = SystemColors.ControlLight;
-            dgvNguoiDung.Location = new Point(23, 92);
+            dgvNguoiDung.Location = new Point(20, 69);
+            dgvNguoiDung.Margin = new Padding(3, 2, 3, 2);
             dgvNguoiDung.Name = "dgvNguoiDung";
             dgvNguoiDung.ReadOnly = true;
             dgvNguoiDung.RowHeadersVisible = false;
@@ -117,7 +120,7 @@
             dgvNguoiDung.ShowEditingIcon = false;
             dgvNguoiDung.ShowRowErrors = false;
             dgvNguoiDung.ShowViewButton = false;
-            dgvNguoiDung.Size = new Size(1775, 740);
+            dgvNguoiDung.Size = new Size(1553, 555);
             dgvNguoiDung.TabIndex = 14;
             // 
             // MaNguoiDung
@@ -158,9 +161,11 @@
             btnThemNguoiDung.ForeColor = Color.White;
             btnThemNguoiDung.Image = Properties.Resources.plus;
             btnThemNguoiDung.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThemNguoiDung.Location = new Point(1680, 28);
+            btnThemNguoiDung.Location = new Point(1470, 21);
+            btnThemNguoiDung.Margin = new Padding(3, 2, 3, 2);
             btnThemNguoiDung.Name = "btnThemNguoiDung";
-            btnThemNguoiDung.Size = new Size(118, 40);
+            btnThemNguoiDung.Padding = new Padding(5, 0, 0, 0);
+            btnThemNguoiDung.Size = new Size(103, 30);
             btnThemNguoiDung.TabIndex = 14;
             btnThemNguoiDung.Text = "   Thêm";
             btnThemNguoiDung.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -173,9 +178,10 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(txtTimKiem);
-            panel3.Location = new Point(1169, 29);
+            panel3.Location = new Point(1023, 22);
+            panel3.Margin = new Padding(3, 2, 3, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(465, 39);
+            panel3.Size = new Size(407, 30);
             panel3.TabIndex = 13;
             // 
             // btnSearch
@@ -188,9 +194,10 @@
             btnSearch.ForeColor = Color.White;
             btnSearch.Image = Properties.Resources.search;
             btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.Location = new Point(381, 0);
+            btnSearch.Location = new Point(333, 0);
+            btnSearch.Margin = new Padding(3, 2, 3, 2);
             btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(82, 37);
+            btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
             btnSearch.TextAlign = ContentAlignment.MiddleLeft;
@@ -203,21 +210,23 @@
             txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtTimKiem.BorderStyle = BorderStyle.None;
             txtTimKiem.Font = new Font("Segoe UI", 9.75F);
-            txtTimKiem.Location = new Point(6, 7);
+            txtTimKiem.Location = new Point(5, 5);
+            txtTimKiem.Margin = new Padding(3, 2, 3, 2);
             txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.Size = new Size(369, 22);
+            txtTimKiem.Size = new Size(323, 18);
             txtTimKiem.TabIndex = 0;
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
             // 
             // UCNguoiDung
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundPanel1);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCNguoiDung";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCNguoiDung_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

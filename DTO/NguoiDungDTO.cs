@@ -14,6 +14,7 @@ namespace DTO
         public int IDNhomNguoiDung { get; set; }
         public string TenNhomNguoiDung { get; set; }
 
+
         public NguoiDungDTO()
         {
             ID = 0;

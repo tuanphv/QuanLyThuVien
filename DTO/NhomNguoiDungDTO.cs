@@ -13,7 +13,12 @@ namespace DTO
         public string TenNhom { get; set; }
         public int TongSoNguoi { get; set; }
         
-        public NhomNguoiDungDTO() { }
+        public NhomNguoiDungDTO() {
+            ID = 0;
+            MaNhom = string.Empty;
+            TenNhom = string.Empty;
+            TongSoNguoi = 0;
+        }
 
         public NhomNguoiDungDTO(int id, string maNhom, string tenNhom, int tongSoNguoi)
         {

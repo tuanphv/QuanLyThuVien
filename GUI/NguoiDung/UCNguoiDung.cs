@@ -1,4 +1,4 @@
-using DTO;
+Ôªøusing DTO;
 using System.ComponentModel;
 
 namespace GUI.NguoiDung
@@ -19,7 +19,7 @@ namespace GUI.NguoiDung
             // T?i d? li?u
             LoadData();
 
-            // G·n s? ki?n cho c·c n˙t S?a/XÛa trong DataGridView
+            // G√°n s? ki?n cho c√°c n√∫t S?a/X√≥a trong DataGridView
             dgvNguoiDung.EditButtonClicked += EditButtonClicked;
             dgvNguoiDung.DeleteButtonClicked += DeleteButtonClicked;
         }
@@ -41,7 +41,7 @@ namespace GUI.NguoiDung
         private void btnThemNguoiDung_Click(object sender, EventArgs e)
         {
             FrmAddEditNguoiDung frm = new FrmAddEditNguoiDung();
-            frm.Text = "ThÍm Ng??i d˘ng";
+            frm.Text = "Th√™m Ng∆∞·ªùi d√πng";
             var result = frm.ShowDialog();
 
             if (result == DialogResult.OK)
@@ -57,7 +57,7 @@ namespace GUI.NguoiDung
             NguoiDungDTO selectedNguoiDung = list[index];
 
             FrmAddEditNguoiDung frm = new FrmAddEditNguoiDung();
-            frm.Text = "Ch?nh s?a Ng??i d˘ng";
+            frm.Text = "Ch?nh s?a Ng??i d√πng";
             frm.NguoiDung = selectedNguoiDung;
 
             var result = frm.ShowDialog();
@@ -74,8 +74,8 @@ namespace GUI.NguoiDung
 
             NguoiDungDTO selectedNguoiDung = list[index];
 
-            var confirm = MessageBox.Show($"B?n cÛ ch?c ch?n mu?n xÛa ng??i d˘ng '{selectedNguoiDung.TenNguoiDung}'?", 
-                "X·c nh?n xÛa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show($"B?n c√≥ ch?c ch?n mu?n x√≥a ng??i d√πng '{selectedNguoiDung.TenNguoiDung}'?", 
+                "X√°c nh?n x√≥a", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
@@ -84,7 +84,7 @@ namespace GUI.NguoiDung
                     if (BUS.NguoiDungBUS.Delete(selectedNguoiDung.MaNguoiDung))
                     {
                         list.RemoveAt(index);
-                        MessageBox.Show("XÛa th‡nh cÙng.", "ThÙng b·o",
+                        MessageBox.Show("X√≥a th√†nh c√¥ng.", "Th√¥ng b√°o",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
