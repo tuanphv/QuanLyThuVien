@@ -1,12 +1,18 @@
 ﻿using DTO;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace GUI.TuaSach
 {
 
     public partial class UCBookTitle : UserControl
     {
+        private BindingList<TuaSachDTO> allList = new BindingList<TuaSachDTO>();
         private BindingList<TuaSachDTO> list = new BindingList<TuaSachDTO>();
+        private System.Windows.Forms.Timer searchTimer;
+        private bool isInitialized = false;
+
         public UCBookTitle()
         {
             InitializeComponent();
@@ -15,7 +21,8 @@ namespace GUI.TuaSach
         {
             dgvBookTitles.AutoGenerateColumns = false;
 
-            list = BUS.TuaSachBUS.GetAll();
+            allList = BUS.TuaSachBUS.GetAll();
+            list = new BindingList<TuaSachDTO>(allList.ToList());
             dgvBookTitles.DataSource = list;
 
             dgvBookTitles.EditButtonClicked += EditButtonClicked;
@@ -33,6 +40,52 @@ namespace GUI.TuaSach
             cbTacGia.DataSource = listTacGia;
             cbTacGia.DisplayMember = "TenTacGia";
             cbTacGia.ValueMember = "ID";
+
+            // Setup debounce timer for live search
+            searchTimer = new System.Windows.Forms.Timer();
+            searchTimer.Interval = 300;
+            searchTimer.Tick += (s, ev) => {
+                searchTimer.Stop();
+                PerformSearch();
+            };
+
+            // Wire events for search
+            btnSearch.Click += (s, ev) => { searchTimer.Stop(); PerformSearch(); };
+            textBox1.TextChanged += (s, ev) => { searchTimer.Stop(); searchTimer.Start(); };
+            textBox1.KeyDown += (s, ev) => { if (ev.KeyCode == Keys.Enter) { searchTimer.Stop(); PerformSearch(); } };
+            cbTheLoai.SelectedIndexChanged += (s, ev) => { if (isInitialized) PerformSearch(); };
+            cbTacGia.SelectedIndexChanged += (s, ev) => { if (isInitialized) PerformSearch(); };
+
+            isInitialized = true;
+        }
+
+        private void PerformSearch()
+        {
+            string keyword = textBox1.Text.Trim();
+            string keywordLower = keyword.ToLowerInvariant();
+
+            string selectedGenre = null;
+            string selectedAuthor = null;
+
+            if (cbTheLoai.SelectedItem is TheLoaiDTO tl && tl.ID != 0)
+                selectedGenre = tl.TenTheLoai?.ToLowerInvariant();
+            if (cbTacGia.SelectedItem is TacGiaDTO tg && tg.ID != 0)
+                selectedAuthor = tg.TenTacGia?.ToLowerInvariant();
+
+            var filtered = allList.Where(t =>
+            {
+                bool matchKeyword = string.IsNullOrEmpty(keyword) 
+                    || (!string.IsNullOrEmpty(t.TenTuaSach) && t.TenTuaSach.ToLowerInvariant().Contains(keywordLower))
+                    || (!string.IsNullOrEmpty(t.MaTuaSach) && t.MaTuaSach.ToLowerInvariant().Contains(keywordLower));
+
+                bool matchGenre = string.IsNullOrEmpty(selectedGenre) || (!string.IsNullOrEmpty(t.TheLoai) && t.TheLoai.ToLowerInvariant().Contains(selectedGenre));
+                bool matchAuthor = string.IsNullOrEmpty(selectedAuthor) || (!string.IsNullOrEmpty(t.TacGia) && t.TacGia.ToLowerInvariant().Contains(selectedAuthor));
+                return matchKeyword && matchGenre && matchAuthor;
+            }).ToList();
+
+            // Update displayed list while keeping a new BindingList to reflect changes
+            list = new BindingList<TuaSachDTO>(filtered);
+            dgvBookTitles.DataSource = list;
         }
 
         private void EditButtonClicked(object? sender, int index)
@@ -47,7 +100,12 @@ namespace GUI.TuaSach
                 if (result == DialogResult.OK)
                 {
                     TuaSachDTO ts = frm.TuaSach;
+                    // Update both displayed list and master list
                     list[index] = ts;
+                    var idxAll = allList.ToList().FindIndex(x => x.ID == ts.ID);
+                    if (idxAll >= 0)
+                        allList[idxAll] = ts;
+                    MessageBox.Show("Cập nhật tựa sách thành công.", "Thông báo");
                 }
             }
         }
@@ -63,6 +121,9 @@ namespace GUI.TuaSach
                     if (BUS.TuaSachBUS.DeleteBookTitle(selectedBookTitle.ID))
                     {
                         MessageBox.Show("Xóa tựa sách thành công.");
+                        // remove from both lists
+                        var idxAll = allList.ToList().FindIndex(x => x.ID == selectedBookTitle.ID);
+                        if (idxAll >= 0) allList.RemoveAt(idxAll);
                         list.RemoveAt(index);
                     } else
                     {
@@ -80,9 +141,11 @@ namespace GUI.TuaSach
 
             if (result == DialogResult.OK)
             {
-                // TODO: Thêm tựa sách vào danh sách
                 TuaSachDTO ts = frm.TuaSach;
+                // add to both master and current displayed list
+                allList.Add(ts);
                 list.Add(ts);
+                MessageBox.Show("Thêm tựa sách thành công.", "Thông báo");
             }
         }
 

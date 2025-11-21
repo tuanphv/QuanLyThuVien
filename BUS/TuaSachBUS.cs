@@ -25,12 +25,23 @@ namespace BUS
             {
                 throw new Exception("Tựa sách với tên này đã tồn tại.");
             }
-            return DAO.TuaSachDAO.UpdateBookTitle(tuaSach);
+
+            bool updated = DAO.TuaSachDAO.UpdateBookTitle(tuaSach);
+            if (!updated)
+                throw new Exception("Cập nhật tựa sách thất bại.");
+
+            return true;
         }
 
         public static bool DeleteBookTitle(int id)
         {
             return DAO.TuaSachDAO.DeleteBookTitle(id);
+        }
+
+        // Search with optional keyword, genreId and authorId
+        public static BindingList<TuaSachDTO> Search(string keyword, int genreId = 0, int authorId = 0)
+        {
+            return DAO.TuaSachDAO.Search(keyword, genreId, authorId);
         }
 
         //Trí thêm hàm lấy tựa sách theo mã thể loại

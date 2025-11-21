@@ -257,6 +257,7 @@
             // txtBookTitleId
             // 
             txtBookTitleId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBookTitleId.Enabled = false;
             txtBookTitleId.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtBookTitleId.Location = new Point(422, 20);
             txtBookTitleId.Margin = new Padding(20, 20, 20, 0);
