@@ -1,6 +1,7 @@
 ﻿using DTO;
 using System.ComponentModel;
 using System.Data;
+using GUI.Helpers;
 
 namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
 {
@@ -25,6 +26,27 @@ namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
             dgvTheLoai.EditButtonClicked += EditButtonClicked;
             dgvTheLoai.DeleteButtonClicked += DeleteButtonClicked;
             dgvTheLoai.ViewButtonClicked += ViewButtonClicked;
+
+            LoadPermissions();
+        }
+
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.TheLoai;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnThemTheLoai.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvTheLoai.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvTheLoai.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvTheLoai.Columns.Contains("Actions"))
+                    dgvTheLoai.Columns["Actions"].Visible = false;
+            }
         }
 
         private void btnThemTheLoai_Click(object sender, EventArgs e)

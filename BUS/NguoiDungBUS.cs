@@ -1,4 +1,4 @@
-using DAO;
+ï»¿using DAO;
 using DTO;
 using System;
 using System.ComponentModel;
@@ -17,33 +17,33 @@ namespace BUS
             // Validate d? li?u
             if (string.IsNullOrWhiteSpace(nguoiDung.TenNguoiDung))
             {
-                throw new Exception("Tên ng??i dùng không ???c ?? tr?ng.");
+                throw new Exception("TÃªn ng??i dÃ¹ng khÃ´ng ???c ?? tr?ng.");
             }
 
             if (string.IsNullOrWhiteSpace(nguoiDung.TenDangNhap))
             {
-                throw new Exception("Tên ??ng nh?p không ???c ?? tr?ng.");
+                throw new Exception("TÃªn ??ng nh?p khÃ´ng ???c ?? tr?ng.");
             }
 
             if (string.IsNullOrWhiteSpace(nguoiDung.MatKhau))
             {
-                throw new Exception("M?t kh?u không ???c ?? tr?ng.");
+                throw new Exception("M?t kh?u khÃ´ng ???c ?? tr?ng.");
             }
 
             if (nguoiDung.MatKhau.Length < 3)
             {
-                throw new Exception("M?t kh?u ph?i có ít nh?t 3 ký t?.");
+                throw new Exception("M?t kh?u ph?i cÃ³ Ã­t nh?t 3 kÃ½ t?.");
             }
 
             if (nguoiDung.IDNhomNguoiDung <= 0)
             {
-                throw new Exception("Vui lòng ch?n nhóm ng??i dùng.");
+                throw new Exception("Vui lÃ²ng ch?n nhÃ³m ng??i dÃ¹ng.");
             }
 
-            // Ki?m tra trùng tên ??ng nh?p
+            // Ki?m tra trÃ¹ng tÃªn ??ng nh?p
             if (NguoiDungDAO.IsTenDangNhapExist(nguoiDung.TenDangNhap))
             {
-                throw new Exception("Tên ??ng nh?p này ?ã t?n t?i.");
+                throw new Exception("TÃªn ??ng nh?p nÃ y ?Ã£ t?n t?i.");
             }
 
             return NguoiDungDAO.Add(nguoiDung);
@@ -54,33 +54,33 @@ namespace BUS
             // Validate d? li?u
             if (string.IsNullOrWhiteSpace(nguoiDung.TenNguoiDung))
             {
-                throw new Exception("Tên ng??i dùng không ???c ?? tr?ng.");
+                throw new Exception("TÃªn ng??i dÃ¹ng khÃ´ng ???c ?? tr?ng.");
             }
 
             if (string.IsNullOrWhiteSpace(nguoiDung.TenDangNhap))
             {
-                throw new Exception("Tên ??ng nh?p không ???c ?? tr?ng.");
+                throw new Exception("TÃªn ??ng nh?p khÃ´ng ???c ?? tr?ng.");
             }
 
             if (string.IsNullOrWhiteSpace(nguoiDung.MatKhau))
             {
-                throw new Exception("M?t kh?u không ???c ?? tr?ng.");
+                throw new Exception("M?t kh?u khÃ´ng ???c ?? tr?ng.");
             }
 
             if (nguoiDung.MatKhau.Length < 3)
             {
-                throw new Exception("M?t kh?u ph?i có ít nh?t 3 ký t?.");
+                throw new Exception("M?t kh?u ph?i cÃ³ Ã­t nh?t 3 kÃ½ t?.");
             }
 
             if (nguoiDung.IDNhomNguoiDung <= 0)
             {
-                throw new Exception("Vui lòng ch?n nhóm ng??i dùng.");
+                throw new Exception("Vui lÃ²ng ch?n nhÃ³m ng??i dÃ¹ng.");
             }
 
-            // Ki?m tra trùng tên ??ng nh?p
+            // Ki?m tra trÃ¹ng tÃªn ??ng nh?p
             if (NguoiDungDAO.IsTenDangNhapExist(nguoiDung.TenDangNhap, nguoiDung.MaNguoiDung))
             {
-                throw new Exception("Tên ??ng nh?p này ?ã t?n t?i.");
+                throw new Exception("TÃªn ??ng nh?p nÃ y ?Ã£ t?n t?i.");
             }
 
             return NguoiDungDAO.Update(nguoiDung);
@@ -88,10 +88,10 @@ namespace BUS
 
         public static bool Delete(string maNguoiDung)
         {
-            // Ki?m tra xem ng??i dùng có ?ang ???c s? d?ng không
+            // Ki?m tra xem ng??i dÃ¹ng cÃ³ ?ang ???c s? d?ng khÃ´ng
             if (NguoiDungDAO.IsInUse(maNguoiDung))
             {
-                throw new Exception("Không th? xóa ng??i dùng này.\nNg??i dùng ?ang ???c liên k?t v?i h? s? ??c gi?.");
+                throw new Exception("KhÃ´ng th? xÃ³a ng??i dÃ¹ng nÃ y.\nNg??i dÃ¹ng ?ang ???c liÃªn k?t v?i h? s? ??c gi?.");
             }
 
             return NguoiDungDAO.Delete(maNguoiDung);
@@ -106,19 +106,19 @@ namespace BUS
         {
             if (string.IsNullOrWhiteSpace(tenDangNhap))
             {
-                throw new Exception("Tên ??ng nh?p không ???c ?? tr?ng.");
+                throw new Exception("TÃªn Ä‘Äƒng nháº­p khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng.");
             }
 
             if (string.IsNullOrWhiteSpace(matKhau))
             {
-                throw new Exception("M?t kh?u không ???c ?? tr?ng.");
+                throw new Exception("Máº­t kháº©u khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng.");
             }
 
             NguoiDungDTO? nguoiDung = NguoiDungDAO.Login(tenDangNhap, matKhau);
             
             if (nguoiDung == null)
             {
-                throw new Exception("Tên ??ng nh?p ho?c m?t kh?u không chính xác.");
+                throw new Exception("TÃªn Ä‘Äƒng nháº­p hoáº·c máº­t kháº©u khÃ´ng chÃ­nh xÃ¡c.");
             }
 
             return nguoiDung;

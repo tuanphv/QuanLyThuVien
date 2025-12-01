@@ -10,11 +10,13 @@ namespace GUI.Helpers
     {
         public Button Button;
         public UserControl? TargetControl;
+        public int PermissionCode;
 
-        public SidebarMenuItem(Button btn, UserControl control = null)
+        public SidebarMenuItem(Button btn, UserControl control = null, int permissionCode = 0)
         {
             Button = btn;
             TargetControl = control;
+            PermissionCode = permissionCode;
         }
     }
 }
