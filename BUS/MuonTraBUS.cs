@@ -98,5 +98,50 @@ namespace BUS
             var capNhat = MuonTraDAO.LayPhieuMuonTheoID(idPhieuMuon);
             return capNhat ?? phieu;
         }
+
+        public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
+        {
+            if (string.IsNullOrWhiteSpace(maPhieuMuon)) return null;
+            return MuonTraDAO.LayPhieuMuonTheoMa(maPhieuMuon.Trim());
+        }
+
+        public static bool XoaPhieuMuon(int idPhieuMuon)
+        {
+            return MuonTraDAO.XoaPhieuMuon(idPhieuMuon);
+        }
+
+        public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
+        {
+            return MuonTraDAO.LayTatCaPhieuTra();
+        }
+
+        public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
+        {
+            return MuonTraDAO.LayChiTietPhieuTra(idPhieuMuon);
+        }
+
+        public static PhieuTraDTO LapPhieuTra(string maPhieuMuon, out int tongTienPhat)
+        {
+            if (string.IsNullOrWhiteSpace(maPhieuMuon))
+                throw new Exception("Cần nhập mã phiếu mượn.");
+
+            var phieu = LayPhieuMuonTheoMa(maPhieuMuon)
+                ?? throw new Exception("Không tìm thấy phiếu mượn.");
+
+            if (phieu.SoSachChuaTra <= 0)
+                throw new Exception("Phiếu này đã trả hết sách.");
+
+            TraPhieuMuon(phieu.ID, out tongTienPhat);
+            return new PhieuTraDTO
+            {
+                IDPhieuMuon = phieu.ID,
+                MaPhieuMuon = phieu.MaPhieuMuon,
+                MaDocGia = phieu.MaDocGia,
+                HoTenDocGia = phieu.HoTenDocGia,
+                NgayTra = DateTime.Today,
+                TongSachTra = phieu.TongSach - phieu.SoSachChuaTra,
+                TongTienPhat = tongTienPhat
+            };
+        }
     }
 }

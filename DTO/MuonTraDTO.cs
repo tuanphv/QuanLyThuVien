@@ -45,6 +45,28 @@ namespace DTO
         public DateTime NgayTraDuKien { get; set; }
     }
 
+    public class PhieuTraDTO
+    {
+        public int IDPhieuMuon { get; set; }
+        public string MaPhieuMuon { get; set; } = string.Empty;
+        public string MaDocGia { get; set; } = string.Empty;
+        public string HoTenDocGia { get; set; } = string.Empty;
+        public DateTime NgayTra { get; set; }
+        public int TongSachTra { get; set; }
+        public int TongTienPhat { get; set; }
+    }
+
+    public class ChiTietPhieuTraDTO
+    {
+        public int IDCuonSach { get; set; }
+        public string MaCuonSach { get; set; } = string.Empty;
+        public string TenSach { get; set; } = string.Empty;
+        public DateTime NgayTraDuKien { get; set; }
+        public DateTime NgayTraThucTe { get; set; }
+        public int SoNgayTre { get; set; }
+        public int TienPhat { get; set; }
+    }
+
     public class ThamSoMuonTraDTO
     {
         public int SoSachMuonToiDa { get; set; }

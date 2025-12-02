@@ -1,8 +1,6 @@
 using BUS;
 using DTO;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,6 +31,8 @@ namespace GUI.MuonTra
             colGhiChu.DataPropertyName = nameof(PhieuMuonDTO.GhiChu);
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
+            dgvPhieuMuon.EditButtonClicked += DgvPhieuMuon_EditButtonClicked;
+            dgvPhieuMuon.DeleteButtonClicked += DgvPhieuMuon_DeleteButtonClicked;
 
             LoadData();
         }
@@ -97,26 +97,11 @@ namespace GUI.MuonTra
 
         private void MoFormThemPhieuMuon()
         {
-            string maDocGia = Interaction.InputBox("Nhập mã độc giả (ví dụ: DG0001)", "Lập phiếu mượn").Trim();
-            if (string.IsNullOrWhiteSpace(maDocGia)) return;
-
-            string maCuonStr = Interaction.InputBox("Nhập mã các cuốn sách (phân tách bởi dấu phẩy)", "Lập phiếu mượn");
-            var maCuonList = maCuonStr.Split(new[] { ',', ';', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim())
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToList();
-
-            if (maCuonList.Count == 0) return;
-
-            try
+            using var frm = new FrmLapPhieuMuon();
+            if (frm.ShowDialog() == DialogResult.OK && frm.PhieuMoi != null)
             {
-                var phieu = MuonTraBUS.LapPhieuMuon(maDocGia, maCuonList);
-                list.Add(phieu);
-                MessageBox.Show($"Lập phiếu thành công. Mã: {phieu.MaPhieuMuon}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                list.Add(frm.PhieuMoi);
+                MessageBox.Show($"Lập phiếu thành công. Mã: {frm.PhieuMoi.MaPhieuMuon}");
             }
         }
 
@@ -126,22 +111,12 @@ namespace GUI.MuonTra
             var phieu = dgvPhieuMuon.CurrentRow.DataBoundItem as PhieuMuonDTO;
             if (phieu == null) return;
 
-            string input = Interaction.InputBox("Nhập số ngày muốn gia hạn", "Gia hạn");
-            if (!int.TryParse(input, out int soNgay) || soNgay <= 0) return;
-
-            try
+            using var frm = new FrmGiaHanPhieuMuon(phieu);
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                var capNhat = MuonTraBUS.GiaHanPhieuMuon(phieu.ID, soNgay);
-                if (capNhat != null)
-                {
-                    CapNhatItemTrongList(capNhat);
-                    dgvPhieuMuon.Refresh();
-                    MessageBox.Show("Gia hạn thành công.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CapNhatItemTrongList(phieu);
+                dgvPhieuMuon.Refresh();
+                MessageBox.Show("Gia hạn thành công.");
             }
         }
 
@@ -151,24 +126,23 @@ namespace GUI.MuonTra
             var phieu = dgvPhieuMuon.CurrentRow.DataBoundItem as PhieuMuonDTO;
             if (phieu == null) return;
 
-            if (MessageBox.Show($"Xác nhận trả toàn bộ sách của phiếu {phieu.MaPhieuMuon}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                != DialogResult.Yes) return;
-
-            try
+            using var frm = new FrmLapPhieuTra(phieu.MaPhieuMuon);
+            frm.StartPosition = FormStartPosition.CenterParent;
+            if (frm.ShowDialog() == DialogResult.OK && frm.PhieuTra != null)
             {
-                var capNhat = MuonTraBUS.TraPhieuMuon(phieu.ID, out int tienPhat);
-                CapNhatItemTrongList(capNhat);
+                var capNhat = MuonTraBUS.LayPhieuMuonTheoMa(phieu.MaPhieuMuon);
+                if (capNhat != null)
+                {
+                    CapNhatItemTrongList(capNhat);
+                    dgvPhieuMuon.Refresh();
+                }
 
                 string thongBao = "Trả sách thành công.";
-                if (tienPhat > 0)
+                if (frm.PhieuTra.TongTienPhat > 0)
                 {
-                    thongBao += $"\nTiền phạt phát sinh: {tienPhat:N0} đồng.";
+                    thongBao += $"\nTiền phạt: {frm.PhieuTra.TongTienPhat:N0} đồng.";
                 }
                 MessageBox.Show(thongBao, "Thành công");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -188,16 +162,37 @@ namespace GUI.MuonTra
             var phieu = dgvPhieuMuon.Rows[rowIndex].DataBoundItem as PhieuMuonDTO;
             if (phieu == null) return;
 
-            var chiTiet = MuonTraBUS.LayChiTietPhieuMuon(phieu.ID);
-            string message = string.Join("\n", chiTiet.Select(ct =>
-                $"- {ct.MaCuonSach} | {ct.TenSach} | Hạn: {ct.NgayTraDuKien:dd/MM/yyyy} | Trả: {(ct.NgayTraThucTe.HasValue ? ct.NgayTraThucTe.Value.ToString("dd/MM/yyyy") : "Chưa trả")}"));
+            using var frm = new FrmChiTietPhieuMuon(phieu);
+            frm.ShowDialog();
+        }
 
-            if (string.IsNullOrWhiteSpace(message))
+        private void DgvPhieuMuon_EditButtonClicked(object? sender, int rowIndex)
+        {
+            dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
+            GiaHanPhieuMuonDuocChon();
+        }
+
+        private void DgvPhieuMuon_DeleteButtonClicked(object? sender, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
+            var phieu = dgvPhieuMuon.Rows[rowIndex].DataBoundItem as PhieuMuonDTO;
+            if (phieu == null) return;
+
+            var confirm = MessageBox.Show($"Bạn muốn xóa phiếu {phieu.MaPhieuMuon}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirm != DialogResult.Yes) return;
+
+            try
             {
-                message = "Không có chi tiết sách.";
+                if (MuonTraBUS.XoaPhieuMuon(phieu.ID))
+                {
+                    list.Remove(phieu);
+                    MessageBox.Show("Đã xóa phiếu mượn.");
+                }
             }
-
-            MessageBox.Show(message, $"Phiếu {phieu.MaPhieuMuon}");
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
