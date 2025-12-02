@@ -1,5 +1,4 @@
 ﻿using GUI.Controls;
-using GUI.Properties;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -62,19 +61,19 @@ namespace GUI.MuonTra
             panelTitle.Dock = DockStyle.Top;
             panelTitle.Location = new Point(0, 0);
             panelTitle.Name = "panelTitle";
-            panelTitle.Size = new Size(1866, 84);
+            panelTitle.Size = new Size(1866, 70);
             panelTitle.TabIndex = 0;
             //
             // lblTitle
             //
             lblTitle = new Label();
             lblTitle.AutoSize = true;
-            lblTitle.Font = new Font("Segoe UI", 20F, FontStyle.Bold, GraphicsUnit.Point);
-            lblTitle.Location = new Point(34, 21);
+            lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.Location = new Point(34, 18);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(292, 46);
+            lblTitle.Size = new Size(228, 41);
             lblTitle.TabIndex = 0;
-            lblTitle.Text = "Quản lý Mượn Trả";
+            lblTitle.Text = "Quản lý Phiếu Mượn";
             panelTitle.Controls.Add(lblTitle);
             //
             // panelHeader
@@ -92,10 +91,10 @@ namespace GUI.MuonTra
             txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtSearch.BorderStyle = BorderStyle.None;
             txtSearch.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            txtSearch.Location = new Point(13, 12);
+            txtSearch.Location = new Point(12, 10);
             txtSearch.Name = "txtSearch";
             txtSearch.PlaceholderText = "Tìm kiếm phiếu mượn";
-            txtSearch.Size = new Size(248, 23);
+            txtSearch.Size = new Size(200, 23);
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtSearch_TextChanged;
             //
@@ -106,10 +105,9 @@ namespace GUI.MuonTra
             btnSearch.BackColor = Color.DarkTurquoise;
             btnSearch.FlatAppearance.BorderSize = 0;
             btnSearch.FlatStyle = FlatStyle.Flat;
-            btnSearch.Image = Properties.Resources.search;
-            btnSearch.Location = new Point(276, 0);
+            btnSearch.Location = new Point(220, -1);
             btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(65, 47);
+            btnSearch.Size = new Size(80, 44);
             btnSearch.TabIndex = 1;
             btnSearch.UseVisualStyleBackColor = false;
             //
@@ -120,9 +118,9 @@ namespace GUI.MuonTra
             panelSearch.BorderStyle = BorderStyle.FixedSingle;
             panelSearch.Controls.Add(txtSearch);
             panelSearch.Controls.Add(btnSearch);
-            panelSearch.Location = new Point(1027, 32);
+            panelSearch.Location = new Point(900, 23);
             panelSearch.Name = "panelSearch";
-            panelSearch.Size = new Size(343, 48);
+            panelSearch.Size = new Size(300, 44);
             panelSearch.TabIndex = 0;
             //
             // btnThem
@@ -134,9 +132,9 @@ namespace GUI.MuonTra
             btnThem.FlatStyle = FlatStyle.Flat;
             btnThem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnThem.ForeColor = Color.White;
-            btnThem.Location = new Point(1394, 32);
+            btnThem.Location = new Point(1230, 22);
             btnThem.Name = "btnThem";
-            btnThem.Size = new Size(95, 48);
+            btnThem.Size = new Size(140, 46);
             btnThem.TabIndex = 1;
             btnThem.Text = "Thêm";
             btnThem.UseVisualStyleBackColor = false;
@@ -151,9 +149,9 @@ namespace GUI.MuonTra
             btnGiaHan.FlatStyle = FlatStyle.Flat;
             btnGiaHan.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnGiaHan.ForeColor = Color.White;
-            btnGiaHan.Location = new Point(1495, 32);
+            btnGiaHan.Location = new Point(1380, 22);
             btnGiaHan.Name = "btnGiaHan";
-            btnGiaHan.Size = new Size(100, 48);
+            btnGiaHan.Size = new Size(140, 46);
             btnGiaHan.TabIndex = 2;
             btnGiaHan.Text = "Gia hạn";
             btnGiaHan.UseVisualStyleBackColor = false;
@@ -168,9 +166,9 @@ namespace GUI.MuonTra
             btnTra.FlatStyle = FlatStyle.Flat;
             btnTra.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnTra.ForeColor = Color.White;
-            btnTra.Location = new Point(1601, 32);
+            btnTra.Location = new Point(1530, 22);
             btnTra.Name = "btnTra";
-            btnTra.Size = new Size(92, 48);
+            btnTra.Size = new Size(140, 46);
             btnTra.TabIndex = 3;
             btnTra.Text = "Trả";
             btnTra.UseVisualStyleBackColor = false;
@@ -249,21 +247,20 @@ namespace GUI.MuonTra
             dataGridViewCellStyle1.SelectionForeColor = Color.White;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvPhieuMuon.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvPhieuMuon.ColumnHeadersHeight = 50;
-            dgvPhieuMuon.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvPhieuMuon.ColumnHeadersHeight = 46;
             dgvPhieuMuon.Columns.AddRange(new DataGridViewColumn[] { colPhieu, colDocGia, colNgayMuon, colHanTra, colNgayTra, colTinhTrang, colGhiChu });
             dgvPhieuMuon.EnableHeadersVisualStyles = false;
             dgvPhieuMuon.GridColor = Color.Gainsboro;
-            dgvPhieuMuon.Location = new Point(34, 213);
+            dgvPhieuMuon.Location = new Point(34, 180);
             dgvPhieuMuon.MultiSelect = false;
             dgvPhieuMuon.Name = "dgvPhieuMuon";
             dgvPhieuMuon.ReadOnly = true;
             dgvPhieuMuon.RowHeadersVisible = false;
-            dgvPhieuMuon.RowTemplate.Height = 50;
+            dgvPhieuMuon.RowTemplate.Height = 48;
             dgvPhieuMuon.ShowDeleteButton = true;
             dgvPhieuMuon.ShowEditButton = true;
             dgvPhieuMuon.ShowViewButton = true;
-            dgvPhieuMuon.Size = new Size(1753, 714);
+            dgvPhieuMuon.Size = new Size(1753, 721);
             dgvPhieuMuon.TabIndex = 3;
             //
             // roundPanelContainer
@@ -277,9 +274,9 @@ namespace GUI.MuonTra
             roundPanelContainer.Controls.Add(dgvPhieuMuon);
             roundPanelContainer.Controls.Add(panelHeader);
             roundPanelContainer.Controls.Add(panelTitle);
-            roundPanelContainer.Location = new Point(23, 27);
+            roundPanelContainer.Location = new Point(23, 20);
             roundPanelContainer.Name = "roundPanelContainer";
-            roundPanelContainer.Size = new Size(1820, 951);
+            roundPanelContainer.Size = new Size(1820, 930);
             roundPanelContainer.TabIndex = 1;
             //
             // panelHeader Controls
@@ -295,7 +292,7 @@ namespace GUI.MuonTra
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(roundPanelContainer);
             Name = "UCPhieuMuon";
-            Size = new Size(1866, 1005);
+            Size = new Size(1866, 975);
             ResumeLayout(false);
         }
 
