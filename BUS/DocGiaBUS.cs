@@ -1,4 +1,4 @@
-﻿using DAO;
+using DAO;
 using DTO;
 using System;
 using System.ComponentModel;
@@ -14,91 +14,22 @@ namespace BUS
 
         public static string Add(DocGiaDTO docGia)
         {
-            // Validate d? li?u
-            if (string.IsNullOrWhiteSpace(docGia.HoTen))
-            {
-                throw new Exception("Họ tên không được để trống.");
-            }
-
-            if (docGia.NgaySinh == null || docGia.NgaySinh == DateTime.MinValue)
-            {
-                throw new Exception("Ngày sinh không hợp lệ.");
-            }
-
-          
-            int tuoi = DateTime.Now.Year - docGia.NgaySinh.Year;
-            if (docGia.NgaySinh > DateTime.Now.AddYears(-tuoi)) tuoi--;
-
-           
-            if (tuoi < 18 || tuoi > 55)
-            {
-                throw new Exception("Tuổi tham gia phải từ 18 đến 55");
-            }
-
-            if (docGia.NgayLapThe == null || docGia.NgayLapThe == DateTime.MinValue)
-            {
-                throw new Exception("Ngày lập thể không hợp lệ.");
-            }
-
-            if (docGia.NgayHetHan == null || docGia.NgayHetHan == DateTime.MinValue)
-            {
-                throw new Exception("Ngày hết hạn không hợp lệ.");
-            }
-
-            if (docGia.NgayHetHan <= docGia.NgayLapThe)
-            {
-                throw new Exception("Ngày hết hạn phải sau ngày lập thể.");
-            }
-
+            ValidateDates(docGia);
             return DocGiaDAO.Add(docGia);
         }
 
         public static bool Update(DocGiaDTO docGia)
         {
-            // Validate d? li?u
-            if (string.IsNullOrWhiteSpace(docGia.HoTen))
-            {
-                throw new Exception("Họ tên không được để trống.");
-            }
-
-            if (docGia.NgaySinh == null || docGia.NgaySinh == DateTime.MinValue)
-            {
-                throw new Exception("Ngày sinh không hợp lệ.");
-            }
-
-       
-            int tuoi = DateTime.Now.Year - docGia.NgaySinh.Year;
-            if (docGia.NgaySinh > DateTime.Now.AddYears(-tuoi)) tuoi--;
-
-            if (tuoi < 18 || tuoi > 55)
-            {
-                throw new Exception("tuổi them gia phải từ 18 đến 55.");
-            }
-
-            if (docGia.NgayLapThe == null || docGia.NgayLapThe == DateTime.MinValue)
-            {
-                throw new Exception("Ngày lập thể không hợp lệ.");
-            }
-
-            if (docGia.NgayHetHan == null || docGia.NgayHetHan == DateTime.MinValue)
-            {
-                throw new Exception("Ngày hết hạn không hợp lệ.");
-            }
-
-            if (docGia.NgayHetHan <= docGia.NgayLapThe)
-            {
-                throw new Exception("Ngày hết hạn phải sau ngày lập thể.");
-            }
-
+            ValidateDates(docGia);
             return DocGiaDAO.Update(docGia);
         }
 
         public static bool Delete(string maDocGia)
         {
-            // Ki?m tra xem ??c gi? có ?ang m??n sách không
+            // Kiểm tra xem độc giả có đang mượn sách không
             if (DocGiaDAO.IsInUse(maDocGia))
             {
-                throw new Exception("Không thể xóa độc giả này.\nđộc giả đang có lịch sử mượn n/trả sách.");
+                throw new Exception("Không thể xóa độc giả này.\nĐộc giả đang có lịch sử mượn/trả sách.");
             }
 
             return DocGiaDAO.Delete(maDocGia);
@@ -122,6 +53,60 @@ namespace BUS
             }
 
             return DocGiaDAO.UpdateTongNo(maDocGia, soTien);
+        }
+
+        private static void ValidateDates(DocGiaDTO docGia)
+        {
+            if (docGia == null)
+            {
+                throw new ArgumentNullException(nameof(docGia));
+            }
+
+            if (string.IsNullOrWhiteSpace(docGia.HoTen))
+            {
+                throw new Exception("Họ tên không được để trống.");
+            }
+
+            if (docGia.NgaySinh == DateTime.MinValue)
+            {
+                throw new Exception("Ngày sinh không hợp lệ.");
+            }
+
+            if (docGia.NgaySinh.Date > DateTime.Today)
+            {
+                throw new Exception("Ngày sinh không được ở tương lai.");
+            }
+
+            int tuoi = DateTime.Today.Year - docGia.NgaySinh.Year;
+            if (docGia.NgaySinh.Date > DateTime.Today.AddYears(-tuoi))
+            {
+                tuoi--;
+            }
+
+            if (tuoi < 18 || tuoi > 55)
+            {
+                throw new Exception("Tuổi tham gia phải từ 18 đến 55.");
+            }
+
+            if (docGia.NgayLapThe == DateTime.MinValue)
+            {
+                throw new Exception("Ngày lập thẻ không hợp lệ.");
+            }
+
+            if (docGia.NgayLapThe.Date > DateTime.Today)
+            {
+                throw new Exception("Ngày lập thẻ không được ở tương lai.");
+            }
+
+            if (docGia.NgayHetHan == DateTime.MinValue)
+            {
+                throw new Exception("Ngày hết hạn không hợp lệ.");
+            }
+
+            if (docGia.NgayHetHan <= docGia.NgayLapThe)
+            {
+                throw new Exception("Ngày hết hạn phải sau ngày lập thẻ.");
+            }
         }
     }
 }
