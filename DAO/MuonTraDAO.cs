@@ -208,6 +208,35 @@ namespace DAO
             };
         }
 
+        public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
+        {
+            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
+                                    COUNT(cp.IDCuonSach) as TongSach,
+                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
+                                    MAX(cp.NgayTraThucTe) as NgayTraThucTe
+                             FROM PHIEUMUON pm
+                             INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
+                             LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
+                             WHERE pm.MaPhieuMuon = @MaPhieu
+                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@MaPhieu", maPhieuMuon));
+            if (data.Rows.Count == 0) return null;
+            DataRow row = data.Rows[0];
+            return new PhieuMuonDTO
+            {
+                ID = Convert.ToInt32(row["ID"]),
+                MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
+                MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
+                HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
+                NgayMuon = row["NgayMuon"] != DBNull.Value ? Convert.ToDateTime(row["NgayMuon"]) : DateTime.MinValue,
+                NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
+                NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : null,
+                TongSach = row["TongSach"] != DBNull.Value ? Convert.ToInt32(row["TongSach"]) : 0,
+                SoSachChuaTra = row["SachChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SachChuaTra"]) : 0,
+            };
+        }
+
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
             BindingList<ChiTietPhieuMuonDTO> list = new BindingList<ChiTietPhieuMuonDTO>();
@@ -241,6 +270,59 @@ namespace DAO
                 new MySqlParameter("@HanTraMoi", hanTraMoi),
                 new MySqlParameter("@ID", idPhieuMuon));
             return count > 0;
+        }
+
+        public static bool XoaPhieuMuon(int idPhieuMuon)
+        {
+            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            {
+                string queryCheck = @"SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
+                using (var cmdCheck = new MySqlCommand(queryCheck, connection, transaction))
+                {
+                    cmdCheck.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    object? result = cmdCheck.ExecuteScalar();
+                    if (result != null && result != DBNull.Value && Convert.ToInt32(result) > 0)
+                    {
+                        throw new Exception("Phiếu đã có lịch sử trả, không thể xóa.");
+                    }
+                }
+
+                string queryCuon = "SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
+                List<int> cuonSach = new();
+                using (var cmdCuon = new MySqlCommand(queryCuon, connection, transaction))
+                {
+                    cmdCuon.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    using var reader = cmdCuon.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        cuonSach.Add(reader.GetInt32("IDCuonSach"));
+                    }
+                }
+
+                string deleteCT = "DELETE FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
+                using (var cmdDeleteCT = new MySqlCommand(deleteCT, connection, transaction))
+                {
+                    cmdDeleteCT.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    cmdDeleteCT.ExecuteNonQuery();
+                }
+
+                foreach (int idCuon in cuonSach)
+                {
+                    string updateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
+                    using var cmdUpdate = new MySqlCommand(updateCuon, connection, transaction);
+                    cmdUpdate.Parameters.AddWithValue("@ID", idCuon);
+                    cmdUpdate.ExecuteNonQuery();
+                }
+
+                string deletePhieu = "DELETE FROM PHIEUMUON WHERE ID = @ID";
+                using (var cmdDeletePhieu = new MySqlCommand(deletePhieu, connection, transaction))
+                {
+                    cmdDeletePhieu.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    cmdDeletePhieu.ExecuteNonQuery();
+                }
+
+                return true;
+            });
         }
 
         public static bool TraPhieuMuon(int idPhieuMuon, DateTime ngayTra, int donGiaPhatMoiNgay, out int tongTienPhat)
@@ -299,6 +381,66 @@ namespace DAO
 
             tongTienPhat = tongTienPhatLocal;
             return success;
+        }
+
+        public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
+        {
+            BindingList<PhieuTraDTO> list = new();
+            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen,
+                                    MAX(cp.NgayTraThucTe) AS NgayTra,
+                                    SUM(CASE WHEN cp.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS TongSachTra,
+                                    SUM(cp.TienPhat) AS TongTienPhat
+                             FROM PHIEUMUON pm
+                             INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
+                             INNER JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
+                             WHERE cp.NgayTraThucTe IS NOT NULL
+                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen
+                             ORDER BY NgayTra DESC";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query);
+            foreach (DataRow row in data.Rows)
+            {
+                list.Add(new PhieuTraDTO
+                {
+                    IDPhieuMuon = Convert.ToInt32(row["ID"]),
+                    MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
+                    MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
+                    HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
+                    NgayTra = row["NgayTra"] != DBNull.Value ? Convert.ToDateTime(row["NgayTra"]) : DateTime.MinValue,
+                    TongSachTra = row["TongSachTra"] != DBNull.Value ? Convert.ToInt32(row["TongSachTra"]) : 0,
+                    TongTienPhat = row["TongTienPhat"] != DBNull.Value ? Convert.ToInt32(row["TongTienPhat"]) : 0
+                });
+            }
+            return list;
+        }
+
+        public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
+        {
+            BindingList<ChiTietPhieuTraDTO> list = new();
+            string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, cp.NgayTraDuKien, cp.NgayTraThucTe,
+                                    IFNULL(cp.SoNgayTre, 0) AS SoNgayTre, IFNULL(cp.TienPhat, 0) AS TienPhat
+                             FROM CT_PHIEUMUON cp
+                             INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
+                             INNER JOIN SACH s ON cs.IDSach = s.ID
+                             INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                             WHERE cp.IDPhieuMuon = @ID AND cp.NgayTraThucTe IS NOT NULL";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@ID", idPhieuMuon));
+            foreach (DataRow row in data.Rows)
+            {
+                list.Add(new ChiTietPhieuTraDTO
+                {
+                    IDCuonSach = row["IDCuonSach"] != DBNull.Value ? Convert.ToInt32(row["IDCuonSach"]) : 0,
+                    MaCuonSach = row["MaCuonSach"]?.ToString() ?? string.Empty,
+                    TenSach = row["TenTuaSach"]?.ToString() ?? string.Empty,
+                    NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
+                    NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : DateTime.MinValue,
+                    SoNgayTre = row["SoNgayTre"] != DBNull.Value ? Convert.ToInt32(row["SoNgayTre"]) : 0,
+                    TienPhat = row["TienPhat"] != DBNull.Value ? Convert.ToInt32(row["TienPhat"]) : 0,
+                });
+            }
+
+            return list;
         }
     }
 }
