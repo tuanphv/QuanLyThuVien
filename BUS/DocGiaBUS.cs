@@ -57,11 +57,6 @@ namespace BUS
 
         private static void ValidateDates(DocGiaDTO docGia)
         {
-            if (docGia == null)
-            {
-                throw new ArgumentNullException(nameof(docGia));
-            }
-
             if (string.IsNullOrWhiteSpace(docGia.HoTen))
             {
                 throw new Exception("Họ tên không được để trống.");
@@ -72,13 +67,8 @@ namespace BUS
                 throw new Exception("Ngày sinh không hợp lệ.");
             }
 
-            if (docGia.NgaySinh.Date > DateTime.Today)
-            {
-                throw new Exception("Ngày sinh không được ở tương lai.");
-            }
-
-            int tuoi = DateTime.Today.Year - docGia.NgaySinh.Year;
-            if (docGia.NgaySinh.Date > DateTime.Today.AddYears(-tuoi))
+            int tuoi = DateTime.Now.Year - docGia.NgaySinh.Year;
+            if (docGia.NgaySinh.Date > DateTime.Now.Date.AddYears(-tuoi))
             {
                 tuoi--;
             }
@@ -93,17 +83,12 @@ namespace BUS
                 throw new Exception("Ngày lập thẻ không hợp lệ.");
             }
 
-            if (docGia.NgayLapThe.Date > DateTime.Today)
-            {
-                throw new Exception("Ngày lập thẻ không được ở tương lai.");
-            }
-
             if (docGia.NgayHetHan == DateTime.MinValue)
             {
-                throw new Exception("Ngày hết hạn không hợp lệ.");
+                throw new Exception("Tuổi tham gia phải từ 18 đến 55.");
             }
 
-            if (docGia.NgayHetHan <= docGia.NgayLapThe)
+            if (docGia.NgayLapThe == DateTime.MinValue)
             {
                 throw new Exception("Ngày hết hạn phải sau ngày lập thẻ.");
             }
