@@ -20,7 +20,7 @@ namespace BUS
                 throw new Exception("Họ tên không được để trống.");
             }
 
-            if (docGia.NgaySinh == null || docGia.NgaySinh == DateTime.MinValue)
+            if (docGia.NgaySinh == DateTime.MinValue)
             {
                 throw new Exception("Ngày sinh không hợp lệ.");
             }
@@ -35,12 +35,12 @@ namespace BUS
                 throw new Exception("Tuổi tham gia phải từ 18 đến 55");
             }
 
-            if (docGia.NgayLapThe == null || docGia.NgayLapThe == DateTime.MinValue)
+            if (docGia.NgayLapThe == DateTime.MinValue)
             {
                 throw new Exception("Ngày lập thể không hợp lệ.");
             }
 
-            if (docGia.NgayHetHan == null || docGia.NgayHetHan == DateTime.MinValue)
+            if (docGia.NgayHetHan == DateTime.MinValue)
             {
                 throw new Exception("Ngày hết hạn không hợp lệ.");
             }
@@ -61,7 +61,7 @@ namespace BUS
                 throw new Exception("Họ tên không được để trống.");
             }
 
-            if (docGia.NgaySinh == null || docGia.NgaySinh == DateTime.MinValue)
+            if (docGia.NgaySinh == DateTime.MinValue)
             {
                 throw new Exception("Ngày sinh không hợp lệ.");
             }
@@ -75,12 +75,12 @@ namespace BUS
                 throw new Exception("tuổi them gia phải từ 18 đến 55.");
             }
 
-            if (docGia.NgayLapThe == null || docGia.NgayLapThe == DateTime.MinValue)
+            if (docGia.NgayLapThe == DateTime.MinValue)
             {
                 throw new Exception("Ngày lập thể không hợp lệ.");
             }
 
-            if (docGia.NgayHetHan == null || docGia.NgayHetHan == DateTime.MinValue)
+            if (docGia.NgayHetHan == DateTime.MinValue)
             {
                 throw new Exception("Ngày hết hạn không hợp lệ.");
             }
