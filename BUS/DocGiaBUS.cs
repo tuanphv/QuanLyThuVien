@@ -85,10 +85,10 @@ namespace BUS
 
             if (docGia.NgayHetHan == DateTime.MinValue)
             {
-                throw new Exception("Ngày hết hạn không hợp lệ.");
+                throw new Exception("Tuổi tham gia phải từ 18 đến 55.");
             }
 
-            if (docGia.NgayHetHan <= docGia.NgayLapThe)
+            if (docGia.NgayLapThe == DateTime.MinValue)
             {
                 throw new Exception("Ngày hết hạn phải sau ngày lập thẻ.");
             }
