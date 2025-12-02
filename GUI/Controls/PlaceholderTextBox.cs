@@ -26,7 +26,7 @@ namespace GUI.Controls
 
         [Category("Appearance")]
         [Description("Văn bản gợi ý (placeholder) hiển thị khi TextBox trống.")]
-        public string PlaceholderText
+        public new string PlaceholderText
         {
             get => _placeholderText;
             set
