@@ -258,16 +258,6 @@ namespace DAO
                     ngayTraDuKien = Convert.ToDateTime(resultNgay);
                 }
 
-                string queryDocGia = "SELECT IDDocGia FROM PHIEUMUON WHERE ID = @ID";
-                int idDocGia;
-                using (var cmdDocGia = new MySqlCommand(queryDocGia, connection, transaction))
-                {
-                    cmdDocGia.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    object? resultDG = cmdDocGia.ExecuteScalar();
-                    if (resultDG == null || resultDG == DBNull.Value) return false;
-                    idDocGia = Convert.ToInt32(resultDG);
-                }
-
                 string querySelectCT = @"SELECT IDCuonSach FROM CT_PHIEUMUON
                                            WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
                 using var cmdSelectCT = new MySqlCommand(querySelectCT, connection, transaction);
@@ -281,7 +271,8 @@ namespace DAO
                 reader.Close();
 
                 int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Date).Days);
-                tongTienPhat = soNgayTre * donGiaPhatMoiNgay * cuonChuaTra.Count;
+                int tienPhatMoiCuon = soNgayTre * donGiaPhatMoiNgay;
+                tongTienPhat = tienPhatMoiCuon * cuonChuaTra.Count;
 
                 string queryUpdateCT = @"UPDATE CT_PHIEUMUON
                                           SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
@@ -290,7 +281,7 @@ namespace DAO
                 {
                     cmdUpdateCT.Parameters.AddWithValue("@NgayTra", ngayTra);
                     cmdUpdateCT.Parameters.AddWithValue("@SoNgayTre", soNgayTre);
-                    cmdUpdateCT.Parameters.AddWithValue("@TienPhat", tongTienPhat);
+                    cmdUpdateCT.Parameters.AddWithValue("@TienPhat", tienPhatMoiCuon);
                     cmdUpdateCT.Parameters.AddWithValue("@ID", idPhieuMuon);
                     cmdUpdateCT.ExecuteNonQuery();
                 }
@@ -301,15 +292,6 @@ namespace DAO
                     using var cmdUpdateCuon = new MySqlCommand(queryUpdateCuon, connection, transaction);
                     cmdUpdateCuon.Parameters.AddWithValue("@ID", idCuon);
                     cmdUpdateCuon.ExecuteNonQuery();
-                }
-
-                if (tongTienPhat > 0)
-                {
-                    string queryUpdateNo = "UPDATE DOCGIA SET TongNoHienTai = TongNoHienTai + @Tien WHERE ID = @ID";
-                    using var cmdUpdateNo = new MySqlCommand(queryUpdateNo, connection, transaction);
-                    cmdUpdateNo.Parameters.AddWithValue("@Tien", tongTienPhat);
-                    cmdUpdateNo.Parameters.AddWithValue("@ID", idDocGia);
-                    cmdUpdateNo.ExecuteNonQuery();
                 }
 
                 return true;
