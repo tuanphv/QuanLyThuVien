@@ -408,16 +408,18 @@ INSERT INTO CHUCNANG (TenChucNang, TenManHinh)
 VALUES ('TQUAN', 'Tổng quan/Báo cáo nhanh'),	-- ID = 1
        ('TL', 'Thể loại'),                     	-- ID = 2
        ('TG', 'Tác giả'),                      	-- ID = 3
-       ('NCC', 'Nhà cung cấp'),                	-- ID = 4
-       ('TS', 'Tựa sách'),                     	-- ID = 5
-       ('SACH', 'Lô sách & Cuốn sách'),        	-- ID = 6
-       ('PN', 'Phiếu nhập sách'),        		-- ID = 7
-       ('PM', 'Phiếu mượn/Trả sách'),          	-- ID = 8
-       ('PT', 'Phiếu thu'),                    	-- ID = 9
-       ('BCQH', 'Báo cáo quá hạn/phạt'),       	-- ID = 10
-       ('ND', 'Người dùng (Tài khoản)'),      	-- ID = 11
-       ('DG', 'Độc giả'),        				-- ID = 12
-       ('PQ', 'Phân quyền');                   	-- ID = 13
+	   ('NXB', 'Nhà xuất bản'),					-- ID = 4
+       ('NCC', 'Nhà cung cấp'),                	-- ID = 5
+       ('TS', 'Tựa sách'),                     	-- ID = 6
+       ('SACH', 'Lô sách & Cuốn sách'),        	-- ID = 7
+       ('PN', 'Phiếu nhập sách'),        		-- ID = 8
+       ('PMS', 'Phiếu mượn sách'),          	-- ID = 9
+       ('PTS', 'Phiếu trả sách'),				-- ID = 10
+       ('PT', 'Phiếu thu'),                    	-- ID = 11
+       ('BCQH', 'Báo cáo quá hạn/phạt'),       	-- ID = 12
+       ('ND', 'Người dùng (Tài khoản)'),      	-- ID = 13
+       ('DG', 'Độc giả'),        				-- ID = 14
+       ('PQ', 'Phân quyền');                   	-- ID = 15
 
 -- 3. PHÂN QUYỀN (PHANQUYEN)
 -- Gán quyền cho Admin (ID=1) - Toàn quyền trên mọi module (1-13)
@@ -432,26 +434,26 @@ SELECT IDNhom, IDChucNang, HanhDong FROM (
 -- Gán quyền cho Thủ thư (ID=2)
 INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong)
 VALUES
--- Module Độc giả, Danh mục (2, 3, 4, 5, 6, 12): Thêm, Sửa, Xem
+-- Module Độc giả, Danh mục (2, 3, 4, 5, 6, 7, 13): Thêm, Sửa, Xem
 (2, 2, 'THEM'), (2, 2, 'SUA'), (2, 2, 'XEM'), -- Thể loại
 (2, 3, 'THEM'), (2, 3, 'SUA'), (2, 3, 'XEM'), -- Tác giả
-(2, 4, 'THEM'), (2, 4, 'SUA'), (2, 4, 'XEM'), -- NCC
-(2, 5, 'THEM'), (2, 5, 'SUA'), (2, 5, 'XEM'), -- Tựa sách
-(2, 6, 'THEM'), (2, 6, 'SUA'), (2, 6, 'XEM'), -- Lô sách/CS
-(2, 12, 'THEM'), (2, 12, 'SUA'), (2, 12, 'XEM'), -- Hồ sơ Độc giả
+(2, 4, 'THEM'), (2, 4, 'SUA'), (2, 4, 'XEM'), -- NXB
+(2, 5, 'THEM'), (2, 5, 'SUA'), (2, 5, 'XEM'), -- NCC
+(2, 6, 'THEM'), (2, 6, 'SUA'), (2, 6, 'XEM'), -- Tựa sách
+(2, 7, 'THEM'), (2, 7, 'SUA'), (2, 7, 'XEM'), -- Lô sách/CS
+(2, 9, 'THEM'), (2, 9, 'SUA'), (2, 9, 'XEM'), -- Phiếu mượn sách
+(2, 10, 'THEM'), (2, 10, 'SUA'), (2, 10, 'XEM'), -- Phiếu trả sách
+(2, 13, 'THEM'), (2, 13, 'SUA'), (2, 13, 'XEM'), -- Hồ sơ Độc giả
 
--- Module Phiếu Nhập (7): Nhập sách (THEM)
-(2, 7, 'THEM'), (2, 7, 'XEM'),
+-- Module Phiếu Nhập (8): Nhập sách (THEM)
+(2, 8, 'THEM'), (2, 8, 'XEM'),
 
--- Module Phiếu Mượn/Trả (8): Mượn (THEM), Trả (SUA)
-(2, 8, 'THEM'), (2, 8, 'SUA'), (2, 8, 'XEM'),
+-- Module Phiếu Thu (11): Lập phiếu thu (THEM)
+(2, 11, 'THEM'), (2, 11, 'XEM'),
 
--- Module Phiếu Thu (9): Lập phiếu thu (THEM)
-(2, 9, 'THEM'), (2, 9, 'XEM'),
-
--- Module Báo cáo (1, 10): Xem
+-- Module Báo cáo (1, 12): Xem
 (2, 1, 'XEM'),
-(2, 10, 'XEM');
+(2, 12, 'XEM');
 
 
 -- Gán quyền cho Độc giả (ID=3)
@@ -460,14 +462,16 @@ INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) VALUES
 (3, 1, 'XEM'), -- Tổng quan/Báo cáo nhanh
 (3, 2, 'XEM'), -- Thể loại
 (3, 3, 'XEM'), -- Tác giả
-(3, 4, 'XEM'), -- Nhà cung cấp (Tùy chọn)
-(3, 5, 'XEM'), -- Tựa sách (Rất quan trọng)
-(3, 6, 'XEM'), -- Lô sách & Cuốn sách
-(3, 8, 'XEM'), -- Phiếu mượn/Trả sách (Xem lịch sử)
-(3, 10, 'XEM'), -- Báo cáo quá hạn/phạt
+(3, 4, 'XEM'), -- Nhà xuất bản
+(3, 5, 'XEM'), -- Nhà cung cấp (Tùy chọn)
+(3, 6, 'XEM'), -- Tựa sách (Rất quan trọng)
+(3, 7, 'XEM'), -- Lô sách & Cuốn sách
+(3, 9, 'XEM'), -- Phiếu mượn sách (Xem lịch sử)
+(3, 10, 'XEM'), -- Phiếu trả sách (Xem lịch sử)
+(3, 12, 'XEM'), -- Báo cáo quá hạn/phạt
 
 -- Quyền THÊM (ADD) cho Phiếu mượn (đặt mượn sách)
-(3, 8, 'THEM');
+(3, 9, 'THEM');
 
 -- 4. NGƯỜI DÙNG (NGUOIDUNG) & ĐỘC GIẢ (DOCGIA)
 -- Tài khoản hệ thống

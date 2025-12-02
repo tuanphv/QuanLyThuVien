@@ -52,17 +52,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(257, 46);
+            label1.Size = new Size(207, 37);
             label1.TabIndex = 0;
             label1.Text = "Quản lý tác giả";
             // 
@@ -77,10 +78,10 @@
             roundPanel1.Controls.Add(dgvTacGia);
             roundPanel1.Controls.Add(btnAdd);
             roundPanel1.Controls.Add(panel2);
-            roundPanel1.Location = new Point(23, 120);
-            roundPanel1.Margin = new Padding(23, 27, 23, 27);
+            roundPanel1.Location = new Point(20, 90);
+            roundPanel1.Margin = new Padding(20, 20, 20, 20);
             roundPanel1.Name = "roundPanel1";
-            roundPanel1.Size = new Size(1821, 859);
+            roundPanel1.Size = new Size(1593, 644);
             roundPanel1.TabIndex = 2;
             // 
             // dgvTacGia
@@ -116,8 +117,8 @@
             dgvTacGia.DefaultCellStyle = dataGridViewCellStyle2;
             dgvTacGia.EnableHeadersVisualStyles = false;
             dgvTacGia.GridColor = SystemColors.ControlLight;
-            dgvTacGia.Location = new Point(23, 92);
-            dgvTacGia.Margin = new Padding(23, 27, 23, 27);
+            dgvTacGia.Location = new Point(20, 69);
+            dgvTacGia.Margin = new Padding(20, 20, 20, 20);
             dgvTacGia.Name = "dgvTacGia";
             dgvTacGia.ReadOnly = true;
             dgvTacGia.RowHeadersVisible = false;
@@ -131,7 +132,7 @@
             dgvTacGia.ShowEditingIcon = false;
             dgvTacGia.ShowRowErrors = false;
             dgvTacGia.ShowViewButton = true;
-            dgvTacGia.Size = new Size(1775, 740);
+            dgvTacGia.Size = new Size(1553, 555);
             dgvTacGia.TabIndex = 17;
             // 
             // MaTacGia
@@ -160,13 +161,13 @@
             btnAdd.ForeColor = Color.White;
             btnAdd.Image = Properties.Resources.plus;
             btnAdd.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAdd.Location = new Point(931, 26);
-            btnAdd.Margin = new Padding(23, 27, 23, 27);
+            btnAdd.Location = new Point(1491, 26);
+            btnAdd.Margin = new Padding(20, 20, 20, 20);
             btnAdd.Name = "btnAdd";
-            btnAdd.Padding = new Padding(3, 4, 3, 4);
-            btnAdd.Size = new Size(87, 40);
+            btnAdd.Padding = new Padding(3, 3, 3, 3);
+            btnAdd.Size = new Size(82, 30);
             btnAdd.TabIndex = 16;
-            btnAdd.Text = "Thêm";
+            btnAdd.Text = "  Thêm";
             btnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnAdd.UseVisualStyleBackColor = false;
             btnAdd.Click += btnThemTacGia_Click;
@@ -177,10 +178,10 @@
             panel2.BorderStyle = BorderStyle.FixedSingle;
             panel2.Controls.Add(button2);
             panel2.Controls.Add(txtSearch);
-            panel2.Location = new Point(420, 27);
-            panel2.Margin = new Padding(23, 27, 23, 27);
+            panel2.Location = new Point(1044, 26);
+            panel2.Margin = new Padding(20, 20, 20, 20);
             panel2.Name = "panel2";
-            panel2.Size = new Size(465, 39);
+            panel2.Size = new Size(407, 30);
             panel2.TabIndex = 15;
             // 
             // button2
@@ -193,11 +194,11 @@
             button2.ForeColor = Color.White;
             button2.Image = Properties.Resources.search;
             button2.ImageAlign = ContentAlignment.MiddleLeft;
-            button2.Location = new Point(381, 0);
-            button2.Margin = new Padding(0, 27, 23, 0);
+            button2.Location = new Point(333, 0);
+            button2.Margin = new Padding(0, 20, 20, 0);
             button2.Name = "button2";
-            button2.Padding = new Padding(2, 3, 2, 3);
-            button2.Size = new Size(82, 37);
+            button2.Padding = new Padding(2, 2, 2, 2);
+            button2.Size = new Size(72, 28);
             button2.TabIndex = 1;
             button2.Text = "  Tìm";
             button2.TextAlign = ContentAlignment.MiddleLeft;
@@ -209,22 +210,23 @@
             txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtSearch.BorderStyle = BorderStyle.None;
             txtSearch.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtSearch.Location = new Point(6, 7);
-            txtSearch.Margin = new Padding(6, 7, 6, 7);
+            txtSearch.Location = new Point(5, 5);
+            txtSearch.Margin = new Padding(5, 5, 5, 5);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(369, 22);
+            txtSearch.Size = new Size(323, 18);
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtTimKiem_TextChanged;
             // 
             // UCTacGia
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundPanel1);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCTacGia";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCTacGia_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

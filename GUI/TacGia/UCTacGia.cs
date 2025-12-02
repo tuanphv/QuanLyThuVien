@@ -2,6 +2,7 @@
 using DTO;
 using System.ComponentModel;
 using System.Data;
+using GUI.Helpers;
 
 namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
 {
@@ -26,6 +27,27 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
             dgvTacGia.EditButtonClicked += EditButtonClicked;
             dgvTacGia.DeleteButtonClicked += DeleteButtonClicked;
             dgvTacGia.ViewButtonClicked += ViewButtonClicked;
+
+            LoadPermissions();
+        }
+
+        public void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.TacGia;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnAdd.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvTacGia.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvTacGia.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvTacGia.Columns.Contains("Actions"))
+                    dgvTacGia.Columns["Actions"].Visible = false;
+            }
         }
 
         private void DgvTacGia_ViewButtonClicked(object? sender, int e)
@@ -116,7 +138,7 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
             frm.ShowDialog();
         }
         private void txtTimKiem_TextChanged(object sender, EventArgs e)
-        {            
+        {
             if (list == null) return;
 
             // 1. Lấy từ khóa, chuyển về chữ thường và xóa khoảng trắng

@@ -52,17 +52,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(271, 46);
+            label1.Size = new Size(218, 37);
             label1.TabIndex = 0;
             label1.Text = "Quản lý thể loại";
             // 
@@ -77,10 +78,10 @@
             roundPanel1.Controls.Add(dgvTheLoai);
             roundPanel1.Controls.Add(btnThemTheLoai);
             roundPanel1.Controls.Add(panel3);
-            roundPanel1.Location = new Point(23, 120);
-            roundPanel1.Margin = new Padding(23, 27, 23, 27);
+            roundPanel1.Location = new Point(20, 90);
+            roundPanel1.Margin = new Padding(20, 20, 20, 20);
             roundPanel1.Name = "roundPanel1";
-            roundPanel1.Size = new Size(1821, 859);
+            roundPanel1.Size = new Size(1593, 644);
             roundPanel1.TabIndex = 1;
             // 
             // dgvTheLoai
@@ -116,8 +117,8 @@
             dgvTheLoai.DefaultCellStyle = dataGridViewCellStyle2;
             dgvTheLoai.EnableHeadersVisualStyles = false;
             dgvTheLoai.GridColor = SystemColors.ControlLight;
-            dgvTheLoai.Location = new Point(23, 92);
-            dgvTheLoai.Margin = new Padding(23, 27, 23, 27);
+            dgvTheLoai.Location = new Point(20, 69);
+            dgvTheLoai.Margin = new Padding(20, 20, 20, 20);
             dgvTheLoai.Name = "dgvTheLoai";
             dgvTheLoai.ReadOnly = true;
             dgvTheLoai.RowHeadersVisible = false;
@@ -131,7 +132,7 @@
             dgvTheLoai.ShowEditingIcon = false;
             dgvTheLoai.ShowRowErrors = false;
             dgvTheLoai.ShowViewButton = true;
-            dgvTheLoai.Size = new Size(1775, 740);
+            dgvTheLoai.Size = new Size(1553, 555);
             dgvTheLoai.TabIndex = 14;
             // 
             // MaTheLoai
@@ -160,13 +161,13 @@
             btnThemTheLoai.ForeColor = Color.White;
             btnThemTheLoai.Image = Properties.Resources.plus;
             btnThemTheLoai.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThemTheLoai.Location = new Point(935, 28);
-            btnThemTheLoai.Margin = new Padding(23, 27, 23, 27);
+            btnThemTheLoai.Location = new Point(1491, 20);
+            btnThemTheLoai.Margin = new Padding(20, 20, 20, 20);
             btnThemTheLoai.Name = "btnThemTheLoai";
-            btnThemTheLoai.Padding = new Padding(3, 4, 3, 4);
-            btnThemTheLoai.Size = new Size(87, 40);
+            btnThemTheLoai.Padding = new Padding(3, 3, 3, 3);
+            btnThemTheLoai.Size = new Size(82, 30);
             btnThemTheLoai.TabIndex = 14;
-            btnThemTheLoai.Text = "Thêm";
+            btnThemTheLoai.Text = "  Thêm";
             btnThemTheLoai.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThemTheLoai.UseVisualStyleBackColor = false;
             btnThemTheLoai.Click += btnThemTheLoai_Click;
@@ -177,10 +178,10 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(txtTimKiem);
-            panel3.Location = new Point(424, 29);
-            panel3.Margin = new Padding(23, 27, 23, 27);
+            panel3.Location = new Point(1044, 20);
+            panel3.Margin = new Padding(20, 20, 20, 20);
             panel3.Name = "panel3";
-            panel3.Size = new Size(465, 39);
+            panel3.Size = new Size(407, 30);
             panel3.TabIndex = 13;
             // 
             // btnSearch
@@ -193,11 +194,11 @@
             btnSearch.ForeColor = Color.White;
             btnSearch.Image = Properties.Resources.search;
             btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.Location = new Point(381, 0);
-            btnSearch.Margin = new Padding(0, 27, 23, 0);
+            btnSearch.Location = new Point(333, 0);
+            btnSearch.Margin = new Padding(0, 20, 20, 0);
             btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2, 3, 2, 3);
-            btnSearch.Size = new Size(82, 37);
+            btnSearch.Padding = new Padding(2, 2, 2, 2);
+            btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
             btnSearch.TextAlign = ContentAlignment.MiddleLeft;
@@ -210,22 +211,23 @@
             txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtTimKiem.BorderStyle = BorderStyle.None;
             txtTimKiem.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.Location = new Point(6, 7);
-            txtTimKiem.Margin = new Padding(6, 7, 6, 7);
+            txtTimKiem.Location = new Point(5, 5);
+            txtTimKiem.Margin = new Padding(5, 5, 5, 5);
             txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.Size = new Size(369, 22);
+            txtTimKiem.Size = new Size(323, 18);
             txtTimKiem.TabIndex = 0;
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
             // 
             // UCTheLoai
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundPanel1);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCTheLoai";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCTheLoai_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

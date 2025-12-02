@@ -1,7 +1,5 @@
 ﻿using DTO;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace GUI.TuaSach
 {
@@ -17,6 +15,22 @@ namespace GUI.TuaSach
         {
             InitializeComponent();
         }
+
+        private void LoadPermissions()
+        {
+            int perCode = (int) Helpers.Permission.TuaSach;
+            bool canAdd = GUI.Helpers.SessionManager.HasPermission(perCode, Helpers.Action.Add);
+            btnAddBookTitle.Visible = canAdd;
+            bool canEdit = GUI.Helpers.SessionManager.HasPermission(perCode, Helpers.Action.Edit);
+            dgvBookTitles.ShowEditButton = canEdit;
+            bool canDelete = GUI.Helpers.SessionManager.HasPermission(perCode, Helpers.Action.Delete);
+            dgvBookTitles.ShowDeleteButton = canDelete;
+            if (!canEdit && !canDelete)
+            {
+                dgvBookTitles.Columns["Actions"].Visible = false;
+            }
+        }
+
         private void UCBookTitle_Load(object sender, EventArgs e)
         {
             dgvBookTitles.AutoGenerateColumns = false;
@@ -24,6 +38,8 @@ namespace GUI.TuaSach
             allList = BUS.TuaSachBUS.GetAll();
             list = new BindingList<TuaSachDTO>(allList.ToList());
             dgvBookTitles.DataSource = list;
+
+            LoadPermissions();
 
             dgvBookTitles.EditButtonClicked += EditButtonClicked;
             dgvBookTitles.DeleteButtonClicked += DeleteButtonClicked;
@@ -58,7 +74,7 @@ namespace GUI.TuaSach
 
             isInitialized = true;
         }
-
+        
         private void PerformSearch()
         {
             string keyword = textBox1.Text.Trim();

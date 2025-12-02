@@ -5,9 +5,7 @@ using GUI.NhaXuatBan;
 using GUI.NhaCungCap;
 using GUI.NguoiDung;
 using GUI.DocGia;
-using GUI.BaoCao;
 using System.Data;
-using System.Windows.Forms;
 namespace GUI
 {
     public partial class FrmMain : Form
@@ -17,127 +15,10 @@ namespace GUI
         public FrmMain()
         {
             InitializeComponent();
-            menuItems = new SidebarMenuItem[]
-            {
-                new SidebarMenuItem(btnDashboard, new ThongKe.UCDashboard()),
-                new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle()),
-                new SidebarMenuItem(btnPermissions, new PhanQuyen.UCPermissions()),
-                new SidebarMenuItem(btnGenre, new UCTheLoai()),
-                new SidebarMenuItem(btnAuthor, new UCTacGia()),
-                new SidebarMenuItem(btnPublisher, new UCNhaXuatBan()),
-                new SidebarMenuItem(btnSupplier, new UCNhaCungCap()),
-                new SidebarMenuItem(btnUsers, new UCNguoiDung()),
-                new SidebarMenuItem(btnReaders, new UCDocGia()),
-                new SidebarMenuItem(button2, new UCBaoCao()), // Thêm nút Báo cáo
-            };
         }
 
         #region Expand/Collapse Menus
-        bool menuCatalogExpanded = true;
-        bool menuInventoryExpanded = true;
-        bool menuCirculationExpanded = true;
-        bool menuUserExpanded = true;
         bool sidebarExpanded = true;
-        int buttonHeight = 40;
-
-        private void menuCatalogTransition_Tick(object sender, EventArgs e)
-        {
-            int buttonCount = 5;
-            if (menuCatalogExpanded)
-            {
-                pnlMenuCatalog.Height -= 10;
-                if (pnlMenuCatalog.Height <= buttonHeight)
-                {
-                    pnlMenuCatalog.Height = buttonHeight;
-                    menuCatalogTransition.Stop();
-                    menuCatalogExpanded = false;
-                }
-            }
-            else
-            {
-                pnlMenuCatalog.Height += 10;
-                if (pnlMenuCatalog.Height >= buttonHeight * buttonCount)
-                {
-                    pnlMenuCatalog.Height = buttonHeight * buttonCount;
-                    menuCatalogTransition.Stop();
-                    menuCatalogExpanded = true;
-                }
-            }
-        }
-
-        private void menuInventoryTransition_Tick(object sender, EventArgs e)
-        {
-            int buttonCount = 4;
-            if (menuInventoryExpanded)
-            {
-                pnlMenuInventory.Height -= 10;
-                if (pnlMenuInventory.Height <= buttonHeight)
-                {
-                    pnlMenuInventory.Height = buttonHeight;
-                    menuInventoryTransition.Stop();
-                    menuInventoryExpanded = false;
-                }
-            }
-            else
-            {
-                pnlMenuInventory.Height += 10;
-                if (pnlMenuInventory.Height >= buttonHeight * buttonCount)
-                {
-                    pnlMenuInventory.Height = buttonHeight * buttonCount;
-                    menuInventoryTransition.Stop();
-                    menuInventoryExpanded = true;
-                }
-            }
-        }
-
-        private void menuCirculationTransition_Tick(object sender, EventArgs e)
-        {
-            int buttonCount = 5;
-            if (menuCirculationExpanded)
-            {
-                pnlMenuCirculation.Height -= 10;
-                if (pnlMenuCirculation.Height <= buttonHeight)
-                {
-                    pnlMenuCirculation.Height = buttonHeight;
-                    menuCirculationTransition.Stop();
-                    menuCirculationExpanded = false;
-                }
-            }
-            else
-            {
-                pnlMenuCirculation.Height += 10;
-                if (pnlMenuCirculation.Height >= buttonHeight * buttonCount)
-                {
-                    pnlMenuCirculation.Height = buttonHeight * buttonCount;
-                    menuCirculationTransition.Stop();
-                    menuCirculationExpanded = true;
-                }
-            }
-        }
-        private void menuUserTransition_Tick(object sender, EventArgs e)
-        {
-            int buttonCount = 4;
-            if (menuUserExpanded)
-            {
-                pnlMenuUser.Height -= 10;
-                if (pnlMenuUser.Height <= buttonHeight)
-                {
-                    pnlMenuUser.Height = buttonHeight;
-                    menuUserTransition.Stop();
-                    menuUserExpanded = false;
-                }
-            }
-            else
-            {
-                pnlMenuUser.Height += 10;
-                if (pnlMenuUser.Height >= buttonHeight * buttonCount)
-                {
-                    pnlMenuUser.Height = buttonHeight * buttonCount;
-                    menuUserTransition.Stop();
-                    menuUserExpanded = true;
-                }
-            }
-        }
 
         private void sidebarTransition_Tick(object sender, EventArgs e)
         {
@@ -167,26 +48,6 @@ namespace GUI
         {
             sidebarTransition.Start();
         }
-
-        private void btnMenuCatalog_Click(object sender, EventArgs e)
-        {
-            menuCatalogTransition.Start();
-        }
-
-        private void btnMenuInventory_Click(object sender, EventArgs e)
-        {
-            menuInventoryTransition.Start();
-        }
-
-        private void btnMenuCirculation_Click(object sender, EventArgs e)
-        {
-            menuCirculationTransition.Start();
-        }
-
-        private void btnMenuUser_Click(object sender, EventArgs e)
-        {
-            menuUserTransition.Start();
-        }
         #endregion
 
         #region Action clicks for menu items
@@ -212,9 +73,10 @@ namespace GUI
         {
             foreach (Button btn in btns)
             {
-                btn.BackColor = (btn.Tag != null && btn.Tag.ToString() == "subItem") ? Color.FromArgb(50, 0, 0, 0) : Color.Transparent;
+                btn.BackColor = Color.Transparent;
             }
-            clickedButton.BackColor = Color.FromArgb(90, 255, 255, 255);
+
+            clickedButton.Font = new Font(clickedButton.Font, FontStyle.Bold);
 
             foreach (SidebarMenuItem item in menuItems)
             {
@@ -226,58 +88,93 @@ namespace GUI
             }
             SwitchUserControl(pnlMainContent, placeholderControl);
         }
+
+        private void SwitchUserControl(Panel containerPanel, UserControl userControlToLoad)
+        {
+            // Find the control that is currently visible in the container (if any)
+            Control? currentVisible = containerPanel.Controls
+                .Cast<Control>()
+                .FirstOrDefault(c => c.Visible);
+
+            // If the requested control is already visible, nothing to do
+            if (currentVisible != null && ReferenceEquals(currentVisible, userControlToLoad))
+                return;
+
+            // Hide the currently visible control (if any)
+            if (currentVisible != null)
+                currentVisible.Visible = false;
+
+            // If the control is already added to the container, just show it and bring to front
+            if (containerPanel.Controls.Contains(userControlToLoad))
+            {
+                userControlToLoad.Visible = true;
+                userControlToLoad.BringToFront();
+            }
+            else
+            {
+                // Add, dock, show and bring to front
+                userControlToLoad.Dock = DockStyle.Fill;
+                userControlToLoad.Visible = true;
+                containerPanel.Controls.Add(userControlToLoad);
+                userControlToLoad.BringToFront();
+            }
+        }
         #endregion
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            btnLogout.Text = $"  {SessionManager.CurrentUser?.TenNguoiDung}";
+
+            menuItems = new SidebarMenuItem[]
+            {
+                new SidebarMenuItem(btnDashboard, new ThongKe.UCDashboard(), 1),
+                new SidebarMenuItem(btnGenre, new UCTheLoai(), 2),
+                new SidebarMenuItem(btnAuthor, new UCTacGia(), 3),
+                new SidebarMenuItem(btnPublisher, new UCNhaXuatBan(), 4),
+                new SidebarMenuItem(btnSupplier, new UCNhaCungCap(), 5),
+                new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle(), 6),
+                new SidebarMenuItem(btnBookStock, new UCPlaceHolder(), 7),
+                new SidebarMenuItem(btnImportBooks, new UCPlaceHolder(), 8),
+                new SidebarMenuItem(btnBorrow, new UCPlaceHolder(), 9),
+                new SidebarMenuItem(btnReturn, new UCPlaceHolder(), 10),
+                new SidebarMenuItem(btnPayment, new UCPlaceHolder(), 11),
+                new SidebarMenuItem(btnReportDebt, new BaoCao.UCBaoCao(), 12),
+                new SidebarMenuItem(btnUsers, new UCNguoiDung(), 13),
+                new SidebarMenuItem(btnReaders, new UCDocGia(), 14),
+                new SidebarMenuItem(btnPermissions, new PhanQuyen.UCPermissions(), 15),
+            };
+
             List<Button> allButtons = FindAllButtonsRecursive(this);
+            allButtons.RemoveAll(b => b == btnLogout); // Exclude logout button
+
+            foreach (SidebarMenuItem item in menuItems)
+            {
+                if (allButtons.IndexOf(item.Button) >= 0 && !SessionManager.HasPermission(item.PermissionCode, Helpers.Action.View))
+                {
+                    allButtons.Remove(item.Button);
+                    item.Button.Visible = false;
+                }
+            }
 
             foreach (Button btn in allButtons)
             {
-                if (btn.Tag != null && btn.Tag.ToString() == "menu")
-                {
-                    continue; // Skip menu buttons
-                }
                 btn.Click += (sender, e) =>
                 {
                     SetActiveButton((Button)sender, allButtons);
                 };
             }
 
-            btnDashboard.PerformClick();
+            //btnDashboard.PerformClick();
         }
 
-        private void SwitchUserControl(Panel containerPanel, UserControl userControlToLoad)
+        private void btnLogout_Click(object sender, EventArgs e)
         {
-            // Nếu chưa có control nào trong containerPanel, thêm control mới vào và hiển thị nó
-            if (containerPanel.Controls.Count == 0)
-            {
-                userControlToLoad.Dock = DockStyle.Fill;
-                containerPanel.Controls.Add(userControlToLoad);
-                return;
-            }
+            var confirm = MessageBox.Show("Bạn có muốn đăng xuất?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
 
-            var currentControl = containerPanel.Controls[containerPanel.Controls.Count - 1];
-
-            // Nếu control hiện tại chính là control cần load → không làm gì
-            if (currentControl == userControlToLoad)
-                return;
-
-            // Ẩn control hiện tại
-            currentControl.Visible = false;
-
-            // Nếu UserControl đã tồn tại trong containerPanel, chỉ cần hiển thị nó
-            if (containerPanel.Controls.Contains(userControlToLoad))
-            {
-                userControlToLoad.Visible = true;
-                userControlToLoad.BringToFront();
-            }
-            else // Nếu chưa tồn tại, thêm nó vào containerPanel và hiển thị
-            {
-                userControlToLoad.Dock = DockStyle.Fill;
-                containerPanel.Controls.Add(userControlToLoad);
-                userControlToLoad.BringToFront();
-            }  
+            // Clear session and close main so Program.Main will show login again
+            SessionManager.Logout();
+            this.Close();
         }
     }
 }
