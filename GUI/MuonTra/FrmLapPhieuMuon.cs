@@ -31,6 +31,7 @@ namespace GUI.MuonTra
 
             var txtDocGia = new TextBox { Name = "txtDocGia", Left = 30, Top = 55, Width = 250, Font = new System.Drawing.Font("Segoe UI", 10F) };
             var txtMaCuon = new TextBox { Name = "txtMaCuon", Left = 30, Top = 130, Width = 250, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lstCuon = new ListBox { Name = "lstCuon", Left = 30, Top = 320, Width = 390, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) }; 
             var btnThemMa = new Button { Text = "Thêm mã", Left = 300, Top = 128, Width = 100, Height = 32, BackColor = System.Drawing.Color.DeepSkyBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnThemMa.Click += (s, e) =>
             {
@@ -55,8 +56,6 @@ namespace GUI.MuonTra
                     txtNhapNhanh.Clear();
                 }
             };
-
-            var lstCuon = new ListBox { Name = "lstCuon", Left = 30, Top = 320, Width = 390, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) };
             var btnXoa = new Button { Text = "Xóa mã chọn", Left = 430, Top = 320, Width = 150, Height = 32, BackColor = System.Drawing.Color.LightCoral, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnXoa.Click += (s, e) =>
             {

@@ -99,6 +99,11 @@ namespace BUS
             return capNhat ?? phieu;
         }
 
+        public static PhieuMuonDTO? LayPhieuMuonTheoID(int idPhieuMuon)
+        {
+            return MuonTraDAO.LayPhieuMuonTheoID(idPhieuMuon);
+        }
+        
         public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
         {
             if (string.IsNullOrWhiteSpace(maPhieuMuon)) return null;
