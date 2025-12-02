@@ -260,8 +260,8 @@ namespace GUI.MuonTra
             dgvPhieuMuon.ReadOnly = true;
             dgvPhieuMuon.RowHeadersVisible = false;
             dgvPhieuMuon.RowTemplate.Height = 50;
-            dgvPhieuMuon.ShowDeleteButton = false;
-            dgvPhieuMuon.ShowEditButton = false;
+            dgvPhieuMuon.ShowDeleteButton = true;
+            dgvPhieuMuon.ShowEditButton = true;
             dgvPhieuMuon.ShowViewButton = true;
             dgvPhieuMuon.Size = new Size(1753, 714);
             dgvPhieuMuon.TabIndex = 3;
