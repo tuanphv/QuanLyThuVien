@@ -245,8 +245,8 @@ namespace DAO
 
         public static bool TraPhieuMuon(int idPhieuMuon, DateTime ngayTra, int donGiaPhatMoiNgay, out int tongTienPhat)
         {
-            tongTienPhat = 0;
-            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            int tongTienPhatLocal = 0;
+            bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
                 string queryNgayTraDuKien = "SELECT NgayTraDuKien FROM PHIEUMUON WHERE ID = @ID";
                 DateTime ngayTraDuKien;
@@ -272,7 +272,7 @@ namespace DAO
 
                 int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Date).Days);
                 int tienPhatMoiCuon = soNgayTre * donGiaPhatMoiNgay;
-                tongTienPhat = tienPhatMoiCuon * cuonChuaTra.Count;
+                tongTienPhatLocal = tienPhatMoiCuon * cuonChuaTra.Count;
 
                 string queryUpdateCT = @"UPDATE CT_PHIEUMUON
                                           SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
@@ -296,6 +296,9 @@ namespace DAO
 
                 return true;
             });
+
+            tongTienPhat = tongTienPhatLocal;
+            return success;
         }
     }
 }
