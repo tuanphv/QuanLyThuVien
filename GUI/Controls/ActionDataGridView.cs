@@ -25,7 +25,7 @@ namespace GUI.Controls
         private int hoveredRow = -1;
         private string hoveredButton = "";
 
-        private bool eventsAttached = false; // ✅ tránh gắn lại event nhiều lần
+        private bool eventsAttached = false; // tránh gắn lại event nhiều lần
 
         public ActionDataGridView()
         {
@@ -189,7 +189,7 @@ namespace GUI.Controls
                 }
             }
 
-            // ✅ Chỉ vẽ lại nếu thay đổi thực sự
+            // Chỉ vẽ lại nếu thay đổi thực sự
             if (newHoveredRow != hoveredRow || newHoveredButton != hoveredButton)
             {
                 // Vẽ lại cell cũ và mới để tránh sót viền hover
