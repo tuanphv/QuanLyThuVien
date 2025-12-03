@@ -16,8 +16,6 @@ namespace GUI.MuonTra
         private RoundPanel roundPanelContainer;
         private ActionDataGridView dgvPhieuMuon;
         private Panel panelHeader;
-        private Button btnTra;
-        private Button btnGiaHan;
         private Button btnThem;
         private Panel panelSearch;
         private TextBox txtSearch;
@@ -80,7 +78,8 @@ namespace GUI.MuonTra
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(0, 84);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(1866, 112);
+            panelHeader.Padding = new Padding(24, 18, 24, 12);
+            panelHeader.Size = new Size(1866, 92);
             panelHeader.TabIndex = 2;
             //
             // txtSearch
@@ -112,13 +111,13 @@ namespace GUI.MuonTra
             // panelSearch
             //
             panelSearch = new Panel();
-            panelSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panelSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panelSearch.BorderStyle = BorderStyle.FixedSingle;
             panelSearch.Controls.Add(txtSearch);
             panelSearch.Controls.Add(btnSearch);
-            panelSearch.Location = new Point(900, 23);
+            panelSearch.Location = new Point(24, 20);
             panelSearch.Name = "panelSearch";
-            panelSearch.Size = new Size(300, 44);
+            panelSearch.Size = new Size(350, 44);
             panelSearch.TabIndex = 0;
             //
             // btnThem
@@ -130,47 +129,13 @@ namespace GUI.MuonTra
             btnThem.FlatStyle = FlatStyle.Flat;
             btnThem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnThem.ForeColor = Color.White;
-            btnThem.Location = new Point(1230, 22);
+            btnThem.Location = new Point(1706, 20);
             btnThem.Name = "btnThem";
-            btnThem.Size = new Size(140, 46);
+            btnThem.Size = new Size(136, 46);
             btnThem.TabIndex = 1;
             btnThem.Text = "Thêm";
             btnThem.UseVisualStyleBackColor = false;
             btnThem.Click += btnThem_Click;
-            //
-            // btnGiaHan
-            //
-            btnGiaHan = new Button();
-            btnGiaHan.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnGiaHan.BackColor = Color.DodgerBlue;
-            btnGiaHan.FlatAppearance.BorderSize = 0;
-            btnGiaHan.FlatStyle = FlatStyle.Flat;
-            btnGiaHan.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
-            btnGiaHan.ForeColor = Color.White;
-            btnGiaHan.Location = new Point(1380, 22);
-            btnGiaHan.Name = "btnGiaHan";
-            btnGiaHan.Size = new Size(140, 46);
-            btnGiaHan.TabIndex = 2;
-            btnGiaHan.Text = "Gia hạn";
-            btnGiaHan.UseVisualStyleBackColor = false;
-            btnGiaHan.Click += btnGiaHan_Click;
-            //
-            // btnTra
-            //
-            btnTra = new Button();
-            btnTra.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnTra.BackColor = Color.LightSeaGreen;
-            btnTra.FlatAppearance.BorderSize = 0;
-            btnTra.FlatStyle = FlatStyle.Flat;
-            btnTra.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
-            btnTra.ForeColor = Color.White;
-            btnTra.Location = new Point(1530, 22);
-            btnTra.Name = "btnTra";
-            btnTra.Size = new Size(140, 46);
-            btnTra.TabIndex = 3;
-            btnTra.Text = "Trả";
-            btnTra.UseVisualStyleBackColor = false;
-            btnTra.Click += btnTra_Click;
             //
             // colPhieu
             //
@@ -217,7 +182,7 @@ namespace GUI.MuonTra
             dgvPhieuMuon = new ActionDataGridView();
             dgvPhieuMuon.AllowUserToAddRows = false;
             dgvPhieuMuon.AllowUserToDeleteRows = false;
-            dgvPhieuMuon.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvPhieuMuon.Dock = DockStyle.Fill;
             dgvPhieuMuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPhieuMuon.BackgroundColor = Color.White;
             dgvPhieuMuon.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
@@ -248,11 +213,12 @@ namespace GUI.MuonTra
             // roundPanelContainer
             //
             roundPanelContainer = new RoundPanel();
-            roundPanelContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            roundPanelContainer.Dock = DockStyle.Fill;
             roundPanelContainer.BackgroundColor = Color.White;
             roundPanelContainer.BorderColor = Color.Gainsboro;
             roundPanelContainer.BorderRadius = 10;
             roundPanelContainer.BorderWidth = 1F;
+            roundPanelContainer.Padding = new Padding(24);
             roundPanelContainer.Controls.Add(dgvPhieuMuon);
             roundPanelContainer.Controls.Add(panelHeader);
             roundPanelContainer.Controls.Add(panelTitle);
@@ -263,8 +229,6 @@ namespace GUI.MuonTra
             //
             // panelHeader Controls
             //
-            panelHeader.Controls.Add(btnTra);
-            panelHeader.Controls.Add(btnGiaHan);
             panelHeader.Controls.Add(btnThem);
             panelHeader.Controls.Add(panelSearch);
             //
@@ -274,6 +238,7 @@ namespace GUI.MuonTra
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(roundPanelContainer);
             Name = "UCPhieuMuon";
+            Padding = new Padding(12);
             Size = new Size(1866, 975);
             ResumeLayout(false);
         }
