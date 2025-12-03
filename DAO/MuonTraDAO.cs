@@ -417,12 +417,13 @@ namespace DAO
         public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
         {
             BindingList<ChiTietPhieuTraDTO> list = new();
-            string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, cp.NgayTraDuKien, cp.NgayTraThucTe,
+            string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
                                     IFNULL(cp.SoNgayTre, 0) AS SoNgayTre, IFNULL(cp.TienPhat, 0) AS TienPhat
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
                              INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                             INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
                              WHERE cp.IDPhieuMuon = @ID AND cp.NgayTraThucTe IS NOT NULL";
 
             DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@ID", idPhieuMuon));
@@ -441,6 +442,46 @@ namespace DAO
             }
 
             return list;
+        }
+
+        public static bool XoaPhieuTra(int idPhieuMuon)
+        {
+            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            {
+                List<int> cuonDaTra = new();
+                string querySelect = @"SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
+                using (var cmdSelect = new MySqlCommand(querySelect, connection, transaction))
+                {
+                    cmdSelect.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    using var reader = cmdSelect.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        cuonDaTra.Add(reader.GetInt32("IDCuonSach"));
+                    }
+                }
+
+                if (cuonDaTra.Count == 0)
+                    throw new Exception("Phiếu mượn chưa có sách trả để xóa.");
+
+                string queryUpdateCT = @"UPDATE CT_PHIEUMUON
+                                          SET NgayTraThucTe = NULL, SoNgayTre = NULL, TienPhat = NULL
+                                          WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
+                using (var cmdUpdateCT = new MySqlCommand(queryUpdateCT, connection, transaction))
+                {
+                    cmdUpdateCT.Parameters.AddWithValue("@ID", idPhieuMuon);
+                    cmdUpdateCT.ExecuteNonQuery();
+                }
+
+                foreach (int idCuon in cuonDaTra)
+                {
+                    string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @ID";
+                    using var cmdUpdateCuon = new MySqlCommand(queryUpdateCuon, connection, transaction);
+                    cmdUpdateCuon.Parameters.AddWithValue("@ID", idCuon);
+                    cmdUpdateCuon.ExecuteNonQuery();
+                }
+
+                return true;
+            });
         }
     }
 }
