@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using GUI.Helpers;
 
 namespace GUI.MuonTra
 {
@@ -11,6 +12,8 @@ namespace GUI.MuonTra
     {
         private BindingList<PhieuMuonDTO> list = new();
         private bool _isInitialized;
+        private bool _isReader;
+        private string? _maDocGiaDangNhap;
 
         public UCPhieuMuon()
         {
@@ -21,6 +24,7 @@ namespace GUI.MuonTra
 
         private void UCPhieuMuon_Load(object sender, EventArgs e)
         {
+            KhoiTaoCheDoNguoiDung();
             dgvPhieuMuon.AutoGenerateColumns = false;
             dgvPhieuMuon.RowTemplate.Height = 40;
 
@@ -31,9 +35,9 @@ namespace GUI.MuonTra
             colTinhTrang.DataPropertyName = nameof(PhieuMuonDTO.TinhTrang);
 
             dgvPhieuMuon.ShowEditButton = false;
-            dgvPhieuMuon.ShowDeleteButton = true;
-            dgvPhieuMuon.ShowExtendButton = false;
-            dgvPhieuMuon.ShowReturnButton = true;
+            dgvPhieuMuon.ShowDeleteButton = !_isReader;
+            dgvPhieuMuon.ShowExtendButton = !_isReader;
+            dgvPhieuMuon.ShowReturnButton = !_isReader;
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
             dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
@@ -70,6 +74,12 @@ namespace GUI.MuonTra
         private void LoadData()
         {
             list = MuonTraBUS.LayTatCaPhieuMuon();
+            if (_isReader)
+            {
+                list = string.IsNullOrEmpty(_maDocGiaDangNhap)
+                    ? new BindingList<PhieuMuonDTO>()
+                    : new BindingList<PhieuMuonDTO>(list.Where(pm => pm.MaDocGia == _maDocGiaDangNhap).ToList());
+            }
             ApplyFilters();
         }
 
@@ -109,6 +119,11 @@ namespace GUI.MuonTra
                 filtered = filtered.Where(pm => pm.SoSachChuaTra <= 0);
                 coLoc = true;
             }
+            else if (trangThai == "Quá hạn")
+            {
+                filtered = filtered.Where(pm => pm.SoSachChuaTra > 0 && DateTime.Today.Date > pm.NgayTraDuKien.Date);
+                coLoc = true;
+            }
 
             if (!coLoc)
             {
@@ -129,6 +144,18 @@ namespace GUI.MuonTra
                 list.Add(frm.PhieuMoi);
                 MessageBox.Show($"Lập phiếu thành công. Mã: {frm.PhieuMoi.MaPhieuMuon}");
             }
+        }
+
+        private void KhoiTaoCheDoNguoiDung()
+        {
+            _isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (_isReader && SessionManager.GetUserId() is int userId)
+            {
+                var docGia = DocGiaBUS.GetByUserId(userId);
+                _maDocGiaDangNhap = docGia?.MaDocGia;
+            }
+
+            btnThem.Visible = !_isReader;
         }
 
         private void GiaHanPhieuMuonDuocChon()

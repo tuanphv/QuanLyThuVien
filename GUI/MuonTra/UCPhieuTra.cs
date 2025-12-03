@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using GUI.Helpers;
 
 namespace GUI.MuonTra
 {
@@ -11,6 +12,8 @@ namespace GUI.MuonTra
     {
         private BindingList<PhieuTraDTO> _list = new();
         private bool _isInitialized;
+        private bool _isReader;
+        private string? _maDocGiaDangNhap;
 
         public UCPhieuTra()
         {
@@ -21,11 +24,15 @@ namespace GUI.MuonTra
 
         private void UCPhieuTra_Load(object? sender, EventArgs e)
         {
+            KhoiTaoCheDoNguoiDung();
             dgvPhieuTra.AutoGenerateColumns = false;
             dgvPhieuTra.RowTemplate.Height = 42;
             dgvPhieuTra.EditButtonClicked += DgvPhieuTra_EditButtonClicked;
             dgvPhieuTra.DeleteButtonClicked += DgvPhieuTra_DeleteButtonClicked;
             dgvPhieuTra.ViewButtonClicked += DgvPhieuTra_ViewButtonClicked;
+
+            dgvPhieuTra.ShowEditButton = !_isReader;
+            dgvPhieuTra.ShowDeleteButton = !_isReader;
 
             colMaPhieu.DataPropertyName = nameof(PhieuTraDTO.MaPhieuMuon);
             colDocGia.DataPropertyName = nameof(PhieuTraDTO.HoTenDocGia);
@@ -35,6 +42,8 @@ namespace GUI.MuonTra
 
             if (dgvPhieuTra.Columns[nameof(colNgayTra)] != null)
                 dgvPhieuTra.Columns[nameof(colNgayTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
+
+            btnLapPhieuTra.Visible = !_isReader;
 
             LoadData();
             _isInitialized = true;
@@ -51,6 +60,12 @@ namespace GUI.MuonTra
         private void LoadData()
         {
             _list = MuonTraBUS.LayTatCaPhieuTra();
+            if (_isReader)
+            {
+                _list = string.IsNullOrEmpty(_maDocGiaDangNhap)
+                    ? new BindingList<PhieuTraDTO>()
+                    : new BindingList<PhieuTraDTO>(_list.Where(p => p.MaDocGia == _maDocGiaDangNhap).ToList());
+            }
             dgvPhieuTra.DataSource = _list;
             Filter(txtSearch.Text);
         }
@@ -128,6 +143,16 @@ namespace GUI.MuonTra
         private void DgvPhieuTra_EditButtonClicked(object? sender, int e)
         {
             MessageBox.Show("Phiếu trả không hỗ trợ chỉnh sửa.");
+        }
+
+        private void KhoiTaoCheDoNguoiDung()
+        {
+            _isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (_isReader && SessionManager.GetUserId() is int userId)
+            {
+                var docGia = DocGiaBUS.GetByUserId(userId);
+                _maDocGiaDangNhap = docGia?.MaDocGia;
+            }
         }
     }
 }

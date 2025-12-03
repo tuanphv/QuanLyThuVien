@@ -166,7 +166,7 @@ namespace GUI.MuonTra
             cbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
             cbStatusFilter.Font = new Font("Segoe UI", 10.2F);
             cbStatusFilter.FormattingEnabled = true;
-            cbStatusFilter.Items.AddRange(new object[] { "Tất cả", "Đang mượn", "Đã trả" });
+            cbStatusFilter.Items.AddRange(new object[] { "Tất cả", "Đang mượn", "Quá hạn", "Đã trả" });
             cbStatusFilter.Location = new Point(550, 31);
             cbStatusFilter.Margin = new Padding(4);
             cbStatusFilter.Name = "cbStatusFilter";
