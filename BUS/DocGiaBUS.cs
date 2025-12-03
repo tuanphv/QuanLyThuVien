@@ -55,6 +55,11 @@ namespace BUS
             return DocGiaDAO.UpdateTongNo(maDocGia, soTien);
         }
 
+        public static DocGiaDTO? GetByUserId(int userId)
+        {
+            return DocGiaDAO.GetByUserId(userId);
+        }
+
         private static void ValidateDates(DocGiaDTO docGia)
         {
             if (string.IsNullOrWhiteSpace(docGia.HoTen))
