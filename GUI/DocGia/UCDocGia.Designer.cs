@@ -28,6 +28,7 @@
             NgayHetHan = new DataGridViewTextBoxColumn();
             TongNoHienTai = new DataGridViewTextBoxColumn();
             TenDangNhap = new DataGridViewTextBoxColumn();
+            btnExport = new Button();
             btnThemDocGia = new Button();
             panel3 = new Panel();
             btnSearch = new Button();
@@ -67,6 +68,7 @@
             roundPanel1.BorderRadius = 10;
             roundPanel1.BorderWidth = 0F;
             roundPanel1.Controls.Add(dgvDocGia);
+            roundPanel1.Controls.Add(btnExport);
             roundPanel1.Controls.Add(btnThemDocGia);
             roundPanel1.Controls.Add(panel3);
             roundPanel1.Location = new Point(23, 120);
@@ -172,6 +174,23 @@
             TenDangNhap.Name = "TenDangNhap";
             TenDangNhap.ReadOnly = true;
             // 
+            // btnExport
+            // 
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.SeaGreen;
+            btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnExport.ForeColor = Color.White;
+            btnExport.ImageAlign = ContentAlignment.MiddleLeft;
+            btnExport.Location = new Point(1535, 28);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(118, 40);
+            btnExport.TabIndex = 15;
+            btnExport.Text = "Xuất Excel";
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            // 
             // btnThemDocGia
             // 
             btnThemDocGia.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -197,7 +216,7 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(txtTimKiem);
-            panel3.Location = new Point(1169, 29);
+            panel3.Location = new Point(1024, 29);
             panel3.Name = "panel3";
             panel3.Size = new Size(465, 39);
             panel3.TabIndex = 13;
@@ -260,6 +279,7 @@
         private TextBox txtTimKiem;
         private GUI.Controls.ActionDataGridView dgvDocGia;
         private Button btnThemDocGia;
+        private Button btnExport;
         private DataGridViewTextBoxColumn MaDocGia;
         private DataGridViewTextBoxColumn HoTen;
         private DataGridViewTextBoxColumn NgaySinh;
