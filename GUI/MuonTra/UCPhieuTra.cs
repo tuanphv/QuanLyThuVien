@@ -10,11 +10,13 @@ namespace GUI.MuonTra
     public partial class UCPhieuTra : UserControl
     {
         private BindingList<PhieuTraDTO> _list = new();
+        private bool _isInitialized;
 
         public UCPhieuTra()
         {
             InitializeComponent();
             Load += UCPhieuTra_Load;
+            VisibleChanged += UCPhieuTra_VisibleChanged;
         }
 
         private void UCPhieuTra_Load(object? sender, EventArgs e)
@@ -35,12 +37,22 @@ namespace GUI.MuonTra
                 dgvPhieuTra.Columns[nameof(colNgayTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
 
             LoadData();
+            _isInitialized = true;
+        }
+
+        private void UCPhieuTra_VisibleChanged(object? sender, EventArgs e)
+        {
+            if (Visible && _isInitialized)
+            {
+                LoadData();
+            }
         }
 
         private void LoadData()
         {
             _list = MuonTraBUS.LayTatCaPhieuTra();
             dgvPhieuTra.DataSource = _list;
+            Filter(txtSearch.Text);
         }
 
         private void txtSearch_TextChanged(object? sender, EventArgs e)
