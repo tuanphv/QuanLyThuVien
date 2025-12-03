@@ -22,6 +22,8 @@ namespace GUI.MuonTra
         private Panel panelSearch;
         private TextBox txtSearch;
         private Button btnSearch;
+        private Button btnImport;
+        private Button btnExport;
         private ComboBox cbStatusFilter;
         private DataGridViewTextBoxColumn colPhieu;
         private DataGridViewTextBoxColumn colDocGia;
@@ -59,6 +61,8 @@ namespace GUI.MuonTra
             panelSearch = new Panel();
             txtSearch = new TextBox();
             btnSearch = new Button();
+            btnExport = new Button();
+            btnImport = new Button();
             colPhieu = new DataGridViewTextBoxColumn();
             colDocGia = new DataGridViewTextBoxColumn();
             colNgayMuon = new DataGridViewTextBoxColumn();
@@ -102,6 +106,8 @@ namespace GUI.MuonTra
             panelHeader.Controls.Add(btnThem);
             panelHeader.Controls.Add(cbStatusFilter);
             panelHeader.Controls.Add(panelSearch);
+            panelHeader.Controls.Add(btnExport);
+            panelHeader.Controls.Add(btnImport);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(30, 118);
             panelHeader.Margin = new Padding(4);
@@ -203,14 +209,14 @@ namespace GUI.MuonTra
             btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSearch.BackColor = Color.DarkTurquoise;
             btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.FlatStyle = FlatStyle.Flat;
             btnSearch.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnSearch.ForeColor = Color.White;
             btnSearch.Image = Properties.Resources.search;
             btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.FlatStyle = FlatStyle.Flat;
             btnSearch.Location = new Point(392, -1);
             btnSearch.Margin = new Padding(4);
-            btnSearch.Name = "btnSearch"; 
+            btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(100, 55);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
@@ -218,6 +224,38 @@ namespace GUI.MuonTra
             btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSearch.UseVisualStyleBackColor = false;
             btnSearch.Click += btnSearch_Click;
+            // 
+            // btnExport
+            // 
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.MediumSeaGreen;
+            btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnExport.ForeColor = Color.White;
+            btnExport.Location = new Point(1875, 19);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(118, 58);
+            btnExport.TabIndex = 16;
+            btnExport.Text = "Export";
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            // 
+            // btnImport
+            // 
+            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnImport.BackColor = Color.DarkOrange;
+            btnImport.FlatAppearance.BorderSize = 0;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnImport.ForeColor = Color.White;
+            btnImport.Location = new Point(1749, 19);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(118, 58);
+            btnImport.TabIndex = 15;
+            btnImport.Text = "Import";
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // colPhieu
             // 

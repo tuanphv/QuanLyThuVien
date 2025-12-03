@@ -44,6 +44,8 @@ namespace GUI.MuonTra
             txtSearch = new TextBox();
             btnSearch = new Button();
             btnLapPhieuTra = new Button();
+            btnExport = new Button();
+            btnImport = new Button();
             dgvPhieuTra = new ActionDataGridView();
             colMaPhieu = new DataGridViewTextBoxColumn();
             colDocGia = new DataGridViewTextBoxColumn();
