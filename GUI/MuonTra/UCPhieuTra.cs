@@ -85,9 +85,9 @@ namespace GUI.MuonTra
 
             keyword = keyword.ToLower().Trim();
             var filtered = _list.Where(p =>
-                p.MaPhieuMuon.ToLower().Contains(keyword) ||
-                p.HoTenDocGia.ToLower().Contains(keyword) ||
-                p.MaDocGia.ToLower().Contains(keyword))
+                (p.MaPhieuMuon ?? string.Empty).ToLower().Contains(keyword) ||
+                (p.HoTenDocGia ?? string.Empty).ToLower().Contains(keyword) ||
+                (p.MaDocGia ?? string.Empty).ToLower().Contains(keyword))
                 .ToList();
             dgvPhieuTra.DataSource = new BindingList<PhieuTraDTO>(filtered);
         }

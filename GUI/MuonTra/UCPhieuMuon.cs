@@ -107,9 +107,9 @@ namespace GUI.MuonTra
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 filtered = filtered.Where(pm =>
-                    pm.MaPhieuMuon.ToLower().Contains(keyword) ||
-                    pm.HoTenDocGia.ToLower().Contains(keyword) ||
-                    pm.MaDocGia.ToLower().Contains(keyword));
+                    (pm.MaPhieuMuon ?? string.Empty).ToLower().Contains(keyword) ||
+                    (pm.HoTenDocGia ?? string.Empty).ToLower().Contains(keyword) ||
+                    (pm.MaDocGia ?? string.Empty).ToLower().Contains(keyword));
                 coLoc = true;
             }
 
