@@ -2,6 +2,7 @@ using BUS;
 using DTO;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GUI.Helpers;
@@ -38,6 +39,9 @@ namespace GUI.MuonTra
             dgvPhieuMuon.ShowDeleteButton = !_isReader;
             dgvPhieuMuon.ShowExtendButton = false;
             dgvPhieuMuon.ShowReturnButton = !_isReader;
+
+            btnImport.Visible = !_isReader;
+            btnExport.Visible = !_isReader;
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
             dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
@@ -156,6 +160,8 @@ namespace GUI.MuonTra
             }
 
             btnThem.Visible = !_isReader;
+            btnImport.Visible = !_isReader;
+            btnExport.Visible = !_isReader;
         }
 
         private void GiaHanPhieuMuonDuocChon()
@@ -284,6 +290,46 @@ namespace GUI.MuonTra
         private void btnSearch_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var bytes = MuonTraBUS.ExportPhieuMuonToExcel();
+                using SaveFileDialog sfd = new() { Filter = "Excel Workbook|*.xlsx", FileName = "PhieuMuon.xlsx" };
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllBytes(sfd.FileName, bytes);
+                    MessageBox.Show("Xuất danh sách phiếu mượn thành công.", "Thông báo");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể xuất Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            using OpenFileDialog ofd = new()
+            {
+                Filter = "Excel Workbook|*.xlsx;*.xls",
+                Title = "Chọn file Excel chứa phiếu mượn"
+            };
+
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+
+            try
+            {
+                var result = MuonTraBUS.ImportPhieuMuonFromExcel(ofd.FileName);
+                LoadData();
+                MessageBox.Show($"Nhập phiếu mượn thành công.\n\n- Đã thêm: {result.importedList.Count} phiếu.\n- Thất bại: {result.fail} hàng.", "Thông báo");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể nhập Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
