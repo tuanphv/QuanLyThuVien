@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Data;
 using GUI.Helpers;
+using ClosedXML.Excel;
 
 namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
 {
@@ -157,7 +158,117 @@ namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
 
             // 4. Tạo một BindingList MỚI từ danh sách đã lọc và gán lại cho DataGridView
             dgvTheLoai.DataSource = new BindingList<TheLoaiDTO>(danhSachLoc);
-        }               
-        
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            // 1. Kiểm tra xem có dữ liệu không
+            if (list == null || list.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu để xuất.", "Thông báo");
+                return;
+            }
+
+            // 2. Mở hộp thoại chọn nơi lưu
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Workbook|*.xlsx";
+            sfd.FileName = "DanhSachTheLoai.xlsx";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // 3. Tạo file Excel bằng ClosedXML
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Thể Loại");
+
+                        // 4. Tạo tiêu đề cột (Header)
+                        worksheet.Cell(1, 1).Value = "Mã Thể Loại";
+                        worksheet.Cell(1, 2).Value = "Tên Thể Loại";
+
+                        // Định dạng Header cho đẹp (In đậm, nền xám)
+                        var headerRow = worksheet.Range("A1:B1");
+                        headerRow.Style.Font.Bold = true;
+                        headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+                        // 5. Đổ dữ liệu từ List vào Excel
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            worksheet.Cell(i + 2, 1).Value = list[i].MaTheLoai;
+                            worksheet.Cell(i + 2, 2).Value = list[i].TenTheLoai;
+                        }
+
+                        // Tự động chỉnh độ rộng cột
+                        worksheet.Columns().AdjustToContents();
+
+                        // 6. Lưu file
+                        workbook.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Xuất file Excel thành công!", "Thông báo");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xuất file: " + ex.Message, "Lỗi");
+                }
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Excel Workbook|*.xlsx";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook(ofd.FileName))
+                    {
+                        var worksheet = workbook.Worksheet(1); // Lấy sheet đầu tiên
+                        var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Bỏ qua dòng tiêu đề (dòng 1)
+
+                        int countSuccess = 0;
+                        int countFail = 0;
+
+                        foreach (var row in rows)
+                        {
+                            // Đọc dữ liệu từ cột 2 (Tên Thể Loại). Cột 1 là Mã thì tự sinh nên ko cần đọc.
+                            string tenTheLoai = row.Cell(2).GetValue<string>().Trim();
+
+                            if (string.IsNullOrEmpty(tenTheLoai)) continue;
+
+                            // KIỂM TRA LOGIC:
+                            // Chỉ thêm nếu tên này chưa tồn tại trong DB
+                            // (Bạn đã có hàm IsNameExist trong DAO rồi, quá tiện!)
+                            if (!DAO.TheLoaiDAO.IsNameExist(tenTheLoai))
+                            {
+                                // Tạo DTO mới
+                                TheLoaiDTO newTL = new TheLoaiDTO(tenTheLoai);
+
+                                // Gọi BUS để thêm vào DB (Hàm Add sẽ tự sinh Mã)
+                                BUS.TheLoaiBUS.Add(newTL);
+
+                                countSuccess++;
+                            }
+                            else
+                            {
+                                countFail++; // Bỏ qua vì trùng tên
+                            }
+                        }
+
+                        // Load lại dữ liệu lên Grid
+                        UCTheLoai_Load(null, null);
+
+                        MessageBox.Show($"Đã nhập xong!\n- Thành công: {countSuccess}\n- Bỏ qua (trùng): {countFail}", "Kết quả");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi đọc file: " + ex.Message, "Lỗi");
+                }
+            }
+        }
     }
 }

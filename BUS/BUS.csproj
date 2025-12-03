@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.5.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DAO\DAO.csproj" />
     <ProjectReference Include="..\DTO\DTO.csproj" />
   </ItemGroup>
