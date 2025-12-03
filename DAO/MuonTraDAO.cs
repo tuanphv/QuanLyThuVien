@@ -1,88 +1,73 @@
+using Dapper;
 using DTO;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.Linq;
 
 namespace DAO
 {
     public class MuonTraDAO
     {
+        private static MySqlConnection OpenConnection()
+        {
+            return DataProvider.Instance.GetOpenConnection();
+        }
+
         public static ThamSoMuonTraDTO LayThamSoMuonTra()
         {
-            string query = @"SELECT SoSachMuonToiDa, SoNgayMuonToiDa, DonGiaPhatMoiNgay, TuoiToiThieu, TuoiToiDa FROM THAMSO LIMIT 1";
-            DataTable data = DataProvider.Instance.ExecuteQuery(query);
+            const string query = @"SELECT SoSachMuonToiDa, SoNgayMuonToiDa, DonGiaPhatMoiNgay, TuoiToiThieu, TuoiToiDa FROM THAMSO LIMIT 1";
+            using var connection = OpenConnection();
+            var thamSo = connection.QueryFirstOrDefault<ThamSoMuonTraDTO>(query);
 
-            if (data.Rows.Count == 0)
+            if (thamSo == null)
                 throw new Exception("Chưa cấu hình bảng THAMSO.");
 
-            DataRow row = data.Rows[0];
-            return new ThamSoMuonTraDTO
-            {
-                SoSachMuonToiDa = row["SoSachMuonToiDa"] != DBNull.Value ? Convert.ToInt32(row["SoSachMuonToiDa"]) : 0,
-                SoNgayMuonToiDa = row["SoNgayMuonToiDa"] != DBNull.Value ? Convert.ToInt32(row["SoNgayMuonToiDa"]) : 0,
-                DonGiaPhatMoiNgay = row["DonGiaPhatMoiNgay"] != DBNull.Value ? Convert.ToInt32(row["DonGiaPhatMoiNgay"]) : 0,
-                TuoiToiThieu = row["TuoiToiThieu"] != DBNull.Value ? Convert.ToInt32(row["TuoiToiThieu"]) : 0,
-                TuoiToiDa = row["TuoiToiDa"] != DBNull.Value ? Convert.ToInt32(row["TuoiToiDa"]) : 0,
-            };
+            return thamSo;
         }
 
         public static DocGiaMuonInfoDTO? LayThongTinDocGia(string maDocGia)
         {
-            string query = @"SELECT ID, MaDocGia, HoTen, NgaySinh, NgayHetHan, TongNoHienTai FROM DOCGIA WHERE MaDocGia = @MaDocGia";
-            DataTable data = DataProvider.Instance.ExecuteQuery(query,
-                new MySqlParameter("@MaDocGia", maDocGia));
-            if (data.Rows.Count == 0) return null;
-            DataRow row = data.Rows[0];
-            return new DocGiaMuonInfoDTO
-            {
-                ID = Convert.ToInt32(row["ID"]),
-                MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
-                HoTen = row["HoTen"]?.ToString() ?? string.Empty,
-                NgaySinh = row["NgaySinh"] != DBNull.Value ? Convert.ToDateTime(row["NgaySinh"]) : DateTime.MinValue,
-                NgayHetHan = row["NgayHetHan"] != DBNull.Value ? Convert.ToDateTime(row["NgayHetHan"]) : DateTime.MinValue,
-                TongNoHienTai = row["TongNoHienTai"] != DBNull.Value ? Convert.ToInt32(row["TongNoHienTai"]) : 0
-            };
+            const string query = @"SELECT ID, MaDocGia, HoTen, NgaySinh, NgayHetHan, TongNoHienTai FROM DOCGIA WHERE MaDocGia = @MaDocGia";
+            using var connection = OpenConnection();
+            return connection.QueryFirstOrDefault<DocGiaMuonInfoDTO>(query, new { MaDocGia = maDocGia });
         }
 
         public static int? LayIDCuonSach(string maCuonSach)
         {
-            string query = "SELECT ID FROM CUONSACH WHERE MaCuonSach = @Ma";
-            object? result = DataProvider.Instance.ExecuteScalar(query, new MySqlParameter("@Ma", maCuonSach));
-            if (result == null || result == DBNull.Value) return null;
-            return Convert.ToInt32(result);
+            const string query = "SELECT ID FROM CUONSACH WHERE MaCuonSach = @Ma";
+            using var connection = OpenConnection();
+            return connection.QuerySingleOrDefault<int?>(query, new { Ma = maCuonSach });
         }
 
         public static bool CuonSachSanSang(int idCuonSach)
         {
-            string query = "SELECT TinhTrang FROM CUONSACH WHERE ID = @ID";
-            object? result = DataProvider.Instance.ExecuteScalar(query, new MySqlParameter("@ID", idCuonSach));
-            if (result == null || result == DBNull.Value) return false;
-            return Convert.ToInt32(result) == 1;
+            const string query = "SELECT TinhTrang FROM CUONSACH WHERE ID = @ID";
+            using var connection = OpenConnection();
+            int? tinhTrang = connection.QuerySingleOrDefault<int?>(query, new { ID = idCuonSach });
+            return tinhTrang == 1;
         }
 
         public static int DemSoSachDangMuon(int idDocGia)
         {
-            string query = @"SELECT COUNT(*) FROM CT_PHIEUMUON cp
+            const string query = @"SELECT COUNT(*) FROM CT_PHIEUMUON cp
                              INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                              WHERE p.IDDocGia = @IDDocGia AND cp.NgayTraThucTe IS NULL";
-            object? result = DataProvider.Instance.ExecuteScalar(query, new MySqlParameter("@IDDocGia", idDocGia));
-            return result != null && result != DBNull.Value ? Convert.ToInt32(result) : 0;
+            using var connection = OpenConnection();
+            return connection.ExecuteScalar<int>(query, new { IDDocGia = idDocGia });
         }
 
         private static string TaoMaPhieuMuonMoi(MySqlConnection connection, MySqlTransaction transaction)
         {
-            string query = "SELECT MaPhieuMuon FROM PHIEUMUON ORDER BY ID DESC LIMIT 1";
-            using var command = new MySqlCommand(query, connection, transaction);
-            object? result = command.ExecuteScalar();
+            const string query = "SELECT MaPhieuMuon FROM PHIEUMUON ORDER BY ID DESC LIMIT 1";
+            string? maCuoi = connection.QueryFirstOrDefault<string>(query, transaction: transaction);
 
-            if (result == null || result == DBNull.Value)
+            if (string.IsNullOrEmpty(maCuoi))
             {
                 return "PM000001";
             }
 
-            string maCuoi = result.ToString() ?? "PM000000";
             string phanSo = maCuoi.Substring(2);
             int so = int.Parse(phanSo) + 1;
             return "PM" + so.ToString("D6");
@@ -91,23 +76,24 @@ namespace DAO
         public static PhieuMuonDTO TaoPhieuMuonVaChiTiet(DocGiaMuonInfoDTO docGia, List<int> danhSachCuon,
             DateTime ngayMuon, DateTime ngayTraDuKien)
         {
-            PhieuMuonDTO phieu = new PhieuMuonDTO();
+            PhieuMuonDTO phieu = new();
 
             bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
                 string maMoi = TaoMaPhieuMuonMoi(connection, transaction);
-                string queryInsert = @"INSERT INTO PHIEUMUON (MaPhieuMuon, IDDocGia, NgayMuon, NgayTraDuKien)
+                const string queryInsert = @"INSERT INTO PHIEUMUON (MaPhieuMuon, IDDocGia, NgayMuon, NgayTraDuKien)
                                         VALUES (@MaPhieuMuon, @IDDocGia, @NgayMuon, @NgayTraDuKien);
                                         SELECT LAST_INSERT_ID();";
 
-                using var cmdInsert = new MySqlCommand(queryInsert, connection, transaction);
-                cmdInsert.Parameters.AddWithValue("@MaPhieuMuon", maMoi);
-                cmdInsert.Parameters.AddWithValue("@IDDocGia", docGia.ID);
-                cmdInsert.Parameters.AddWithValue("@NgayMuon", ngayMuon);
-                cmdInsert.Parameters.AddWithValue("@NgayTraDuKien", ngayTraDuKien);
+                long idResult = connection.ExecuteScalar<long>(queryInsert, new
+                {
+                    MaPhieuMuon = maMoi,
+                    IDDocGia = docGia.ID,
+                    NgayMuon = ngayMuon,
+                    NgayTraDuKien = ngayTraDuKien
+                }, transaction);
 
-                object? idResult = cmdInsert.ExecuteScalar();
-                if (idResult == null || idResult == DBNull.Value)
+                if (idResult == 0)
                 {
                     return false;
                 }
@@ -115,17 +101,12 @@ namespace DAO
                 int idPhieu = Convert.ToInt32(idResult);
                 foreach (int idCuon in danhSachCuon)
                 {
-                    string queryCT = @"INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+                    const string queryCT = @"INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
                                         VALUES (@IDPhieuMuon, @IDCuonSach);";
-                    using var cmdCT = new MySqlCommand(queryCT, connection, transaction);
-                    cmdCT.Parameters.AddWithValue("@IDPhieuMuon", idPhieu);
-                    cmdCT.Parameters.AddWithValue("@IDCuonSach", idCuon);
-                    cmdCT.ExecuteNonQuery();
+                    connection.Execute(queryCT, new { IDPhieuMuon = idPhieu, IDCuonSach = idCuon }, transaction);
 
-                    string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @IDCuon";
-                    using var cmdUpdateCuon = new MySqlCommand(queryUpdateCuon, connection, transaction);
-                    cmdUpdateCuon.Parameters.AddWithValue("@IDCuon", idCuon);
-                    cmdUpdateCuon.ExecuteNonQuery();
+                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @IDCuon";
+                    connection.Execute(queryUpdateCuon, new { IDCuon = idCuon }, transaction);
                 }
 
                 phieu = new PhieuMuonDTO
@@ -151,8 +132,7 @@ namespace DAO
         public static BindingList<PhieuMuonDTO> LayTatCaPhieuMuon()
         {
             BindingList<PhieuMuonDTO> list = new BindingList<PhieuMuonDTO>();
-            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
-                                    COUNT(cp.IDCuonSach) as TongSach,
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
                                     MAX(cp.NgayTraThucTe) as NgayTraThucTe
                              FROM PHIEUMUON pm
@@ -160,29 +140,14 @@ namespace DAO
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
                              GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien
                              ORDER BY pm.NgayMuon DESC";
-            DataTable data = DataProvider.Instance.ExecuteQuery(query);
-            foreach (DataRow row in data.Rows)
-            {
-                PhieuMuonDTO item = new PhieuMuonDTO
-                {
-                    ID = Convert.ToInt32(row["ID"]),
-                    MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
-                    MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
-                    HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
-                    NgayMuon = row["NgayMuon"] != DBNull.Value ? Convert.ToDateTime(row["NgayMuon"]) : DateTime.MinValue,
-                    NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
-                    NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : null,
-                    TongSach = row["TongSach"] != DBNull.Value ? Convert.ToInt32(row["TongSach"]) : 0,
-                    SoSachChuaTra = row["SachChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SachChuaTra"]) : 0,
-                };
-                list.Add(item);
-            }
-            return list;
+            using var connection = OpenConnection();
+            var phieuMuonList = connection.Query<PhieuMuonDTO>(query).ToList();
+            return new BindingList<PhieuMuonDTO>(phieuMuonList);
         }
 
         public static PhieuMuonDTO? LayPhieuMuonTheoID(int idPhieuMuon)
         {
-            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
                                     COUNT(cp.IDCuonSach) as TongSach,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
                                     MAX(cp.NgayTraThucTe) as NgayTraThucTe
@@ -191,26 +156,13 @@ namespace DAO
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
                              WHERE pm.ID = @ID
                              GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien";
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@ID", idPhieuMuon));
-            if (data.Rows.Count == 0) return null;
-            DataRow row = data.Rows[0];
-            return new PhieuMuonDTO
-            {
-                ID = Convert.ToInt32(row["ID"]),
-                MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
-                MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
-                HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
-                NgayMuon = row["NgayMuon"] != DBNull.Value ? Convert.ToDateTime(row["NgayMuon"]) : DateTime.MinValue,
-                NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
-                NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : null,
-                TongSach = row["TongSach"] != DBNull.Value ? Convert.ToInt32(row["TongSach"]) : 0,
-                SoSachChuaTra = row["SachChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SachChuaTra"]) : 0,
-            };
+            using var connection = OpenConnection();
+            return connection.QueryFirstOrDefault<PhieuMuonDTO>(query, new { ID = idPhieuMuon });
         }
 
         public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
         {
-            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
                                     COUNT(cp.IDCuonSach) as TongSach,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
                                     MAX(cp.NgayTraThucTe) as NgayTraThucTe
@@ -220,55 +172,29 @@ namespace DAO
                              WHERE pm.MaPhieuMuon = @MaPhieu
                              GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien";
 
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@MaPhieu", maPhieuMuon));
-            if (data.Rows.Count == 0) return null;
-            DataRow row = data.Rows[0];
-            return new PhieuMuonDTO
-            {
-                ID = Convert.ToInt32(row["ID"]),
-                MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
-                MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
-                HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
-                NgayMuon = row["NgayMuon"] != DBNull.Value ? Convert.ToDateTime(row["NgayMuon"]) : DateTime.MinValue,
-                NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
-                NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : null,
-                TongSach = row["TongSach"] != DBNull.Value ? Convert.ToInt32(row["TongSach"]) : 0,
-                SoSachChuaTra = row["SachChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SachChuaTra"]) : 0,
-            };
+            using var connection = OpenConnection();
+            return connection.QueryFirstOrDefault<PhieuMuonDTO>(query, new { MaPhieu = maPhieuMuon });
         }
 
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
-            BindingList<ChiTietPhieuMuonDTO> list = new BindingList<ChiTietPhieuMuonDTO>();
-            string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, cp.NgayTraThucTe, pm.NgayTraDuKien
+            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, cp.NgayTraThucTe, pm.NgayTraDuKien
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
                              INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
                              INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
                              WHERE cp.IDPhieuMuon = @ID";
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@ID", idPhieuMuon));
-            foreach (DataRow row in data.Rows)
-            {
-                list.Add(new ChiTietPhieuMuonDTO
-                {
-                    IDPhieuMuon = Convert.ToInt32(row["IDPhieuMuon"]),
-                    IDCuonSach = Convert.ToInt32(row["IDCuonSach"]),
-                    MaCuonSach = row["MaCuonSach"]?.ToString() ?? string.Empty,
-                    TenSach = row["TenTuaSach"]?.ToString() ?? string.Empty,
-                    NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : null,
-                    NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
-                });
-            }
-            return list;
+            using var connection = OpenConnection();
+            var list = connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
+            return new BindingList<ChiTietPhieuMuonDTO>(list);
         }
 
         public static bool GiaHanPhieuMuon(int idPhieuMuon, DateTime hanTraMoi)
         {
-            string query = "UPDATE PHIEUMUON SET NgayTraDuKien = @HanTraMoi WHERE ID = @ID";
-            int count = DataProvider.Instance.ExecuteNonQuery(query,
-                new MySqlParameter("@HanTraMoi", hanTraMoi),
-                new MySqlParameter("@ID", idPhieuMuon));
+            const string query = "UPDATE PHIEUMUON SET NgayTraDuKien = @HanTraMoi WHERE ID = @ID";
+            using var connection = OpenConnection();
+            int count = connection.Execute(query, new { HanTraMoi = hanTraMoi, ID = idPhieuMuon });
             return count > 0;
         }
 
@@ -276,50 +202,27 @@ namespace DAO
         {
             return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
-                string queryCheck = @"SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                using (var cmdCheck = new MySqlCommand(queryCheck, connection, transaction))
+                const string queryCheck = @"SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
+                int coLichSuTra = connection.ExecuteScalar<int>(queryCheck, new { ID = idPhieuMuon }, transaction);
+                if (coLichSuTra > 0)
                 {
-                    cmdCheck.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    object? result = cmdCheck.ExecuteScalar();
-                    if (result != null && result != DBNull.Value && Convert.ToInt32(result) > 0)
-                    {
-                        throw new Exception("Phiếu đã có lịch sử trả, không thể xóa.");
-                    }
+                    throw new Exception("Phiếu đã có lịch sử trả, không thể xóa.");
                 }
 
-                string queryCuon = "SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
-                List<int> cuonSach = new();
-                using (var cmdCuon = new MySqlCommand(queryCuon, connection, transaction))
-                {
-                    cmdCuon.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    using var reader = cmdCuon.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        cuonSach.Add(reader.GetInt32("IDCuonSach"));
-                    }
-                }
+                const string queryCuon = "SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
+                List<int> cuonSach = connection.Query<int>(queryCuon, new { ID = idPhieuMuon }, transaction).ToList();
 
-                string deleteCT = "DELETE FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
-                using (var cmdDeleteCT = new MySqlCommand(deleteCT, connection, transaction))
-                {
-                    cmdDeleteCT.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    cmdDeleteCT.ExecuteNonQuery();
-                }
+                const string deleteCT = "DELETE FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
+                connection.Execute(deleteCT, new { ID = idPhieuMuon }, transaction);
 
                 foreach (int idCuon in cuonSach)
                 {
-                    string updateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
-                    using var cmdUpdate = new MySqlCommand(updateCuon, connection, transaction);
-                    cmdUpdate.Parameters.AddWithValue("@ID", idCuon);
-                    cmdUpdate.ExecuteNonQuery();
+                    const string updateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
+                    connection.Execute(updateCuon, new { ID = idCuon }, transaction);
                 }
 
-                string deletePhieu = "DELETE FROM PHIEUMUON WHERE ID = @ID";
-                using (var cmdDeletePhieu = new MySqlCommand(deletePhieu, connection, transaction))
-                {
-                    cmdDeletePhieu.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    cmdDeletePhieu.ExecuteNonQuery();
-                }
+                const string deletePhieu = "DELETE FROM PHIEUMUON WHERE ID = @ID";
+                connection.Execute(deletePhieu, new { ID = idPhieuMuon }, transaction);
 
                 return true;
             });
@@ -330,50 +233,36 @@ namespace DAO
             int tongTienPhatLocal = 0;
             bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
-                string queryNgayTraDuKien = "SELECT NgayTraDuKien FROM PHIEUMUON WHERE ID = @ID";
-                DateTime ngayTraDuKien;
-                using (var cmdGetNgay = new MySqlCommand(queryNgayTraDuKien, connection, transaction))
+                const string queryNgayTraDuKien = "SELECT NgayTraDuKien FROM PHIEUMUON WHERE ID = @ID";
+                DateTime? ngayTraDuKien = connection.QueryFirstOrDefault<DateTime?>(queryNgayTraDuKien, new { ID = idPhieuMuon }, transaction);
+                if (ngayTraDuKien == null)
                 {
-                    cmdGetNgay.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    object? resultNgay = cmdGetNgay.ExecuteScalar();
-                    if (resultNgay == null || resultNgay == DBNull.Value) return false;
-                    ngayTraDuKien = Convert.ToDateTime(resultNgay);
+                    return false;
                 }
 
-                string querySelectCT = @"SELECT IDCuonSach FROM CT_PHIEUMUON
+                const string querySelectCT = @"SELECT IDCuonSach FROM CT_PHIEUMUON
                                            WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                using var cmdSelectCT = new MySqlCommand(querySelectCT, connection, transaction);
-                cmdSelectCT.Parameters.AddWithValue("@ID", idPhieuMuon);
-                using var reader = cmdSelectCT.ExecuteReader();
-                List<int> cuonChuaTra = new List<int>();
-                while (reader.Read())
-                {
-                    cuonChuaTra.Add(reader.GetInt32("IDCuonSach"));
-                }
-                reader.Close();
+                List<int> cuonChuaTra = connection.Query<int>(querySelectCT, new { ID = idPhieuMuon }, transaction).ToList();
 
-                int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Date).Days);
+                int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Value.Date).Days);
                 int tienPhatMoiCuon = soNgayTre * donGiaPhatMoiNgay;
                 tongTienPhatLocal = tienPhatMoiCuon * cuonChuaTra.Count;
 
-                string queryUpdateCT = @"UPDATE CT_PHIEUMUON
+                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
                                           SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
                                           WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                using (var cmdUpdateCT = new MySqlCommand(queryUpdateCT, connection, transaction))
+                connection.Execute(queryUpdateCT, new
                 {
-                    cmdUpdateCT.Parameters.AddWithValue("@NgayTra", ngayTra);
-                    cmdUpdateCT.Parameters.AddWithValue("@SoNgayTre", soNgayTre);
-                    cmdUpdateCT.Parameters.AddWithValue("@TienPhat", tienPhatMoiCuon);
-                    cmdUpdateCT.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    cmdUpdateCT.ExecuteNonQuery();
-                }
+                    NgayTra = ngayTra,
+                    SoNgayTre = soNgayTre,
+                    TienPhat = tienPhatMoiCuon,
+                    ID = idPhieuMuon
+                }, transaction);
 
                 foreach (int idCuon in cuonChuaTra)
                 {
-                    string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
-                    using var cmdUpdateCuon = new MySqlCommand(queryUpdateCuon, connection, transaction);
-                    cmdUpdateCuon.Parameters.AddWithValue("@ID", idCuon);
-                    cmdUpdateCuon.ExecuteNonQuery();
+                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
+                    connection.Execute(queryUpdateCuon, new { ID = idCuon }, transaction);
                 }
 
                 return true;
@@ -385,8 +274,7 @@ namespace DAO
 
         public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
         {
-            BindingList<PhieuTraDTO> list = new();
-            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen,
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen,
                                     MAX(cp.NgayTraThucTe) AS NgayTra,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS TongSachTra,
                                     SUM(cp.TienPhat) AS TongTienPhat
@@ -397,27 +285,14 @@ namespace DAO
                              GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen
                              ORDER BY NgayTra DESC";
 
-            DataTable data = DataProvider.Instance.ExecuteQuery(query);
-            foreach (DataRow row in data.Rows)
-            {
-                list.Add(new PhieuTraDTO
-                {
-                    IDPhieuMuon = Convert.ToInt32(row["ID"]),
-                    MaPhieuMuon = row["MaPhieuMuon"]?.ToString() ?? string.Empty,
-                    MaDocGia = row["MaDocGia"]?.ToString() ?? string.Empty,
-                    HoTenDocGia = row["HoTen"]?.ToString() ?? string.Empty,
-                    NgayTra = row["NgayTra"] != DBNull.Value ? Convert.ToDateTime(row["NgayTra"]) : DateTime.MinValue,
-                    TongSachTra = row["TongSachTra"] != DBNull.Value ? Convert.ToInt32(row["TongSachTra"]) : 0,
-                    TongTienPhat = row["TongTienPhat"] != DBNull.Value ? Convert.ToInt32(row["TongTienPhat"]) : 0
-                });
-            }
-            return list;
+            using var connection = OpenConnection();
+            var list = connection.Query<PhieuTraDTO>(query).ToList();
+            return new BindingList<PhieuTraDTO>(list);
         }
 
         public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
         {
-            BindingList<ChiTietPhieuTraDTO> list = new();
-            string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
+            const string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
                                     IFNULL(cp.SoNgayTre, 0) AS SoNgayTre, IFNULL(cp.TienPhat, 0) AS TienPhat
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
@@ -426,58 +301,31 @@ namespace DAO
                              INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
                              WHERE cp.IDPhieuMuon = @ID AND cp.NgayTraThucTe IS NOT NULL";
 
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@ID", idPhieuMuon));
-            foreach (DataRow row in data.Rows)
-            {
-                list.Add(new ChiTietPhieuTraDTO
-                {
-                    IDCuonSach = row["IDCuonSach"] != DBNull.Value ? Convert.ToInt32(row["IDCuonSach"]) : 0,
-                    MaCuonSach = row["MaCuonSach"]?.ToString() ?? string.Empty,
-                    TenSach = row["TenTuaSach"]?.ToString() ?? string.Empty,
-                    NgayTraDuKien = row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
-                    NgayTraThucTe = row["NgayTraThucTe"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraThucTe"]) : DateTime.MinValue,
-                    SoNgayTre = row["SoNgayTre"] != DBNull.Value ? Convert.ToInt32(row["SoNgayTre"]) : 0,
-                    TienPhat = row["TienPhat"] != DBNull.Value ? Convert.ToInt32(row["TienPhat"]) : 0,
-                });
-            }
+            using var connection = OpenConnection();
+            var list = connection.Query<ChiTietPhieuTraDTO>(query, new { ID = idPhieuMuon }).ToList();
 
-            return list;
+            return new BindingList<ChiTietPhieuTraDTO>(list);
         }
 
         public static bool XoaPhieuTra(int idPhieuMuon)
         {
             return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
-                List<int> cuonDaTra = new();
-                string querySelect = @"SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                using (var cmdSelect = new MySqlCommand(querySelect, connection, transaction))
-                {
-                    cmdSelect.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    using var reader = cmdSelect.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        cuonDaTra.Add(reader.GetInt32("IDCuonSach"));
-                    }
-                }
+                const string querySelect = @"SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
+                List<int> cuonDaTra = connection.Query<int>(querySelect, new { ID = idPhieuMuon }, transaction).ToList();
 
                 if (cuonDaTra.Count == 0)
                     throw new Exception("Phiếu mượn chưa có sách trả để xóa.");
 
-                string queryUpdateCT = @"UPDATE CT_PHIEUMUON
+                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
                                           SET NgayTraThucTe = NULL, SoNgayTre = NULL, TienPhat = NULL
                                           WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                using (var cmdUpdateCT = new MySqlCommand(queryUpdateCT, connection, transaction))
-                {
-                    cmdUpdateCT.Parameters.AddWithValue("@ID", idPhieuMuon);
-                    cmdUpdateCT.ExecuteNonQuery();
-                }
+                connection.Execute(queryUpdateCT, new { ID = idPhieuMuon }, transaction);
 
                 foreach (int idCuon in cuonDaTra)
                 {
-                    string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @ID";
-                    using var cmdUpdateCuon = new MySqlCommand(queryUpdateCuon, connection, transaction);
-                    cmdUpdateCuon.Parameters.AddWithValue("@ID", idCuon);
-                    cmdUpdateCuon.ExecuteNonQuery();
+                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @ID";
+                    connection.Execute(queryUpdateCuon, new { ID = idCuon }, transaction);
                 }
 
                 return true;
