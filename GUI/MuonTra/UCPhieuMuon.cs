@@ -10,11 +10,13 @@ namespace GUI.MuonTra
     public partial class UCPhieuMuon : UserControl
     {
         private BindingList<PhieuMuonDTO> list = new();
+        private bool _isInitialized;
 
         public UCPhieuMuon()
         {
             InitializeComponent();
             this.Load += UCPhieuMuon_Load;
+            VisibleChanged += UCPhieuMuon_VisibleChanged;
         }
 
         private void UCPhieuMuon_Load(object sender, EventArgs e)
@@ -30,16 +32,24 @@ namespace GUI.MuonTra
 
             dgvPhieuMuon.ShowEditButton = false;
             dgvPhieuMuon.ShowDeleteButton = true;
-            dgvPhieuMuon.ShowExtendButton = true;
+            dgvPhieuMuon.ShowExtendButton = false;
             dgvPhieuMuon.ShowReturnButton = true;
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
-            dgvPhieuMuon.ExtendButtonClicked += DgvPhieuMuon_ExtendButtonClicked;
             dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
             dgvPhieuMuon.DeleteButtonClicked += DgvPhieuMuon_DeleteButtonClicked;
 
             cbStatusFilter.SelectedIndex = 0;
             LoadData();
+            _isInitialized = true;
+        }
+
+        private void UCPhieuMuon_VisibleChanged(object? sender, EventArgs e)
+        {
+            if (Visible && _isInitialized)
+            {
+                LoadData();
+            }
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
