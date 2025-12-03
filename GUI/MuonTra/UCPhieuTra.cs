@@ -87,7 +87,30 @@ namespace GUI.MuonTra
 
         private void DgvPhieuTra_DeleteButtonClicked(object? sender, int e)
         {
-            MessageBox.Show("Phiếu trả không thể xóa để đảm bảo lịch sử.", "Thông tin");
+            if (e < 0 || e >= dgvPhieuTra.Rows.Count) return;
+            var phieu = dgvPhieuTra.Rows[e].DataBoundItem as PhieuTraDTO;
+            if (phieu == null) return;
+
+            var confirm = MessageBox.Show(
+                $"Xóa phiếu trả của {phieu.HoTenDocGia} (mã {phieu.MaPhieuMuon})?\nSách sẽ trở lại trạng thái đang mượn.",
+                "Xác nhận",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.OK) return;
+
+            try
+            {
+                if (MuonTraBUS.XoaPhieuTra(phieu.IDPhieuMuon))
+                {
+                    LoadData();
+                    MessageBox.Show("Đã xóa phiếu trả.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void DgvPhieuTra_EditButtonClicked(object? sender, int e)

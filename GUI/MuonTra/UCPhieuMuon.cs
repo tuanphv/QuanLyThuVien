@@ -29,20 +29,27 @@ namespace GUI.MuonTra
             colTinhTrang.DataPropertyName = nameof(PhieuMuonDTO.TinhTrang);
 
             dgvPhieuMuon.ShowEditButton = false;
-            dgvPhieuMuon.ShowDeleteButton = false;
+            dgvPhieuMuon.ShowDeleteButton = true;
             dgvPhieuMuon.ShowExtendButton = true;
             dgvPhieuMuon.ShowReturnButton = true;
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
             dgvPhieuMuon.ExtendButtonClicked += DgvPhieuMuon_ExtendButtonClicked;
             dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
+            dgvPhieuMuon.DeleteButtonClicked += DgvPhieuMuon_DeleteButtonClicked;
 
+            cbStatusFilter.SelectedIndex = 0;
             LoadData();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            FilterPhieuMuon(txtSearch.Text);
+            ApplyFilters();
+        }
+
+        private void cbStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyFilters();
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -53,8 +60,7 @@ namespace GUI.MuonTra
         private void LoadData()
         {
             list = MuonTraBUS.LayTatCaPhieuMuon();
-            dgvPhieuMuon.DataSource = list;
-            DinhDangCotNgay();
+            ApplyFilters();
         }
 
         private void DinhDangCotNgay()
@@ -65,24 +71,43 @@ namespace GUI.MuonTra
                 dgvPhieuMuon.Columns[nameof(colHanTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
         }
 
-        private void FilterPhieuMuon(string keyword)
+        private void ApplyFilters()
         {
             if (list == null) return;
-            if (string.IsNullOrWhiteSpace(keyword))
+
+            string keyword = txtSearch.Text?.Trim().ToLower() ?? string.Empty;
+            string trangThai = cbStatusFilter.SelectedItem?.ToString() ?? "Tất cả";
+
+            var filtered = list.AsEnumerable();
+            bool coLoc = false;
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
-                dgvPhieuMuon.DataSource = list;
-                return;
+                filtered = filtered.Where(pm =>
+                    pm.MaPhieuMuon.ToLower().Contains(keyword) ||
+                    pm.HoTenDocGia.ToLower().Contains(keyword) ||
+                    pm.MaDocGia.ToLower().Contains(keyword));
+                coLoc = true;
             }
 
-            keyword = keyword.ToLower().Trim();
-            var filtered = list.Where(pm =>
-                pm.MaPhieuMuon.ToLower().Contains(keyword) ||
-                pm.HoTenDocGia.ToLower().Contains(keyword) ||
-                pm.MaDocGia.ToLower().Contains(keyword) ||
-                pm.TinhTrang.ToLower().Contains(keyword))
-                .ToList();
+            if (trangThai == "Đang mượn")
+            {
+                filtered = filtered.Where(pm => pm.SoSachChuaTra > 0);
+                coLoc = true;
+            }
+            else if (trangThai == "Đã trả")
+            {
+                filtered = filtered.Where(pm => pm.SoSachChuaTra <= 0);
+                coLoc = true;
+            }
 
-            dgvPhieuMuon.DataSource = new BindingList<PhieuMuonDTO>(filtered);
+            if (!coLoc)
+            {
+                dgvPhieuMuon.DataSource = list;
+            }
+            else
+            {
+                dgvPhieuMuon.DataSource = new BindingList<PhieuMuonDTO>(filtered.ToList());
+            }
             DinhDangCotNgay();
         }
 
@@ -102,6 +127,12 @@ namespace GUI.MuonTra
             var phieu = dgvPhieuMuon.CurrentRow.DataBoundItem as PhieuMuonDTO;
             if (phieu == null) return;
 
+            if (phieu.SoSachChuaTra <= 0)
+            {
+                MessageBox.Show("Phiếu đã trả hết, không thể gia hạn.");
+                return;
+            }
+
             using var frm = new FrmGiaHanPhieuMuon(phieu);
             if (frm.ShowDialog() == DialogResult.OK)
             {
@@ -116,6 +147,12 @@ namespace GUI.MuonTra
             if (dgvPhieuMuon.CurrentRow == null) return;
             var phieu = dgvPhieuMuon.CurrentRow.DataBoundItem as PhieuMuonDTO;
             if (phieu == null) return;
+
+            if (phieu.SoSachChuaTra <= 0)
+            {
+                MessageBox.Show("Phiếu đã trả hết sách.");
+                return;
+            }
 
             using var frm = new FrmLapPhieuTra(phieu.MaPhieuMuon);
             frm.StartPosition = FormStartPosition.CenterParent;
@@ -169,6 +206,42 @@ namespace GUI.MuonTra
             if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
             dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
             TraPhieuMuonDuocChon();
+        }
+
+        private void DgvPhieuMuon_DeleteButtonClicked(object? sender, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
+            dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
+            XoaPhieuMuonDuocChon();
+        }
+
+        private void XoaPhieuMuonDuocChon()
+        {
+            if (dgvPhieuMuon.CurrentRow == null) return;
+            var phieu = dgvPhieuMuon.CurrentRow.DataBoundItem as PhieuMuonDTO;
+            if (phieu == null) return;
+
+            DialogResult confirm = MessageBox.Show(
+                $"Bạn có chắc muốn xóa phiếu mượn {phieu.MaPhieuMuon}?\nToàn bộ sách sẽ được chuyển về trạng thái sẵn sàng.",
+                "Xác nhận",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.OK) return;
+
+            try
+            {
+                if (MuonTraBUS.XoaPhieuMuon(phieu.ID))
+                {
+                    list.Remove(phieu);
+                    ApplyFilters();
+                    MessageBox.Show("Đã xóa phiếu mượn.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
     }

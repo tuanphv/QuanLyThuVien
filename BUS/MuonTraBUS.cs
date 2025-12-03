@@ -19,7 +19,7 @@ namespace BUS
             return MuonTraDAO.LayChiTietPhieuMuon(idPhieuMuon);
         }
 
-        public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<string> danhSachMaCuon)
+        public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<string> danhSachMaCuon, DateTime? ngayTraDuKien = null)
         {
             if (string.IsNullOrWhiteSpace(maDocGia))
                 throw new Exception("Mã độc giả không được trống.");
@@ -58,11 +58,19 @@ namespace BUS
             }
 
             DateTime ngayMuon = DateTime.Today;
-            DateTime ngayTraDuKien = thamSo.SoNgayMuonToiDa > 0
+            DateTime hanTraToiDa = thamSo.SoNgayMuonToiDa > 0
                 ? ngayMuon.AddDays(thamSo.SoNgayMuonToiDa)
                 : ngayMuon;
 
-            return MuonTraDAO.TaoPhieuMuonVaChiTiet(docGia, danhSachIdCuon, ngayMuon, ngayTraDuKien);
+            DateTime ngayTra = ngayTraDuKien?.Date ?? hanTraToiDa.Date;
+            if (ngayTra.Date < ngayMuon.Date)
+                throw new Exception("Ngày trả dự kiến không được trước ngày mượn.");
+            if (thamSo.SoNgayMuonToiDa > 0 && ngayTra.Date > hanTraToiDa.Date)
+                throw new Exception($"Hạn trả tối đa là {hanTraToiDa:dd/MM/yyyy} theo quy định.");
+            if (ngayTra.Date > docGia.NgayHetHan.Date)
+                throw new Exception("Ngày trả dự kiến không được vượt quá ngày hết hạn thẻ độc giả.");
+
+            return MuonTraDAO.TaoPhieuMuonVaChiTiet(docGia, danhSachIdCuon, ngayMuon, ngayTra);
         }
 
         public static PhieuMuonDTO? GiaHanPhieuMuon(int idPhieuMuon, int soNgayGiaHan)
@@ -123,6 +131,11 @@ namespace BUS
         public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
         {
             return MuonTraDAO.LayChiTietPhieuTra(idPhieuMuon);
+        }
+
+        public static bool XoaPhieuTra(int idPhieuMuon)
+        {
+            return MuonTraDAO.XoaPhieuTra(idPhieuMuon);
         }
 
         public static PhieuTraDTO LapPhieuTra(string maPhieuMuon, out int tongTienPhat)

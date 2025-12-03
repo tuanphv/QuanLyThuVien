@@ -20,6 +20,7 @@ namespace GUI.MuonTra
         private Panel panelSearch;
         private TextBox txtSearch;
         private Button btnSearch;
+        private ComboBox cbStatusFilter;
         private DataGridViewTextBoxColumn colPhieu;
         private DataGridViewTextBoxColumn colDocGia;
         private DataGridViewTextBoxColumn colNgayMuon;
@@ -55,6 +56,7 @@ namespace GUI.MuonTra
             panelSearch = new Panel();
             txtSearch = new TextBox();
             btnSearch = new Button();
+            cbStatusFilter = new ComboBox();
             colPhieu = new DataGridViewTextBoxColumn();
             colDocGia = new DataGridViewTextBoxColumn();
             colNgayMuon = new DataGridViewTextBoxColumn();
@@ -94,6 +96,7 @@ namespace GUI.MuonTra
             // panelHeader
             // 
             panelHeader.Controls.Add(btnThem);
+            panelHeader.Controls.Add(cbStatusFilter);
             panelHeader.Controls.Add(panelSearch);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(30, 118);
@@ -102,9 +105,9 @@ namespace GUI.MuonTra
             panelHeader.Padding = new Padding(30, 22, 30, 15);
             panelHeader.Size = new Size(2242, 115);
             panelHeader.TabIndex = 2;
-            // 
+            //
             // btnThem
-            // 
+            //
             btnThem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnThem.BackColor = Color.DeepSkyBlue;
             btnThem.FlatAppearance.BorderSize = 0;
@@ -119,47 +122,60 @@ namespace GUI.MuonTra
             btnThem.Text = "Thêm";
             btnThem.UseVisualStyleBackColor = false;
             btnThem.Click += btnThem_Click;
-            // 
+            //
             // panelSearch
-            // 
-            panelSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            //
+            panelSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             panelSearch.BorderStyle = BorderStyle.FixedSingle;
             panelSearch.Controls.Add(txtSearch);
             panelSearch.Controls.Add(btnSearch);
             panelSearch.Location = new Point(30, 25);
-            panelSearch.Margin = new Padding(4, 4, 4, 4);
+            panelSearch.Margin = new Padding(4);
             panelSearch.Name = "panelSearch";
-            panelSearch.Size = new Size(347, 54);
+            panelSearch.Size = new Size(480, 54);
             panelSearch.TabIndex = 0;
-            // 
+            //
             // txtSearch
-            // 
+            //
             txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtSearch.BorderStyle = BorderStyle.None;
             txtSearch.Font = new Font("Segoe UI", 10.2F);
             txtSearch.Location = new Point(15, 12);
-            txtSearch.Margin = new Padding(4, 4, 4, 4);
+            txtSearch.Margin = new Padding(4);
             txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "Tìm mã phiếu, độc giả";
-            txtSearch.Size = new Size(345, 28);
+            txtSearch.PlaceholderText = "Tìm mã phiếu, tên độc giả";
+            txtSearch.Size = new Size(370, 28);
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtSearch_TextChanged;
-            // 
+            //
             // btnSearch
-            // 
+            //
             btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSearch.BackColor = Color.DarkTurquoise;
             btnSearch.FlatAppearance.BorderSize = 0;
             btnSearch.FlatStyle = FlatStyle.Flat;
-            btnSearch.Location = new Point(369, -1);
-            btnSearch.Margin = new Padding(4, 4, 4, 4);
+            btnSearch.Location = new Point(392, -1);
+            btnSearch.Margin = new Padding(4);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(100, 55);
             btnSearch.TabIndex = 1;
             btnSearch.UseVisualStyleBackColor = false;
-            // 
+            //
+            // cbStatusFilter
+            //
+            cbStatusFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbStatusFilter.Font = new Font("Segoe UI", 10.2F);
+            cbStatusFilter.FormattingEnabled = true;
+            cbStatusFilter.Items.AddRange(new object[] { "Tất cả", "Đang mượn", "Đã trả" });
+            cbStatusFilter.Location = new Point(550, 31);
+            cbStatusFilter.Margin = new Padding(4);
+            cbStatusFilter.Name = "cbStatusFilter";
+            cbStatusFilter.Size = new Size(188, 36);
+            cbStatusFilter.TabIndex = 2;
+            cbStatusFilter.SelectedIndexChanged += cbStatusFilter_SelectedIndexChanged;
+            //
             // colPhieu
-            // 
+            //
             colPhieu.HeaderText = "Phiếu";
             colPhieu.MinimumWidth = 6;
             colPhieu.Name = "colPhieu";
@@ -192,9 +208,9 @@ namespace GUI.MuonTra
             colTinhTrang.MinimumWidth = 6;
             colTinhTrang.Name = "colTinhTrang";
             colTinhTrang.ReadOnly = true;
-            // 
+            //
             // dgvPhieuMuon
-            // 
+            //
             dgvPhieuMuon.AllowUserToAddRows = false;
             dgvPhieuMuon.AllowUserToDeleteRows = false;
             dgvPhieuMuon.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;

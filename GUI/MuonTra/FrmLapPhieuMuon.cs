@@ -27,12 +27,12 @@ namespace GUI.MuonTra
             MaximizeBox = false;
 
             var lblDocGia = new Label { Text = "Mã độc giả", AutoSize = true, Left = 30, Top = 30, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var lblCuon = new Label { Text = "Danh sách mã cuốn (mỗi dòng một mã)", AutoSize = true, Left = 30, Top = 100, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblCuon = new Label { Text = "Danh sách mã cuốn (mỗi dòng một mã)", AutoSize = true, Left = 30, Top = 150, Font = new System.Drawing.Font("Segoe UI", 10F) };
 
             var txtDocGia = new TextBox { Name = "txtDocGia", Left = 30, Top = 55, Width = 250, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var txtMaCuon = new TextBox { Name = "txtMaCuon", Left = 30, Top = 130, Width = 250, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var lstCuon = new ListBox { Name = "lstCuon", Left = 30, Top = 320, Width = 390, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) }; 
-            var btnThemMa = new Button { Text = "Thêm mã", Left = 300, Top = 128, Width = 100, Height = 32, BackColor = System.Drawing.Color.DeepSkyBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
+            var txtMaCuon = new TextBox { Name = "txtMaCuon", Left = 30, Top = 180, Width = 250, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lstCuon = new ListBox { Name = "lstCuon", Left = 30, Top = 370, Width = 390, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var btnThemMa = new Button { Text = "Thêm mã", Left = 300, Top = 178, Width = 100, Height = 32, BackColor = System.Drawing.Color.DeepSkyBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnThemMa.Click += (s, e) =>
             {
                 if (!string.IsNullOrWhiteSpace(txtMaCuon.Text))
@@ -42,8 +42,8 @@ namespace GUI.MuonTra
                 }
             };
 
-            var txtNhapNhanh = new TextBox { Name = "txtNhapNhanh", Multiline = true, Left = 30, Top = 180, Width = 250, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var btnNhapNhanh = new Button { Text = "Thêm hàng loạt", Left = 300, Top = 180, Width = 120, Height = 32, BackColor = System.Drawing.Color.MediumSeaGreen, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
+            var txtNhapNhanh = new TextBox { Name = "txtNhapNhanh", Multiline = true, Left = 30, Top = 230, Width = 250, Height = 120, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var btnNhapNhanh = new Button { Text = "Thêm hàng loạt", Left = 300, Top = 230, Width = 120, Height = 32, BackColor = System.Drawing.Color.MediumSeaGreen, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnNhapNhanh.Click += (s, e) =>
             {
                 if (!string.IsNullOrWhiteSpace(txtNhapNhanh.Text))
@@ -56,7 +56,7 @@ namespace GUI.MuonTra
                     txtNhapNhanh.Clear();
                 }
             };
-            var btnXoa = new Button { Text = "Xóa mã chọn", Left = 430, Top = 320, Width = 150, Height = 32, BackColor = System.Drawing.Color.LightCoral, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
+            var btnXoa = new Button { Text = "Xóa mã chọn", Left = 430, Top = 370, Width = 150, Height = 32, BackColor = System.Drawing.Color.LightCoral, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnXoa.Click += (s, e) =>
             {
                 if (lstCuon.SelectedItem is string ma)
@@ -66,7 +66,12 @@ namespace GUI.MuonTra
                 }
             };
 
-            var btnLuu = new Button { Text = "Tạo phiếu", Left = 430, Top = 408, Width = 150, Height = 32, BackColor = System.Drawing.Color.RoyalBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
+            var lblNgayMuon = new Label { Text = "Ngày mượn", AutoSize = true, Left = 320, Top = 30, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var dtpNgayMuon = new DateTimePicker { Name = "dtpNgayMuon", Left = 430, Top = 25, Width = 170, Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy", Enabled = false, Value = DateTime.Today };
+            var lblNgayTra = new Label { Text = "Hạn trả", AutoSize = true, Left = 320, Top = 75, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var dtpNgayTra = new DateTimePicker { Name = "dtpNgayTra", Left = 430, Top = 70, Width = 170, Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy", MinDate = DateTime.Today, Value = DateTime.Today };
+
+            var btnLuu = new Button { Text = "Tạo phiếu", Left = 430, Top = 458, Width = 150, Height = 32, BackColor = System.Drawing.Color.RoyalBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnLuu.Click += (s, e) =>
             {
                 try
@@ -82,7 +87,7 @@ namespace GUI.MuonTra
                         return;
                     }
 
-                    PhieuMoi = MuonTraBUS.LapPhieuMuon(txtDocGia.Text, _maCuon.ToList());
+                    PhieuMoi = MuonTraBUS.LapPhieuMuon(txtDocGia.Text, _maCuon.ToList(), dtpNgayTra.Value.Date);
                     DialogResult = DialogResult.OK;
                     Close();
                 }
@@ -92,7 +97,7 @@ namespace GUI.MuonTra
                 }
             };
 
-            Controls.AddRange(new Control[] { lblDocGia, txtDocGia, lblCuon, txtMaCuon, btnThemMa, txtNhapNhanh, btnNhapNhanh, lstCuon, btnXoa, btnLuu });
+            Controls.AddRange(new Control[] { lblDocGia, txtDocGia, lblNgayMuon, dtpNgayMuon, lblNgayTra, dtpNgayTra, lblCuon, txtMaCuon, btnThemMa, txtNhapNhanh, btnNhapNhanh, lstCuon, btnXoa, btnLuu });
 
             void AddMaCuon(string ma)
             {
