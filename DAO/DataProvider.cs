@@ -121,5 +121,44 @@ namespace DAO
 
             return command.ExecuteScalar();
         }
+
+        /// <summary>
+        /// Lấy một kết nối đã mở để sử dụng trong giao dịch tuỳ chỉnh.
+        /// </summary>
+        public MySqlConnection GetOpenConnection()
+        {
+            var connection = new MySqlConnection(connectionSTR);
+            connection.Open();
+            return connection;
+        }
+
+        /// <summary>
+        /// Thực thi logic trong một Transaction. Khi hàm <paramref name="action"/> trả về true
+        /// thì Transaction sẽ được Commit, ngược lại sẽ Rollback.
+        /// </summary>
+        public bool ExecuteTransaction(Func<MySqlConnection, MySqlTransaction, bool> action)
+        {
+            using var connection = GetOpenConnection();
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                bool success = action(connection, transaction);
+                if (success)
+                {
+                    transaction.Commit();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+                return success;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
     }
 }
