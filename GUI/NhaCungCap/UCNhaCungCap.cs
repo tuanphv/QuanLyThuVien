@@ -2,6 +2,7 @@
 using DTO;
 using System.ComponentModel;
 using System.Data;
+using GUI.Helpers;
 
 namespace GUI.NhaCungCap
 {
@@ -14,6 +15,25 @@ namespace GUI.NhaCungCap
             InitializeComponent();
         }
 
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.NhaCungCap;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnThem.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvNhaCungCap.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvNhaCungCap.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvNhaCungCap.Columns.Contains("Actions"))
+                    dgvNhaCungCap.Columns["Actions"].Visible = false;
+            }
+        }
+
         private void UCNhaCungCap_Load(object sender, EventArgs e)
         {
             dgvNhaCungCap.AutoGenerateColumns = false;
@@ -24,6 +44,9 @@ namespace GUI.NhaCungCap
             // Gán sự kiện
             dgvNhaCungCap.EditButtonClicked += EditButtonClicked;
             dgvNhaCungCap.DeleteButtonClicked += DeleteButtonClicked;
+
+            // Apply permissions after grid and columns exist
+            LoadPermissions();
         }
 
         private void LoadData()

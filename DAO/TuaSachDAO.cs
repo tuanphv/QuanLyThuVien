@@ -7,9 +7,9 @@ namespace DAO
 {
     public class TuaSachDAO
     {
-        public static BindingList<TuaSachDTO> GetAll()
+        public static List<TuaSachDTO> GetAll()
         {
-            BindingList<TuaSachDTO> list = new BindingList<TuaSachDTO>();
+            List<TuaSachDTO> list = new List<TuaSachDTO>();
             string query = @"
                 SELECT
                     TS.*,

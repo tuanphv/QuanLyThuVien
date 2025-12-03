@@ -1,5 +1,6 @@
 ﻿using DTO;
 using System.ComponentModel;
+using GUI.Helpers;
 
 namespace GUI.DocGia
 {
@@ -12,16 +13,37 @@ namespace GUI.DocGia
             InitializeComponent();
         }
 
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.DocGia;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnThemDocGia.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvDocGia.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvDocGia.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvDocGia.Columns.Contains("Actions"))
+                    dgvDocGia.Columns["Actions"].Visible = false;
+            }
+        }
+
         private void UCDocGia_Load(object sender, EventArgs e)
         {
             dgvDocGia.AutoGenerateColumns = false;
 
- 
             LoadData();
 
 
             dgvDocGia.EditButtonClicked += EditButtonClicked;
             dgvDocGia.DeleteButtonClicked += DeleteButtonClicked;
+
+            // Apply permissions after DataGridView and its columns are ready
+            LoadPermissions();
         }
 
         private void LoadData()

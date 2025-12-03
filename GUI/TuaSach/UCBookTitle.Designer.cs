@@ -33,6 +33,8 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            btnExport = new Button();
+            btnImport = new Button();
             label6 = new Label();
             roundedPanel1 = new GUI.Controls.RoundPanel();
             dgvBookTitles = new GUI.Controls.ActionDataGridView();
@@ -58,6 +60,8 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btnExport);
+            panel1.Controls.Add(btnImport);
             panel1.Controls.Add(label6);
             panel1.Dock = DockStyle.Top;
             panel1.ForeColor = SystemColors.ControlText;
@@ -66,6 +70,38 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 1;
+            // 
+            // btnExport
+            // 
+            btnExport.BackColor = Color.PaleGreen;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnExport.Image = Properties.Resources.excel;
+            btnExport.ImageAlign = ContentAlignment.TopCenter;
+            btnExport.Location = new Point(1533, 5);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(58, 55);
+            btnExport.TabIndex = 15;
+            btnExport.Text = "Export";
+            btnExport.TextAlign = ContentAlignment.BottomCenter;
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            // 
+            // btnImport
+            // 
+            btnImport.BackColor = Color.LightBlue;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnImport.Image = Properties.Resources.upload;
+            btnImport.ImageAlign = ContentAlignment.TopCenter;
+            btnImport.Location = new Point(1451, 5);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(58, 55);
+            btnImport.TabIndex = 15;
+            btnImport.Text = "Import";
+            btnImport.TextAlign = ContentAlignment.BottomCenter;
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // label6
             // 
@@ -93,7 +129,7 @@
             roundedPanel1.Controls.Add(cbTheLoai);
             roundedPanel1.Controls.Add(label7);
             roundedPanel1.Location = new Point(20, 90);
-            roundedPanel1.Margin = new Padding(20, 20, 20, 20);
+            roundedPanel1.Margin = new Padding(20);
             roundedPanel1.Name = "roundedPanel1";
             roundedPanel1.Size = new Size(1593, 644);
             roundedPanel1.TabIndex = 6;
@@ -132,7 +168,7 @@
             dgvBookTitles.EnableHeadersVisualStyles = false;
             dgvBookTitles.GridColor = SystemColors.ControlLight;
             dgvBookTitles.Location = new Point(20, 69);
-            dgvBookTitles.Margin = new Padding(20, 20, 20, 20);
+            dgvBookTitles.Margin = new Padding(20);
             dgvBookTitles.Name = "dgvBookTitles";
             dgvBookTitles.ReadOnly = true;
             dgvBookTitles.RowHeadersVisible = false;
@@ -201,9 +237,9 @@
             btnAddBookTitle.Image = Properties.Resources.plus;
             btnAddBookTitle.ImageAlign = ContentAlignment.MiddleLeft;
             btnAddBookTitle.Location = new Point(1431, 20);
-            btnAddBookTitle.Margin = new Padding(20, 20, 20, 20);
+            btnAddBookTitle.Margin = new Padding(20);
             btnAddBookTitle.Name = "btnAddBookTitle";
-            btnAddBookTitle.Padding = new Padding(3, 3, 3, 3);
+            btnAddBookTitle.Padding = new Padding(3);
             btnAddBookTitle.Size = new Size(140, 30);
             btnAddBookTitle.TabIndex = 13;
             btnAddBookTitle.Text = "  Thêm Tựa sách";
@@ -219,7 +255,7 @@
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(textBox1);
             panel3.Location = new Point(846, 20);
-            panel3.Margin = new Padding(20, 20, 20, 20);
+            panel3.Margin = new Padding(20);
             panel3.Name = "panel3";
             panel3.Size = new Size(545, 30);
             panel3.TabIndex = 12;
@@ -237,7 +273,7 @@
             btnSearch.Location = new Point(471, 0);
             btnSearch.Margin = new Padding(0, 20, 20, 0);
             btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2, 2, 2, 2);
+            btnSearch.Padding = new Padding(2);
             btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
@@ -251,7 +287,7 @@
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBox1.Location = new Point(5, 5);
-            textBox1.Margin = new Padding(5, 5, 5, 5);
+            textBox1.Margin = new Padding(5);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(461, 18);
             textBox1.TabIndex = 0;
@@ -348,5 +384,8 @@
         private DataGridViewImageColumn Image;
         private DataGridViewTextBoxColumn Genres;
         private DataGridViewTextBoxColumn Authors;
+        private PictureBox pictureBox2;
+        private Button btnImport;
+        private Button btnExport;
     }
 }

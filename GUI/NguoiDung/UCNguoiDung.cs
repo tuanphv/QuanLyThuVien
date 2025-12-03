@@ -1,5 +1,6 @@
 ﻿using DTO;
 using System.ComponentModel;
+using GUI.Helpers;
 
 namespace GUI.NguoiDung
 {
@@ -12,16 +13,36 @@ namespace GUI.NguoiDung
             InitializeComponent();
         }
 
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.NguoiDung;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnThemNguoiDung.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvNguoiDung.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvNguoiDung.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvNguoiDung.Columns.Contains("Actions"))
+                    dgvNguoiDung.Columns["Actions"].Visible = false;
+            }
+        }
+
         private void UCNguoiDung_Load(object sender, EventArgs e)
         {
             dgvNguoiDung.AutoGenerateColumns = false;
 
-            // T?i d? li?u
+            // Tải dữ liệu
             LoadData();
 
-            // Gán s? ki?n cho các nút S?a/Xóa trong DataGridView
+            // Gán sự kiện cho các nút Sửa/Xóa trong DataGridView
             dgvNguoiDung.EditButtonClicked += EditButtonClicked;
             dgvNguoiDung.DeleteButtonClicked += DeleteButtonClicked;
+            LoadPermissions();
         }
 
         private void LoadData()
@@ -33,7 +54,7 @@ namespace GUI.NguoiDung
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi t?i d? li?u: " + ex.Message, "L?i",
+                MessageBox.Show("Lỗi khi tải dữ liệu: " + ex.Message, "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -57,7 +78,7 @@ namespace GUI.NguoiDung
             NguoiDungDTO selectedNguoiDung = list[index];
 
             FrmAddEditNguoiDung frm = new FrmAddEditNguoiDung();
-            frm.Text = "Ch?nh s?a Ng??i dùng";
+            frm.Text = "Chỉnh sửa Người dùng";
             frm.NguoiDung = selectedNguoiDung;
 
             var result = frm.ShowDialog();
@@ -74,8 +95,8 @@ namespace GUI.NguoiDung
 
             NguoiDungDTO selectedNguoiDung = list[index];
 
-            var confirm = MessageBox.Show($"B?n có ch?c ch?n mu?n xóa ng??i dùng '{selectedNguoiDung.TenNguoiDung}'?", 
-                "Xác nh?n xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa người dùng '{selectedNguoiDung.TenNguoiDung}'?", 
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
@@ -90,7 +111,7 @@ namespace GUI.NguoiDung
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "L?i",
+                    MessageBox.Show(ex.Message, "Lỗi",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

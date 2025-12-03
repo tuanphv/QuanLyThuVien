@@ -18,7 +18,7 @@ namespace GUI.TuaSach
 
         private void LoadPermissions()
         {
-            int perCode = (int) Helpers.Permission.TuaSach;
+            int perCode = (int)Helpers.Permission.TuaSach;
             bool canAdd = GUI.Helpers.SessionManager.HasPermission(perCode, Helpers.Action.Add);
             btnAddBookTitle.Visible = canAdd;
             bool canEdit = GUI.Helpers.SessionManager.HasPermission(perCode, Helpers.Action.Edit);
@@ -35,7 +35,7 @@ namespace GUI.TuaSach
         {
             dgvBookTitles.AutoGenerateColumns = false;
 
-            allList = BUS.TuaSachBUS.GetAll();
+            allList = new BindingList<TuaSachDTO>(BUS.TuaSachBUS.GetAll());
             list = new BindingList<TuaSachDTO>(allList.ToList());
             dgvBookTitles.DataSource = list;
 
@@ -60,7 +60,8 @@ namespace GUI.TuaSach
             // Setup debounce timer for live search
             searchTimer = new System.Windows.Forms.Timer();
             searchTimer.Interval = 300;
-            searchTimer.Tick += (s, ev) => {
+            searchTimer.Tick += (s, ev) =>
+            {
                 searchTimer.Stop();
                 PerformSearch();
             };
@@ -74,7 +75,7 @@ namespace GUI.TuaSach
 
             isInitialized = true;
         }
-        
+
         private void PerformSearch()
         {
             string keyword = textBox1.Text.Trim();
@@ -90,7 +91,7 @@ namespace GUI.TuaSach
 
             var filtered = allList.Where(t =>
             {
-                bool matchKeyword = string.IsNullOrEmpty(keyword) 
+                bool matchKeyword = string.IsNullOrEmpty(keyword)
                     || (!string.IsNullOrEmpty(t.TenTuaSach) && t.TenTuaSach.ToLowerInvariant().Contains(keywordLower))
                     || (!string.IsNullOrEmpty(t.MaTuaSach) && t.MaTuaSach.ToLowerInvariant().Contains(keywordLower));
 
@@ -136,12 +137,12 @@ namespace GUI.TuaSach
                 {
                     if (BUS.TuaSachBUS.DeleteBookTitle(selectedBookTitle.ID))
                     {
-                        MessageBox.Show("Xóa tựa sách thành công.");
                         // remove from both lists
                         var idxAll = allList.ToList().FindIndex(x => x.ID == selectedBookTitle.ID);
                         if (idxAll >= 0) allList.RemoveAt(idxAll);
                         list.RemoveAt(index);
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("Xóa tựa sách thất bại.");
                     }
@@ -165,5 +166,54 @@ namespace GUI.TuaSach
             }
         }
 
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            var fileBytes = BUS.TuaSachBUS.ExportToExcel();
+
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel Workbook|*.xlsx", FileName = "DanhSachTuaSach.xlsx" })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        System.IO.File.WriteAllBytes(sfd.FileName, fileBytes);
+                        MessageBox.Show("Xuất file thành công.", "Thông báo");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi lưu file: " + ex.Message, "Lỗi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Filter = "Excel Workbook|*.xlsx;*.xls",
+                Title = "Chọn file Excel để nhập tựa sách"
+            };
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var result = BUS.TuaSachBUS.ImportFromExcel(ofd.FileName);
+                    foreach (var ts in result.importedList)
+                    {
+                        allList.Add(ts);
+                        list.Add(ts);
+                    }
+                    MessageBox.Show($"Nhập file thành công.\n\n- Đã thêm: {result.importedList.Count} tựa sách.\n- Thêm thất bại {result.fail} tựa sách do dữ liệu trùng hoặc lỗi.", "Thông báo");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi nhập file: " + ex.Message, "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }
