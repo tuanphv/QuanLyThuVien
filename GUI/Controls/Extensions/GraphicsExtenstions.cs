@@ -1,6 +1,6 @@
 ﻿using System.Drawing.Drawing2D;
 
-namespace RoundButton.Extensions
+namespace GUI.Controls.Extensions
 {
     static class GraphicsExtension
     {

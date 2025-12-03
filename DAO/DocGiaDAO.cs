@@ -9,12 +9,12 @@ namespace DAO
 {
     public class DocGiaDAO
     {
-        // 1. L?y t?t c? ??c gi?
+        // 1. Lấy tất cả độc giả
         public static BindingList<DocGiaDTO> GetAll()
         {
             BindingList<DocGiaDTO> list = new BindingList<DocGiaDTO>();
             string query = @"
-                SELECT 
+                SELECT
                     dg.ID,
                     dg.MaDocGia,
                     dg.HoTen,
@@ -33,24 +33,12 @@ namespace DAO
             DataTable data = DataProvider.Instance.ExecuteQuery(query);
             foreach (DataRow item in data.Rows)
             {
-                DocGiaDTO docGia = new DocGiaDTO(
-                    Convert.ToInt32(item["ID"]),
-                    item["MaDocGia"].ToString() ?? string.Empty,
-                    item["HoTen"].ToString() ?? string.Empty,
-                    Convert.ToDateTime(item["NgaySinh"]),
-                    item["DiaChi"]?.ToString() ?? string.Empty,
-                    Convert.ToDateTime(item["NgayLapThe"]),
-                    Convert.ToDateTime(item["NgayHetHan"]),
-                    Convert.ToInt32(item["TongNoHienTai"]),
-                    item["IDNguoiDung"] != DBNull.Value ? Convert.ToInt32(item["IDNguoiDung"]) : (int?)null,
-                    item["TenDangNhap"]?.ToString() ?? string.Empty
-                );
-                list.Add(docGia);
+                list.Add(MapDocGia(item));
             }
             return list;
         }
 
-        // 2. T?o m� m?i
+        // 2. Tạo mã mới
         public static string TaoMaMoi()
         {
             string query = "SELECT MaDocGia FROM DOCGIA ORDER BY ID DESC LIMIT 1";
@@ -61,7 +49,7 @@ namespace DAO
                 return "DG0001";
             }
 
-            string maCuoi = result.ToString(); // V� d?: "DG0005"
+            string maCuoi = result.ToString(); // Ví dụ: "DG0005"
             string phanSo = maCuoi.Substring(2);
             int so = int.Parse(phanSo);
             so++;
@@ -69,15 +57,15 @@ namespace DAO
             return "DG" + so.ToString("D4");
         }
 
-        // 3. Th�m m?i ??c gi?
+        // 3. Thêm mới độc giả
         public static string Add(DocGiaDTO docGia)
         {
             string maMoi = TaoMaMoi();
 
             string query = @"
-                INSERT INTO DOCGIA (MaDocGia, HoTen, NgaySinh, DiaChi, 
+                INSERT INTO DOCGIA (MaDocGia, HoTen, NgaySinh, DiaChi,
                     NgayLapThe, NgayHetHan, TongNoHienTai, IDNguoiDung)
-                VALUES (@MaDocGia, @HoTen, @NgaySinh, @DiaChi, 
+                VALUES (@MaDocGia, @HoTen, @NgaySinh, @DiaChi,
                     @NgayLapThe, @NgayHetHan, @TongNoHienTai, @IDNguoiDung);
             ";
 
@@ -95,7 +83,7 @@ namespace DAO
             return result > 0 ? maMoi : string.Empty;
         }
 
-        // 4. C?p nh?t ??c gi?
+        // 4. Cập nhật độc giả
         public static bool Update(DocGiaDTO docGia)
         {
             string query = @"
@@ -122,7 +110,7 @@ namespace DAO
             return count > 0;
         }
 
-        // 5. X�a ??c gi?
+        // 5. Xóa độc giả
         public static bool Delete(string maDocGia)
         {
             string query = "DELETE FROM DOCGIA WHERE MaDocGia = @MaDocGia";
@@ -132,7 +120,7 @@ namespace DAO
             return count > 0;
         }
 
-        // 6. Ki?m tra ??c gi? c� ?ang m??n s�ch kh�ng
+        // 6. Kiểm tra độc giả có đang mượn sách không
         public static bool IsInUse(string maDocGia)
         {
             string queryGetId = "SELECT ID FROM DOCGIA WHERE MaDocGia = @MaDocGia";
@@ -146,7 +134,7 @@ namespace DAO
 
             int idDocGia = Convert.ToInt32(result);
 
-            // Ki?m tra xem c� phi?u m??n n�o c?a ??c gi? n�y kh�ng
+            // Kiểm tra xem có phiếu mượn nào của độc giả này không
             string queryCheckUse = "SELECT COUNT(*) FROM PHIEUMUON WHERE IDDocGia = @IDDocGia";
             int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(queryCheckUse,
                 new MySqlParameter("@IDDocGia", idDocGia)
@@ -155,12 +143,12 @@ namespace DAO
             return count > 0;
         }
 
-        // 7. L?y danh s�ch ng??i d�ng ch?a l� ??c gi? (?? g�n t�i kho?n)
+        // 7. Lấy danh sách người dùng chưa là độc giả (để gán tài khoản)
         public static BindingList<NguoiDungDTO> GetNguoiDungChuaLaDocGia()
         {
             BindingList<NguoiDungDTO> list = new BindingList<NguoiDungDTO>();
             string query = @"
-                SELECT 
+                SELECT
                     nd.ID,
                     nd.MaNguoiDung,
                     nd.TenNguoiDung,
@@ -168,7 +156,7 @@ namespace DAO
                 FROM NGUOIDUNG nd
                 LEFT JOIN DOCGIA dg ON nd.ID = dg.IDNguoiDung
                 WHERE dg.ID IS NULL AND nd.IDNhomNguoiDung = (
-                    SELECT ID FROM NHOMNGUOIDUNG WHERE TenNhomNguoiDung = N'??c Gi?'
+                    SELECT ID FROM NHOMNGUOIDUNG WHERE TenNhomNguoiDung = N'Độc Giả'
                 )
                 ORDER BY nd.ID
             ";
@@ -186,7 +174,7 @@ namespace DAO
             return list;
         }
 
-        // 8. C?p nh?t t?ng n?
+        // 8. Cập nhật tổng nợ
         public static bool UpdateTongNo(string maDocGia, int soTien)
         {
             string query = @"
@@ -201,6 +189,53 @@ namespace DAO
             );
 
             return count > 0;
+        }
+
+        public static DocGiaDTO? GetByUserId(int userId)
+        {
+            string query = @"
+                SELECT
+                    dg.ID,
+                    dg.MaDocGia,
+                    dg.HoTen,
+                    dg.NgaySinh,
+                    dg.DiaChi,
+                    dg.NgayLapThe,
+                    dg.NgayHetHan,
+                    dg.TongNoHienTai,
+                    dg.IDNguoiDung,
+                    nd.TenDangNhap
+                FROM DOCGIA dg
+                LEFT JOIN NGUOIDUNG nd ON dg.IDNguoiDung = nd.ID
+                WHERE dg.IDNguoiDung = @IDNguoiDung
+                LIMIT 1
+            ";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query,
+                new MySqlParameter("@IDNguoiDung", userId));
+
+            if (data.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            return MapDocGia(data.Rows[0]);
+        }
+
+        private static DocGiaDTO MapDocGia(DataRow item)
+        {
+            return new DocGiaDTO(
+                Convert.ToInt32(item["ID"]),
+                item["MaDocGia"].ToString() ?? string.Empty,
+                item["HoTen"].ToString() ?? string.Empty,
+                Convert.ToDateTime(item["NgaySinh"]),
+                item["DiaChi"]?.ToString() ?? string.Empty,
+                Convert.ToDateTime(item["NgayLapThe"]),
+                Convert.ToDateTime(item["NgayHetHan"]),
+                Convert.ToInt32(item["TongNoHienTai"]),
+                item["IDNguoiDung"] != DBNull.Value ? Convert.ToInt32(item["IDNguoiDung"]) : (int?)null,
+                item["TenDangNhap"]?.ToString() ?? string.Empty
+            );
         }
     }
 }
