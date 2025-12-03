@@ -20,6 +20,8 @@ namespace GUI.MuonTra
         private Panel panelSearch;
         private TextBox txtSearch;
         private Button btnSearch;
+        private Button btnImport;
+        private Button btnExport;
         private ComboBox cbStatusFilter;
         private DataGridViewTextBoxColumn colPhieu;
         private DataGridViewTextBoxColumn colDocGia;
@@ -52,6 +54,8 @@ namespace GUI.MuonTra
             panelTitle = new Panel();
             lblTitle = new Label();
             panelHeader = new Panel();
+            btnExport = new Button();
+            btnImport = new Button();
             btnThem = new Button();
             cbStatusFilter = new ComboBox();
             panelSearch = new Panel();
@@ -98,6 +102,8 @@ namespace GUI.MuonTra
             panelHeader.Controls.Add(btnThem);
             panelHeader.Controls.Add(cbStatusFilter);
             panelHeader.Controls.Add(panelSearch);
+            panelHeader.Controls.Add(btnExport);
+            panelHeader.Controls.Add(btnImport);
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(30, 118);
             panelHeader.Margin = new Padding(4);
@@ -105,6 +111,38 @@ namespace GUI.MuonTra
             panelHeader.Padding = new Padding(30, 22, 30, 15);
             panelHeader.Size = new Size(2242, 115);
             panelHeader.TabIndex = 2;
+            //
+            // btnExport
+            //
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.MediumSeaGreen;
+            btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnExport.ForeColor = Color.White;
+            btnExport.Location = new Point(1733, 25);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(118, 58);
+            btnExport.TabIndex = 16;
+            btnExport.Text = "Export";
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            //
+            // btnImport
+            //
+            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnImport.BackColor = Color.DarkOrange;
+            btnImport.FlatAppearance.BorderSize = 0;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnImport.ForeColor = Color.White;
+            btnImport.Location = new Point(1607, 25);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(118, 58);
+            btnImport.TabIndex = 15;
+            btnImport.Text = "Import";
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // btnThem
             // 
