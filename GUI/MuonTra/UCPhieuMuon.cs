@@ -26,9 +26,7 @@ namespace GUI.MuonTra
             colDocGia.DataPropertyName = nameof(PhieuMuonDTO.HoTenDocGia);
             colNgayMuon.DataPropertyName = nameof(PhieuMuonDTO.NgayMuon);
             colHanTra.DataPropertyName = nameof(PhieuMuonDTO.NgayTraDuKien);
-            colNgayTra.DataPropertyName = nameof(PhieuMuonDTO.NgayTraThucTe);
             colTinhTrang.DataPropertyName = nameof(PhieuMuonDTO.TinhTrang);
-            colGhiChu.DataPropertyName = nameof(PhieuMuonDTO.GhiChu);
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
             dgvPhieuMuon.EditButtonClicked += DgvPhieuMuon_EditButtonClicked;
@@ -70,8 +68,6 @@ namespace GUI.MuonTra
                 dgvPhieuMuon.Columns[nameof(colNgayMuon)].DefaultCellStyle.Format = "dd/MM/yyyy";
             if (dgvPhieuMuon.Columns[nameof(colHanTra)] != null)
                 dgvPhieuMuon.Columns[nameof(colHanTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
-            if (dgvPhieuMuon.Columns[nameof(colNgayTra)] != null)
-                dgvPhieuMuon.Columns[nameof(colNgayTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
         }
 
         private void FilterPhieuMuon(string keyword)
@@ -168,6 +164,7 @@ namespace GUI.MuonTra
 
         private void DgvPhieuMuon_EditButtonClicked(object? sender, int rowIndex)
         {
+            if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
             dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
             GiaHanPhieuMuonDuocChon();
         }
@@ -194,5 +191,6 @@ namespace GUI.MuonTra
                 MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

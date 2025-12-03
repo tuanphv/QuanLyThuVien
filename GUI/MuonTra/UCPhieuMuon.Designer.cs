@@ -26,9 +26,7 @@ namespace GUI.MuonTra
         private DataGridViewTextBoxColumn colDocGia;
         private DataGridViewTextBoxColumn colNgayMuon;
         private DataGridViewTextBoxColumn colHanTra;
-        private DataGridViewTextBoxColumn colNgayTra;
         private DataGridViewTextBoxColumn colTinhTrang;
-        private DataGridViewTextBoxColumn colGhiChu;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -93,7 +91,7 @@ namespace GUI.MuonTra
             txtSearch.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(12, 10);
             txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "Tìm kiếm phiếu mượn";
+            txtSearch.PlaceholderText = "Tìm mã phiếu, độc giả";
             txtSearch.Size = new Size(200, 23);
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtSearch_TextChanged;
@@ -206,14 +204,6 @@ namespace GUI.MuonTra
             colHanTra.Name = "colHanTra";
             colHanTra.ReadOnly = true;
             //
-            // colNgayTra
-            //
-            colNgayTra = new DataGridViewTextBoxColumn();
-            colNgayTra.HeaderText = "Ngày trả";
-            colNgayTra.MinimumWidth = 6;
-            colNgayTra.Name = "colNgayTra";
-            colNgayTra.ReadOnly = true;
-            //
             // colTinhTrang
             //
             colTinhTrang = new DataGridViewTextBoxColumn();
@@ -221,14 +211,6 @@ namespace GUI.MuonTra
             colTinhTrang.MinimumWidth = 6;
             colTinhTrang.Name = "colTinhTrang";
             colTinhTrang.ReadOnly = true;
-            //
-            // colGhiChu
-            //
-            colGhiChu = new DataGridViewTextBoxColumn();
-            colGhiChu.HeaderText = "Ghi chú";
-            colGhiChu.MinimumWidth = 6;
-            colGhiChu.Name = "colGhiChu";
-            colGhiChu.ReadOnly = true;
             //
             // dgvPhieuMuon
             //
@@ -248,7 +230,7 @@ namespace GUI.MuonTra
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvPhieuMuon.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvPhieuMuon.ColumnHeadersHeight = 46;
-            dgvPhieuMuon.Columns.AddRange(new DataGridViewColumn[] { colPhieu, colDocGia, colNgayMuon, colHanTra, colNgayTra, colTinhTrang, colGhiChu });
+            dgvPhieuMuon.Columns.AddRange(new DataGridViewColumn[] { colPhieu, colDocGia, colNgayMuon, colHanTra, colTinhTrang });
             dgvPhieuMuon.EnableHeadersVisualStyles = false;
             dgvPhieuMuon.GridColor = Color.Gainsboro;
             dgvPhieuMuon.Location = new Point(34, 180);
