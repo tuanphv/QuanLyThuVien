@@ -114,11 +114,18 @@ namespace GUI.MuonTra
             btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSearch.BackColor = Color.DarkTurquoise;
             btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnSearch.ForeColor = Color.White;
+            btnSearch.Image = Properties.Resources.search;
+            btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
             btnSearch.FlatStyle = FlatStyle.Flat;
             btnSearch.Location = new Point(220, -1);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(80, 44);
             btnSearch.TabIndex = 1;
+            btnSearch.Text = "  Tìm";
+            btnSearch.TextAlign = ContentAlignment.MiddleLeft;
+            btnSearch.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSearch.UseVisualStyleBackColor = false;
             // 
             // btnLapPhieuTra

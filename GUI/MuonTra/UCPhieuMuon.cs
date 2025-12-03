@@ -36,7 +36,7 @@ namespace GUI.MuonTra
 
             dgvPhieuMuon.ShowEditButton = false;
             dgvPhieuMuon.ShowDeleteButton = !_isReader;
-            dgvPhieuMuon.ShowExtendButton = !_isReader;
+            dgvPhieuMuon.ShowExtendButton = false;
             dgvPhieuMuon.ShowReturnButton = !_isReader;
 
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
@@ -281,5 +281,9 @@ namespace GUI.MuonTra
             }
         }
 
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

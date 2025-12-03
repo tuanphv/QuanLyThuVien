@@ -24,7 +24,7 @@ namespace GUI.MuonTra
         {
             Text = "Lập phiếu mượn";
             Width = 640;
-            Height = 520;
+            Height = 550;
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;

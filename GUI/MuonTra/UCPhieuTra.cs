@@ -27,13 +27,9 @@ namespace GUI.MuonTra
             KhoiTaoCheDoNguoiDung();
             dgvPhieuTra.AutoGenerateColumns = false;
             dgvPhieuTra.RowTemplate.Height = 42;
-            dgvPhieuTra.EditButtonClicked += DgvPhieuTra_EditButtonClicked;
             dgvPhieuTra.DeleteButtonClicked += DgvPhieuTra_DeleteButtonClicked;
             dgvPhieuTra.ViewButtonClicked += DgvPhieuTra_ViewButtonClicked;
-
-            dgvPhieuTra.ShowEditButton = !_isReader;
             dgvPhieuTra.ShowDeleteButton = !_isReader;
-
             colMaPhieu.DataPropertyName = nameof(PhieuTraDTO.MaPhieuMuon);
             colDocGia.DataPropertyName = nameof(PhieuTraDTO.HoTenDocGia);
             colNgayTra.DataPropertyName = nameof(PhieuTraDTO.NgayTra);
@@ -138,11 +134,6 @@ namespace GUI.MuonTra
             {
                 MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void DgvPhieuTra_EditButtonClicked(object? sender, int e)
-        {
-            MessageBox.Show("Phiếu trả không hỗ trợ chỉnh sửa.");
         }
 
         private void KhoiTaoCheDoNguoiDung()
