@@ -87,7 +87,7 @@ namespace GUI.Controls
                 ("delete", Properties.Resources.bin, ShowDeleteButton),
                 ("view", Properties.Resources.info, ShowViewButton),
                 ("extend", Properties.Resources.calendar, ShowExtendButton),
-                ("return", Properties.Resources.@return, ShowReturnButton)
+                ("return", Properties.Resources._return, ShowReturnButton)
             };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
@@ -164,7 +164,7 @@ namespace GUI.Controls
                 ("delete", Properties.Resources.bin, ShowDeleteButton),
                 ("view", Properties.Resources.info, ShowViewButton),
                 ("extend", Properties.Resources.calendar, ShowExtendButton),
-                ("return", Properties.Resources.@return, ShowReturnButton)
+                ("return", Properties.Resources._return, ShowReturnButton)
             };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
