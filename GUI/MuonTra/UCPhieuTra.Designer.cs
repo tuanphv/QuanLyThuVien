@@ -77,11 +77,11 @@ namespace GUI.MuonTra
             panelTitle.Controls.Add(lblTitle);
             // 
             // panelHeader
-            // 
+            //
             panelHeader.Dock = DockStyle.Top;
-            panelHeader.Location = new Point(0, 70);
+            panelHeader.Location = new Point(0, 84);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(1866, 90);
+            panelHeader.Size = new Size(1866, 112);
             panelHeader.TabIndex = 1;
             panelHeader.Controls.Add(btnLapPhieuTra);
             panelHeader.Controls.Add(panelSearch);
@@ -92,7 +92,7 @@ namespace GUI.MuonTra
             panelSearch.BorderStyle = BorderStyle.FixedSingle;
             panelSearch.Controls.Add(txtSearch);
             panelSearch.Controls.Add(btnSearch);
-            panelSearch.Location = new Point(1200, 23);
+            panelSearch.Location = new Point(900, 23);
             panelSearch.Name = "panelSearch";
             panelSearch.Size = new Size(300, 44);
             panelSearch.TabIndex = 0;
@@ -104,7 +104,7 @@ namespace GUI.MuonTra
             txtSearch.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(12, 10);
             txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "Tìm mã phiếu/độc giả";
+            txtSearch.PlaceholderText = "Tìm mã phiếu,độc giả";
             txtSearch.Size = new Size(200, 23);
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtSearch_TextChanged;
@@ -129,7 +129,7 @@ namespace GUI.MuonTra
             btnLapPhieuTra.FlatStyle = FlatStyle.Flat;
             btnLapPhieuTra.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnLapPhieuTra.ForeColor = Color.White;
-            btnLapPhieuTra.Location = new Point(1520, 22);
+            btnLapPhieuTra.Location = new Point(1230, 22);
             btnLapPhieuTra.Name = "btnLapPhieuTra";
             btnLapPhieuTra.Size = new Size(160, 46);
             btnLapPhieuTra.TabIndex = 2;
