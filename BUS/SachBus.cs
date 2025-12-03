@@ -1,141 +1,59 @@
 // File: SachBUS.cs
 using DAO;
-using DTO;
+using QuanLyThuVien.DTO;
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
+using DTO;
 
-namespace BUS
+namespace QuanLyThuVien.BUS
 {
-    public class SachBUS
+    public class LoSachBUS
     {
-        public static BindingList<SachDTO> GetAll()
+        private LoSachDAO loSachDAO = new LoSachDAO();
+        private ThamSoDAO thamSoDAO = new ThamSoDAO();
+
+        // 1. Kiểm tra Quy định & Thêm lô sách
+        public string ThemLoSach_BUS(int idTuaSach, string nxb, int namXB, decimal donGia)
         {
-            return SachDAO.GetAll();
+            // Lấy tham số quy định
+            int khoangCachNam = thamSoDAO.LayKhoangCachXuatBan();
+            int namHienTai = DateTime.Now.Year;
+
+            // Kiểm tra quy định: Năm XB không được quá cũ so với quy định
+            if ((namHienTai - namXB) > khoangCachNam)
+            {
+                return $"Lỗi: Chỉ nhận sách xuất bản trong vòng {khoangCachNam} năm.";
+            }
+
+            if (donGia <= 0) return "Lỗi: Đơn giá phải lớn hơn 0.";
+
+            // Nếu hợp lệ thì gọi DAO
+            bool ketQua = loSachDAO.ThemLoSach(idTuaSach, nxb, namXB, donGia);
+            return ketQua ? "Thêm lô sách thành công." : "Thêm thất bại.";
         }
 
-        public static string Add(SachDTO sach)
+        // 2. Logic Tồn kho: Tính số lượng còn lại
+        public int TinhSoLuongConLai(int idLoSach)
         {
-            // Validate dữ liệu
-            if (string.IsNullOrWhiteSpace(sach.TieuDe))
-            {
-                throw new Exception("Tiêu đề không được để trống.");
-            }
-
-            if (string.IsNullOrWhiteSpace(sach.ISBN))
-            {
-                throw new Exception("ISBN không được để trống.");
-            }
-
-            if (sach.NamXuatBan < 1900 || sach.NamXuatBan > DateTime.Now.Year)
-            {
-                throw new Exception("Năm xuất bản phải hợp lệ (từ 1900 đến hiện tại).");
-            }
-
-            if (sach.GiaSach < 0)
-            {
-                throw new Exception("Giá sách không được âm.");
-            }
-
-            if (sach.SoLuongTong < 0 || sach.SoLuongCon < 0)
-            {
-                throw new Exception("Số lượng không được âm.");
-            }
-
-            if (sach.SoLuongCon > sach.SoLuongTong)
-            {
-                throw new Exception("Số lượng còn lại không được vượt quá tổng số lượng.");
-            }
-
-            if (sach.MaNXB <= 0)
-            {
-                throw new Exception("Mã nhà xuất bản không hợp lệ.");
-            }
-
-            if (sach.MaTheLoai <= 0)
-            {
-                throw new Exception("Mã thể loại không hợp lệ.");
-            }
-
-            // Kiểm tra ISBN tồn tại
-            if (SachDAO.IsISBNExists(sach.ISBN))
-            {
-                throw new Exception("ISBN đã tồn tại.");
-            }
-
-            return SachDAO.Add(sach);
+            // LayCuonSachSanSang returns List<TuaSachDTO>, not List<CuonSach>
+            List<TuaSachDTO> dsSanSang = loSachDAO.LayCuonSachSanSang(idLoSach);
+            return dsSanSang.Count;
         }
 
-        public static bool Update(SachDTO sach)
+        // 3. Logic Trạng thái: Admin cập nhật tình trạng cuốn sách
+        // (Ví dụ: Chuyển từ "Sẵn sàng" sang "Hỏng" hoặc "Mất")
+        public string CapNhatTrangThaiCuonSach_Admin(int idCuonSach, string trangThaiMoi)
         {
-            // Validate dữ liệu tương tự Add
-            if (string.IsNullOrWhiteSpace(sach.TieuDe))
-            {
-                throw new Exception("Tiêu đề không được để trống.");
-            }
+            // Logic kiểm tra: Admin không được sửa sách đang được mượn thành Sẵn sàng trực tiếp 
+            // mà phải thông qua quy trình Trả sách (tùy nghiệp vụ, ở đây demo đơn giản)
 
-            if (string.IsNullOrWhiteSpace(sach.ISBN))
-            {
-                throw new Exception("ISBN không được để trống.");
-            }
-
-            if (sach.NamXuatBan < 1900 || sach.NamXuatBan > DateTime.Now.Year)
-            {
-                throw new Exception("Năm xuất bản phải hợp lệ (từ 1900 đến hiện tại).");
-            }
-
-            if (sach.GiaSach < 0)
-            {
-                throw new Exception("Giá sách không được âm.");
-            }
-
-            if (sach.SoLuongTong < 0 || sach.SoLuongCon < 0)
-            {
-                throw new Exception("Số lượng không được âm.");
-            }
-
-            if (sach.SoLuongCon > sach.SoLuongTong)
-            {
-                throw new Exception("Số lượng còn lại không được vượt quá tổng số lượng.");
-            }
-
-            if (sach.MaNXB <= 0)
-            {
-                throw new Exception("Mã nhà xuất bản không hợp lệ.");
-            }
-
-            if (sach.MaTheLoai <= 0)
-            {
-                throw new Exception("Mã thể loại không hợp lệ.");
-            }
-
-            // Kiểm tra ISBN tồn tại với sách khác
-            if (SachDAO.IsISBNExists(sach.ISBN) && !SachDAO.IsISBNBelongsToSach(sach.ISBN, sach.MaSach))
-            {
-                throw new Exception("ISBN đã tồn tại với sách khác.");
-            }
-
-            return SachDAO.Update(sach);
+            bool result = loSachDAO.CapNhatTrangThaiCuon(idCuonSach, trangThaiMoi);
+            return result ? "Cập nhật trạng thái thành công." : "Lỗi cập nhật.";
         }
 
-        public static bool Delete(int maSach)
-        {
-            // Kiểm tra xem sách có đang được mượn không
-            if (SachDAO.IsInUse(maSach))
-            {
-                throw new Exception("Không thể xóa sách này.\nSách đang có lịch sử mượn/trả hoặc nhập.");
-            }
-
-            return SachDAO.Delete(maSach);
-        }
-
-        public static string GetNewMaSach()
-        {
-            return SachDAO.TaoMaMoi();
-        }
-
-        public static BindingList<SachDTO> SearchByTieuDe(string tieuDe)
-        {
-            return SachDAO.SearchByTieuDe(tieuDe);
-        }
+        // Gọi xuống DAO để lấy chi tiết hiển thị
+        public LoSach LayThongTinLoSach(int id) => (LoSach)loSachDAO.LayChiTietLoSach(id);
+        public bool SuaThongTinLoSach(int id, string nxb, decimal gia) => loSachDAO.SuaThongTinLoSach(id, nxb, gia);
     }
 }
