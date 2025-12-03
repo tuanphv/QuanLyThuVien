@@ -144,7 +144,7 @@ namespace BUS
                 MaDocGia = phieu.MaDocGia,
                 HoTenDocGia = phieu.HoTenDocGia,
                 NgayTra = DateTime.Today,
-                TongSachTra = phieu.TongSach - phieu.SoSachChuaTra,
+                TongSachTra = phieu.SoSachChuaTra,
                 TongTienPhat = tongTienPhat
             };
         }
