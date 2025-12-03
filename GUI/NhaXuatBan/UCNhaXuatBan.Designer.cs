@@ -94,7 +94,7 @@
             btnThem.ForeColor = Color.White;
             btnThem.Image = Properties.Resources.plus;
             btnThem.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThem.Location = new Point(954, 26);
+            btnThem.Location = new Point(1711, 27);
             btnThem.Margin = new Padding(23, 27, 23, 27);
             btnThem.Name = "btnThem";
             btnThem.Padding = new Padding(3, 4, 3, 4);
@@ -111,7 +111,7 @@
             panel4.BorderStyle = BorderStyle.FixedSingle;
             panel4.Controls.Add(button3);
             panel4.Controls.Add(txtTimKiem);
-            panel4.Location = new Point(420, 27);
+            panel4.Location = new Point(1177, 28);
             panel4.Margin = new Padding(23, 27, 23, 27);
             panel4.Name = "panel4";
             panel4.Size = new Size(465, 39);
