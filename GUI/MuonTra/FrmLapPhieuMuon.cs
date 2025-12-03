@@ -17,6 +17,9 @@ namespace GUI.MuonTra
             InitializeComponent();
         }
 
+        private bool _ngayTraDaChinhSua;
+        private DateTime _hanTraMacDinh;
+
         private void InitializeComponent()
         {
             Text = "Lập phiếu mượn";
@@ -69,7 +72,9 @@ namespace GUI.MuonTra
             var lblNgayMuon = new Label { Text = "Ngày mượn", AutoSize = true, Left = 320, Top = 30, Font = new System.Drawing.Font("Segoe UI", 10F) };
             var dtpNgayMuon = new DateTimePicker { Name = "dtpNgayMuon", Left = 430, Top = 25, Width = 170, Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy", Enabled = false, Value = DateTime.Today };
             var lblNgayTra = new Label { Text = "Hạn trả", AutoSize = true, Left = 320, Top = 75, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var dtpNgayTra = new DateTimePicker { Name = "dtpNgayTra", Left = 430, Top = 70, Width = 170, Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy", MinDate = DateTime.Today, Value = DateTime.Today };
+            _hanTraMacDinh = MuonTraBUS.TinhHanTraMacDinh(DateTime.Today);
+            var dtpNgayTra = new DateTimePicker { Name = "dtpNgayTra", Left = 430, Top = 70, Width = 170, Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy", MinDate = DateTime.Today, Value = _hanTraMacDinh };
+            dtpNgayTra.ValueChanged += (s, e) => { _ngayTraDaChinhSua = true; };
 
             var btnLuu = new Button { Text = "Tạo phiếu", Left = 430, Top = 458, Width = 150, Height = 32, BackColor = System.Drawing.Color.RoyalBlue, FlatStyle = FlatStyle.Flat, ForeColor = System.Drawing.Color.White };
             btnLuu.Click += (s, e) =>
@@ -87,7 +92,8 @@ namespace GUI.MuonTra
                         return;
                     }
 
-                    PhieuMoi = MuonTraBUS.LapPhieuMuon(txtDocGia.Text, _maCuon.ToList(), dtpNgayTra.Value.Date);
+                    DateTime? ngayTra = _ngayTraDaChinhSua ? dtpNgayTra.Value.Date : (DateTime?)null;
+                    PhieuMoi = MuonTraBUS.LapPhieuMuon(txtDocGia.Text, _maCuon.ToList(), ngayTra);
                     DialogResult = DialogResult.OK;
                     Close();
                 }

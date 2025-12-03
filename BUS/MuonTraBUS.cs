@@ -58,9 +58,7 @@ namespace BUS
             }
 
             DateTime ngayMuon = DateTime.Today;
-            DateTime hanTraToiDa = thamSo.SoNgayMuonToiDa > 0
-                ? ngayMuon.AddDays(thamSo.SoNgayMuonToiDa)
-                : ngayMuon;
+            DateTime hanTraToiDa = TinhHanTraMacDinh(ngayMuon, thamSo.SoNgayMuonToiDa);
 
             DateTime ngayTra = ngayTraDuKien?.Date ?? hanTraToiDa.Date;
             if (ngayTra.Date < ngayMuon.Date)
@@ -71,6 +69,19 @@ namespace BUS
                 throw new Exception("Ngày trả dự kiến không được vượt quá ngày hết hạn thẻ độc giả.");
 
             return MuonTraDAO.TaoPhieuMuonVaChiTiet(docGia, danhSachIdCuon, ngayMuon, ngayTra);
+        }
+
+        public static DateTime TinhHanTraMacDinh(DateTime ngayMuon)
+        {
+            var thamSo = MuonTraDAO.LayThamSoMuonTra();
+            return TinhHanTraMacDinh(ngayMuon, thamSo.SoNgayMuonToiDa);
+        }
+
+        private static DateTime TinhHanTraMacDinh(DateTime ngayMuon, int soNgayMuonToiDa)
+        {
+            return soNgayMuonToiDa > 0
+                ? ngayMuon.AddDays(soNgayMuonToiDa)
+                : ngayMuon;
         }
 
         public static PhieuMuonDTO? GiaHanPhieuMuon(int idPhieuMuon, int soNgayGiaHan)
