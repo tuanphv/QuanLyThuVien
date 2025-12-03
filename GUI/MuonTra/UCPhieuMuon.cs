@@ -28,9 +28,14 @@ namespace GUI.MuonTra
             colHanTra.DataPropertyName = nameof(PhieuMuonDTO.NgayTraDuKien);
             colTinhTrang.DataPropertyName = nameof(PhieuMuonDTO.TinhTrang);
 
+            dgvPhieuMuon.ShowEditButton = false;
+            dgvPhieuMuon.ShowDeleteButton = false;
+            dgvPhieuMuon.ShowExtendButton = true;
+            dgvPhieuMuon.ShowReturnButton = true;
+
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
-            dgvPhieuMuon.EditButtonClicked += DgvPhieuMuon_EditButtonClicked;
-            dgvPhieuMuon.DeleteButtonClicked += DgvPhieuMuon_DeleteButtonClicked;
+            dgvPhieuMuon.ExtendButtonClicked += DgvPhieuMuon_ExtendButtonClicked;
+            dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
 
             LoadData();
         }
@@ -43,16 +48,6 @@ namespace GUI.MuonTra
         private void btnThem_Click(object sender, EventArgs e)
         {
             MoFormThemPhieuMuon();
-        }
-
-        private void btnGiaHan_Click(object sender, EventArgs e)
-        {
-            GiaHanPhieuMuonDuocChon();
-        }
-
-        private void btnTra_Click(object sender, EventArgs e)
-        {
-            TraPhieuMuonDuocChon();
         }
 
         private void LoadData()
@@ -162,34 +157,18 @@ namespace GUI.MuonTra
             frm.ShowDialog();
         }
 
-        private void DgvPhieuMuon_EditButtonClicked(object? sender, int rowIndex)
+        private void DgvPhieuMuon_ExtendButtonClicked(object? sender, int rowIndex)
         {
             if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
             dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
             GiaHanPhieuMuonDuocChon();
         }
 
-        private void DgvPhieuMuon_DeleteButtonClicked(object? sender, int rowIndex)
+        private void DgvPhieuMuon_ReturnButtonClicked(object? sender, int rowIndex)
         {
             if (rowIndex < 0 || rowIndex >= dgvPhieuMuon.Rows.Count) return;
-            var phieu = dgvPhieuMuon.Rows[rowIndex].DataBoundItem as PhieuMuonDTO;
-            if (phieu == null) return;
-
-            var confirm = MessageBox.Show($"Bạn muốn xóa phiếu {phieu.MaPhieuMuon}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (confirm != DialogResult.Yes) return;
-
-            try
-            {
-                if (MuonTraBUS.XoaPhieuMuon(phieu.ID))
-                {
-                    list.Remove(phieu);
-                    MessageBox.Show("Đã xóa phiếu mượn.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            dgvPhieuMuon.CurrentCell = dgvPhieuMuon.Rows[rowIndex].Cells[0];
+            TraPhieuMuonDuocChon();
         }
 
     }
