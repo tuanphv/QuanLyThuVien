@@ -246,17 +246,7 @@ namespace GUI.TuaSach
 
         private void FrmAddEditBookTitle_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.DialogResult == DialogResult.Cancel)
-            {
-                var confirm = MessageBox.Show("Bạn có chắc muốn thoát không?", "Xác nhận",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (confirm == DialogResult.No)
-                {
-                    e.Cancel = true;
-                }
-            }
-            else if (this.DialogResult == DialogResult.OK)
+            if (this.DialogResult == DialogResult.OK)
             {
                 if (!ValidateInputs())
                 {
@@ -274,6 +264,16 @@ namespace GUI.TuaSach
             if (string.IsNullOrWhiteSpace(txtBookName.Text))
             {
                 MessageBox.Show("Tên tựa sách không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(this.TuaSach.TheLoai))
+            {
+                MessageBox.Show("Phải có ít nhất một thể loại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(this.TuaSach.TacGia))
+            {
+                MessageBox.Show("Phải có ít nhất một tác giả.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;

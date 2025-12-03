@@ -76,7 +76,7 @@ namespace GUI
                 btn.BackColor = Color.Transparent;
             }
 
-            clickedButton.Font = new Font(clickedButton.Font, FontStyle.Bold);
+            clickedButton.BackColor = Color.FromArgb(70, 255, 255, 255);
 
             foreach (SidebarMenuItem item in menuItems)
             {
