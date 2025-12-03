@@ -1,8 +1,10 @@
+using ClosedXML.Excel;
 using DAO;
 using DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 namespace BUS
@@ -171,6 +173,142 @@ namespace BUS
                 TongSachTra = phieu.SoSachChuaTra,
                 TongTienPhat = tongTienPhat
             };
+        }
+
+        public static byte[] ExportPhieuMuonToExcel()
+        {
+            var danhSachPhieuMuon = MuonTraDAO.LayTatCaPhieuMuon();
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("PhieuMuon");
+
+            worksheet.Cell(1, 1).Value = "Mã phiếu";
+            worksheet.Cell(1, 2).Value = "Mã độc giả";
+            worksheet.Cell(1, 3).Value = "Họ tên độc giả";
+            worksheet.Cell(1, 4).Value = "Ngày mượn";
+            worksheet.Cell(1, 5).Value = "Hạn trả";
+            worksheet.Cell(1, 6).Value = "Sách chưa trả";
+            worksheet.Cell(1, 7).Value = "Tình trạng";
+
+            int row = 2;
+            foreach (var pm in danhSachPhieuMuon)
+            {
+                worksheet.Cell(row, 1).Value = pm.MaPhieuMuon;
+                worksheet.Cell(row, 2).Value = pm.MaDocGia;
+                worksheet.Cell(row, 3).Value = pm.HoTenDocGia;
+                worksheet.Cell(row, 4).Value = pm.NgayMuon;
+                worksheet.Cell(row, 5).Value = pm.NgayTraDuKien;
+                worksheet.Cell(row, 6).Value = pm.SoSachChuaTra;
+                worksheet.Cell(row, 7).Value = pm.TinhTrang;
+                row++;
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return stream.ToArray();
+        }
+
+        public static byte[] ExportPhieuTraToExcel()
+        {
+            var danhSachPhieuTra = MuonTraDAO.LayTatCaPhieuTra();
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("PhieuTra");
+
+            worksheet.Cell(1, 1).Value = "Mã phiếu mượn";
+            worksheet.Cell(1, 2).Value = "Mã độc giả";
+            worksheet.Cell(1, 3).Value = "Họ tên độc giả";
+            worksheet.Cell(1, 4).Value = "Ngày trả";
+            worksheet.Cell(1, 5).Value = "Sách đã trả";
+            worksheet.Cell(1, 6).Value = "Tiền phạt";
+
+            int row = 2;
+            foreach (var pt in danhSachPhieuTra)
+            {
+                worksheet.Cell(row, 1).Value = pt.MaPhieuMuon;
+                worksheet.Cell(row, 2).Value = pt.MaDocGia;
+                worksheet.Cell(row, 3).Value = pt.HoTenDocGia;
+                worksheet.Cell(row, 4).Value = pt.NgayTra;
+                worksheet.Cell(row, 5).Value = pt.TongSachTra;
+                worksheet.Cell(row, 6).Value = pt.TongTienPhat;
+                row++;
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return stream.ToArray();
+        }
+
+        public static (List<PhieuMuonDTO> importedList, int fail) ImportPhieuMuonFromExcel(string filePath)
+        {
+            List<PhieuMuonDTO> importedList = new();
+            int fail = 0;
+
+            using var workbook = new XLWorkbook(filePath);
+            var ws = workbook.Worksheet(1);
+            var rows = ws.RangeUsed()?.RowsUsed();
+            if (rows == null) return (importedList, fail);
+
+            foreach (var row in rows.Skip(1))
+            {
+                try
+                {
+                    string maDocGia = row.Cell(1).GetValue<string>().Trim();
+                    string danhSachMaCuon = row.Cell(2).GetValue<string>();
+                    DateTime? ngayTraDuKien = null;
+                    string ngayTraStr = row.Cell(3).GetValue<string>();
+                    if (!string.IsNullOrWhiteSpace(ngayTraStr) && DateTime.TryParse(ngayTraStr, out DateTime parsed))
+                    {
+                        ngayTraDuKien = parsed;
+                    }
+
+                    var danhSachMaCuonList = danhSachMaCuon
+                        .Split(new[] { ',', ';', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(m => m.Trim())
+                        .Where(m => !string.IsNullOrWhiteSpace(m))
+                        .ToList();
+
+                    var phieu = LapPhieuMuon(maDocGia, danhSachMaCuonList, ngayTraDuKien);
+                    importedList.Add(phieu);
+                }
+                catch
+                {
+                    fail++;
+                }
+            }
+
+            return (importedList, fail);
+        }
+
+        public static (List<PhieuTraDTO> importedList, int fail) ImportPhieuTraFromExcel(string filePath)
+        {
+            List<PhieuTraDTO> importedList = new();
+            int fail = 0;
+
+            using var workbook = new XLWorkbook(filePath);
+            var ws = workbook.Worksheet(1);
+            var rows = ws.RangeUsed()?.RowsUsed();
+            if (rows == null) return (importedList, fail);
+
+            foreach (var row in rows.Skip(1))
+            {
+                try
+                {
+                    string maPhieuMuon = row.Cell(1).GetValue<string>().Trim();
+                    if (string.IsNullOrWhiteSpace(maPhieuMuon))
+                    {
+                        fail++;
+                        continue;
+                    }
+
+                    var phieuTra = LapPhieuTra(maPhieuMuon, out _);
+                    importedList.Add(phieuTra);
+                }
+                catch
+                {
+                    fail++;
+                }
+            }
+
+            return (importedList, fail);
         }
     }
 }
