@@ -7,9 +7,9 @@ namespace DAO
 {
     public class TuaSachDAO
     {
-        public static BindingList<TuaSachDTO> GetAll()
+        public static List<TuaSachDTO> GetAll()
         {
-            BindingList<TuaSachDTO> list = new BindingList<TuaSachDTO>();
+            List<TuaSachDTO> list = new List<TuaSachDTO>();
             string query = @"
                 SELECT
                     TS.*,
@@ -202,6 +202,16 @@ namespace DAO
 
         public static bool DeleteBookTitle(int id)
         {
+            string countQuery = "SELECT COUNT(*) FROM Sach WHERE IDTuaSach = @ID";
+            int associatedCount = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(countQuery,
+                new MySqlParameter("@ID", id)
+            ));
+            if (associatedCount > 0)
+            {
+                // Cannot delete if there are associated books
+                return false;
+            }
+
             string query = @"
                 UPDATE TuaSach
                 SET DaAn = 1 

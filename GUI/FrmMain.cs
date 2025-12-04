@@ -6,6 +6,7 @@ using GUI.NhaCungCap;
 using GUI.NguoiDung;
 using GUI.DocGia;
 using GUI.NhapSach;
+using GUI.MuonTra;
 using System.Data;
 
 namespace GUI
@@ -78,7 +79,7 @@ namespace GUI
                 btn.BackColor = Color.Transparent;
             }
 
-            clickedButton.Font = new Font(clickedButton.Font, FontStyle.Bold);
+            clickedButton.BackColor = Color.FromArgb(70, 255, 255, 255);
 
             foreach (SidebarMenuItem item in menuItems)
             {
@@ -137,8 +138,8 @@ namespace GUI
                 new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle(), 6),
                 new SidebarMenuItem(btnBookStock, new UCPlaceHolder(), 7),
                 new SidebarMenuItem(btnImportBooks, new UCNhapSach(), 8),
-                new SidebarMenuItem(btnBorrow, new UCPlaceHolder(), 9),
-                new SidebarMenuItem(btnReturn, new UCPlaceHolder(), 10),
+                new SidebarMenuItem(btnBorrow, new UCPhieuMuon(), 9),
+                new SidebarMenuItem(btnReturn, new UCPhieuTra(), 10),
                 new SidebarMenuItem(btnPayment, new UCPlaceHolder(), 11),
                 new SidebarMenuItem(btnReportDebt, new BaoCao.UCBaoCao(), 12),
                 new SidebarMenuItem(btnUsers, new UCNguoiDung(), 13),

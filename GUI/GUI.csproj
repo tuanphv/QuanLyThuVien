@@ -24,6 +24,12 @@
     <ProjectReference Include="..\..\QuanLyThuVien\BUS\BUS.csproj" />
     <ProjectReference Include="..\..\QuanLyThuVien\DTO\DTO.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Remove="**\obj\**\*.cs" />
+    <EmbeddedResource Remove="**\obj\**\*.*" />
+    <None Remove="**\obj\**\*.*" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

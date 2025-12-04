@@ -834,5 +834,117 @@ INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
 WHERE YEAR(p.NgayMuon) = 2025
 GROUP BY MONTH(p.NgayMuon)
 ORDER BY Thang;
+-- =========================================================================
+-- SCRIPT THÊM DỮ LIỆU ĐỘC GIẢ QUÁ HẠN (Để test báo cáo)
+-- =========================================================================
+
+USE QLTV;
+
+-- =========================================================================
+-- 1. THÊM CÁC PHIẾU MƯỢN QUÁ HẠN CHƯA TRẢ
+-- =========================================================================
+
+-- Phiếu mượn quá hạn 3 ngày (DG1 - Nguyễn Mai Anh)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES (1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 1);
+
+-- Lấy ID phiếu vừa tạo
+SET @lastPM = LAST_INSERT_ID();
+
+-- Chi tiết mượn (2 cuốn sách chưa trả)
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+VALUES 
+    (@lastPM, 4),   -- Cuốn CS0004 (CSDL Nâng cao)
+    (@lastPM, 18);  -- Cuốn CS0018 (Ông Già Và Biển Cả)
+
+-- =========================================================================
+
+-- Phiếu mượn quá hạn 7 ngày (DG2 - Lê Thành Đô) - Trường hợp nghiêm trọng
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES (2, DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY), 1);
+
+SET @lastPM = LAST_INSERT_ID();
+
+-- Chi tiết mượn (3 cuốn sách chưa trả)
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+VALUES 
+    (@lastPM, 5),   -- Cuốn CS0005 (CSDL Nâng cao)
+    (@lastPM, 19),  -- Cuốn CS0019 (Ông Già Và Biển Cả)
+    (@lastPM, 36);  -- Cuốn CS0036 (C#)
+
+-- =========================================================================
+
+-- Phiếu mượn quá hạn 15 ngày (DG4 - Trần Nhật Huy) - Rất nghiêm trọng
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES (4, DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY), 1);
+
+SET @lastPM = LAST_INSERT_ID();
+
+-- Chi tiết mượn (1 cuốn sách chưa trả)
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+VALUES 
+    (@lastPM, 20);  -- Cuốn CS0020 (Ông Già Và Biển Cả)
+
+-- =========================================================================
+
+-- Phiếu mượn quá hạn 1 ngày (DG3 - Huỳnh Hồng Thu Giang)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES (3, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), 1);
+
+SET @lastPM = LAST_INSERT_ID();
+
+-- Chi tiết mượn (2 cuốn sách chưa trả)
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+VALUES 
+    (@lastPM, 42),  -- Cuốn CS0042 (CTDL)
+    (@lastPM, 102); -- Cuốn CS0102 (Python)
+
+-- =========================================================================
+
+-- Phiếu mượn quá hạn 10 ngày (DG1 - Nguyễn Mai Anh) - Phiếu thứ 2
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
+VALUES (1, DATE_SUB(NOW(), INTERVAL 17 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 1);
+
+SET @lastPM = LAST_INSERT_ID();
+
+-- Chi tiết mượn (1 cuốn sách chưa trả)
+INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+VALUES 
+    (@lastPM, 60);  -- Cuốn CS0060 (AI)
+
+-- =========================================================================
+-- 2. KIỂM TRA KẾT QUẢ
+-- =========================================================================
+
+SELECT '=== DANH SÁCH ĐỘC GIẢ QUÁ HẠN ===' AS ThongTin;
+
+SELECT 
+    dg.MaDocGia,
+    dg.HoTen,
+    p.MaPhieuMuon,
+    p.NgayMuon,
+    p.NgayTraDuKien,
+    DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
+    DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1) as TienPhat
+FROM CT_PHIEUMUON cp
+INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
+WHERE cp.NgayTraThucTe IS NULL 
+  AND p.NgayTraDuKien < CURDATE()
+ORDER BY SoNgayQuaHan DESC;
+
+-- =========================================================================
+-- KẾT QUẢ MONG ĐỢI:
+-- =========================================================================
+-- Sau khi chạy script này, bạn sẽ có:
+-- 
+-- 1. Trần Nhật Huy (DG4): 1 phiếu quá hạn 15 ngày - Tiền phạt: 15,000đ
+-- 2. Nguyễn Mai Anh (DG1): 1 phiếu quá hạn 10 ngày - Tiền phạt: 10,000đ
+-- 3. Lê Thành Đô (DG2): 1 phiếu quá hạn 7 ngày - Tiền phạt: 7,000đ (màu đỏ)
+-- 4. Nguyễn Mai Anh (DG1): 1 phiếu quá hạn 3 ngày - Tiền phạt: 3,000đ
+-- 5. Huỳnh Hồng Thu Giang (DG3): 1 phiếu quá hạn 1 ngày - Tiền phạt: 1,000đ
+--
+-- Tổng: 5 phiếu mượn quá hạn với 9 cuốn sách chưa trả
+-- =========================================================================
 
 

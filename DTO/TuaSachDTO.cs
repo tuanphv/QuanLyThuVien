@@ -15,6 +15,15 @@ namespace DTO
         public string TheLoai { get; set; } = string.Empty;
         public string TacGia { get; set; } = string.Empty;
 
+        public TuaSachDTO() {
+            ID = 0;
+            MaTuaSach = string.Empty;
+            TenTuaSach = string.Empty;
+            AnhBia = null;
+            TheLoai = string.Empty;
+            TacGia = string.Empty;
+        }
+
         public TuaSachDTO(int id, string maTuaSach, string tenTuaSach, byte[]? anh, string theLoai, string tacGia)
         {
             ID= id;

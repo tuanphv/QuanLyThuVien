@@ -12,16 +12,20 @@ namespace GUI.Controls
         public bool ShowEditButton { get; set; } = true;
         public bool ShowDeleteButton { get; set; } = true;
         public bool ShowViewButton { get; set; } = true;
+        public bool ShowExtendButton { get; set; } = false;
+        public bool ShowReturnButton { get; set; } = false;
 
         public event EventHandler<int> EditButtonClicked;
         public event EventHandler<int> DeleteButtonClicked;
         public event EventHandler<int> ViewButtonClicked;
+        public event EventHandler<int> ExtendButtonClicked;
+        public event EventHandler<int> ReturnButtonClicked;
 
         private ToolTip toolTip = new ToolTip();
         private int hoveredRow = -1;
         private string hoveredButton = "";
 
-        private bool eventsAttached = false; // ✅ tránh gắn lại event nhiều lần
+        private bool eventsAttached = false; // tránh gắn lại event nhiều lần
 
         public ActionDataGridView()
         {
@@ -81,7 +85,9 @@ namespace GUI.Controls
             {
                 ("edit", Properties.Resources.edit, ShowEditButton),
                 ("delete", Properties.Resources.bin, ShowDeleteButton),
-                ("view", Properties.Resources.info, ShowViewButton)
+                ("view", Properties.Resources.info, ShowViewButton),
+                ("extend", Properties.Resources.calendar, ShowExtendButton),
+                ("return", Properties.Resources._return, ShowReturnButton)
             };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
@@ -135,6 +141,8 @@ namespace GUI.Controls
                 "edit" => Color.LightBlue,
                 "delete" => Color.LightCoral,
                 "view" => Color.LightGreen,
+                "extend" => Color.SteelBlue,
+                "return" => Color.MediumSeaGreen,
                 _ => Color.LightGray
             };
         }
@@ -151,11 +159,13 @@ namespace GUI.Controls
             int spacing = 6;
 
             var buttons = new List<(string key, Image icon, bool visible)>
-    {
-        ("edit", Properties.Resources.edit, ShowEditButton),
-        ("delete", Properties.Resources.bin, ShowDeleteButton),
-        ("view", Properties.Resources.info, ShowViewButton)
-    };
+            {
+                ("edit", Properties.Resources.edit, ShowEditButton),
+                ("delete", Properties.Resources.bin, ShowDeleteButton),
+                ("view", Properties.Resources.info, ShowViewButton),
+                ("extend", Properties.Resources.calendar, ShowExtendButton),
+                ("return", Properties.Resources._return, ShowReturnButton)
+            };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
             int totalWidth = visibleButtons.Count * buttonWidth + (visibleButtons.Count - 1) * spacing;
@@ -179,7 +189,7 @@ namespace GUI.Controls
                 }
             }
 
-            // ✅ Chỉ vẽ lại nếu thay đổi thực sự
+            // Chỉ vẽ lại nếu thay đổi thực sự
             if (newHoveredRow != hoveredRow || newHoveredButton != hoveredButton)
             {
                 // Vẽ lại cell cũ và mới để tránh sót viền hover
@@ -197,6 +207,8 @@ namespace GUI.Controls
                         "edit" => "Sửa",
                         "delete" => "Xóa",
                         "view" => "Xem",
+                        "extend" => "Gia hạn",
+                        "return" => "Trả",
                         _ => ""
                     });
                 }
@@ -215,6 +227,10 @@ namespace GUI.Controls
                 DeleteButtonClicked?.Invoke(this, e.RowIndex);
             else if (hoveredButton == "view")
                 ViewButtonClicked?.Invoke(this, e.RowIndex);
+            else if (hoveredButton == "extend")
+                ExtendButtonClicked?.Invoke(this, e.RowIndex);
+            else if (hoveredButton == "return")
+                ReturnButtonClicked?.Invoke(this, e.RowIndex);
         }
     }
 }

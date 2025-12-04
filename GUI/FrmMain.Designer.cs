@@ -216,7 +216,7 @@
             btnDashboard.FlatStyle = FlatStyle.Flat;
             btnDashboard.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnDashboard.ForeColor = SystemColors.HighlightText;
-            btnDashboard.Image = Properties.Resources.activity;
+            btnDashboard.Image = Properties.Resources.speedometer;
             btnDashboard.ImageAlign = ContentAlignment.MiddleLeft;
             btnDashboard.Location = new Point(0, 0);
             btnDashboard.Margin = new Padding(0);
@@ -330,7 +330,7 @@
             btnBookTitle.FlatStyle = FlatStyle.Flat;
             btnBookTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnBookTitle.ForeColor = SystemColors.HighlightText;
-            btnBookTitle.Image = Properties.Resources.genre;
+            btnBookTitle.Image = Properties.Resources.book_cover;
             btnBookTitle.ImageAlign = ContentAlignment.MiddleLeft;
             btnBookTitle.Location = new Point(0, 200);
             btnBookTitle.Margin = new Padding(0);
@@ -445,7 +445,7 @@
             btnPermissions.FlatStyle = FlatStyle.Flat;
             btnPermissions.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnPermissions.ForeColor = Color.White;
-            btnPermissions.Image = Properties.Resources.card;
+            btnPermissions.Image = Properties.Resources.user_access;
             btnPermissions.ImageAlign = ContentAlignment.MiddleLeft;
             btnPermissions.Location = new Point(0, 560);
             btnPermissions.Margin = new Padding(0);
@@ -472,7 +472,7 @@
             // 
             // btnLogout
             // 
-            btnLogout.BackColor = Color.SlateBlue;
+            btnLogout.BackColor = Color.MediumPurple;
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.FlatAppearance.MouseDownBackColor = Color.FromArgb(70, 255, 255, 255);
             btnLogout.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 255, 255, 255);

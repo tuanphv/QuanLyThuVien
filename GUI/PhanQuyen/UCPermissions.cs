@@ -2,6 +2,7 @@
 using GUI.TuaSach;
 using System.ComponentModel;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
+using GUI.Helpers;
 
 namespace GUI.PhanQuyen
 {
@@ -20,6 +21,28 @@ namespace GUI.PhanQuyen
         {
             list = BUS.NhomNguoiDungBUS.GetAllNhomNguoiDung();
             dgvUsersGroup.DataSource = list;
+
+            // Apply permissions after grid and columns are ready
+            LoadPermissions();
+        }
+
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.PhanQuyen; // permission code for managing permissions
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnAddBookTitle.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvUsersGroup.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvUsersGroup.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvUsersGroup.Columns.Contains("Actions"))
+                    dgvUsersGroup.Columns["Actions"].Visible = false;
+            }
         }
 
         private void btnAddBookTitle_Click(object sender, EventArgs e)

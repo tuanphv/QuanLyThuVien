@@ -1,4 +1,4 @@
-using BUS;
+Ôªøusing BUS;
 using DTO;
 
 namespace GUI.NhapSach
@@ -43,7 +43,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nh‡ cung c?p: {ex.Message}", "L?i",
+                MessageBox.Show($"L?i khi t?i nh√† cung c?p: {ex.Message}", "L?i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -59,7 +59,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i t?a s·ch: {ex.Message}", "L?i",
+                MessageBox.Show($"L?i khi t?i t?a s√°ch: {ex.Message}", "L?i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -75,7 +75,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nh‡ xu?t b?n: {ex.Message}", "L?i",
+                MessageBox.Show($"L?i khi t?i nh√† xu?t b?n: {ex.Message}", "L?i",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -86,7 +86,7 @@ namespace GUI.NhapSach
             {
                 if (cbTuaSach.SelectedValue == null || cbNhaXuatBan.SelectedValue == null)
                 {
-                    MessageBox.Show("Vui lÚng ch?n t?a s·ch v‡ nh‡ xu?t b?n.", "ThÙng b·o",
+                    MessageBox.Show("Vui l√≤ng ch?n t?a s√°ch v√† nh√† xu?t b?n.", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -96,7 +96,7 @@ namespace GUI.NhapSach
 
                 if (tuaSach == null || nhaXuatBan == null) return;
 
-                // Ki?m tra xem ?„ cÛ trong danh s·ch ch?a
+                // Ki?m tra xem ?√£ c√≥ trong danh s√°ch ch?a
                 var existing = chiTietList.FirstOrDefault(x =>
                     x.IDTuaSach == tuaSach.ID &&
                     x.IDNhaXuatBan == nhaXuatBan.ID &&
@@ -104,12 +104,12 @@ namespace GUI.NhapSach
 
                 if (existing != null)
                 {
-                    MessageBox.Show("S·ch v?i thÙng tin n‡y ?„ cÛ trong danh s·ch nh?p.", "ThÙng b·o",
+                    MessageBox.Show("S√°ch v?i th√¥ng tin n√†y ?√£ c√≥ trong danh s√°ch nh?p.", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // ThÍm v‡o danh s·ch
+                // Th√™m v√†o danh s√°ch
                 var item = new ChiTietNhapItem
                 {
                     IDTuaSach = tuaSach.ID,
@@ -134,7 +134,7 @@ namespace GUI.NhapSach
         {
             if (dgvChiTiet.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lÚng ch?n dÚng c?n xÛa.", "ThÙng b·o",
+                MessageBox.Show("Vui l√≤ng ch·ªçn d√≤ng c·∫ßn x√≥a.", "Th√¥ng b√°o",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -171,7 +171,7 @@ namespace GUI.NhapSach
             {
                 if (cbNhaCungCap.SelectedValue == null)
                 {
-                    MessageBox.Show("Vui lÚng ch?n nh‡ cung c?p.", "ThÙng b·o",
+                    MessageBox.Show("Vui l√≤ng ch?n nh√† cung c?p.", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.DialogResult = DialogResult.None;
                     return;
@@ -179,7 +179,7 @@ namespace GUI.NhapSach
 
                 if (chiTietList.Count == 0)
                 {
-                    MessageBox.Show("Vui lÚng thÍm Ìt nh?t m?t s·ch v‡o phi?u nh?p.", "ThÙng b·o",
+                    MessageBox.Show("Vui l√≤ng th√™m √≠t nh?t m?t s√°ch v√†o phi?u nh?p.", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.DialogResult = DialogResult.None;
                     return;
@@ -192,18 +192,18 @@ namespace GUI.NhapSach
                     NgayNhap = dtpNgayNhap.Value
                 };
 
-                // T?o danh s·ch chi ti?t v‡ x? l˝ Sach/CuonSach
+                // T?o danh s√°ch chi ti?t v√† x? l√Ω Sach/CuonSach
                 var chiTiet = new List<CT_PhieuNhapDTO>();
 
                 foreach (var item in chiTietList)
                 {
-                    // TÏm ho?c t?o m?i lÙ s·ch
+                    // T√¨m ho?c t?o m?i l√¥ s√°ch
                     var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(item.IDTuaSach, item.IDNhaXuatBan, item.NamXB);
 
                     int idSach;
                     if (sach == null)
                     {
-                        // T?o lÙ s·ch m?i
+                        // T?o l√¥ s√°ch m?i
                         var sachMoi = new SachDTO
                         {
                             IDTuaSach = item.IDTuaSach,
@@ -220,7 +220,7 @@ namespace GUI.NhapSach
                         idSach = sach.ID;
                     }
 
-                    // ThÍm v‡o chi ti?t phi?u nh?p
+                    // Th√™m v√†o chi ti?t phi?u nh?p
                     chiTiet.Add(new CT_PhieuNhapDTO
                     {
                         IDSach = idSach,

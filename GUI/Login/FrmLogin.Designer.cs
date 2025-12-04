@@ -223,7 +223,6 @@
             txtPassword.TabIndex = 2;
             txtPassword.Text = "Mật khẩu";
             txtPassword.TextColor = Color.Black;
-            txtPassword.UseSystemPasswordChar = true;
             txtPassword.Enter += txtPassword_Enter;
             txtPassword.KeyDown += txtPassword_KeyDown;
             txtPassword.Leave += txtPassword_Leave;

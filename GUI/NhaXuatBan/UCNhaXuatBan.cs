@@ -1,5 +1,6 @@
 ﻿using BUS;
 using DTO;
+using GUI.Helpers;
 using System.ComponentModel;
 using System.Data;
 
@@ -27,6 +28,26 @@ namespace GUI.NhaXuatBan
             dgvNhaXuatBan.EditButtonClicked += EditButtonClicked;
             dgvNhaXuatBan.DeleteButtonClicked += DeleteButtonClicked;
             // dgvNhaXuatBan.ViewButtonClicked += ViewButtonClicked; (Nếu bạn làm nút Xem)
+            LoadPermissions();
+        }
+
+        private void LoadPermissions()
+        {
+            int permissionCode = (int) Permission.NhaXuatBan;
+            bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
+            btnThem.Visible = canAdd;
+
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvNhaXuatBan.ShowEditButton = canEdit;
+
+            bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
+            dgvNhaXuatBan.ShowDeleteButton = canDelete;
+
+            if (!canEdit && !canDelete)
+            {
+                if (dgvNhaXuatBan.Columns.Contains("Actions"))
+                    dgvNhaXuatBan.Columns["Actions"].Visible = false;
+            }
         }
 
         private void LoadData()
