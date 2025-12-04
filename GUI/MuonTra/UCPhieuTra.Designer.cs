@@ -43,6 +43,8 @@ namespace GUI.MuonTra
             panelSearch = new Panel();
             txtSearch = new TextBox();
             btnSearch = new Button();
+            btnExport = new Button();
+            btnImport = new Button();
             btnLapPhieuTra = new Button();
             btnExport = new Button();
             btnImport = new Button();
@@ -91,6 +93,8 @@ namespace GUI.MuonTra
             panelHeader.Controls.Add(btnImport);
             panelHeader.Controls.Add(btnLapPhieuTra);
             panelHeader.Controls.Add(panelSearch);
+            panelHeader.Controls.Add(btnExport);
+            panelHeader.Controls.Add(btnImport);
             // 
             // panelSearch
             // 

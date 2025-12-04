@@ -12,139 +12,8 @@ namespace GUI.BaoCao
 
         private void UCBaoCao_Load(object sender, EventArgs e)
         {
-
-            dtpTuNgay.Value = DateTime.Now.AddMonths(-1);
-            dtpDenNgay.Value = DateTime.Now;
-
-
-            LoadBaoCaoTheoKhoang();
-            LoadTopSach();
-            LoadTopDocGia();
             LoadBaoCaoQuaHan();
         }
-
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            LoadBaoCaoTheoKhoang();
-        }
-
-        private void LoadBaoCaoTheoKhoang()
-        {
-            try
-            {
-                DateTime tuNgay = dtpTuNgay.Value.Date;
-                DateTime denNgay = dtpDenNgay.Value.Date;
-
-                var result = BaoCaoBUS.GetBaoCaoTheoKhoang(tuNgay, denNgay);
-
-
-                lblKetQua.Text = $"Kết quả: {result.TongLuotMuon} lượt mượn | {result.TongSachMuon} cu?n sách";
-
-                var dt = new System.Data.DataTable();
-                dt.Columns.Add("Tiêu chí", typeof(string));
-                dt.Columns.Add("Giá tr?", typeof(int));
-
-                dt.Rows.Add("Tổng lượt mượn", result.TongLuotMuon);
-                dt.Rows.Add("Tổng sách mượn", result.TongSachMuon);
-
-                dgvTheoKhoang.DataSource = dt;
-
-                if (dgvTheoKhoang.Columns["Tiêu chí"] != null)
-                    dgvTheoKhoang.Columns["Tiêu chí"].Width = 200;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        private void btnLoadTopSach_Click(object sender, EventArgs e)
-        {
-            LoadTopSach();
-        }
-
-        private void LoadTopSach()
-        {
-            try
-            {
-                int top = (int)numTopSach.Value;
-                var list = BaoCaoBUS.GetTopSachMuonNhieu(top);
-
-                dgvTopSach.DataSource = list;
-
-                if (dgvTopSach.Columns["STT"] != null)
-                {
-                    dgvTopSach.Columns["STT"].HeaderText = "STT";
-                }
-
-                if (dgvTopSach.Columns["MaTuaSach"] != null)
-                    dgvTopSach.Columns["MaTuaSach"].HeaderText = "Mã sách";
-
-                if (dgvTopSach.Columns["TenTuaSach"] != null)
-                    dgvTopSach.Columns["TenTuaSach"].HeaderText = "Tên sách";
-
-                if (dgvTopSach.Columns["TheLoai"] != null)
-                    dgvTopSach.Columns["TheLoai"].HeaderText = "Thể loại";
-
-                if (dgvTopSach.Columns["SoLuotMuon"] != null)
-                    dgvTopSach.Columns["SoLuotMuon"].HeaderText = "Lượt mượn";
-
-                if (dgvTopSach.Columns["SoLuongHienCo"] != null)
-                    dgvTopSach.Columns["SoLuongHienCo"].HeaderText = "Còn lại";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        #region Tab 3: Top ??c gi? tích c?c
-        private void btnLoadTopDocGia_Click(object sender, EventArgs e)
-        {
-            LoadTopDocGia();
-        }
-
-        private void LoadTopDocGia()
-        {
-            try
-            {
-                int top = (int)numTopDocGia.Value;
-                var list = BaoCaoBUS.GetTopDocGiaTichCuc(top);
-
-                dgvTopDocGia.DataSource = list;
-
-
-                if (dgvTopDocGia.Columns["STT"] != null)
-                {
-                    dgvTopDocGia.Columns["STT"].HeaderText = "STT";
-                }
-
-                if (dgvTopDocGia.Columns["MaDocGia"] != null)
-                    dgvTopDocGia.Columns["MaDocGia"].HeaderText = "Mã độc giả";
-
-                if (dgvTopDocGia.Columns["HoTen"] != null)
-                    dgvTopDocGia.Columns["HoTen"].HeaderText = "Họ tên";
-
-                if (dgvTopDocGia.Columns["SoLuotMuon"] != null)
-                    dgvTopDocGia.Columns["SoLuotMuon"].HeaderText = "Lượt mượn";
-
-                if (dgvTopDocGia.Columns["TongNo"] != null)
-                    dgvTopDocGia.Columns["TongNo"].HeaderText = "Tổng nợ";
-
-                if (dgvTopDocGia.Columns["NgayLapThe"] != null)
-                {
-                    dgvTopDocGia.Columns["NgayLapThe"].HeaderText = "Ngày lập thể";
-                    dgvTopDocGia.Columns["NgayLapThe"].DefaultCellStyle.Format = "dd/MM/yyyy";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
 
         private void btnLoadQuaHan_Click(object sender, EventArgs e)
         {
@@ -159,6 +28,13 @@ namespace GUI.BaoCao
 
                 dgvQuaHan.DataSource = list;
 
+                // Hiển thị số lượng kết quả
+                if (list == null || list.Count == 0)
+                {
+                    MessageBox.Show("Không có độc giả nào quá hạn chưa trả sách.", "Thông báo", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
                 if (dgvQuaHan.Columns["MaDocGia"] != null)
                     dgvQuaHan.Columns["MaDocGia"].HeaderText = "Mã độc giả";
@@ -185,8 +61,12 @@ namespace GUI.BaoCao
                     dgvQuaHan.Columns["SoNgayQuaHan"].HeaderText = "Số ngày trễ";
 
                 if (dgvQuaHan.Columns["TienPhat"] != null)
+                {
                     dgvQuaHan.Columns["TienPhat"].HeaderText = "Tiền phạt";
+                    dgvQuaHan.Columns["TienPhat"].DefaultCellStyle.Format = "#,##0 đ";
+                }
 
+                // Highlight các dòng quá hạn nhiều (> 7 ngày) bằng màu đỏ nhạt
                 foreach (DataGridViewRow row in dgvQuaHan.Rows)
                 {
                     if (row.Cells["SoNgayQuaHan"].Value != null)
@@ -198,32 +78,15 @@ namespace GUI.BaoCao
                         }
                     }
                 }
+
+                // Hiển thị số lượng kết quả ở title
+                label1.Text = $"Báo cáo nợ quá hạn ({list.Count} độc giả)";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}\n\nChi tiết: {ex.StackTrace}", 
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        #endregion
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

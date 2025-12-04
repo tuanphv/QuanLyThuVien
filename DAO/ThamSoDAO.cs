@@ -1,4 +1,4 @@
-using DTO;
+﻿using DTO;
 using System.Data;
 
 namespace DAO
@@ -23,7 +23,7 @@ namespace DAO
                     Convert.ToInt32(item["DonGiaPhatMoiNgay"])
                 );
             }
-            return null; // Tr??ng h?p ch?a c� tham s?
+            return null; // Tr??ng h?p ch?a có tham s?
         }
     }
 }

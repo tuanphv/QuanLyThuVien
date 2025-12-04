@@ -5,9 +5,11 @@ using GUI.NhaXuatBan;
 using GUI.NhaCungCap;
 using GUI.NguoiDung;
 using GUI.DocGia;
+using GUI.NhapSach;
 using GUI.MuonTra;
 using GUI.Sach;
 using System.Data;
+
 namespace GUI
 {
     public partial class FrmMain : Form
@@ -137,6 +139,8 @@ namespace GUI
                 new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle(), 6),
                 new SidebarMenuItem(btnBookStock, new UCSach(), 7),
                 new SidebarMenuItem(btnImportBooks, new UCPlaceHolder(), 8),
+                new SidebarMenuItem(btnBookStock, new UCPlaceHolder(), 7),
+                new SidebarMenuItem(btnImportBooks, new UCNhapSach(), 8),
                 new SidebarMenuItem(btnBorrow, new UCPhieuMuon(), 9),
                 new SidebarMenuItem(btnReturn, new UCPhieuTra(), 10),
                 new SidebarMenuItem(btnPayment, new UCPlaceHolder(), 11),

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="9.5.0" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Svg" Version="3.4.7" />
   </ItemGroup>
@@ -24,12 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\QuanLyThuVien\BUS\BUS.csproj" />
     <ProjectReference Include="..\..\QuanLyThuVien\DTO\DTO.csproj" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Compile Remove="**\obj\**\*.cs" />
-    <EmbeddedResource Remove="**\obj\**\*.*" />
-    <None Remove="**\obj\**\*.*" />
   </ItemGroup>
 
   <ItemGroup>

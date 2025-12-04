@@ -1,6 +1,7 @@
 ﻿using DTO;
 using System.ComponentModel;
 using GUI.Helpers;
+using ClosedXML.Excel;
 
 namespace GUI.DocGia
 {
@@ -37,7 +38,6 @@ namespace GUI.DocGia
             dgvDocGia.AutoGenerateColumns = false;
 
             LoadData();
-
 
             dgvDocGia.EditButtonClicked += EditButtonClicked;
             dgvDocGia.DeleteButtonClicked += DeleteButtonClicked;
@@ -138,6 +138,102 @@ namespace GUI.DocGia
             ).ToList();
 
             dgvDocGia.DataSource = new BindingList<DocGiaDTO>(danhSachLoc);
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            // 1. Kiểm tra xem có dữ liệu không
+            if (list == null || list.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu để xuất.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // 2. Mở hộp thoại chọn nơi lưu
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Workbook|*.xlsx";
+            sfd.FileName = $"DanhSachDocGia_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // 3. Tạo file Excel bằng ClosedXML
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Độc Giả");
+
+                        // 4. Tạo tiêu đề cột (Header)
+                        worksheet.Cell(1, 1).Value = "Mã Độc Giả";
+                        worksheet.Cell(1, 2).Value = "Họ Tên";
+                        worksheet.Cell(1, 3).Value = "Ngày Sinh";
+                        worksheet.Cell(1, 4).Value = "Địa Chỉ";
+                        worksheet.Cell(1, 5).Value = "Ngày Lập Thẻ";
+                        worksheet.Cell(1, 6).Value = "Ngày Hết Hạn";
+                        worksheet.Cell(1, 7).Value = "Tổng Nợ Hiện Tại";
+                        worksheet.Cell(1, 8).Value = "Tên Đăng Nhập";
+
+                        // Định dạng Header cho đẹp (In đậm, nền xanh)
+                        var headerRow = worksheet.Range("A1:H1");
+                        headerRow.Style.Font.Bold = true;
+                        headerRow.Style.Fill.BackgroundColor = XLColor.LightBlue;
+                        headerRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        headerRow.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                        // 5. Đổ dữ liệu từ List vào Excel
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var docGia = list[i];
+                            int rowIndex = i + 2;
+
+                            worksheet.Cell(rowIndex, 1).Value = docGia.MaDocGia;
+                            worksheet.Cell(rowIndex, 2).Value = docGia.HoTen;
+                            worksheet.Cell(rowIndex, 3).Value = docGia.NgaySinh.ToString("dd/MM/yyyy");
+                            worksheet.Cell(rowIndex, 4).Value = docGia.DiaChi ?? "";
+                            worksheet.Cell(rowIndex, 5).Value = docGia.NgayLapThe.ToString("dd/MM/yyyy");
+                            worksheet.Cell(rowIndex, 6).Value = docGia.NgayHetHan.ToString("dd/MM/yyyy");
+                            worksheet.Cell(rowIndex, 7).Value = docGia.TongNoHienTai;
+                            worksheet.Cell(rowIndex, 8).Value = docGia.TenDangNhap ?? "";
+
+                            // Định dạng số tiền
+                            worksheet.Cell(rowIndex, 7).Style.NumberFormat.Format = "#,##0";
+                        }
+
+                        // Thêm border cho toàn bộ dữ liệu
+                        var dataRange = worksheet.Range($"A1:H{list.Count + 1}");
+                        dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                        dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                        // Tự động chỉnh độ rộng cột
+                        worksheet.Columns().AdjustToContents();
+
+                        // 6. Lưu file
+                        workbook.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Xuất file Excel thành công!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Hỏi người dùng có muốn mở file không
+                    var openFile = MessageBox.Show("Bạn có muốn mở file vừa xuất không?", "Mở file",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    
+                    if (openFile == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = sfd.FileName,
+                            UseShellExecute = true
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xuất file: " + ex.Message, "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

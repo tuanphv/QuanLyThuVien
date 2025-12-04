@@ -44,7 +44,7 @@ namespace DAO
         public static bool Add(SachDTO sach)
         {
             // Sử dụng Transaction để đảm bảo tính toàn vẹn dữ liệu
-            using var connection = DataProvider.Instance.GetConnection();
+            //using var connection = DataProvider.Instance.GetConnection();
 
             try
             {
@@ -113,6 +113,55 @@ namespace DAO
         {
             string query = "UPDATE SACH SET DaAn = 1 WHERE ID = @ID";
             return DataProvider.Instance.ExecuteNonQuery(query, new MySqlParameter("@ID", id)) > 0;
+        }
+
+        public static SachDTO? FindByTuaSachAndNXBAndNamXB(int idTuaSach, int idNhaXuatBan, int namXB)
+        {
+            string query = @"
+                SELECT 
+                    S.ID, S.MaSach, S.IDTuaSach, TS.TenTuaSach,
+                    S.SoLuongTong, S.SoLuongConLai, S.DonGia, S.NamXB,
+                    S.IDNhaXuatBan, NXB.TenNXB as TenNhaXuatBan
+                FROM SACH S
+                INNER JOIN TUASACH TS ON S.IDTuaSach = TS.ID
+                INNER JOIN NHAXUATBAN NXB ON S.IDNhaXuatBan = NXB.ID
+                WHERE S.IDTuaSach = @IDTuaSach 
+                  AND S.IDNhaXuatBan = @IDNhaXuatBan 
+                  AND S.NamXB = @NamXB 
+                  AND S.DaAn = 0
+                LIMIT 1
+            ";
+
+            DataTable data = DataProvider.Instance.ExecuteQuery(query,
+                new MySqlParameter("@IDTuaSach", idTuaSach),
+                new MySqlParameter("@IDNhaXuatBan", idNhaXuatBan),
+                new MySqlParameter("@NamXB", namXB)
+            );
+
+            if (data.Rows.Count > 0)
+            {
+                DataRow item = data.Rows[0];
+                return new SachDTO(
+                    Convert.ToInt32(item["ID"]),
+                    item["MaSach"].ToString() ?? string.Empty,
+                    Convert.ToInt32(item["IDTuaSach"]),
+                    item["TenTuaSach"].ToString() ?? string.Empty,
+                    Convert.ToInt32(item["SoLuongTong"]),
+                    Convert.ToInt32(item["SoLuongConLai"]),
+                    Convert.ToInt32(item["DonGia"]),
+                    Convert.ToInt32(item["NamXB"]),
+                    Convert.ToInt32(item["IDNhaXuatBan"]),
+                    item["TenNhaXuatBan"].ToString() ?? string.Empty
+                );
+            }
+            return null;
+        }
+
+        public static int GetLatestID()
+        {
+            string query = "SELECT LAST_INSERT_ID()";
+            object result = DataProvider.Instance.ExecuteScalar(query);
+            return result != null ? Convert.ToInt32(result) : -1;
         }
     }
 }

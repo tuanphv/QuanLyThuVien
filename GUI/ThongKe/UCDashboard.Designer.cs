@@ -145,7 +145,7 @@
             panel9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel9.Controls.Add(cbTimeInterval);
             panel9.Controls.Add(panel10);
-            panel9.Location = new Point(426, 20);
+            panel9.Location = new Point(556, 20);
             panel9.Margin = new Padding(0, 20, 20, 0);
             panel9.Name = "panel9";
             panel9.Size = new Size(624, 35);
@@ -260,7 +260,7 @@
             roundedPanel1.Location = new Point(20, 20);
             roundedPanel1.Margin = new Padding(10);
             roundedPanel1.Name = "roundedPanel1";
-            roundedPanel1.Size = new Size(252, 110);
+            roundedPanel1.Size = new Size(285, 110);
             roundedPanel1.TabIndex = 1;
             // 
             // lblTotalBooks
@@ -293,7 +293,7 @@
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Image = Properties.Resources._002_book_stack;
-            pictureBox1.Location = new Point(182, 25);
+            pictureBox1.Location = new Point(215, 25);
             pictureBox1.Margin = new Padding(0, 25, 20, 25);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(50, 50);
@@ -312,10 +312,10 @@
             roundedPanel2.Controls.Add(label3);
             roundedPanel2.Controls.Add(pictureBox2);
             roundedPanel2.Dock = DockStyle.Fill;
-            roundedPanel2.Location = new Point(292, 20);
+            roundedPanel2.Location = new Point(325, 20);
             roundedPanel2.Margin = new Padding(10);
             roundedPanel2.Name = "roundedPanel2";
-            roundedPanel2.Size = new Size(252, 110);
+            roundedPanel2.Size = new Size(285, 110);
             roundedPanel2.TabIndex = 1;
             // 
             // lblTotalBooksBorrow
@@ -348,7 +348,7 @@
             pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox2.BackColor = Color.Transparent;
             pictureBox2.Image = Properties.Resources._003_inventory;
-            pictureBox2.Location = new Point(182, 25);
+            pictureBox2.Location = new Point(215, 25);
             pictureBox2.Margin = new Padding(0, 25, 20, 25);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(50, 50);
@@ -367,10 +367,10 @@
             roundedPanel3.Controls.Add(label4);
             roundedPanel3.Controls.Add(pictureBox3);
             roundedPanel3.Dock = DockStyle.Fill;
-            roundedPanel3.Location = new Point(564, 20);
+            roundedPanel3.Location = new Point(630, 20);
             roundedPanel3.Margin = new Padding(10);
             roundedPanel3.Name = "roundedPanel3";
-            roundedPanel3.Size = new Size(252, 110);
+            roundedPanel3.Size = new Size(285, 110);
             roundedPanel3.TabIndex = 1;
             // 
             // lblTotalReaders
@@ -403,7 +403,7 @@
             pictureBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Image = Properties.Resources._005_reader_1;
-            pictureBox3.Location = new Point(182, 25);
+            pictureBox3.Location = new Point(215, 25);
             pictureBox3.Margin = new Padding(0, 25, 20, 25);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(50, 50);
@@ -422,10 +422,10 @@
             roundedPanel4.Controls.Add(label5);
             roundedPanel4.Controls.Add(pictureBox4);
             roundedPanel4.Dock = DockStyle.Fill;
-            roundedPanel4.Location = new Point(836, 20);
+            roundedPanel4.Location = new Point(935, 20);
             roundedPanel4.Margin = new Padding(10);
             roundedPanel4.Name = "roundedPanel4";
-            roundedPanel4.Size = new Size(254, 110);
+            roundedPanel4.Size = new Size(285, 110);
             roundedPanel4.TabIndex = 1;
             // 
             // lblTotalDebt
@@ -459,7 +459,7 @@
             pictureBox4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox4.BackColor = Color.Transparent;
             pictureBox4.Image = Properties.Resources._006_coin;
-            pictureBox4.Location = new Point(184, 25);
+            pictureBox4.Location = new Point(215, 25);
             pictureBox4.Margin = new Padding(0, 25, 20, 25);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(50, 50);
@@ -469,6 +469,7 @@
             // 
             // roundedPanel5
             // 
+            roundedPanel5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             roundedPanel5.BackColor = Color.Transparent;
             roundedPanel5.BackgroundColor = Color.White;
             roundedPanel5.BorderColor = Color.White;
@@ -484,11 +485,12 @@
             roundedPanel5.Margin = new Padding(0);
             roundedPanel5.Name = "roundedPanel5";
             roundedPanel5.Padding = new Padding(20);
-            roundedPanel5.Size = new Size(540, 380);
+            roundedPanel5.Size = new Size(410, 380);
             roundedPanel5.TabIndex = 1;
             // 
             // panel8
             // 
+            panel8.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel8.BackColor = Color.Azure;
             panel8.Controls.Add(metricPanel4);
             panel8.Controls.Add(label10);
@@ -496,7 +498,7 @@
             panel8.Margin = new Padding(0, 10, 0, 20);
             panel8.Name = "panel8";
             panel8.Padding = new Padding(10, 0, 10, 0);
-            panel8.Size = new Size(500, 50);
+            panel8.Size = new Size(370, 50);
             panel8.TabIndex = 3;
             // 
             // metricPanel4
@@ -509,7 +511,7 @@
             metricPanel4.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel4.BorderRadius = 15;
             metricPanel4.BorderWidth = 0F;
-            metricPanel4.Location = new Point(408, 9);
+            metricPanel4.Location = new Point(278, 9);
             metricPanel4.Margin = new Padding(0, 9, 0, 0);
             metricPanel4.Name = "metricPanel4";
             metricPanel4.Padding = new Padding(10, 5, 10, 5);
@@ -532,6 +534,7 @@
             // 
             // panel6
             // 
+            panel6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel6.BackColor = Color.Azure;
             panel6.Controls.Add(metricPanel2);
             panel6.Controls.Add(label8);
@@ -539,7 +542,7 @@
             panel6.Margin = new Padding(0, 10, 0, 0);
             panel6.Name = "panel6";
             panel6.Padding = new Padding(10, 0, 10, 0);
-            panel6.Size = new Size(500, 50);
+            panel6.Size = new Size(370, 50);
             panel6.TabIndex = 3;
             // 
             // metricPanel2
@@ -552,7 +555,7 @@
             metricPanel2.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel2.BorderRadius = 15;
             metricPanel2.BorderWidth = 0F;
-            metricPanel2.Location = new Point(408, 9);
+            metricPanel2.Location = new Point(278, 9);
             metricPanel2.Margin = new Padding(0, 9, 0, 0);
             metricPanel2.Name = "metricPanel2";
             metricPanel2.Padding = new Padding(10, 5, 10, 5);
@@ -588,6 +591,7 @@
             // 
             // panel4
             // 
+            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel4.BackColor = Color.Azure;
             panel4.Controls.Add(lblBorrowCount1);
             panel4.Controls.Add(lblBookBorrow1);
@@ -595,7 +599,7 @@
             panel4.Margin = new Padding(0, 10, 0, 0);
             panel4.Name = "panel4";
             panel4.Padding = new Padding(10, 0, 10, 0);
-            panel4.Size = new Size(500, 50);
+            panel4.Size = new Size(370, 50);
             panel4.TabIndex = 3;
             // 
             // lblBorrowCount1
@@ -608,7 +612,7 @@
             lblBorrowCount1.BorderColor = Color.FromArgb(184, 223, 255);
             lblBorrowCount1.BorderRadius = 15;
             lblBorrowCount1.BorderWidth = 0F;
-            lblBorrowCount1.Location = new Point(408, 9);
+            lblBorrowCount1.Location = new Point(278, 9);
             lblBorrowCount1.Margin = new Padding(0, 9, 0, 0);
             lblBorrowCount1.Name = "lblBorrowCount1";
             lblBorrowCount1.Padding = new Padding(10, 5, 10, 5);
@@ -631,6 +635,7 @@
             // 
             // panel7
             // 
+            panel7.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel7.BackColor = Color.Azure;
             panel7.Controls.Add(metricPanel3);
             panel7.Controls.Add(label9);
@@ -638,7 +643,7 @@
             panel7.Margin = new Padding(0, 10, 0, 0);
             panel7.Name = "panel7";
             panel7.Padding = new Padding(10, 0, 10, 0);
-            panel7.Size = new Size(500, 50);
+            panel7.Size = new Size(370, 50);
             panel7.TabIndex = 3;
             // 
             // metricPanel3
@@ -651,7 +656,7 @@
             metricPanel3.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel3.BorderRadius = 15;
             metricPanel3.BorderWidth = 0F;
-            metricPanel3.Location = new Point(408, 9);
+            metricPanel3.Location = new Point(278, 9);
             metricPanel3.Margin = new Padding(0, 9, 0, 0);
             metricPanel3.Name = "metricPanel3";
             metricPanel3.Padding = new Padding(10, 5, 10, 5);
@@ -674,6 +679,7 @@
             // 
             // panel5
             // 
+            panel5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel5.BackColor = Color.Azure;
             panel5.Controls.Add(metricPanel1);
             panel5.Controls.Add(label7);
@@ -681,7 +687,7 @@
             panel5.Margin = new Padding(0, 10, 0, 0);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(10, 0, 10, 0);
-            panel5.Size = new Size(500, 50);
+            panel5.Size = new Size(370, 50);
             panel5.TabIndex = 3;
             // 
             // metricPanel1
@@ -694,7 +700,7 @@
             metricPanel1.BorderColor = Color.FromArgb(184, 223, 255);
             metricPanel1.BorderRadius = 15;
             metricPanel1.BorderWidth = 0F;
-            metricPanel1.Location = new Point(408, 9);
+            metricPanel1.Location = new Point(278, 9);
             metricPanel1.Margin = new Padding(0, 9, 0, 0);
             metricPanel1.Name = "metricPanel1";
             metricPanel1.Padding = new Padding(10, 5, 10, 5);
@@ -729,7 +735,7 @@
             roundedPanel6.Location = new Point(20, 150);
             roundedPanel6.Margin = new Padding(20, 10, 10, 20);
             roundedPanel6.Name = "roundedPanel6";
-            roundedPanel6.Size = new Size(1070, 760);
+            roundedPanel6.Size = new Size(1200, 760);
             roundedPanel6.TabIndex = 1;
             // 
             // label18
@@ -759,7 +765,7 @@
             barChartControl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             barChartControl1.Location = new Point(20, 69);
             barChartControl1.Name = "barChartControl1";
-            barChartControl1.Size = new Size(1030, 371);
+            barChartControl1.Size = new Size(1160, 371);
             barChartControl1.TabIndex = 6;
             // 
             // panel2
@@ -771,7 +777,7 @@
             panel2.Location = new Point(0, 70);
             panel2.Margin = new Padding(0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1100, 930);
+            panel2.Size = new Size(1230, 930);
             panel2.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -792,7 +798,7 @@
             tableLayoutPanel1.Padding = new Padding(10, 10, 0, 0);
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1100, 140);
+            tableLayoutPanel1.Size = new Size(1230, 140);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // panel3
@@ -801,15 +807,16 @@
             panel3.Controls.Add(roundPanel1);
             panel3.Controls.Add(roundedPanel5);
             panel3.Dock = DockStyle.Right;
-            panel3.Location = new Point(1100, 70);
+            panel3.Location = new Point(1230, 70);
             panel3.Margin = new Padding(0);
             panel3.Name = "panel3";
             panel3.Padding = new Padding(10, 20, 20, 10);
-            panel3.Size = new Size(570, 930);
+            panel3.Size = new Size(440, 930);
             panel3.TabIndex = 3;
             // 
             // roundPanel1
             // 
+            roundPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             roundPanel1.BackColor = Color.Transparent;
             roundPanel1.BackgroundColor = Color.White;
             roundPanel1.BorderColor = Color.Transparent;
@@ -823,7 +830,7 @@
             roundPanel1.Margin = new Padding(0, 20, 0, 0);
             roundPanel1.Name = "roundPanel1";
             roundPanel1.Padding = new Padding(20);
-            roundPanel1.Size = new Size(540, 260);
+            roundPanel1.Size = new Size(410, 260);
             roundPanel1.TabIndex = 1;
             // 
             // label13
@@ -841,6 +848,7 @@
             // 
             // panel11
             // 
+            panel11.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel11.BackColor = Color.AntiqueWhite;
             panel11.Controls.Add(metricPanel7);
             panel11.Controls.Add(label14);
@@ -848,7 +856,7 @@
             panel11.Margin = new Padding(0, 10, 0, 0);
             panel11.Name = "panel11";
             panel11.Padding = new Padding(10, 0, 10, 0);
-            panel11.Size = new Size(500, 50);
+            panel11.Size = new Size(370, 50);
             panel11.TabIndex = 3;
             // 
             // metricPanel7
@@ -862,7 +870,7 @@
             metricPanel7.BorderRadius = 15;
             metricPanel7.BorderWidth = 0F;
             metricPanel7.ForeColor = Color.FromArgb(192, 64, 0);
-            metricPanel7.Location = new Point(395, 9);
+            metricPanel7.Location = new Point(265, 9);
             metricPanel7.Margin = new Padding(0, 9, 0, 0);
             metricPanel7.Name = "metricPanel7";
             metricPanel7.Padding = new Padding(10, 5, 10, 5);
@@ -885,6 +893,7 @@
             // 
             // panel12
             // 
+            panel12.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel12.BackColor = Color.AntiqueWhite;
             panel12.Controls.Add(metricPanel8);
             panel12.Controls.Add(label15);
@@ -892,7 +901,7 @@
             panel12.Margin = new Padding(0, 10, 0, 0);
             panel12.Name = "panel12";
             panel12.Padding = new Padding(10, 0, 10, 0);
-            panel12.Size = new Size(500, 50);
+            panel12.Size = new Size(370, 50);
             panel12.TabIndex = 3;
             // 
             // metricPanel8
@@ -906,7 +915,7 @@
             metricPanel8.BorderRadius = 15;
             metricPanel8.BorderWidth = 0F;
             metricPanel8.ForeColor = Color.FromArgb(192, 64, 0);
-            metricPanel8.Location = new Point(395, 9);
+            metricPanel8.Location = new Point(265, 9);
             metricPanel8.Margin = new Padding(0, 9, 0, 0);
             metricPanel8.Name = "metricPanel8";
             metricPanel8.Padding = new Padding(10, 5, 10, 5);
@@ -929,6 +938,7 @@
             // 
             // panel13
             // 
+            panel13.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel13.BackColor = Color.AntiqueWhite;
             panel13.Controls.Add(metricPanel9);
             panel13.Controls.Add(label16);
@@ -936,7 +946,7 @@
             panel13.Margin = new Padding(0, 10, 0, 0);
             panel13.Name = "panel13";
             panel13.Padding = new Padding(10, 0, 10, 0);
-            panel13.Size = new Size(500, 50);
+            panel13.Size = new Size(370, 50);
             panel13.TabIndex = 3;
             // 
             // metricPanel9
@@ -950,7 +960,7 @@
             metricPanel9.BorderRadius = 15;
             metricPanel9.BorderWidth = 0F;
             metricPanel9.ForeColor = Color.FromArgb(192, 64, 0);
-            metricPanel9.Location = new Point(395, 9);
+            metricPanel9.Location = new Point(265, 9);
             metricPanel9.Margin = new Padding(0, 9, 0, 0);
             metricPanel9.Name = "metricPanel9";
             metricPanel9.Padding = new Padding(10, 5, 10, 5);
