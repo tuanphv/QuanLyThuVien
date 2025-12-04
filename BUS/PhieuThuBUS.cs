@@ -31,5 +31,22 @@ namespace BUS
                 throw new Exception($"Lỗi khi thêm phiếu thu: {ex.Message}", ex);
             }
         }
+
+        public static List<(int ID, string HoTen)> GetAllDocGiaCoPhieuThu()
+        {
+            return DAO.PhieuThuDAO.GetAllDocGiaCoPhieuThu();
+        }
+
+        public static bool DeletePhieuThu(int idPhieuThu)
+        {
+            try
+            {
+                return DAO.PhieuThuDAO.DeletePhieuThu(idPhieuThu);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi xóa phiếu thu: {ex.Message}", ex);
+            }
+        }
     }
 }

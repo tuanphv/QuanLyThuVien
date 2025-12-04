@@ -110,6 +110,7 @@
             txtTienThu.TabIndex = 13;
             txtTienThu.Text = "0";
             txtTienThu.TextAlign = HorizontalAlignment.Right;
+            txtTienThu.Click += txtTienThu_Enter;
             txtTienThu.Enter += txtTienThu_Enter;
             txtTienThu.KeyDown += txtTienThu_KeyDown;
             txtTienThu.Leave += txtTienThu_Leave;
@@ -296,6 +297,7 @@
             Name = "FrmAddPhieuThu";
             StartPosition = FormStartPosition.CenterParent;
             Text = "FrmAddPhieuThu";
+            FormClosing += FrmAddPhieuThu_FormClosing;
             Load += FrmAddPhieuThu_Load;
             roundPanel1.ResumeLayout(false);
             roundPanel1.PerformLayout();

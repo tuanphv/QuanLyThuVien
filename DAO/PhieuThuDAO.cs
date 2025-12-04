@@ -40,14 +40,13 @@ namespace DAO
             try
             {
                 string sql = @"
-                    INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLapPhieu)
+                    INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
                     VALUES (@IDDocGia, @SoTienThu, @NgayLapPhieu);
 
                     SELECT ID, MaPhieuThu FROM PhieuThu WHERE ID = LAST_INSERT_ID()";
                 var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
                 {
                     new MySql.Data.MySqlClient.MySqlParameter("@IDDocGia", phieuThu.IDDocGia),
-                    new MySql.Data.MySqlClient.MySqlParameter("@IDDocGia", phieuThu.TenDocGia),
                     new MySql.Data.MySqlClient.MySqlParameter("@SoTienThu", phieuThu.SoTienThu),
                     new MySql.Data.MySqlClient.MySqlParameter("@NgayLapPhieu", phieuThu.NgayLapPhieu)
                 };
@@ -58,6 +57,48 @@ namespace DAO
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi thêm phiếu thu: {ex.Message}", ex);
+            }
+        }
+
+        public static List<(int ID, string HoTen)> GetAllDocGiaCoPhieuThu()
+        {
+            List<(int ID, string HoTen)> list = new List<(int ID, string HoTen)>();
+            try
+            {
+                string sql = @"
+                    SELECT DISTINCT dg.ID, dg.HoTen
+                    FROM DocGia dg
+                    JOIN PhieuThu pt ON dg.ID = pt.IDDocGia";
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
+                foreach (DataRow row in dt.Rows)
+                {
+                    int id = Convert.ToInt32(row["ID"]);
+                    string hoTen = row["HoTen"].ToString() ?? string.Empty;
+                    list.Add((id, hoTen));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy danh sách độc giả có phiếu thu: {ex.Message}", ex);
+            }
+            return list;
+        }
+
+        public static bool DeletePhieuThu(int idPhieuThu)
+        {
+            try
+            {
+                string sql = "DELETE FROM PhieuThu WHERE ID = @IDPhieuThu";
+                var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
+                {
+                    new MySql.Data.MySqlClient.MySqlParameter("@IDPhieuThu", idPhieuThu)
+                };
+                int rowsAffected = DataProvider.Instance.ExecuteNonQuery(sql, parameters);
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi xóa phiếu thu: {ex.Message}", ex);
             }
         }
     }

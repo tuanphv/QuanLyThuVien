@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             panel1 = new Panel();
             label1 = new Label();
             dgvPhieuThu = new GUI.Controls.ActionDataGridView();
@@ -39,7 +39,7 @@
             colSoTienThu = new DataGridViewTextBoxColumn();
             colNgayLap = new DataGridViewTextBoxColumn();
             roundPanel1 = new GUI.Controls.RoundPanel();
-            comboBox1 = new ComboBox();
+            cbDocGia = new ComboBox();
             label2 = new Label();
             btnThem = new Button();
             panel1.SuspendLayout();
@@ -77,25 +77,25 @@
             dgvPhieuThu.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPhieuThu.BackgroundColor = Color.White;
             dgvPhieuThu.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle7.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
-            dgvPhieuThu.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvPhieuThu.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvPhieuThu.ColumnHeadersHeight = 40;
             dgvPhieuThu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvPhieuThu.Columns.AddRange(new DataGridViewColumn[] { colMaPhieuThu, colDocGia, colSoTienThu, colNgayLap });
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = SystemColors.Window;
-            dataGridViewCellStyle9.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle9.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle9.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.False;
-            dgvPhieuThu.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.Window;
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle6.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
+            dgvPhieuThu.DefaultCellStyle = dataGridViewCellStyle6;
             dgvPhieuThu.EnableHeadersVisualStyles = false;
             dgvPhieuThu.Location = new Point(20, 64);
             dgvPhieuThu.Margin = new Padding(20, 10, 20, 20);
@@ -132,8 +132,8 @@
             // colNgayLap
             // 
             colNgayLap.DataPropertyName = "NgayLapPhieu";
-            dataGridViewCellStyle8.Format = "dd/MM/yyyy";
-            colNgayLap.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle5.Format = "dd/MM/yyyy";
+            colNgayLap.DefaultCellStyle = dataGridViewCellStyle5;
             colNgayLap.HeaderText = "Ngày lập phiếu";
             colNgayLap.Name = "colNgayLap";
             // 
@@ -145,7 +145,7 @@
             roundPanel1.BorderColor = Color.White;
             roundPanel1.BorderRadius = 10;
             roundPanel1.BorderWidth = 0F;
-            roundPanel1.Controls.Add(comboBox1);
+            roundPanel1.Controls.Add(cbDocGia);
             roundPanel1.Controls.Add(label2);
             roundPanel1.Controls.Add(btnThem);
             roundPanel1.Controls.Add(dgvPhieuThu);
@@ -155,14 +155,14 @@
             roundPanel1.Size = new Size(1160, 642);
             roundPanel1.TabIndex = 2;
             // 
-            // comboBox1
+            // cbDocGia
             // 
-            comboBox1.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(87, 23);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(187, 28);
-            comboBox1.TabIndex = 3;
+            cbDocGia.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbDocGia.FormattingEnabled = true;
+            cbDocGia.Location = new Point(87, 23);
+            cbDocGia.Name = "cbDocGia";
+            cbDocGia.Size = new Size(187, 28);
+            cbDocGia.TabIndex = 3;
             // 
             // label2
             // 
@@ -217,7 +217,7 @@
         private Controls.ActionDataGridView dgvPhieuThu;
         private Controls.RoundPanel roundPanel1;
         private Button btnThem;
-        private ComboBox comboBox1;
+        private ComboBox cbDocGia;
         private Label label2;
         private DataGridViewTextBoxColumn colMaPhieuThu;
         private DataGridViewTextBoxColumn colDocGia;
