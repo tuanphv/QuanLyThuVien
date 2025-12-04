@@ -132,9 +132,10 @@ namespace DAO
         public static BindingList<PhieuMuonDTO> LayTatCaPhieuMuon()
         {
             BindingList<PhieuMuonDTO> list = new BindingList<PhieuMuonDTO>();
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
-                                    MAX(cp.NgayTraThucTe) as NgayTraThucTe
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
+                                    COUNT(cp.IDCuonSach) AS TongSach,
+                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
+                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
                              FROM PHIEUMUON pm
                              INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
@@ -147,10 +148,10 @@ namespace DAO
 
         public static PhieuMuonDTO? LayPhieuMuonTheoID(int idPhieuMuon)
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
-                                    COUNT(cp.IDCuonSach) as TongSach,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
-                                    MAX(cp.NgayTraThucTe) as NgayTraThucTe
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
+                                    COUNT(cp.IDCuonSach) AS TongSach,
+                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
+                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
                              FROM PHIEUMUON pm
                              INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
@@ -162,10 +163,10 @@ namespace DAO
 
         public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien,
-                                    COUNT(cp.IDCuonSach) as TongSach,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) as SachChuaTra,
-                                    MAX(cp.NgayTraThucTe) as NgayTraThucTe
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
+                                    COUNT(cp.IDCuonSach) AS TongSach,
+                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
+                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
                              FROM PHIEUMUON pm
                              INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
@@ -178,7 +179,7 @@ namespace DAO
 
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
-            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, cp.NgayTraThucTe, pm.NgayTraDuKien
+            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, cp.NgayTraThucTe, pm.NgayTraDuKien
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
@@ -274,7 +275,7 @@ namespace DAO
 
         public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen,
+            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia,
                                     MAX(cp.NgayTraThucTe) AS NgayTra,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS TongSachTra,
                                     SUM(cp.TienPhat) AS TongTienPhat
@@ -292,7 +293,7 @@ namespace DAO
 
         public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
         {
-            const string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
+            const string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
                                     IFNULL(cp.SoNgayTre, 0) AS SoNgayTre, IFNULL(cp.TienPhat, 0) AS TienPhat
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
