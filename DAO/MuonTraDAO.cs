@@ -275,7 +275,7 @@ namespace DAO
 
         public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia,
+            const string query = @"SELECT pm.ID AS IDPhieuMuon, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia,
                                     MAX(cp.NgayTraThucTe) AS NgayTra,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS TongSachTra,
                                     SUM(cp.TienPhat) AS TongTienPhat
