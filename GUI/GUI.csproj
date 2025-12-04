@@ -27,8 +27,11 @@
 	
   <ItemGroup>
     <Compile Remove="**\obj\**\*.cs" />
+    <Compile Remove="NewFolder\**" />
     <EmbeddedResource Remove="**\obj\**\*.*" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="**\obj\**\*.*" />
+    <None Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>

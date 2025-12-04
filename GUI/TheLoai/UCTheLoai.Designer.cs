@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             panel1 = new Panel();
             label1 = new Label();
             roundPanel1 = new GUI.Controls.RoundPanel();
-            btnExport = new Button();
-            btnImport = new Button();
             dgvTheLoai = new GUI.Controls.ActionDataGridView();
             MaTheLoai = new DataGridViewTextBoxColumn();
             TenTheLoai = new DataGridViewTextBoxColumn();
@@ -42,6 +40,8 @@
             panel3 = new Panel();
             btnSearch = new Button();
             txtTimKiem = new TextBox();
+            button1 = new Button();
+            button2 = new Button();
             panel1.SuspendLayout();
             roundPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTheLoai).BeginInit();
@@ -51,6 +51,8 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(button1);
+            panel1.Controls.Add(button2);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
@@ -76,8 +78,6 @@
             roundPanel1.BorderColor = Color.White;
             roundPanel1.BorderRadius = 10;
             roundPanel1.BorderWidth = 0F;
-            roundPanel1.Controls.Add(btnExport);
-            roundPanel1.Controls.Add(btnImport);
             roundPanel1.Controls.Add(dgvTheLoai);
             roundPanel1.Controls.Add(btnThemTheLoai);
             roundPanel1.Controls.Add(panel3);
@@ -86,32 +86,6 @@
             roundPanel1.Name = "roundPanel1";
             roundPanel1.Size = new Size(1821, 859);
             roundPanel1.TabIndex = 1;
-            // 
-            // btnExport
-            // 
-            btnExport.FlatAppearance.BorderSize = 5;
-            btnExport.FlatStyle = FlatStyle.Popup;
-            btnExport.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            btnExport.Location = new Point(186, 28);
-            btnExport.Name = "btnExport";
-            btnExport.Size = new Size(99, 39);
-            btnExport.TabIndex = 16;
-            btnExport.Text = "Export";
-            btnExport.UseVisualStyleBackColor = true;
-            btnExport.Click += btnExport_Click;
-            // 
-            // btnImport
-            // 
-            btnImport.FlatAppearance.BorderSize = 5;
-            btnImport.FlatStyle = FlatStyle.Popup;
-            btnImport.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            btnImport.Location = new Point(51, 28);
-            btnImport.Name = "btnImport";
-            btnImport.Size = new Size(99, 39);
-            btnImport.TabIndex = 15;
-            btnImport.Text = "Import";
-            btnImport.UseVisualStyleBackColor = true;
-            btnImport.Click += btnImport_Click;
             // 
             // dgvTheLoai
             // 
@@ -124,26 +98,26 @@
             dgvTheLoai.BackgroundColor = Color.White;
             dgvTheLoai.BorderStyle = BorderStyle.None;
             dgvTheLoai.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvTheLoai.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvTheLoai.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvTheLoai.ColumnHeadersHeight = 40;
             dgvTheLoai.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvTheLoai.Columns.AddRange(new DataGridViewColumn[] { MaTheLoai, TenTheLoai });
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(5);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvTheLoai.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new Padding(5);
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvTheLoai.DefaultCellStyle = dataGridViewCellStyle4;
             dgvTheLoai.EnableHeadersVisualStyles = false;
             dgvTheLoai.GridColor = SystemColors.ControlLight;
             dgvTheLoai.Location = new Point(23, 92);
@@ -159,6 +133,8 @@
             dgvTheLoai.ShowDeleteButton = true;
             dgvTheLoai.ShowEditButton = true;
             dgvTheLoai.ShowEditingIcon = false;
+            dgvTheLoai.ShowExtendButton = false;
+            dgvTheLoai.ShowReturnButton = false;
             dgvTheLoai.ShowRowErrors = false;
             dgvTheLoai.ShowViewButton = true;
             dgvTheLoai.Size = new Size(1775, 740);
@@ -247,6 +223,42 @@
             txtTimKiem.TabIndex = 0;
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
             // 
+            // button1
+            // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.BackColor = Color.PaleGreen;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button1.Image = Properties.Resources.excel;
+            button1.ImageAlign = ContentAlignment.TopCenter;
+            button1.Location = new Point(1747, 4);
+            button1.Margin = new Padding(3, 4, 3, 4);
+            button1.Name = "button1";
+            button1.Size = new Size(74, 73);
+            button1.TabIndex = 16;
+            button1.Text = "Export";
+            button1.TextAlign = ContentAlignment.BottomCenter;
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += btnExport_Click;
+            // 
+            // button2
+            // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button2.BackColor = Color.LightBlue;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button2.Image = Properties.Resources.upload;
+            button2.ImageAlign = ContentAlignment.TopCenter;
+            button2.Location = new Point(1652, 4);
+            button2.Margin = new Padding(3, 4, 3, 4);
+            button2.Name = "button2";
+            button2.Size = new Size(74, 73);
+            button2.TabIndex = 17;
+            button2.Text = "Import";
+            button2.TextAlign = ContentAlignment.BottomCenter;
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += btnImport_Click;
+            // 
             // UCTheLoai
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -278,7 +290,7 @@
         private Button btnThemTheLoai;
         private DataGridViewTextBoxColumn MaTheLoai;
         private DataGridViewTextBoxColumn TenTheLoai;
-        private Button btnExport;
-        private Button btnImport;
+        private Button button1;
+        private Button button2;
     }
 }

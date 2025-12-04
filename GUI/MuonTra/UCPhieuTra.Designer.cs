@@ -46,6 +46,8 @@ namespace GUI.MuonTra
             btnExport = new Button();
             btnImport = new Button();
             btnLapPhieuTra = new Button();
+            btnExport = new Button();
+            btnImport = new Button();
             dgvPhieuTra = new ActionDataGridView();
             colMaPhieu = new DataGridViewTextBoxColumn();
             colDocGia = new DataGridViewTextBoxColumn();
