@@ -40,9 +40,6 @@ namespace GUI.MuonTra
             dgvPhieuMuon.ShowExtendButton = false;
             dgvPhieuMuon.ShowReturnButton = !_isReader;
 
-            btnImport.Visible = !_isReader;
-            btnExport.Visible = !_isReader;
-
             dgvPhieuMuon.ViewButtonClicked += DgvPhieuMuon_ViewButtonClicked;
             dgvPhieuMuon.ReturnButtonClicked += DgvPhieuMuon_ReturnButtonClicked;
             dgvPhieuMuon.DeleteButtonClicked += DgvPhieuMuon_DeleteButtonClicked;
