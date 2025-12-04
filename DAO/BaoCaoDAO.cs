@@ -217,18 +217,24 @@ namespace DAO
                         dg.MaDocGia,
                         dg.HoTen,
                         dg.TongNoHienTai as NoHienTai,
-                        COUNT(DISTINCT cp.IDCuonSach) as SoSachQuaHan,
-                        (dg.TongNoHienTai + 
-                            COALESCE(SUM(GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * 
-                                (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)), 0)
-                        ) as TongNoUocTinh
+                        COALESCE(sach_qh.SoSachQuaHan, 0) as SoSachQuaHan,
+                        (dg.TongNoHienTai + COALESCE(sach_qh.TienPhatUocTinh, 0)) as TongNoUocTinh
                     FROM DOCGIA dg
-                    LEFT JOIN PHIEUMUON p ON dg.ID = p.IDDocGia
-                    LEFT JOIN CT_PHIEUMUON cp ON p.ID = cp.IDPhieuMuon 
-                        AND cp.NgayTraThucTe IS NULL 
-                        AND p.NgayTraDuKien < CURDATE()
-                    GROUP BY dg.ID, dg.MaDocGia, dg.HoTen, dg.TongNoHienTai
-                    HAVING dg.TongNoHienTai > 0 OR SoSachQuaHan > 0
+                    LEFT JOIN (
+                        SELECT 
+                            p.IDDocGia,
+                            COUNT(DISTINCT cp.IDCuonSach) as SoSachQuaHan,
+                            SUM(
+                                GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * 
+                                (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)
+                            ) as TienPhatUocTinh
+                        FROM CT_PHIEUMUON cp
+                        INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                        WHERE cp.NgayTraThucTe IS NULL 
+                          AND p.NgayTraDuKien < CURDATE()
+                        GROUP BY p.IDDocGia
+                    ) sach_qh ON dg.ID = sach_qh.IDDocGia
+                    WHERE dg.TongNoHienTai > 0 OR COALESCE(sach_qh.SoSachQuaHan, 0) > 0
                     ORDER BY TongNoUocTinh DESC, SoSachQuaHan DESC";
 
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
