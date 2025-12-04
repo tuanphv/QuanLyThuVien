@@ -44,6 +44,52 @@ namespace DTO
         }
     }
 
+    // DTO m?i cho báo cáo n? quá h?n theo ??c gi?
+    public class BaoCaoNoDocGiaDTO
+    {
+        public string MaDocGia { get; set; }
+        public string HoTen { get; set; }
+        public int NoHienTai { get; set; }  // S? ti?n ph?t ?ã ghi nh?n
+        public int SoSachQuaHan { get; set; }  // S? b?n sao sách quá h?n ch?a tr?
+        public int TongNoUocTinh { get; set; }  // N? hi?n t?i + ti?n ph?t d? ki?n
+
+        public BaoCaoNoDocGiaDTO() { }
+
+        public BaoCaoNoDocGiaDTO(string maDocGia, string hoTen, int noHienTai, 
+            int soSachQuaHan, int tongNoUocTinh)
+        {
+            MaDocGia = maDocGia;
+            HoTen = hoTen;
+            NoHienTai = noHienTai;
+            SoSachQuaHan = soSachQuaHan;
+            TongNoUocTinh = tongNoUocTinh;
+        }
+    }
+
+    // DTO cho chi ti?t sách quá h?n c?a m?t ??c gi?
+    public class ChiTietSachQuaHanDTO
+    {
+        public string MaCuonSach { get; set; }
+        public string TenSach { get; set; }
+        public string MaPhieuMuon { get; set; }
+        public DateTime NgayTraDuKien { get; set; }
+        public int SoNgayQuaHan { get; set; }
+        public int TienPhatUocTinh { get; set; }
+
+        public ChiTietSachQuaHanDTO() { }
+
+        public ChiTietSachQuaHanDTO(string maCuonSach, string tenSach, string maPhieuMuon,
+            DateTime ngayTraDuKien, int soNgayQuaHan, int tienPhatUocTinh)
+        {
+            MaCuonSach = maCuonSach;
+            TenSach = tenSach;
+            MaPhieuMuon = maPhieuMuon;
+            NgayTraDuKien = ngayTraDuKien;
+            SoNgayQuaHan = soNgayQuaHan;
+            TienPhatUocTinh = tienPhatUocTinh;
+        }
+    }
+
     public class BaoCaoTopSachDTO
     {
         public int STT { get; set; }

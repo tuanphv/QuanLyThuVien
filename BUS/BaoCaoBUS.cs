@@ -39,5 +39,20 @@ namespace BUS
 
             return BaoCaoDAO.GetTopDocGiaTichCuc(top);
         }
+
+        public static List<BaoCaoNoDocGiaDTO> GetBaoCaoNoDocGia()
+        {
+            return BaoCaoDAO.GetBaoCaoNoDocGia();
+        }
+
+        public static List<ChiTietSachQuaHanDTO> GetChiTietSachQuaHan(string maDocGia)
+        {
+            if (string.IsNullOrWhiteSpace(maDocGia))
+            {
+                throw new Exception("Mã độc giả không được để trống!");
+            }
+
+            return BaoCaoDAO.GetChiTietSachQuaHan(maDocGia);
+        }
     }
 }
