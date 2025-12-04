@@ -1,5 +1,6 @@
 using BUS;
 using DTO;
+using GUI.Helpers;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -42,6 +43,13 @@ namespace GUI.MuonTra
             dgvChiTiet.DataSource = _chiTiet;
             btnTraSach.Enabled = _chiTiet.Any(c => !c.NgayTraThucTe.HasValue);
             btnGiaHan.Enabled = btnTraSach.Enabled;
+
+            bool isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (isReader)
+            {
+                btnGiaHan.Visible = false;
+                btnTraSach.Left = btnGiaHan.Left;
+            }
         }
 
         private void btnGiaHan_Click(object sender, EventArgs e)
