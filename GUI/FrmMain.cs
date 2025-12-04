@@ -8,6 +8,7 @@ using GUI.DocGia;
 using GUI.NhapSach;
 using GUI.MuonTra;
 using GUI.Sach;
+using GUI.PhieuThu;
 using System.Data;
 
 namespace GUI
@@ -141,7 +142,7 @@ namespace GUI
                 new SidebarMenuItem(btnImportBooks, new UCNhapSach(), 8),
                 new SidebarMenuItem(btnBorrow, new UCPhieuMuon(), 9),
                 new SidebarMenuItem(btnReturn, new UCPhieuTra(), 10),
-                new SidebarMenuItem(btnPayment, new UCPlaceHolder(), 11),
+                new SidebarMenuItem(btnPayment, new UCPhieuThu(), 11),
                 new SidebarMenuItem(btnReportDebt, new BaoCao.UCBaoCao(), 12),
                 new SidebarMenuItem(btnUsers, new UCNguoiDung(), 13),
                 new SidebarMenuItem(btnReaders, new UCDocGia(), 14),

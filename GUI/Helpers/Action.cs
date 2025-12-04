@@ -17,6 +17,7 @@
         NguoiDung = 13,
         DocGia = 14,
         PhanQuyen = 15,
+        ThongKeNo = 16,
     }
 
     public enum Action

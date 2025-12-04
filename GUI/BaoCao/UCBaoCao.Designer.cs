@@ -33,7 +33,11 @@
             panel1 = new Panel();
             label1 = new Label();
             panel2 = new Panel();
+            btnExportExcel = new Button();
+            btnLoadNoDocGia = new Button();
             btnLoadQuaHan = new Button();
+            txtTimKiem = new TextBox();
+            label2 = new Label();
             dgvQuaHan = new DataGridView();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -46,17 +50,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8F, FontStyle.Bold);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(357, 46);
+            label1.Size = new Size(267, 37);
             label1.TabIndex = 0;
             label1.Text = "Báo cáo nợ quá hạn";
             // 
@@ -64,26 +69,87 @@
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel2.BackColor = Color.White;
+            panel2.Controls.Add(btnExportExcel);
+            panel2.Controls.Add(btnLoadNoDocGia);
             panel2.Controls.Add(btnLoadQuaHan);
-            panel2.Location = new Point(23, 120);
+            panel2.Controls.Add(txtTimKiem);
+            panel2.Controls.Add(label2);
+            panel2.Location = new Point(20, 90);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1821, 60);
+            panel2.Size = new Size(1593, 45);
             panel2.TabIndex = 1;
+            // 
+            // btnExportExcel
+            // 
+            btnExportExcel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExportExcel.BackColor = Color.FromArgb(40, 167, 69);
+            btnExportExcel.FlatAppearance.BorderSize = 0;
+            btnExportExcel.FlatStyle = FlatStyle.Flat;
+            btnExportExcel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnExportExcel.ForeColor = Color.White;
+            btnExportExcel.Location = new Point(1450, 9);
+            btnExportExcel.Margin = new Padding(3, 2, 3, 2);
+            btnExportExcel.Name = "btnExportExcel";
+            btnExportExcel.Size = new Size(131, 26);
+            btnExportExcel.TabIndex = 4;
+            btnExportExcel.Text = "Xuất Excel";
+            btnExportExcel.UseVisualStyleBackColor = false;
+            btnExportExcel.Click += btnExportExcel_Click;
+            // 
+            // btnLoadNoDocGia
+            // 
+            btnLoadNoDocGia.BackColor = Color.DeepSkyBlue;
+            btnLoadNoDocGia.FlatAppearance.BorderSize = 0;
+            btnLoadNoDocGia.FlatStyle = FlatStyle.Flat;
+            btnLoadNoDocGia.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnLoadNoDocGia.ForeColor = Color.White;
+            btnLoadNoDocGia.Location = new Point(9, 9);
+            btnLoadNoDocGia.Margin = new Padding(3, 2, 3, 2);
+            btnLoadNoDocGia.Name = "btnLoadNoDocGia";
+            btnLoadNoDocGia.Size = new Size(170, 26);
+            btnLoadNoDocGia.TabIndex = 0;
+            btnLoadNoDocGia.Text = "Báo cáo nợ độc giả";
+            btnLoadNoDocGia.UseVisualStyleBackColor = false;
+            btnLoadNoDocGia.Click += btnLoadNoDocGia_Click;
             // 
             // btnLoadQuaHan
             // 
-            btnLoadQuaHan.BackColor = Color.DeepSkyBlue;
+            btnLoadQuaHan.BackColor = Color.SlateGray;
             btnLoadQuaHan.FlatAppearance.BorderSize = 0;
             btnLoadQuaHan.FlatStyle = FlatStyle.Flat;
             btnLoadQuaHan.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnLoadQuaHan.ForeColor = Color.White;
-            btnLoadQuaHan.Location = new Point(10, 12);
+            btnLoadQuaHan.Location = new Point(185, 9);
+            btnLoadQuaHan.Margin = new Padding(3, 2, 3, 2);
             btnLoadQuaHan.Name = "btnLoadQuaHan";
-            btnLoadQuaHan.Size = new Size(150, 35);
-            btnLoadQuaHan.TabIndex = 0;
-            btnLoadQuaHan.Text = "Tải dữ liệu";
+            btnLoadQuaHan.Size = new Size(170, 26);
+            btnLoadQuaHan.TabIndex = 1;
+            btnLoadQuaHan.Text = "Báo cáo theo phiếu";
             btnLoadQuaHan.UseVisualStyleBackColor = false;
             btnLoadQuaHan.Click += btnLoadQuaHan_Click;
+            // 
+            // txtTimKiem
+            // 
+            txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtTimKiem.Font = new Font("Segoe UI", 10F);
+            txtTimKiem.Location = new Point(1130, 9);
+            txtTimKiem.Name = "txtTimKiem";
+            txtTimKiem.PlaceholderText = "Nhập mã hoặc tên độc giả...";
+            txtTimKiem.Size = new Size(300, 25);
+            txtTimKiem.TabIndex = 3;
+            txtTimKiem.TextChanged += txtTimKiem_TextChanged;
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 10F);
+            label2.Location = new Point(1050, 12);
+            label2.Name = "label2";
+            label2.Size = new Size(70, 19);
+            label2.TabIndex = 2;
+            label2.Text = "Tìm kiếm:";
             // 
             // dgvQuaHan
             // 
@@ -115,30 +181,34 @@
             dgvQuaHan.DefaultCellStyle = dataGridViewCellStyle2;
             dgvQuaHan.EnableHeadersVisualStyles = false;
             dgvQuaHan.GridColor = SystemColors.ControlLight;
-            dgvQuaHan.Location = new Point(23, 195);
+            dgvQuaHan.Location = new Point(20, 146);
+            dgvQuaHan.Margin = new Padding(3, 2, 3, 2);
             dgvQuaHan.Name = "dgvQuaHan";
             dgvQuaHan.ReadOnly = true;
             dgvQuaHan.RowHeadersVisible = false;
             dgvQuaHan.RowHeadersWidth = 51;
             dgvQuaHan.RowTemplate.Height = 40;
             dgvQuaHan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvQuaHan.Size = new Size(1821, 784);
+            dgvQuaHan.Size = new Size(1593, 588);
             dgvQuaHan.TabIndex = 2;
+            dgvQuaHan.CellDoubleClick += dgvQuaHan_CellDoubleClick;
             // 
             // UCBaoCao
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(dgvQuaHan);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCBaoCao";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCBaoCao_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvQuaHan).EndInit();
             ResumeLayout(false);
         }
@@ -148,7 +218,11 @@
         private Panel panel1;
         private Label label1;
         private Panel panel2;
+        private Button btnLoadNoDocGia;
         private Button btnLoadQuaHan;
         private DataGridView dgvQuaHan;
+        private TextBox txtTimKiem;
+        private Label label2;
+        private Button btnExportExcel;
     }
 }

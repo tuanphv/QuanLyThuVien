@@ -62,12 +62,13 @@ namespace DAO
                         p.NgayMuon,
                         p.NgayTraDuKien,
                         DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
-                        DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1) as TienPhat
+                        SUM(DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)) as TienPhat
                     FROM CT_PHIEUMUON cp
                     INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                     INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
                     WHERE cp.NgayTraThucTe IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
+                    GROUP BY p.ID
                     ORDER BY SoNgayQuaHan DESC";
 
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
@@ -197,6 +198,115 @@ namespace DAO
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi lấy top độc giả: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy danh sách độc giả có nợ quá hạn
+        /// </summary>
+        public static List<BaoCaoNoDocGiaDTO> GetBaoCaoNoDocGia()
+        {
+            var list = new List<BaoCaoNoDocGiaDTO>();
+
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        dg.MaDocGia,
+                        dg.HoTen,
+                        dg.TongNoHienTai as NoHienTai,
+                        COUNT(DISTINCT cp.IDCuonSach) as SoSachQuaHan,
+                        (dg.TongNoHienTai + 
+                            COALESCE(SUM(GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * 
+                                (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)), 0)
+                        ) as TongNoUocTinh
+                    FROM DOCGIA dg
+                    LEFT JOIN PHIEUMUON p ON dg.ID = p.IDDocGia
+                    LEFT JOIN CT_PHIEUMUON cp ON p.ID = cp.IDPhieuMuon 
+                        AND cp.NgayTraThucTe IS NULL 
+                        AND p.NgayTraDuKien < CURDATE()
+                    GROUP BY dg.ID, dg.MaDocGia, dg.HoTen, dg.TongNoHienTai
+                    HAVING dg.TongNoHienTai > 0 OR SoSachQuaHan > 0
+                    ORDER BY TongNoUocTinh DESC, SoSachQuaHan DESC";
+
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new BaoCaoNoDocGiaDTO(
+                            row["MaDocGia"]?.ToString() ?? "",
+                            row["HoTen"]?.ToString() ?? "",
+                            row["NoHienTai"] != DBNull.Value ? Convert.ToInt32(row["NoHienTai"]) : 0,
+                            row["SoSachQuaHan"] != DBNull.Value ? Convert.ToInt32(row["SoSachQuaHan"]) : 0,
+                            row["TongNoUocTinh"] != DBNull.Value ? Convert.ToInt32(row["TongNoUocTinh"]) : 0
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy báo cáo nợ độc giả: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy chi tiết sách quá hạn của một độc giả
+        /// </summary>
+        public static List<ChiTietSachQuaHanDTO> GetChiTietSachQuaHan(string maDocGia)
+        {
+            var list = new List<ChiTietSachQuaHanDTO>();
+
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        cs.MaCuonSach,
+                        ts.TenTuaSach as TenSach,
+                        p.MaPhieuMuon,
+                        p.NgayTraDuKien,
+                        DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
+                        (DATEDIFF(CURDATE(), p.NgayTraDuKien) * 
+                            (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)) as TienPhatUocTinh
+                    FROM CT_PHIEUMUON cp
+                    INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
+                    INNER JOIN SACH s ON cs.IDSach = s.ID
+                    INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                    INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                    INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
+                    WHERE dg.MaDocGia = @MaDocGia
+                      AND cp.NgayTraThucTe IS NULL 
+                      AND p.NgayTraDuKien < CURDATE()
+                    ORDER BY p.NgayTraDuKien ASC";
+
+                var param = new MySqlParameter("@MaDocGia", maDocGia);
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql, param);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new ChiTietSachQuaHanDTO(
+                            row["MaCuonSach"]?.ToString() ?? "",
+                            row["TenSach"]?.ToString() ?? "",
+                            row["MaPhieuMuon"]?.ToString() ?? "",
+                            row["NgayTraDuKien"] != DBNull.Value ? Convert.ToDateTime(row["NgayTraDuKien"]) : DateTime.MinValue,
+                            row["SoNgayQuaHan"] != DBNull.Value ? Convert.ToInt32(row["SoNgayQuaHan"]) : 0,
+                            row["TienPhatUocTinh"] != DBNull.Value ? Convert.ToInt32(row["TienPhatUocTinh"]) : 0
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy chi tiết sách quá hạn: {ex.Message}", ex);
             }
 
             return list;
