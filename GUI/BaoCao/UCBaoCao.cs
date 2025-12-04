@@ -12,12 +12,15 @@ namespace GUI.BaoCao
 
         private void UCBaoCao_Load(object sender, EventArgs e)
         {
+
             LoadBaoCaoQuaHan();
         }
 
         private void btnLoadQuaHan_Click(object sender, EventArgs e)
         {
-            LoadBaoCaoQuaHan();
+            var list = BaoCaoBUS.GetBaoCaoQuaHan();
+
+            dgvQuaHan.DataSource = list;
         }
 
         private void LoadBaoCaoQuaHan()
@@ -78,9 +81,6 @@ namespace GUI.BaoCao
                         }
                     }
                 }
-
-                // Hiển thị số lượng kết quả ở title
-                label1.Text = $"Báo cáo nợ quá hạn ({list.Count} độc giả)";
             }
             catch (Exception ex)
             {

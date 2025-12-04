@@ -353,6 +353,10 @@ BEGIN
 			 UPDATE DOCGIA
 			 SET TongNoHienTai = TongNoHienTai + NEW.TienPhat
 			 WHERE ID = v_ID_docgia;
+             
+             UPDATE PHIEUMUON
+             SET TongPhat = TongPhat + NEW.TienPhat
+             WHERE ID = NEW.IDPhieuMuon;
 		END IF;
 
 	END IF;
@@ -933,18 +937,21 @@ WHERE cp.NgayTraThucTe IS NULL
   AND p.NgayTraDuKien < CURDATE()
 ORDER BY SoNgayQuaHan DESC;
 
--- =========================================================================
--- KẾT QUẢ MONG ĐỢI:
--- =========================================================================
--- Sau khi chạy script này, bạn sẽ có:
--- 
--- 1. Trần Nhật Huy (DG4): 1 phiếu quá hạn 15 ngày - Tiền phạt: 15,000đ
--- 2. Nguyễn Mai Anh (DG1): 1 phiếu quá hạn 10 ngày - Tiền phạt: 10,000đ
--- 3. Lê Thành Đô (DG2): 1 phiếu quá hạn 7 ngày - Tiền phạt: 7,000đ (màu đỏ)
--- 4. Nguyễn Mai Anh (DG1): 1 phiếu quá hạn 3 ngày - Tiền phạt: 3,000đ
--- 5. Huỳnh Hồng Thu Giang (DG3): 1 phiếu quá hạn 1 ngày - Tiền phạt: 1,000đ
---
--- Tổng: 5 phiếu mượn quá hạn với 9 cuốn sách chưa trả
--- =========================================================================
+SET SQL_SAFE_UPDATES = 0;
 
+UPDATE PHIEUMUON pm
+SET TongPhat = (
+	SELECT COALESCE(SUM(ctpm.TienPhat), 0)
+    FROM CT_PHIEUMUON ctpm
+    WHERE ctpm.IDPhieuMuon = pm.ID
+);
+
+UPDATE DOCGIA dg
+SET TongNoHienTai = (
+    SELECT COALESCE(SUM(pm.TongPhat), 0)
+    FROM PHIEUMUON pm
+    WHERE pm.IDDocGia = dg.ID
+);
+
+SET SQL_SAFE_UPDATES = 1;
 

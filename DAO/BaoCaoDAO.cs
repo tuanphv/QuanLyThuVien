@@ -62,12 +62,13 @@ namespace DAO
                         p.NgayMuon,
                         p.NgayTraDuKien,
                         DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
-                        DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1) as TienPhat
+                        SUM(DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)) as TienPhat
                     FROM CT_PHIEUMUON cp
                     INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                     INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
                     WHERE cp.NgayTraThucTe IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
+                    GROUP BY p.ID
                     ORDER BY SoNgayQuaHan DESC";
 
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql);

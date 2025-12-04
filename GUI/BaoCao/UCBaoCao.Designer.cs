@@ -46,17 +46,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 0;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8F, FontStyle.Bold);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(357, 46);
+            label1.Size = new Size(267, 37);
             label1.TabIndex = 0;
             label1.Text = "Báo cáo nợ quá hạn";
             // 
@@ -65,9 +66,10 @@
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel2.BackColor = Color.White;
             panel2.Controls.Add(btnLoadQuaHan);
-            panel2.Location = new Point(23, 120);
+            panel2.Location = new Point(20, 90);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1821, 60);
+            panel2.Size = new Size(1593, 45);
             panel2.TabIndex = 1;
             // 
             // btnLoadQuaHan
@@ -77,9 +79,10 @@
             btnLoadQuaHan.FlatStyle = FlatStyle.Flat;
             btnLoadQuaHan.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnLoadQuaHan.ForeColor = Color.White;
-            btnLoadQuaHan.Location = new Point(10, 12);
+            btnLoadQuaHan.Location = new Point(9, 9);
+            btnLoadQuaHan.Margin = new Padding(3, 2, 3, 2);
             btnLoadQuaHan.Name = "btnLoadQuaHan";
-            btnLoadQuaHan.Size = new Size(150, 35);
+            btnLoadQuaHan.Size = new Size(131, 26);
             btnLoadQuaHan.TabIndex = 0;
             btnLoadQuaHan.Text = "Tải dữ liệu";
             btnLoadQuaHan.UseVisualStyleBackColor = false;
@@ -115,26 +118,28 @@
             dgvQuaHan.DefaultCellStyle = dataGridViewCellStyle2;
             dgvQuaHan.EnableHeadersVisualStyles = false;
             dgvQuaHan.GridColor = SystemColors.ControlLight;
-            dgvQuaHan.Location = new Point(23, 195);
+            dgvQuaHan.Location = new Point(20, 146);
+            dgvQuaHan.Margin = new Padding(3, 2, 3, 2);
             dgvQuaHan.Name = "dgvQuaHan";
             dgvQuaHan.ReadOnly = true;
             dgvQuaHan.RowHeadersVisible = false;
             dgvQuaHan.RowHeadersWidth = 51;
             dgvQuaHan.RowTemplate.Height = 40;
             dgvQuaHan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvQuaHan.Size = new Size(1821, 784);
+            dgvQuaHan.Size = new Size(1593, 588);
             dgvQuaHan.TabIndex = 2;
             // 
             // UCBaoCao
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(dgvQuaHan);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCBaoCao";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCBaoCao_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
