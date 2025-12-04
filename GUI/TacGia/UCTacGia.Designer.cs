@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            btnExport = new Button();
+            btnImport = new Button();
             label1 = new Label();
             roundPanel1 = new GUI.Controls.RoundPanel();
             dgvTacGia = new GUI.Controls.ActionDataGridView();
@@ -49,12 +51,50 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btnExport);
+            panel1.Controls.Add(btnImport);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(1866, 93);
             panel1.TabIndex = 1;
+            // 
+            // btnExport
+            // 
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.PaleGreen;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnExport.Image = Properties.Resources.excel;
+            btnExport.ImageAlign = ContentAlignment.TopCenter;
+            btnExport.Location = new Point(1744, 10);
+            btnExport.Margin = new Padding(3, 4, 3, 4);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(74, 73);
+            btnExport.TabIndex = 16;
+            btnExport.Text = "Export";
+            btnExport.TextAlign = ContentAlignment.BottomCenter;
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            // 
+            // btnImport
+            // 
+            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnImport.BackColor = Color.LightBlue;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnImport.Image = Properties.Resources.upload;
+            btnImport.ImageAlign = ContentAlignment.TopCenter;
+            btnImport.Location = new Point(1649, 10);
+            btnImport.Margin = new Padding(3, 4, 3, 4);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(74, 73);
+            btnImport.TabIndex = 17;
+            btnImport.Text = "Import";
+            btnImport.TextAlign = ContentAlignment.BottomCenter;
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // label1
             // 
@@ -94,26 +134,26 @@
             dgvTacGia.BackgroundColor = Color.White;
             dgvTacGia.BorderStyle = BorderStyle.None;
             dgvTacGia.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvTacGia.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvTacGia.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvTacGia.ColumnHeadersHeight = 40;
             dgvTacGia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvTacGia.Columns.AddRange(new DataGridViewColumn[] { MaTacGia, TenTacGia });
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Window;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle4.Padding = new Padding(5);
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dgvTacGia.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new Padding(5);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvTacGia.DefaultCellStyle = dataGridViewCellStyle2;
             dgvTacGia.EnableHeadersVisualStyles = false;
             dgvTacGia.GridColor = SystemColors.ControlLight;
             dgvTacGia.Location = new Point(23, 92);
@@ -129,6 +169,8 @@
             dgvTacGia.ShowDeleteButton = true;
             dgvTacGia.ShowEditButton = true;
             dgvTacGia.ShowEditingIcon = false;
+            dgvTacGia.ShowExtendButton = false;
+            dgvTacGia.ShowReturnButton = false;
             dgvTacGia.ShowRowErrors = false;
             dgvTacGia.ShowViewButton = true;
             dgvTacGia.Size = new Size(1775, 740);
@@ -247,5 +289,7 @@
         private Controls.ActionDataGridView dgvTacGia;
         private DataGridViewTextBoxColumn MaTacGia;
         private DataGridViewTextBoxColumn TenTacGia;
+        private Button btnExport;
+        private Button btnImport;
     }
 }
