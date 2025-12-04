@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace GUI.PhieuThu
 {
@@ -36,6 +39,7 @@ namespace GUI.PhieuThu
             cbDocGia.SelectedIndexChanged += cbDocGia_SelectedIndexChanged;
 
             dgvPhieuThu.DeleteButtonClicked += DeleteButtonClicked;
+            dgvPhieuThu.PrintButtonClicked += PrintButtonClicked;
         }
 
         private void LoadPhieuThuData()
@@ -62,6 +66,54 @@ namespace GUI.PhieuThu
                     {
                         MessageBox.Show("Xóa phiếu thu thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+        }
+
+        private void PrintButtonClicked(object? sender, int index)
+        {
+            PhieuThuDTO? selectedPhieuThu = phieuThuList[index];
+            if (selectedPhieuThu == null) return;
+            using (var sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "PDF file|*.pdf";
+                sfd.FileName = $"PhieuThu_{selectedPhieuThu.MaPhieuThu}.pdf";
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    using (var fs = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write))
+                    {
+                        var doc = new Document(PageSize.A6, 36, 36, 36, 36);
+                        PdfWriter.GetInstance(doc, fs);
+                        doc.Open();
+
+                        string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+
+                        BaseFont bf = BaseFont.CreateFont(
+                            fontPath,
+                            BaseFont.IDENTITY_H,
+                            BaseFont.EMBEDDED
+                        );
+
+                        iTextSharp.text.Font fontTitle = new iTextSharp.text.Font(bf, 16, iTextSharp.text.Font.BOLD);
+                        iTextSharp.text.Font fontLabel = new iTextSharp.text.Font(bf, 12);
+                        iTextSharp.text.Font fontValue = new iTextSharp.text.Font(bf, 12, iTextSharp.text.Font.BOLD);
+
+                        doc.Add(new Paragraph("PHIẾU THU TIỀN", fontTitle) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(new Paragraph("\n"));
+                        doc.Add(new Paragraph($"Mã phiếu thu: {selectedPhieuThu.MaPhieuThu}", fontLabel));
+                        doc.Add(new Paragraph($"Ngày lập: {selectedPhieuThu.NgayLapPhieu:dd/MM/yyyy}", fontLabel));
+                        doc.Add(new Paragraph($"Độc giả: {selectedPhieuThu.TenDocGia}", fontLabel));
+                        doc.Add(new Paragraph($"Số tiền thu: {selectedPhieuThu.SoTienThu:N0} VNĐ", fontValue));
+
+                        doc.Close();
+                    }
+                    MessageBox.Show("Xuất PDF thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xuất PDF: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
