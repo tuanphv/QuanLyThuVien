@@ -99,8 +99,6 @@ namespace GUI.MuonTra
             // 
             // panelHeader
             // 
-            panelHeader.Controls.Add(btnExport);
-            panelHeader.Controls.Add(btnImport);
             panelHeader.Controls.Add(btnThem);
             panelHeader.Controls.Add(cbStatusFilter);
             panelHeader.Controls.Add(panelSearch);
@@ -113,9 +111,9 @@ namespace GUI.MuonTra
             panelHeader.Padding = new Padding(30, 22, 30, 15);
             panelHeader.Size = new Size(2242, 115);
             panelHeader.TabIndex = 2;
-            //
+            // 
             // btnThem
-            //
+            // 
             btnThem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnThem.BackColor = Color.DeepSkyBlue;
             btnThem.FlatAppearance.BorderSize = 0;
@@ -124,46 +122,14 @@ namespace GUI.MuonTra
             btnThem.ForeColor = Color.White;
             btnThem.Image = Properties.Resources.plus;
             btnThem.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThem.Location = new Point(1907, 25);
+            btnThem.Location = new Point(2069, 29);
             btnThem.Name = "btnThem";
-            btnThem.Size = new Size(118, 58);
+            btnThem.Size = new Size(120, 46);
             btnThem.TabIndex = 14;
             btnThem.Text = "   Thêm";
             btnThem.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThem.UseVisualStyleBackColor = false;
             btnThem.Click += btnThem_Click;
-            //
-            // btnExport
-            //
-            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnExport.BackColor = Color.MediumSeaGreen;
-            btnExport.FlatAppearance.BorderSize = 0;
-            btnExport.FlatStyle = FlatStyle.Flat;
-            btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            btnExport.ForeColor = Color.White;
-            btnExport.Location = new Point(1738, 25);
-            btnExport.Name = "btnExport";
-            btnExport.Size = new Size(150, 58);
-            btnExport.TabIndex = 16;
-            btnExport.Text = "Xuất Excel";
-            btnExport.UseVisualStyleBackColor = false;
-            btnExport.Click += btnExport_Click;
-            //
-            // btnImport
-            //
-            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnImport.BackColor = Color.DarkOrange;
-            btnImport.FlatAppearance.BorderSize = 0;
-            btnImport.FlatStyle = FlatStyle.Flat;
-            btnImport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            btnImport.ForeColor = Color.White;
-            btnImport.Location = new Point(1564, 25);
-            btnImport.Name = "btnImport";
-            btnImport.Size = new Size(150, 58);
-            btnImport.TabIndex = 15;
-            btnImport.Text = "Nhập Excel";
-            btnImport.UseVisualStyleBackColor = false;
-            btnImport.Click += btnImport_Click;
             // 
             // cbStatusFilter
             // 
@@ -171,7 +137,7 @@ namespace GUI.MuonTra
             cbStatusFilter.Font = new Font("Segoe UI", 10.2F);
             cbStatusFilter.FormattingEnabled = true;
             cbStatusFilter.Items.AddRange(new object[] { "Tất cả", "Đang mượn", "Quá hạn", "Đã trả" });
-            cbStatusFilter.Location = new Point(550, 31);
+            cbStatusFilter.Location = new Point(545, 35);
             cbStatusFilter.Margin = new Padding(4);
             cbStatusFilter.Name = "cbStatusFilter";
             cbStatusFilter.Size = new Size(188, 36);
@@ -231,11 +197,11 @@ namespace GUI.MuonTra
             btnExport.FlatStyle = FlatStyle.Flat;
             btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnExport.ForeColor = Color.White;
-            btnExport.Location = new Point(1875, 19);
+            btnExport.Location = new Point(1912, 29);
             btnExport.Name = "btnExport";
-            btnExport.Size = new Size(118, 58);
+            btnExport.Size = new Size(140, 46);
             btnExport.TabIndex = 16;
-            btnExport.Text = "Export";
+            btnExport.Text = "Xuât Excel";
             btnExport.UseVisualStyleBackColor = false;
             btnExport.Click += btnExport_Click;
             // 
@@ -247,11 +213,11 @@ namespace GUI.MuonTra
             btnImport.FlatStyle = FlatStyle.Flat;
             btnImport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnImport.ForeColor = Color.White;
-            btnImport.Location = new Point(1749, 19);
+            btnImport.Location = new Point(1754, 29);
             btnImport.Name = "btnImport";
-            btnImport.Size = new Size(118, 58);
+            btnImport.Size = new Size(140, 46);
             btnImport.TabIndex = 15;
-            btnImport.Text = "Import";
+            btnImport.Text = "Nhập Excel";
             btnImport.UseVisualStyleBackColor = false;
             btnImport.Click += btnImport_Click;
             // 
