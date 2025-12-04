@@ -120,12 +120,11 @@
             btnLoadQuaHan.FlatStyle = FlatStyle.Flat;
             btnLoadQuaHan.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnLoadQuaHan.ForeColor = Color.White;
-            btnLoadQuaHan.Location = new Point(185, 9);
-            btnLoadQuaHan.Margin = new Padding(3, 2, 3, 2);
+            btnLoadQuaHan.Location = new Point(10, 12);
             btnLoadQuaHan.Name = "btnLoadQuaHan";
-            btnLoadQuaHan.Size = new Size(170, 26);
-            btnLoadQuaHan.TabIndex = 1;
-            btnLoadQuaHan.Text = "Báo cáo theo phiếu";
+            btnLoadQuaHan.Size = new Size(150, 35);
+            btnLoadQuaHan.TabIndex = 0;
+            btnLoadQuaHan.Text = "Tải dữ liệu";
             btnLoadQuaHan.UseVisualStyleBackColor = false;
             btnLoadQuaHan.Click += btnLoadQuaHan_Click;
             // 
