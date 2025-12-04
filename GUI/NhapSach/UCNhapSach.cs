@@ -1,4 +1,4 @@
-using BUS;
+﻿using BUS;
 using DTO;
 using System.ComponentModel;
 
@@ -25,6 +25,7 @@ namespace GUI.NhapSach
             try
             {
                 list = PhieuNhapSachBUS.GetAll();
+                dgvPhieuNhap.AutoGenerateColumns = false;
                 dgvPhieuNhap.DataSource = list;
             }
             catch (Exception ex)
@@ -45,33 +46,28 @@ namespace GUI.NhapSach
         {
             if (dgvPhieuNhap.Columns["colTongTien"] != null)
             {
-                dgvPhieuNhap.Columns["colTongTien"].DefaultCellStyle.Format = "#,##0 ?";
+                dgvPhieuNhap.Columns["colTongTien"].DefaultCellStyle.Format = "#,##0 đ";
                 dgvPhieuNhap.Columns["colTongTien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
+
+            dgvPhieuNhap.ViewButtonClicked += (s, rowIndex) =>
+            {
+                var phieu = list[rowIndex];
+                FrmChiTietPhieuNhap frm = new FrmChiTietPhieuNhap(phieu.ID);
+                frm.ShowDialog();
+            };
         }
 
         private void btnThemPhieuNhap_Click(object sender, EventArgs e)
         {
             FrmAddPhieuNhap frm = new FrmAddPhieuNhap();
-            frm.Text = "L?p phi?u nh?p s�ch";
+            frm.Text = "Lập phiếu nhập sách";
             
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
-                MessageBox.Show("Nh?p s�ch th�nh c�ng!", "Th�ng b�o", 
+                MessageBox.Show("Nhập sách thành công!", "Thông báo", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void dgvPhieuNhap_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            if (dgvPhieuNhap.Columns[e.ColumnIndex].Name == "colActions")
-            {
-                var phieu = list[e.RowIndex];
-                FrmChiTietPhieuNhap frm = new FrmChiTietPhieuNhap(phieu.ID);
-                frm.ShowDialog();
             }
         }
     }

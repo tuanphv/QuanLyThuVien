@@ -43,7 +43,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nhà cung c?p: {ex.Message}", "L?i",
+                MessageBox.Show($"L?i khi t?i nhà cung c?p: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -86,7 +86,7 @@ namespace GUI.NhapSach
             {
                 if (cbTuaSach.SelectedValue == null || cbNhaXuatBan.SelectedValue == null)
                 {
-                    MessageBox.Show("Vui lòng ch?n t?a sách và nhà xu?t b?n.", "Thông báo",
+                    MessageBox.Show("Vui lòng chọn tựa sách và nhà xuất bản.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -156,13 +156,13 @@ namespace GUI.NhapSach
                     item.TenNhaXuatBan,
                     item.NamXB,
                     item.SoLuong,
-                    item.DonGia.ToString("#,##0 ?"),
-                    item.ThanhTien.ToString("#,##0 ?")
+                    item.DonGia.ToString("#,##0 đ"),
+                    item.ThanhTien.ToString("#,##0 đ")
                 );
                 tongTien += item.ThanhTien;
             }
 
-            lblTongTien.Text = tongTien.ToString("#,##0 ?");
+            lblTongTien.Text = tongTien.ToString("#,##0 VNĐ");
         }
 
         private void btnLuu_Click(object sender, EventArgs e)
@@ -171,7 +171,7 @@ namespace GUI.NhapSach
             {
                 if (cbNhaCungCap.SelectedValue == null)
                 {
-                    MessageBox.Show("Vui lòng ch?n nhà cung c?p.", "Thông báo",
+                    MessageBox.Show("Vui lòng chọn nhà cung cấp.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.DialogResult = DialogResult.None;
                     return;

@@ -1,4 +1,4 @@
-using BUS;
+﻿using BUS;
 
 namespace GUI.NhapSach
 {
@@ -29,12 +29,12 @@ namespace GUI.NhapSach
                     lblMaPhieu.Text = phieu.MaPhieuNhap;
                     lblNhaCungCap.Text = phieu.TenNhaCungCap;
                     lblNgayNhap.Text = phieu.NgayNhap.ToString("dd/MM/yyyy HH:mm");
-                    lblTongTien.Text = phieu.TongTien.ToString("#,##0 ?");
+                    lblTongTien.Text = phieu.TongTien.ToString("#,##0 đ");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i th�ng tin phi?u nh?p: {ex.Message}", "L?i", 
+                MessageBox.Show($"Lỗi khi tải thông tin phiếu nhập: {ex.Message}", "Lỗi", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -44,11 +44,12 @@ namespace GUI.NhapSach
             try
             {
                 var list = PhieuNhapSachBUS.GetChiTiet(idPhieuNhap);
+                dgvChiTiet.AutoGenerateColumns = false;
                 dgvChiTiet.DataSource = list;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i chi ti?t phi?u nh?p: {ex.Message}", "L?i", 
+                MessageBox.Show($"Lỗi khi tải chi tiết phiếu nhập: {ex.Message}", "Lỗi", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -57,13 +58,13 @@ namespace GUI.NhapSach
         {
             if (dgvChiTiet.Columns["colDonGia"] != null)
             {
-                dgvChiTiet.Columns["colDonGia"].DefaultCellStyle.Format = "#,##0 ?";
+                dgvChiTiet.Columns["colDonGia"].DefaultCellStyle.Format = "#,##0 đ";
                 dgvChiTiet.Columns["colDonGia"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
 
             if (dgvChiTiet.Columns["colThanhTien"] != null)
             {
-                dgvChiTiet.Columns["colThanhTien"].DefaultCellStyle.Format = "#,##0 ?";
+                dgvChiTiet.Columns["colThanhTien"].DefaultCellStyle.Format = "#,##0 đ";
                 dgvChiTiet.Columns["colThanhTien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
         }
