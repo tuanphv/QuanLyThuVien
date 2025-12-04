@@ -89,5 +89,17 @@ namespace GUI.Sach
 
             dgvSach.DataSource = new BindingList<SachDTO>(ketQua);
         }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            // 1. Xóa ô tìm kiếm để hiển thị trọn vẹn danh sách
+            txtTimKiem.Text = string.Empty;
+
+            // 2. Gọi lại hàm LoadData (Hàm này bạn đã viết sẵn trong UCSach rồi)
+            LoadData();
+
+            // (Tùy chọn) Focus lại vào ô tìm kiếm cho tiện
+            txtTimKiem.Focus();
+        }
     }
 }
