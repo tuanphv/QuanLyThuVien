@@ -1,44 +1,21 @@
 using System;
+using System.Collections.Generic;
 
-namespace DTO
+namespace QuanLyThuVien.DTO
 {
-    public class SachDTO
+    public class LoSach
     {
-        public int MaSach { get; set; }
-        public string TieuDe { get; set; }
-        public string ISBN { get; set; }
-        public int NamXuatBan { get; set; }
-        public decimal GiaSach { get; set; }
-        public int SoLuongTong { get; set; }
-        public int SoLuongCon { get; set; }
-        public int MaNXB { get; set; }
-        public int MaTheLoai { get; set; }
+        public int ID { get; set; }
+        public int IDTuaSach { get; set; }
+        public string NXB { get; set; }
+        public int NamXB { get; set; }
+        public decimal DonGia { get; set; }
+    }
 
-        public SachDTO()
-        {
-            MaSach = 0;
-            TieuDe = string.Empty;
-            ISBN = string.Empty;
-            NamXuatBan = DateTime.Now.Year;
-            GiaSach = 0;
-            SoLuongTong = 0;
-            SoLuongCon = 0;
-            MaNXB = 0;
-            MaTheLoai = 0;
-        }
-
-        public SachDTO(int maSach, string tieuDe, string isbn, int namXuatBan, decimal giaSach,
-                       int soLuongTong, int soLuongCon, int maNXB, int maTheLoai)
-        {
-            MaSach = maSach;
-            TieuDe = tieuDe;
-            ISBN = isbn;
-            NamXuatBan = namXuatBan;
-            GiaSach = giaSach;
-            SoLuongTong = soLuongTong;
-            SoLuongCon = soLuongCon;
-            MaNXB = maNXB;
-            MaTheLoai = maTheLoai;
-        }
+    public class CuonSach
+    {
+        public int ID { get; set; }
+        public int IDLoSach { get; set; }
+        public string TinhTrang { get; set; } // "SanSang", "DangMuon", "Hong"
     }
 }

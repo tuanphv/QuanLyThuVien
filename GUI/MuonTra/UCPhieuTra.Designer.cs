@@ -15,6 +15,8 @@ namespace GUI.MuonTra
         private TextBox txtSearch;
         private Button btnSearch;
         private Button btnLapPhieuTra;
+        private Button btnExport;
+        private Button btnImport;
         private ActionDataGridView dgvPhieuTra;
         private DataGridViewTextBoxColumn colMaPhieu;
         private DataGridViewTextBoxColumn colDocGia;
@@ -42,6 +44,8 @@ namespace GUI.MuonTra
             txtSearch = new TextBox();
             btnSearch = new Button();
             btnLapPhieuTra = new Button();
+            btnExport = new Button();
+            btnImport = new Button();
             dgvPhieuTra = new ActionDataGridView();
             colMaPhieu = new DataGridViewTextBoxColumn();
             colDocGia = new DataGridViewTextBoxColumn();
@@ -83,6 +87,8 @@ namespace GUI.MuonTra
             panelHeader.Name = "panelHeader";
             panelHeader.Size = new Size(1866, 112);
             panelHeader.TabIndex = 1;
+            panelHeader.Controls.Add(btnExport);
+            panelHeader.Controls.Add(btnImport);
             panelHeader.Controls.Add(btnLapPhieuTra);
             panelHeader.Controls.Add(panelSearch);
             // 
@@ -92,7 +98,7 @@ namespace GUI.MuonTra
             panelSearch.BorderStyle = BorderStyle.FixedSingle;
             panelSearch.Controls.Add(txtSearch);
             panelSearch.Controls.Add(btnSearch);
-            panelSearch.Location = new Point(900, 23);
+            panelSearch.Location = new Point(845, 23);
             panelSearch.Name = "panelSearch";
             panelSearch.Size = new Size(300, 44);
             panelSearch.TabIndex = 0;
@@ -136,13 +142,45 @@ namespace GUI.MuonTra
             btnLapPhieuTra.FlatStyle = FlatStyle.Flat;
             btnLapPhieuTra.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point);
             btnLapPhieuTra.ForeColor = Color.White;
-            btnLapPhieuTra.Location = new Point(1230, 22);
+            btnLapPhieuTra.Location = new Point(1515, 22);
             btnLapPhieuTra.Name = "btnLapPhieuTra";
             btnLapPhieuTra.Size = new Size(160, 46);
             btnLapPhieuTra.TabIndex = 2;
             btnLapPhieuTra.Text = "Tạo phiếu trả";
             btnLapPhieuTra.UseVisualStyleBackColor = false;
             btnLapPhieuTra.Click += btnLapPhieuTra_Click;
+            //
+            // btnExport
+            //
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.MediumSeaGreen;
+            btnExport.FlatAppearance.BorderSize = 0;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnExport.ForeColor = Color.White;
+            btnExport.Location = new Point(1354, 22);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(140, 46);
+            btnExport.TabIndex = 3;
+            btnExport.Text = "Xuất Excel";
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            //
+            // btnImport
+            //
+            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnImport.BackColor = Color.DarkOrange;
+            btnImport.FlatAppearance.BorderSize = 0;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnImport.ForeColor = Color.White;
+            btnImport.Location = new Point(1193, 22);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(140, 46);
+            btnImport.TabIndex = 4;
+            btnImport.Text = "Nhập Excel";
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // dgvPhieuTra
             // 
