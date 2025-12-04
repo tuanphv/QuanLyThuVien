@@ -6,6 +6,7 @@ using GUI.NhaCungCap;
 using GUI.NguoiDung;
 using GUI.DocGia;
 using GUI.MuonTra;
+using GUI.Sach;
 using System.Data;
 namespace GUI
 {
@@ -134,7 +135,7 @@ namespace GUI
                 new SidebarMenuItem(btnPublisher, new UCNhaXuatBan(), 4),
                 new SidebarMenuItem(btnSupplier, new UCNhaCungCap(), 5),
                 new SidebarMenuItem(btnBookTitle, new TuaSach.UCBookTitle(), 6),
-                new SidebarMenuItem(btnBookStock, new UCPlaceHolder(), 7),
+                new SidebarMenuItem(btnBookStock, new UCSach(), 7),
                 new SidebarMenuItem(btnImportBooks, new UCPlaceHolder(), 8),
                 new SidebarMenuItem(btnBorrow, new UCPhieuMuon(), 9),
                 new SidebarMenuItem(btnReturn, new UCPhieuTra(), 10),

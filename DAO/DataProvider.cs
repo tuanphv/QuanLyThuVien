@@ -160,5 +160,10 @@ namespace DAO
                 throw;
             }
         }
+        
+        public MySqlConnection GetConnection()
+        {
+            return new MySqlConnection(connectionSTR);
+        }
     }
 }

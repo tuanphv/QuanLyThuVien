@@ -1,59 +1,52 @@
-// File: SachBUS.cs
 using DAO;
-using QuanLyThuVien.DTO;
-using System;
-using System.ComponentModel;
-using System.Collections.Generic;
 using DTO;
+using System.ComponentModel;
 
-namespace QuanLyThuVien.BUS
+namespace BUS
 {
-    public class LoSachBUS
+    public class SachBUS
     {
-        private LoSachDAO loSachDAO = new LoSachDAO();
-        private ThamSoDAO thamSoDAO = new ThamSoDAO();
-
-        // 1. Kiểm tra Quy định & Thêm lô sách
-        public string ThemLoSach_BUS(int idTuaSach, string nxb, int namXB, decimal donGia)
+        public static BindingList<SachDTO> GetAll()
         {
-            // Lấy tham số quy định
-            int khoangCachNam = thamSoDAO.LayKhoangCachXuatBan();
-            int namHienTai = DateTime.Now.Year;
+            return SachDAO.GetAll();
+        }
 
-            // Kiểm tra quy định: Năm XB không được quá cũ so với quy định
-            if ((namHienTai - namXB) > khoangCachNam)
+        public static bool Add(SachDTO sach)
+        {
+            // 1. Kiểm tra quy định Năm Xuất Bản
+            if (!ThamSoBUS.KiemTraNamXuatBan(sach.NamXB))
             {
-                return $"Lỗi: Chỉ nhận sách xuất bản trong vòng {khoangCachNam} năm.";
+                ThamSoDTO qd = ThamSoBUS.GetQuyDinh();
+                throw new Exception($"Chỉ nhận sách xuất bản trong vòng {qd.KhoangCachXuatBan} năm trở lại đây.");
             }
 
-            if (donGia <= 0) return "Lỗi: Đơn giá phải lớn hơn 0.";
+            // 2. Kiểm tra giá tiền
+            if (sach.DonGia <= 0) throw new Exception("Đơn giá phải lớn hơn 0.");
+            if (sach.SoLuongTong <= 0) throw new Exception("Số lượng nhập phải lớn hơn 0.");
 
-            // Nếu hợp lệ thì gọi DAO
-            bool ketQua = loSachDAO.ThemLoSach(idTuaSach, nxb, namXB, donGia);
-            return ketQua ? "Thêm lô sách thành công." : "Thêm thất bại.";
+            return SachDAO.Add(sach);
         }
 
-        // 2. Logic Tồn kho: Tính số lượng còn lại
-        public int TinhSoLuongConLai(int idLoSach)
+        public static bool Update(SachDTO sach)
         {
-            // LayCuonSachSanSang returns List<TuaSachDTO>, not List<CuonSach>
-            List<TuaSachDTO> dsSanSang = loSachDAO.LayCuonSachSanSang(idLoSach);
-            return dsSanSang.Count;
+            if (!ThamSoBUS.KiemTraNamXuatBan(sach.NamXB))
+            {
+                ThamSoDTO qd = ThamSoBUS.GetQuyDinh();
+                throw new Exception($"Năm xuất bản không hợp lệ (Quá {qd.KhoangCachXuatBan} năm).");
+            }
+            return SachDAO.Update(sach);
         }
 
-        // 3. Logic Trạng thái: Admin cập nhật tình trạng cuốn sách
-        // (Ví dụ: Chuyển từ "Sẵn sàng" sang "Hỏng" hoặc "Mất")
-        public string CapNhatTrangThaiCuonSach_Admin(int idCuonSach, string trangThaiMoi)
+        public static bool Delete(int id)
         {
-            // Logic kiểm tra: Admin không được sửa sách đang được mượn thành Sẵn sàng trực tiếp 
-            // mà phải thông qua quy trình Trả sách (tùy nghiệp vụ, ở đây demo đơn giản)
+            // 1. Kiểm tra nghiệp vụ: Có cuốn nào đang được độc giả mượn không?
+            if (CuonSachDAO.IsBatchBeingBorrowed(id))
+            {
+                throw new Exception("Không thể xóa lô sách này!\nLý do: Đang có độc giả mượn sách thuộc lô này.");
+            }
 
-            bool result = loSachDAO.CapNhatTrangThaiCuon(idCuonSach, trangThaiMoi);
-            return result ? "Cập nhật trạng thái thành công." : "Lỗi cập nhật.";
+            // 2. Nếu an toàn (tất cả đều đang ở trong kho), cho phép xóa (Soft Delete)
+            return SachDAO.Delete(id);
         }
-
-        // Gọi xuống DAO để lấy chi tiết hiển thị
-        public LoSach LayThongTinLoSach(int id) => (LoSach)loSachDAO.LayChiTietLoSach(id);
-        public bool SuaThongTinLoSach(int id, string nxb, decimal gia) => loSachDAO.SuaThongTinLoSach(id, nxb, gia);
     }
 }
