@@ -197,7 +197,7 @@ namespace GUI.NhapSach
 
                 foreach (var item in chiTietList)
                 {
-                    // Tìm ho?c t?o m?i lô sách
+                    // Tìm hoặc tạo mới lô sách
                     var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(item.IDTuaSach, item.IDNhaXuatBan, item.NamXB);
 
                     int idSach;
@@ -213,7 +213,8 @@ namespace GUI.NhapSach
                             SoLuongConLai = 0,
                             DonGia = item.DonGia
                         };
-                        idSach = SachBUS.Add(sachMoi);
+                        SachBUS.Add(sachMoi);
+                        idSach = SachBUS.GetLatestID();
                     }
                     else
                     {

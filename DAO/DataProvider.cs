@@ -56,6 +56,8 @@ namespace DAO
             }
         }
 
+
+
         /// <summary>
         /// Thực thi truy vấn SELECT và trả về DataTable.
         /// <para>Ví dụ 1: Không có tham số</para>
