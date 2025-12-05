@@ -153,7 +153,6 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
             }
 
             // 3. Nếu có từ khóa, dùng LINQ để lọc
-            // Chúng ta lọc từ danh sách 'list' GỐC (đầy đủ tất cả thể loại)
             var danhSachLoc = list.Where(dto =>
                                     dto.TenTacGia.ToLower().Contains(tuKhoa) ||
                                     dto.MaTacGia.ToLower().Contains(tuKhoa)
@@ -243,9 +242,6 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                             if (string.IsNullOrEmpty(tenTacGia)) continue;
                             int namSinh = 0; // Khai báo năm sinh mặc định là 0 cho file Excel
 
-                            // KIỂM TRA LOGIC:
-                            // Chỉ thêm nếu tên này chưa tồn tại trong DB
-                            // (Bạn đã có hàm IsNameExist trong DAO rồi, quá tiện!)
                             if (!DAO.TacGiaDAO.IsNameExist(tenTacGia, namSinh))
                             {
                                 // Tạo DTO mới
