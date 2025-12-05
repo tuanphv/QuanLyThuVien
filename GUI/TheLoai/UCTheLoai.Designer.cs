@@ -31,6 +31,8 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            btnExport = new Button();
+            btnImport = new Button();
             label1 = new Label();
             roundPanel1 = new GUI.Controls.RoundPanel();
             dgvTheLoai = new GUI.Controls.ActionDataGridView();
@@ -40,8 +42,6 @@
             panel3 = new Panel();
             btnSearch = new Button();
             txtTimKiem = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
             panel1.SuspendLayout();
             roundPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTheLoai).BeginInit();
@@ -51,22 +51,57 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
-            panel1.Controls.Add(button1);
-            panel1.Controls.Add(button2);
+            panel1.Controls.Add(btnExport);
+            panel1.Controls.Add(btnImport);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 0;
+            // 
+            // btnExport
+            // 
+            btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnExport.BackColor = Color.PaleGreen;
+            btnExport.FlatStyle = FlatStyle.Flat;
+            btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnExport.Image = Properties.Resources.excel;
+            btnExport.ImageAlign = ContentAlignment.TopCenter;
+            btnExport.Location = new Point(1529, 8);
+            btnExport.Name = "btnExport";
+            btnExport.Size = new Size(65, 55);
+            btnExport.TabIndex = 16;
+            btnExport.Text = "Export";
+            btnExport.TextAlign = ContentAlignment.BottomCenter;
+            btnExport.UseVisualStyleBackColor = false;
+            btnExport.Click += btnExport_Click;
+            // 
+            // btnImport
+            // 
+            btnImport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnImport.BackColor = Color.LightBlue;
+            btnImport.FlatStyle = FlatStyle.Flat;
+            btnImport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnImport.Image = Properties.Resources.upload;
+            btnImport.ImageAlign = ContentAlignment.TopCenter;
+            btnImport.Location = new Point(1446, 8);
+            btnImport.Name = "btnImport";
+            btnImport.Size = new Size(65, 55);
+            btnImport.TabIndex = 17;
+            btnImport.Text = "Import";
+            btnImport.TextAlign = ContentAlignment.BottomCenter;
+            btnImport.UseVisualStyleBackColor = false;
+            btnImport.Click += btnImport_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(271, 46);
+            label1.Size = new Size(218, 37);
             label1.TabIndex = 0;
             label1.Text = "Quản lý thể loại";
             // 
@@ -81,10 +116,10 @@
             roundPanel1.Controls.Add(dgvTheLoai);
             roundPanel1.Controls.Add(btnThemTheLoai);
             roundPanel1.Controls.Add(panel3);
-            roundPanel1.Location = new Point(23, 120);
-            roundPanel1.Margin = new Padding(23, 27, 23, 27);
+            roundPanel1.Location = new Point(20, 90);
+            roundPanel1.Margin = new Padding(20, 20, 20, 20);
             roundPanel1.Name = "roundPanel1";
-            roundPanel1.Size = new Size(1821, 859);
+            roundPanel1.Size = new Size(1593, 644);
             roundPanel1.TabIndex = 1;
             // 
             // dgvTheLoai
@@ -120,8 +155,8 @@
             dgvTheLoai.DefaultCellStyle = dataGridViewCellStyle4;
             dgvTheLoai.EnableHeadersVisualStyles = false;
             dgvTheLoai.GridColor = SystemColors.ControlLight;
-            dgvTheLoai.Location = new Point(23, 92);
-            dgvTheLoai.Margin = new Padding(23, 27, 23, 27);
+            dgvTheLoai.Location = new Point(20, 69);
+            dgvTheLoai.Margin = new Padding(20, 20, 20, 20);
             dgvTheLoai.Name = "dgvTheLoai";
             dgvTheLoai.ReadOnly = true;
             dgvTheLoai.RowHeadersVisible = false;
@@ -134,10 +169,11 @@
             dgvTheLoai.ShowEditButton = true;
             dgvTheLoai.ShowEditingIcon = false;
             dgvTheLoai.ShowExtendButton = false;
+            dgvTheLoai.ShowPrintButton = false;
             dgvTheLoai.ShowReturnButton = false;
             dgvTheLoai.ShowRowErrors = false;
             dgvTheLoai.ShowViewButton = true;
-            dgvTheLoai.Size = new Size(1775, 740);
+            dgvTheLoai.Size = new Size(1553, 555);
             dgvTheLoai.TabIndex = 14;
             // 
             // MaTheLoai
@@ -166,11 +202,11 @@
             btnThemTheLoai.ForeColor = Color.White;
             btnThemTheLoai.Image = Properties.Resources.plus;
             btnThemTheLoai.ImageAlign = ContentAlignment.MiddleLeft;
-            btnThemTheLoai.Location = new Point(1704, 27);
-            btnThemTheLoai.Margin = new Padding(23, 27, 23, 27);
+            btnThemTheLoai.Location = new Point(1491, 20);
+            btnThemTheLoai.Margin = new Padding(20, 20, 20, 20);
             btnThemTheLoai.Name = "btnThemTheLoai";
-            btnThemTheLoai.Padding = new Padding(3, 4, 3, 4);
-            btnThemTheLoai.Size = new Size(94, 40);
+            btnThemTheLoai.Padding = new Padding(3, 3, 3, 3);
+            btnThemTheLoai.Size = new Size(82, 30);
             btnThemTheLoai.TabIndex = 14;
             btnThemTheLoai.Text = " Thêm";
             btnThemTheLoai.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -183,10 +219,10 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(btnSearch);
             panel3.Controls.Add(txtTimKiem);
-            panel3.Location = new Point(1193, 27);
-            panel3.Margin = new Padding(23, 27, 23, 27);
+            panel3.Location = new Point(1044, 20);
+            panel3.Margin = new Padding(20, 20, 20, 20);
             panel3.Name = "panel3";
-            panel3.Size = new Size(465, 39);
+            panel3.Size = new Size(407, 30);
             panel3.TabIndex = 13;
             // 
             // btnSearch
@@ -199,11 +235,11 @@
             btnSearch.ForeColor = Color.White;
             btnSearch.Image = Properties.Resources.search;
             btnSearch.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSearch.Location = new Point(381, 0);
-            btnSearch.Margin = new Padding(0, 27, 23, 0);
+            btnSearch.Location = new Point(333, 0);
+            btnSearch.Margin = new Padding(0, 20, 20, 0);
             btnSearch.Name = "btnSearch";
-            btnSearch.Padding = new Padding(2, 3, 2, 3);
-            btnSearch.Size = new Size(82, 37);
+            btnSearch.Padding = new Padding(2, 2, 2, 2);
+            btnSearch.Size = new Size(72, 28);
             btnSearch.TabIndex = 1;
             btnSearch.Text = "  Tìm";
             btnSearch.TextAlign = ContentAlignment.MiddleLeft;
@@ -216,58 +252,23 @@
             txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtTimKiem.BorderStyle = BorderStyle.None;
             txtTimKiem.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.Location = new Point(6, 7);
-            txtTimKiem.Margin = new Padding(6, 7, 6, 7);
+            txtTimKiem.Location = new Point(5, 5);
+            txtTimKiem.Margin = new Padding(5, 5, 5, 5);
             txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.Size = new Size(369, 22);
+            txtTimKiem.Size = new Size(323, 18);
             txtTimKiem.TabIndex = 0;
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
             // 
-            // button1
-            // 
-            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.BackColor = Color.PaleGreen;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button1.Image = Properties.Resources.excel;
-            button1.ImageAlign = ContentAlignment.TopCenter;
-            button1.Location = new Point(1747, 4);
-            button1.Margin = new Padding(3, 4, 3, 4);
-            button1.Name = "button1";
-            button1.Size = new Size(74, 73);
-            button1.TabIndex = 16;
-            button1.Text = "Export";
-            button1.TextAlign = ContentAlignment.BottomCenter;
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += btnExport_Click;
-            // 
-            // button2
-            // 
-            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button2.BackColor = Color.LightBlue;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button2.Image = Properties.Resources.upload;
-            button2.ImageAlign = ContentAlignment.TopCenter;
-            button2.Location = new Point(1652, 4);
-            button2.Margin = new Padding(3, 4, 3, 4);
-            button2.Name = "button2";
-            button2.Size = new Size(74, 73);
-            button2.TabIndex = 17;
-            button2.Text = "Import";
-            button2.TextAlign = ContentAlignment.BottomCenter;
-            button2.UseVisualStyleBackColor = false;
-            button2.Click += btnImport_Click;
-            // 
             // UCTheLoai
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundPanel1);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCTheLoai";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCTheLoai_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -290,7 +291,7 @@
         private Button btnThemTheLoai;
         private DataGridViewTextBoxColumn MaTheLoai;
         private DataGridViewTextBoxColumn TenTheLoai;
-        private Button button1;
-        private Button button2;
+        private Button btnExport;
+        private Button btnImport;
     }
 }

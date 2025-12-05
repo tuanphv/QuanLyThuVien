@@ -48,6 +48,10 @@ namespace GUI.TheLoai // (Hoặc namespace GUI.DanhMuc... của bạn)
                 if (dgvTheLoai.Columns.Contains("Actions"))
                     dgvTheLoai.Columns["Actions"].Visible = false;
             }
+
+            bool isReader = SessionManager.CurrentUser.TenNhomNguoiDung.Equals("Độc giả", StringComparison.OrdinalIgnoreCase);
+            btnImport.Visible = !isReader;
+            btnExport.Visible = !isReader;
         }
 
         private void btnThemTheLoai_Click(object sender, EventArgs e)

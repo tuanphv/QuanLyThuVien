@@ -19,18 +19,13 @@ namespace GUI.DocGia
             int permissionCode = (int)Helpers.Permission.DocGia;
             bool canAdd = SessionManager.HasPermission(permissionCode, Helpers.Action.Add);
             btnThemDocGia.Visible = canAdd;
+            
 
             bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
             dgvDocGia.ShowEditButton = canEdit;
 
             bool canDelete = SessionManager.HasPermission(permissionCode, Helpers.Action.Delete);
             dgvDocGia.ShowDeleteButton = canDelete;
-
-            if (!canEdit && !canDelete)
-            {
-                if (dgvDocGia.Columns.Contains("Actions"))
-                    dgvDocGia.Columns["Actions"].Visible = false;
-            }
         }
 
         private void UCDocGia_Load(object sender, EventArgs e)
