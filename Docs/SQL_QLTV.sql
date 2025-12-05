@@ -84,7 +84,8 @@ CREATE TABLE TACGIA
 (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
 	MATACGIA CHAR(6),
-	TenTacGia VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL
+	TenTacGia VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
+	NamSinh INT DEFAULT NULL
 );
 
 -- Bảng CT_TACGIA (Bảng trung gian N:N: Tác giả - Tựa sách)
@@ -502,8 +503,8 @@ VALUES ('Nguyễn Mai Anh', '2003-06-11 00:00:00', '2025-01-01 00:00:00', '2025-
 INSERT INTO THELOAI (TenTheLoai)
 VALUES ('Khoa học máy tính'), ('Tài liệu tham khảo'), ('Tiểu thuyết'), ('Kinh tế học'), ('Văn học thiếu nhi');
 
-INSERT INTO TACGIA (TenTacGia)
-VALUES ('Nguyễn Văn Trí'), ('Phạm Thị La'), ('Ernest Hemingway'), ('Hector Malot');
+INSERT INTO TACGIA (TenTacGia, NamSinh)
+VALUES ('Nguyễn Văn Trí', 1984), ('Phạm Thị La', 1980), ('Ernest Hemingway', 1975), ('Hector Malot', 1982);
 
 -- Cột AnhBia (MEDIUMBLOB) để NULL
 INSERT INTO TUASACH (TenTuaSach)
@@ -946,10 +947,16 @@ SET TongPhat = (
     WHERE ctpm.IDPhieuMuon = pm.ID
 );
 
-UPDATE DOCGIA dg
+UPDATE DocGia dg
 SET TongNoHienTai = (
-    SELECT COALESCE(SUM(pm.TongPhat), 0)
-    FROM PHIEUMUON pm
+    SELECT 
+        COALESCE(SUM(pm.TongPhat), 0) 
+        - COALESCE((
+            SELECT SUM(pt.SoTienThu)
+            FROM PhieuThu pt
+            WHERE pt.IDDocGia = dg.ID
+        ), 0)
+    FROM PhieuMuon pm
     WHERE pm.IDDocGia = dg.ID
 );
 
