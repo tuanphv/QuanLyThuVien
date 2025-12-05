@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panel1 = new Panel();
             btnExport = new Button();
@@ -36,12 +37,13 @@
             label1 = new Label();
             roundPanel1 = new GUI.Controls.RoundPanel();
             dgvTacGia = new GUI.Controls.ActionDataGridView();
-            MaTacGia = new DataGridViewTextBoxColumn();
-            TenTacGia = new DataGridViewTextBoxColumn();
             btnAdd = new Button();
             panel2 = new Panel();
             button2 = new Button();
             txtSearch = new TextBox();
+            MaTacGia = new DataGridViewTextBoxColumn();
+            TenTacGia = new DataGridViewTextBoxColumn();
+            NamSinh = new DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
             roundPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTacGia).BeginInit();
@@ -144,16 +146,16 @@
             dgvTacGia.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvTacGia.ColumnHeadersHeight = 40;
             dgvTacGia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvTacGia.Columns.AddRange(new DataGridViewColumn[] { MaTacGia, TenTacGia });
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(5);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvTacGia.DefaultCellStyle = dataGridViewCellStyle2;
+            dgvTacGia.Columns.AddRange(new DataGridViewColumn[] { MaTacGia, TenTacGia, NamSinh });
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new Padding(5);
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvTacGia.DefaultCellStyle = dataGridViewCellStyle3;
             dgvTacGia.EnableHeadersVisualStyles = false;
             dgvTacGia.GridColor = SystemColors.ControlLight;
             dgvTacGia.Location = new Point(23, 92);
@@ -175,22 +177,6 @@
             dgvTacGia.ShowViewButton = true;
             dgvTacGia.Size = new Size(1775, 740);
             dgvTacGia.TabIndex = 17;
-            // 
-            // MaTacGia
-            // 
-            MaTacGia.DataPropertyName = "MaTacGia";
-            MaTacGia.HeaderText = "Mã tác giả";
-            MaTacGia.MinimumWidth = 6;
-            MaTacGia.Name = "MaTacGia";
-            MaTacGia.ReadOnly = true;
-            // 
-            // TenTacGia
-            // 
-            TenTacGia.DataPropertyName = "TenTacGia";
-            TenTacGia.HeaderText = "Tên tác giả";
-            TenTacGia.MinimumWidth = 6;
-            TenTacGia.Name = "TenTacGia";
-            TenTacGia.ReadOnly = true;
             // 
             // btnAdd
             // 
@@ -258,6 +244,32 @@
             txtSearch.TabIndex = 0;
             txtSearch.TextChanged += txtTimKiem_TextChanged;
             // 
+            // MaTacGia
+            // 
+            MaTacGia.DataPropertyName = "MaTacGia";
+            MaTacGia.HeaderText = "Mã tác giả";
+            MaTacGia.MinimumWidth = 6;
+            MaTacGia.Name = "MaTacGia";
+            MaTacGia.ReadOnly = true;
+            // 
+            // TenTacGia
+            // 
+            TenTacGia.DataPropertyName = "TenTacGia";
+            TenTacGia.HeaderText = "Tên tác giả";
+            TenTacGia.MinimumWidth = 6;
+            TenTacGia.Name = "TenTacGia";
+            TenTacGia.ReadOnly = true;
+            // 
+            // NamSinh
+            // 
+            NamSinh.DataPropertyName = "NamSinh";
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            NamSinh.DefaultCellStyle = dataGridViewCellStyle2;
+            NamSinh.HeaderText = "Năm Sinh";
+            NamSinh.MinimumWidth = 6;
+            NamSinh.Name = "NamSinh";
+            NamSinh.ReadOnly = true;
+            // 
             // UCTacGia
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -287,9 +299,10 @@
         private Button button2;
         private TextBox txtSearch;
         private Controls.ActionDataGridView dgvTacGia;
-        private DataGridViewTextBoxColumn MaTacGia;
-        private DataGridViewTextBoxColumn TenTacGia;
         private Button btnExport;
         private Button btnImport;
+        private DataGridViewTextBoxColumn MaTacGia;
+        private DataGridViewTextBoxColumn TenTacGia;
+        private DataGridViewTextBoxColumn NamSinh;
     }
 }

@@ -17,7 +17,9 @@ namespace GUI.TacGia
             {
                 // Lấy dữ liệu từ control
                 _tacgiaDTO.TenTacGia = txtTenTacGia.Text.Trim();
-                //_tacgiaDTO.MaTacGia = txtMaTacGia.Text;
+                int namSinh = 0;
+                int.TryParse(txtNamSinh.Text.Trim(), out namSinh);
+                _tacgiaDTO.NamSinh = namSinh;
                 return _tacgiaDTO;
             }
             set
@@ -26,6 +28,7 @@ namespace GUI.TacGia
                 _tacgiaDTO = value;
                 //txtMaTacGia.Text = _tacgiaDTO.MaTacGia;
                 txtTenTacGia.Text = _tacgiaDTO.TenTacGia;
+                txtNamSinh.Text = _tacgiaDTO.NamSinh == 0 ? "" : _tacgiaDTO.NamSinh.ToString();
                 _isEditMode = true;
             }
         }
@@ -33,7 +36,7 @@ namespace GUI.TacGia
         public FrmAddEditTacGia()
         {
             InitializeComponent();
-            _tacgiaDTO = new TacGiaDTO("", ""); // Khởi tạo DTO rỗng
+            _tacgiaDTO = new TacGiaDTO(); // Khởi tạo DTO rỗng
         }
 
         // Xử lý logic chính khi đóng form (bấm Lưu hoặc Thoát)
@@ -46,7 +49,6 @@ namespace GUI.TacGia
             }
 
             // Bước 2: Thực hiện Thêm hoặc Sửa
-            // Hàm AddTheLoai/UpdateTheLoai của bạn đã có sẵn try-catch và MessageBox rồi
             bool success = _isEditMode ? UpdateTheLoai() : AddTheLoai();
 
             // Bước 3: Nếu thành công thì mới đóng Form và trả về OK
@@ -65,12 +67,24 @@ namespace GUI.TacGia
 
         private bool ValidateInputs()
         {
+            //kiểm tra tên tác giả
             if (string.IsNullOrWhiteSpace(txtTenTacGia.Text))
             {
                 MessageBox.Show("Tên tác giả không được để trống.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtTenTacGia.Focus();
                 return false;
+            }
+
+            // Kiểm tra Năm sinh (Phải là số)
+            if (!string.IsNullOrEmpty(txtNamSinh.Text))
+            {
+                if (!int.TryParse(txtNamSinh.Text.Trim(), out int nam))
+                {
+                    MessageBox.Show("Năm sinh phải là một con số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtNamSinh.Focus();
+                    return false;
+                }
             }
             return true;
         }
@@ -127,14 +141,6 @@ namespace GUI.TacGia
             }
         }
 
-        private void txtTenTheLoai_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTenTacGia_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
