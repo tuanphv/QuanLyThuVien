@@ -93,10 +93,11 @@
             // 
             // btnReload
             // 
-            btnReload.BackColor = Color.Yellow;
+            btnReload.BackColor = Color.LightSeaGreen;
             btnReload.FlatAppearance.BorderSize = 0;
             btnReload.FlatStyle = FlatStyle.Flat;
             btnReload.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReload.ForeColor = Color.White;
             btnReload.Image = (Image)resources.GetObject("btnReload.Image");
             btnReload.ImageAlign = ContentAlignment.MiddleLeft;
             btnReload.Location = new Point(1246, 29);
