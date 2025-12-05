@@ -66,10 +66,9 @@
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.menus;
-            pictureBox1.Location = new Point(14, 19);
-            pictureBox1.Margin = new Padding(3, 4, 3, 4);
+            pictureBox1.Location = new Point(12, 14);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(34, 40);
+            pictureBox1.Size = new Size(30, 30);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
@@ -86,11 +85,11 @@
             btnBorrow.ForeColor = SystemColors.HighlightText;
             btnBorrow.Image = (Image)resources.GetObject("btnBorrow.Image");
             btnBorrow.ImageAlign = ContentAlignment.MiddleLeft;
-            btnBorrow.Location = new Point(0, 424);
+            btnBorrow.Location = new Point(0, 320);
             btnBorrow.Margin = new Padding(0);
             btnBorrow.Name = "btnBorrow";
-            btnBorrow.Padding = new Padding(11, 0, 0, 0);
-            btnBorrow.Size = new Size(320, 53);
+            btnBorrow.Padding = new Padding(10, 0, 0, 0);
+            btnBorrow.Size = new Size(280, 40);
             btnBorrow.TabIndex = 3;
             btnBorrow.Tag = "subItem";
             btnBorrow.Text = "    Quản lý Phiếu Mượn";
@@ -109,11 +108,11 @@
             btnReturn.ForeColor = SystemColors.HighlightText;
             btnReturn.Image = (Image)resources.GetObject("btnReturn.Image");
             btnReturn.ImageAlign = ContentAlignment.MiddleLeft;
-            btnReturn.Location = new Point(0, 477);
+            btnReturn.Location = new Point(0, 360);
             btnReturn.Margin = new Padding(0);
             btnReturn.Name = "btnReturn";
-            btnReturn.Padding = new Padding(11, 0, 0, 0);
-            btnReturn.Size = new Size(320, 53);
+            btnReturn.Padding = new Padding(10, 0, 0, 0);
+            btnReturn.Size = new Size(280, 40);
             btnReturn.TabIndex = 3;
             btnReturn.Tag = "subItem";
             btnReturn.Text = "    Xử lý Trả sách";
@@ -130,13 +129,13 @@
             btnPayment.FlatStyle = FlatStyle.Flat;
             btnPayment.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnPayment.ForeColor = SystemColors.HighlightText;
-            btnPayment.Image = Properties.Resources.overdue;
+            btnPayment.Image = (Image)resources.GetObject("btnPayment.Image");
             btnPayment.ImageAlign = ContentAlignment.MiddleLeft;
-            btnPayment.Location = new Point(0, 530);
+            btnPayment.Location = new Point(0, 400);
             btnPayment.Margin = new Padding(0);
             btnPayment.Name = "btnPayment";
-            btnPayment.Padding = new Padding(11, 0, 0, 0);
-            btnPayment.Size = new Size(320, 53);
+            btnPayment.Padding = new Padding(10, 0, 0, 0);
+            btnPayment.Size = new Size(280, 40);
             btnPayment.TabIndex = 3;
             btnPayment.Tag = "subItem";
             btnPayment.Text = "    Quản lý Phiếu Thu";
@@ -155,11 +154,11 @@
             btnReportDebt.ForeColor = SystemColors.HighlightText;
             btnReportDebt.Image = Properties.Resources.overdue;
             btnReportDebt.ImageAlign = ContentAlignment.MiddleLeft;
-            btnReportDebt.Location = new Point(0, 583);
+            btnReportDebt.Location = new Point(0, 440);
             btnReportDebt.Margin = new Padding(0);
             btnReportDebt.Name = "btnReportDebt";
-            btnReportDebt.Padding = new Padding(11, 0, 0, 0);
-            btnReportDebt.Size = new Size(320, 53);
+            btnReportDebt.Padding = new Padding(10, 0, 0, 0);
+            btnReportDebt.Size = new Size(280, 40);
             btnReportDebt.TabIndex = 3;
             btnReportDebt.Tag = "subItem";
             btnReportDebt.Text = "    Báo cáo Nợ && Quá hạn";
@@ -181,7 +180,7 @@
             pnlSidebar.Location = new Point(0, 0);
             pnlSidebar.Margin = new Padding(0);
             pnlSidebar.Name = "pnlSidebar";
-            pnlSidebar.Size = new Size(320, 1055);
+            pnlSidebar.Size = new Size(280, 791);
             pnlSidebar.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -203,10 +202,9 @@
             flowLayoutPanel1.Controls.Add(btnReaders);
             flowLayoutPanel1.Controls.Add(btnPermissions);
             flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(0, 107);
-            flowLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
+            flowLayoutPanel1.Location = new Point(0, 80);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(320, 881);
+            flowLayoutPanel1.Size = new Size(280, 661);
             flowLayoutPanel1.TabIndex = 11;
             // 
             // btnDashboard
@@ -223,8 +221,8 @@
             btnDashboard.Location = new Point(0, 0);
             btnDashboard.Margin = new Padding(0);
             btnDashboard.Name = "btnDashboard";
-            btnDashboard.Padding = new Padding(11, 0, 0, 0);
-            btnDashboard.Size = new Size(320, 53);
+            btnDashboard.Padding = new Padding(10, 0, 0, 0);
+            btnDashboard.Size = new Size(280, 40);
             btnDashboard.TabIndex = 1;
             btnDashboard.Text = "    Báo cáo - Thống kê";
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
@@ -242,11 +240,11 @@
             btnGenre.ForeColor = SystemColors.HighlightText;
             btnGenre.Image = (Image)resources.GetObject("btnGenre.Image");
             btnGenre.ImageAlign = ContentAlignment.MiddleLeft;
-            btnGenre.Location = new Point(0, 53);
+            btnGenre.Location = new Point(0, 40);
             btnGenre.Margin = new Padding(0);
             btnGenre.Name = "btnGenre";
-            btnGenre.Padding = new Padding(11, 0, 0, 0);
-            btnGenre.Size = new Size(320, 53);
+            btnGenre.Padding = new Padding(10, 0, 0, 0);
+            btnGenre.Size = new Size(280, 40);
             btnGenre.TabIndex = 3;
             btnGenre.Tag = "subItem";
             btnGenre.Text = "    Quản lý Thể loại";
@@ -265,11 +263,11 @@
             btnAuthor.ForeColor = SystemColors.HighlightText;
             btnAuthor.Image = (Image)resources.GetObject("btnAuthor.Image");
             btnAuthor.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAuthor.Location = new Point(0, 106);
+            btnAuthor.Location = new Point(0, 80);
             btnAuthor.Margin = new Padding(0);
             btnAuthor.Name = "btnAuthor";
-            btnAuthor.Padding = new Padding(11, 0, 0, 0);
-            btnAuthor.Size = new Size(320, 53);
+            btnAuthor.Padding = new Padding(10, 0, 0, 0);
+            btnAuthor.Size = new Size(280, 40);
             btnAuthor.TabIndex = 4;
             btnAuthor.Tag = "subItem";
             btnAuthor.Text = "    Quản lý Tác giả";
@@ -288,11 +286,11 @@
             btnPublisher.ForeColor = SystemColors.HighlightText;
             btnPublisher.Image = (Image)resources.GetObject("btnPublisher.Image");
             btnPublisher.ImageAlign = ContentAlignment.MiddleLeft;
-            btnPublisher.Location = new Point(0, 159);
+            btnPublisher.Location = new Point(0, 120);
             btnPublisher.Margin = new Padding(0);
             btnPublisher.Name = "btnPublisher";
-            btnPublisher.Padding = new Padding(11, 0, 0, 0);
-            btnPublisher.Size = new Size(320, 53);
+            btnPublisher.Padding = new Padding(10, 0, 0, 0);
+            btnPublisher.Size = new Size(280, 40);
             btnPublisher.TabIndex = 5;
             btnPublisher.Tag = "subItem";
             btnPublisher.Text = "    Quản lý Nhà xuất bản";
@@ -311,11 +309,11 @@
             btnSupplier.ForeColor = SystemColors.HighlightText;
             btnSupplier.Image = (Image)resources.GetObject("btnSupplier.Image");
             btnSupplier.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSupplier.Location = new Point(0, 212);
+            btnSupplier.Location = new Point(0, 160);
             btnSupplier.Margin = new Padding(0);
             btnSupplier.Name = "btnSupplier";
-            btnSupplier.Padding = new Padding(11, 0, 0, 0);
-            btnSupplier.Size = new Size(320, 53);
+            btnSupplier.Padding = new Padding(10, 0, 0, 0);
+            btnSupplier.Size = new Size(280, 40);
             btnSupplier.TabIndex = 6;
             btnSupplier.Tag = "subItem";
             btnSupplier.Text = "    Quản lý Nhà cung cấp";
@@ -334,11 +332,11 @@
             btnBookTitle.ForeColor = SystemColors.HighlightText;
             btnBookTitle.Image = Properties.Resources.book_cover;
             btnBookTitle.ImageAlign = ContentAlignment.MiddleLeft;
-            btnBookTitle.Location = new Point(0, 265);
+            btnBookTitle.Location = new Point(0, 200);
             btnBookTitle.Margin = new Padding(0);
             btnBookTitle.Name = "btnBookTitle";
-            btnBookTitle.Padding = new Padding(11, 0, 0, 0);
-            btnBookTitle.Size = new Size(320, 53);
+            btnBookTitle.Padding = new Padding(10, 0, 0, 0);
+            btnBookTitle.Size = new Size(280, 40);
             btnBookTitle.TabIndex = 3;
             btnBookTitle.Tag = "subItem";
             btnBookTitle.Text = "    Quản lý Tựa sách";
@@ -357,11 +355,11 @@
             btnBookStock.ForeColor = SystemColors.HighlightText;
             btnBookStock.Image = (Image)resources.GetObject("btnBookStock.Image");
             btnBookStock.ImageAlign = ContentAlignment.MiddleLeft;
-            btnBookStock.Location = new Point(0, 318);
+            btnBookStock.Location = new Point(0, 240);
             btnBookStock.Margin = new Padding(0);
             btnBookStock.Name = "btnBookStock";
-            btnBookStock.Padding = new Padding(11, 0, 0, 0);
-            btnBookStock.Size = new Size(320, 53);
+            btnBookStock.Padding = new Padding(10, 0, 0, 0);
+            btnBookStock.Size = new Size(280, 40);
             btnBookStock.TabIndex = 4;
             btnBookStock.Tag = "subItem";
             btnBookStock.Text = "    Quản lý Sách && Tồn kho";
@@ -380,11 +378,11 @@
             btnImportBooks.ForeColor = SystemColors.HighlightText;
             btnImportBooks.Image = (Image)resources.GetObject("btnImportBooks.Image");
             btnImportBooks.ImageAlign = ContentAlignment.MiddleLeft;
-            btnImportBooks.Location = new Point(0, 371);
+            btnImportBooks.Location = new Point(0, 280);
             btnImportBooks.Margin = new Padding(0);
             btnImportBooks.Name = "btnImportBooks";
-            btnImportBooks.Padding = new Padding(11, 0, 0, 0);
-            btnImportBooks.Size = new Size(320, 53);
+            btnImportBooks.Padding = new Padding(10, 0, 0, 0);
+            btnImportBooks.Size = new Size(280, 40);
             btnImportBooks.TabIndex = 5;
             btnImportBooks.Tag = "subItem";
             btnImportBooks.Text = "    Nhập sách";
@@ -403,11 +401,11 @@
             btnUsers.ForeColor = Color.White;
             btnUsers.Image = Properties.Resources.user;
             btnUsers.ImageAlign = ContentAlignment.MiddleLeft;
-            btnUsers.Location = new Point(0, 636);
+            btnUsers.Location = new Point(0, 480);
             btnUsers.Margin = new Padding(0);
             btnUsers.Name = "btnUsers";
-            btnUsers.Padding = new Padding(11, 0, 0, 0);
-            btnUsers.Size = new Size(320, 53);
+            btnUsers.Padding = new Padding(10, 0, 0, 0);
+            btnUsers.Size = new Size(280, 40);
             btnUsers.TabIndex = 4;
             btnUsers.Tag = "subItem";
             btnUsers.Text = "    Quản lý Tài khoản";
@@ -426,11 +424,11 @@
             btnReaders.ForeColor = Color.White;
             btnReaders.Image = Properties.Resources.reader;
             btnReaders.ImageAlign = ContentAlignment.MiddleLeft;
-            btnReaders.Location = new Point(0, 689);
+            btnReaders.Location = new Point(0, 520);
             btnReaders.Margin = new Padding(0);
             btnReaders.Name = "btnReaders";
-            btnReaders.Padding = new Padding(11, 0, 0, 0);
-            btnReaders.Size = new Size(320, 53);
+            btnReaders.Padding = new Padding(10, 0, 0, 0);
+            btnReaders.Size = new Size(280, 40);
             btnReaders.TabIndex = 4;
             btnReaders.Tag = "subItem";
             btnReaders.Text = "    Quản lý Độc giả";
@@ -449,11 +447,11 @@
             btnPermissions.ForeColor = Color.White;
             btnPermissions.Image = Properties.Resources.user_access;
             btnPermissions.ImageAlign = ContentAlignment.MiddleLeft;
-            btnPermissions.Location = new Point(0, 742);
+            btnPermissions.Location = new Point(0, 560);
             btnPermissions.Margin = new Padding(0);
             btnPermissions.Name = "btnPermissions";
-            btnPermissions.Padding = new Padding(11, 0, 0, 0);
-            btnPermissions.Size = new Size(320, 53);
+            btnPermissions.Padding = new Padding(10, 0, 0, 0);
+            btnPermissions.Size = new Size(280, 40);
             btnPermissions.TabIndex = 4;
             btnPermissions.Tag = "subItem";
             btnPermissions.Text = "    Quản lý Phân quyền";
@@ -466,10 +464,10 @@
             flowLayoutPanel2.BackColor = Color.Transparent;
             flowLayoutPanel2.Controls.Add(btnLogout);
             flowLayoutPanel2.Dock = DockStyle.Bottom;
-            flowLayoutPanel2.Location = new Point(0, 988);
+            flowLayoutPanel2.Location = new Point(0, 741);
             flowLayoutPanel2.Margin = new Padding(0);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(320, 67);
+            flowLayoutPanel2.Size = new Size(280, 50);
             flowLayoutPanel2.TabIndex = 10;
             // 
             // btnLogout
@@ -486,8 +484,8 @@
             btnLogout.Location = new Point(0, 0);
             btnLogout.Margin = new Padding(0);
             btnLogout.Name = "btnLogout";
-            btnLogout.Padding = new Padding(11, 0, 0, 0);
-            btnLogout.Size = new Size(320, 67);
+            btnLogout.Padding = new Padding(10, 0, 0, 0);
+            btnLogout.Size = new Size(280, 50);
             btnLogout.TabIndex = 5;
             btnLogout.Text = "    Đăng xuất";
             btnLogout.TextAlign = ContentAlignment.MiddleLeft;
@@ -503,7 +501,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(320, 107);
+            panel1.Size = new Size(280, 80);
             panel1.TabIndex = 0;
             // 
             // sidebarTransition
@@ -518,10 +516,9 @@
             pnlMainContent.BackgroundImageLayout = ImageLayout.Center;
             pnlMainContent.Controls.Add(pictureBox2);
             pnlMainContent.Dock = DockStyle.Fill;
-            pnlMainContent.Location = new Point(320, 0);
-            pnlMainContent.Margin = new Padding(3, 4, 3, 4);
+            pnlMainContent.Location = new Point(280, 0);
             pnlMainContent.Name = "pnlMainContent";
-            pnlMainContent.Size = new Size(1440, 1055);
+            pnlMainContent.Size = new Size(1260, 791);
             pnlMainContent.TabIndex = 1;
             // 
             // pictureBox2
@@ -529,23 +526,21 @@
             pictureBox2.Dock = DockStyle.Fill;
             pictureBox2.Image = Properties.Resources.home_page;
             pictureBox2.Location = new Point(0, 0);
-            pictureBox2.Margin = new Padding(3, 4, 3, 4);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(1440, 1055);
+            pictureBox2.Size = new Size(1260, 791);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 0;
             pictureBox2.TabStop = false;
             // 
             // FrmMain
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1760, 1055);
+            ClientSize = new Size(1540, 791);
             Controls.Add(pnlMainContent);
             Controls.Add(pnlSidebar);
             DoubleBuffered = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 4, 3, 4);
             Name = "FrmMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Phần mềm Quản lý thư viện";
