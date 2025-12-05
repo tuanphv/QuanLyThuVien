@@ -25,11 +25,12 @@ namespace GUI.MuonTra
 
         private void UCPhieuTra_Load(object? sender, EventArgs e)
         {
+            KhoiTaoCheDoNguoiDung();
             dgvPhieuTra.AutoGenerateColumns = false;
             dgvPhieuTra.RowTemplate.Height = 42;
             dgvPhieuTra.DeleteButtonClicked += DgvPhieuTra_DeleteButtonClicked;
             dgvPhieuTra.ViewButtonClicked += DgvPhieuTra_ViewButtonClicked;
-            dgvPhieuTra.ShowDeleteButton = !_isReader;
+            dgvPhieuTra.ShowEditButton = false;
             colMaPhieu.DataPropertyName = nameof(PhieuTraDTO.MaPhieuMuon);
             colDocGia.DataPropertyName = nameof(PhieuTraDTO.HoTenDocGia);
             colNgayTra.DataPropertyName = nameof(PhieuTraDTO.NgayTra);
@@ -41,7 +42,6 @@ namespace GUI.MuonTra
 
             LoadData();
             _isInitialized = true;
-            KhoiTaoCheDoNguoiDung();
         }
 
         private void UCPhieuTra_VisibleChanged(object? sender, EventArgs e)
@@ -137,18 +137,21 @@ namespace GUI.MuonTra
 
         private void KhoiTaoCheDoNguoiDung()
         {
+            _isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (_isReader && SessionManager.GetUserId() is int userId)
+            {
+                var docGia = DocGiaBUS.GetByUserId(userId);
+                _maDocGiaDangNhap = docGia?.MaDocGia;
+            }
             int perCode = (int)Permission.PhieuTraSach;
             var canAdd = SessionManager.HasPermission(perCode, Helpers.Action.Add);
-            var canEdit = SessionManager.HasPermission(perCode, Helpers.Action.Edit);
             var canDelete = SessionManager.HasPermission(perCode, Helpers.Action.Delete);
             
             btnLapPhieuTra.Visible = canAdd;
             dgvPhieuTra.ShowDeleteButton = canDelete;
-            dgvPhieuTra.ShowEditButton = canEdit;
 
-            var isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
-            btnImport.Visible = !isReader;
-            btnExport.Visible = !isReader;
+            btnImport.Visible = !_isReader;
+            btnExport.Visible = !_isReader;
         }
 
         private void btnExport_Click(object? sender, EventArgs e)

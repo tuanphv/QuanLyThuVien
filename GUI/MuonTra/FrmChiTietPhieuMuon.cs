@@ -1,10 +1,11 @@
 using BUS;
 using DTO;
 using GUI.Helpers;
-using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace GUI.MuonTra
 {
@@ -12,6 +13,7 @@ namespace GUI.MuonTra
     {
         private readonly PhieuMuonDTO _phieu;
         private BindingList<ChiTietPhieuMuonDTO> _chiTiet = new();
+        private Button btnExportPdf = null!;
 
         public PhieuMuonDTO PhieuCapNhat => _phieu;
 
@@ -109,6 +111,9 @@ namespace GUI.MuonTra
             var lblTinh = new Label { Text = "Tình trạng:", Left = 20, Top = 180, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
             lblTinhTrang = new Label { Left = 110, Top = 180, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
 
+            btnExportPdf = new Button { Text = "Xuất PDF", Left = 560, Top = 170, Width = 120, Height = 32 };
+            btnExportPdf.Click += BtnExportPdf_Click;
+
             dgvChiTiet = new DataGridView
             {
                 Left = 20,
@@ -133,7 +138,80 @@ namespace GUI.MuonTra
             btnTraSach = new Button { Text = "Trả sách", Left = 540, Top = 440, Width = 120, Height = 32, BackColor = System.Drawing.Color.SeaGreen, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnTraSach.Click += btnTraSach_Click;
 
-            Controls.AddRange(new Control[] { lblTitle, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayM, lblNgayMuon, lblHan, lblHanTra, lblTinh, lblTinhTrang, dgvChiTiet, btnGiaHan, btnTraSach });
+            Controls.AddRange(new Control[] { lblTitle, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayM, lblNgayMuon, lblHan, lblHanTra, lblTinh, lblTinhTrang, btnExportPdf, dgvChiTiet, btnGiaHan, btnTraSach });
+        }
+                    private void BtnExportPdf_Click(object? sender, EventArgs e)
+        {
+            using (var sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "PDF file|*.pdf";
+                sfd.FileName = $"PhieuMuon_{_phieu.MaPhieuMuon}.pdf";
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    using (var fs = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write))
+                    {
+                        var doc = new Document(PageSize.A4, 36, 36, 36, 36);
+                        PdfWriter.GetInstance(doc, fs);
+                        doc.Open();
+
+                        string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+
+                        BaseFont bf = BaseFont.CreateFont(
+                            fontPath,
+                            BaseFont.IDENTITY_H,
+                            BaseFont.EMBEDDED
+                        );
+
+                        iTextSharp.text.Font fontTitle = new iTextSharp.text.Font(bf, 16, iTextSharp.text.Font.BOLD);
+                        iTextSharp.text.Font fontLabel = new iTextSharp.text.Font(bf, 12);
+                        iTextSharp.text.Font fontValue = new iTextSharp.text.Font(bf, 12, iTextSharp.text.Font.BOLD);
+
+                        doc.Add(new Paragraph("PHIẾU MƯỢN SÁCH", fontTitle) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(new Paragraph("\n"));
+                        doc.Add(new Paragraph($"Mã phiếu mượn: {_phieu.MaPhieuMuon}", fontLabel));
+                        doc.Add(new Paragraph($"Độc giả: {_phieu.HoTenDocGia} ({_phieu.MaDocGia})", fontLabel));
+                        doc.Add(new Paragraph($"Ngày mượn: {_phieu.NgayMuon:dd/MM/yyyy}", fontLabel));
+                        doc.Add(new Paragraph($"Hạn trả: {_phieu.NgayTraDuKien:dd/MM/yyyy}", fontLabel));
+                        doc.Add(new Paragraph($"Tổng sách: {_phieu.TongSach}", fontValue));
+                        doc.Add(new Paragraph($"Tình trạng: {_phieu.TinhTrang}", fontLabel));
+                        doc.Add(new Paragraph("\n"));
+
+                        // Table for details
+                        PdfPTable table = new PdfPTable(4) { WidthPercentage = 100 };
+                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.5f, 1.5f });
+                        string[] headers = { "Mã cuốn", "Tên sách", "Hạn trả", "Ngày trả" };
+                        foreach (var h in headers)
+                        {
+                            var cell = new PdfPCell(new Phrase(h, fontLabel)) { BackgroundColor = new BaseColor(220, 220, 220), HorizontalAlignment = Element.ALIGN_CENTER };
+                            table.AddCell(cell);
+                        }
+                        foreach (var ct in _chiTiet)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase(ct.MaCuonSach, fontValue)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.TenSach, fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.NgayTraDuKien.ToString("dd/MM/yyyy"), fontLabel)));
+                            table.AddCell(new PdfPCell(
+                                new Phrase(
+                                    ct.NgayTraThucTe.HasValue
+                                        ? ct.NgayTraThucTe.Value.ToString("dd/MM/yyyy")
+                                        : string.Empty,
+                                    fontLabel
+                                )
+                            ));
+
+                        }
+                        doc.Add(table);
+                        doc.Close();
+                    }
+                    MessageBox.Show("Xuất PDF thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xuất PDF: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private Label lblMaPhieu = null!;
