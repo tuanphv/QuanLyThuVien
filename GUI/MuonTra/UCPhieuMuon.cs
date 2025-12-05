@@ -25,6 +25,7 @@ namespace GUI.MuonTra
 
         private void UCPhieuMuon_Load(object sender, EventArgs e)
         {
+            KhoiTaoCheDoNguoiDung();
             dgvPhieuMuon.AutoGenerateColumns = false;
             dgvPhieuMuon.RowTemplate.Height = 40;
 
@@ -45,7 +46,7 @@ namespace GUI.MuonTra
 
             cbStatusFilter.SelectedIndex = 0;
             LoadData();
-            KhoiTaoCheDoNguoiDung();
+
             _isInitialized = true;
         }
 
@@ -153,10 +154,15 @@ namespace GUI.MuonTra
             var canAdd = SessionManager.HasPermission(perCode, Helpers.Action.Add);
             var canEdit = SessionManager.HasPermission(perCode, Helpers.Action.Edit);
             var canDelete = SessionManager.HasPermission(perCode, Helpers.Action.Delete);
-            var isUser = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
-            
-            btnImport.Visible = !isUser;
-            btnExport.Visible = !isUser;
+            _isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (_isReader && SessionManager.GetUserId() is int userId)
+            {
+                var docGia = DocGiaBUS.GetByUserId(userId);
+                _maDocGiaDangNhap = docGia?.MaDocGia;
+            }
+
+            btnImport.Visible = !_isReader;
+            btnExport.Visible = !_isReader;
             
             btnThem.Visible = canAdd;
             dgvPhieuMuon.ShowEditButton = canEdit;
