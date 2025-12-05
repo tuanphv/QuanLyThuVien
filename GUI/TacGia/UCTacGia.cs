@@ -192,9 +192,10 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                         // 4. Tạo tiêu đề cột (Header)
                         worksheet.Cell(1, 1).Value = "Mã Tác giả";
                         worksheet.Cell(1, 2).Value = "Tên Tác giả";
+                        worksheet.Cell(1, 3).Value = "Năm sinh";
 
-                        // Định dạng Header cho đẹp (In đậm, nền xám)
-                        var headerRow = worksheet.Range("A1:B1");
+                        // Định dạng Header 
+                        var headerRow = worksheet.Range("A1:C1");
                         headerRow.Style.Font.Bold = true;
                         headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
 
@@ -203,6 +204,14 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                         {
                             worksheet.Cell(i + 2, 1).Value = list[i].MaTacGia;
                             worksheet.Cell(i + 2, 2).Value = list[i].TenTacGia;
+                            if (list[i].NamSinh > 0)
+                            {
+                                worksheet.Cell(i + 2, 3).Value = list[i].NamSinh;
+                            }
+                            else
+                            {
+                                worksheet.Cell(i + 2, 3).Value = "";
+                            }
                         }
 
                         // Tự động chỉnh độ rộng cột
