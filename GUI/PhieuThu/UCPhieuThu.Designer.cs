@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panel1 = new Panel();
             label1 = new Label();
             dgvPhieuThu = new GUI.Controls.ActionDataGridView();
@@ -77,25 +77,25 @@
             dgvPhieuThu.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPhieuThu.BackgroundColor = Color.White;
             dgvPhieuThu.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            dgvPhieuThu.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvPhieuThu.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvPhieuThu.ColumnHeadersHeight = 40;
             dgvPhieuThu.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvPhieuThu.Columns.AddRange(new DataGridViewColumn[] { colMaPhieuThu, colDocGia, colSoTienThu, colNgayLap });
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Window;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
-            dgvPhieuThu.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dgvPhieuThu.DefaultCellStyle = dataGridViewCellStyle3;
             dgvPhieuThu.EnableHeadersVisualStyles = false;
             dgvPhieuThu.Location = new Point(20, 64);
             dgvPhieuThu.Margin = new Padding(20, 10, 20, 20);
@@ -106,6 +106,7 @@
             dgvPhieuThu.ShowDeleteButton = true;
             dgvPhieuThu.ShowEditButton = false;
             dgvPhieuThu.ShowExtendButton = false;
+            dgvPhieuThu.ShowPrintButton = true;
             dgvPhieuThu.ShowReturnButton = false;
             dgvPhieuThu.ShowViewButton = false;
             dgvPhieuThu.Size = new Size(1120, 558);
@@ -132,8 +133,8 @@
             // colNgayLap
             // 
             colNgayLap.DataPropertyName = "NgayLapPhieu";
-            dataGridViewCellStyle5.Format = "dd/MM/yyyy";
-            colNgayLap.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Format = "dd/MM/yyyy";
+            colNgayLap.DefaultCellStyle = dataGridViewCellStyle2;
             colNgayLap.HeaderText = "Ngày lập phiếu";
             colNgayLap.Name = "colNgayLap";
             // 

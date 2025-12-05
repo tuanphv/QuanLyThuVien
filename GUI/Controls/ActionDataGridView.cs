@@ -15,11 +15,14 @@ namespace GUI.Controls
         public bool ShowExtendButton { get; set; } = false;
         public bool ShowReturnButton { get; set; } = false;
 
+        public bool ShowPrintButton { get; set; } = false; // reserved for future use
+
         public event EventHandler<int> EditButtonClicked;
         public event EventHandler<int> DeleteButtonClicked;
         public event EventHandler<int> ViewButtonClicked;
         public event EventHandler<int> ExtendButtonClicked;
         public event EventHandler<int> ReturnButtonClicked;
+        public event EventHandler<int> PrintButtonClicked;
 
         private ToolTip toolTip = new ToolTip();
         private int hoveredRow = -1;
@@ -87,7 +90,8 @@ namespace GUI.Controls
                 ("delete", Properties.Resources.bin, ShowDeleteButton),
                 ("view", Properties.Resources.info, ShowViewButton),
                 ("extend", Properties.Resources.calendar, ShowExtendButton),
-                ("return", Properties.Resources._return, ShowReturnButton)
+                ("return", Properties.Resources._return, ShowReturnButton),
+                ("print", Properties.Resources.printing, ShowPrintButton)
             };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
@@ -143,6 +147,7 @@ namespace GUI.Controls
                 "view" => Color.LightGreen,
                 "extend" => Color.SteelBlue,
                 "return" => Color.MediumSeaGreen,
+                "print" => Color.Khaki,
                 _ => Color.LightGray
             };
         }
@@ -164,7 +169,8 @@ namespace GUI.Controls
                 ("delete", Properties.Resources.bin, ShowDeleteButton),
                 ("view", Properties.Resources.info, ShowViewButton),
                 ("extend", Properties.Resources.calendar, ShowExtendButton),
-                ("return", Properties.Resources._return, ShowReturnButton)
+                ("return", Properties.Resources._return, ShowReturnButton),
+                ("print", Properties.Resources.printing, ShowPrintButton)
             };
 
             var visibleButtons = buttons.Where(b => b.visible).ToList();
@@ -209,6 +215,7 @@ namespace GUI.Controls
                         "view" => "Xem",
                         "extend" => "Gia hạn",
                         "return" => "Trả",
+                        "print" => "In",
                         _ => ""
                     });
                 }
@@ -231,6 +238,8 @@ namespace GUI.Controls
                 ExtendButtonClicked?.Invoke(this, e.RowIndex);
             else if (hoveredButton == "return")
                 ReturnButtonClicked?.Invoke(this, e.RowIndex);
+            else if (hoveredButton == "print")
+                PrintButtonClicked?.Invoke(this, e.RowIndex);
         }
     }
 }
