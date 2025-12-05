@@ -64,7 +64,7 @@
             txtMaTheLoai.Name = "txtMaTheLoai";
             txtMaTheLoai.ReadOnly = true;
             txtMaTheLoai.Size = new Size(175, 27);
-            txtMaTheLoai.TabIndex = 2;
+            txtMaTheLoai.TabIndex = 0;
             // 
             // txtTenTheLoai
             // 
@@ -72,7 +72,7 @@
             txtTenTheLoai.Location = new Point(197, 114);
             txtTenTheLoai.Name = "txtTenTheLoai";
             txtTenTheLoai.Size = new Size(175, 27);
-            txtTenTheLoai.TabIndex = 3;
+            txtTenTheLoai.TabIndex = 1;
             // 
             // btnLuu
             // 
@@ -85,7 +85,7 @@
             btnLuu.Location = new Point(90, 179);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(92, 41);
-            btnLuu.TabIndex = 4;
+            btnLuu.TabIndex = 2;
             btnLuu.Text = "Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;
@@ -102,7 +102,7 @@
             btnThoat.Location = new Point(269, 179);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(92, 41);
-            btnThoat.TabIndex = 5;
+            btnThoat.TabIndex = 3;
             btnThoat.Text = "Thoát";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThoat.UseVisualStyleBackColor = false;

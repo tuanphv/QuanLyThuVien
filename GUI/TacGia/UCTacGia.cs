@@ -245,14 +245,15 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                             string tenTacGia = row.Cell(2).GetValue<string>().Trim();
 
                             if (string.IsNullOrEmpty(tenTacGia)) continue;
+                            int namSinh = 0; // Khai báo năm sinh mặc định là 0 cho file Excel
 
                             // KIỂM TRA LOGIC:
                             // Chỉ thêm nếu tên này chưa tồn tại trong DB
                             // (Bạn đã có hàm IsNameExist trong DAO rồi, quá tiện!)
-                            if (!DAO.TacGiaDAO.IsNameExist(tenTacGia))
+                            if (!DAO.TacGiaDAO.IsNameExist(tenTacGia, namSinh))
                             {
                                 // Tạo DTO mới
-                                TacGiaDTO newTG = new TacGiaDTO(tenTacGia);
+                                TacGiaDTO newTG = new TacGiaDTO(tenTacGia, 0);
 
                                 // Gọi BUS để thêm vào DB (Hàm Add sẽ tự sinh Mã)
                                 BUS.TacGiaBUS.Add(newTG);

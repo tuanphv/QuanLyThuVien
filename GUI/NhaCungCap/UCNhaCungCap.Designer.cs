@@ -195,8 +195,10 @@
             dgvNhaCungCap.ShowDeleteButton = true;
             dgvNhaCungCap.ShowEditButton = true;
             dgvNhaCungCap.ShowEditingIcon = false;
+            dgvNhaCungCap.ShowExtendButton = false;
+            dgvNhaCungCap.ShowReturnButton = false;
             dgvNhaCungCap.ShowRowErrors = false;
-            dgvNhaCungCap.ShowViewButton = true;
+            dgvNhaCungCap.ShowViewButton = false;
             dgvNhaCungCap.Size = new Size(1775, 740);
             dgvNhaCungCap.TabIndex = 17;
             // 

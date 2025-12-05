@@ -113,7 +113,7 @@
             txtMaSach.Name = "txtMaSach";
             txtMaSach.ReadOnly = true;
             txtMaSach.Size = new Size(125, 27);
-            txtMaSach.TabIndex = 6;
+            txtMaSach.TabIndex = 0;
             // 
             // txtTenTuaSach
             // 
@@ -123,7 +123,7 @@
             txtTenTuaSach.Name = "txtTenTuaSach";
             txtTenTuaSach.ReadOnly = true;
             txtTenTuaSach.Size = new Size(376, 27);
-            txtTenTuaSach.TabIndex = 7;
+            txtTenTuaSach.TabIndex = 1;
             // 
             // txtSoLuong
             // 
@@ -133,7 +133,7 @@
             txtSoLuong.Name = "txtSoLuong";
             txtSoLuong.ReadOnly = true;
             txtSoLuong.Size = new Size(125, 27);
-            txtSoLuong.TabIndex = 9;
+            txtSoLuong.TabIndex = 4;
             // 
             // txtNamXB
             // 
@@ -141,7 +141,7 @@
             txtNamXB.Location = new Point(540, 144);
             txtNamXB.Name = "txtNamXB";
             txtNamXB.Size = new Size(125, 27);
-            txtNamXB.TabIndex = 10;
+            txtNamXB.TabIndex = 3;
             // 
             // txtDonGia
             // 
@@ -149,7 +149,7 @@
             txtDonGia.Location = new Point(540, 204);
             txtDonGia.Name = "txtDonGia";
             txtDonGia.Size = new Size(125, 27);
-            txtDonGia.TabIndex = 11;
+            txtDonGia.TabIndex = 5;
             // 
             // cboNXB
             // 
@@ -157,7 +157,7 @@
             cboNXB.Location = new Point(219, 143);
             cboNXB.Name = "cboNXB";
             cboNXB.Size = new Size(213, 28);
-            cboNXB.TabIndex = 12;
+            cboNXB.TabIndex = 2;
             // 
             // btnThoat
             // 
@@ -171,7 +171,7 @@
             btnThoat.Location = new Point(430, 304);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(92, 41);
-            btnThoat.TabIndex = 25;
+            btnThoat.TabIndex = 7;
             btnThoat.Text = "Thoát";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThoat.UseVisualStyleBackColor = false;
@@ -189,7 +189,7 @@
             btnLuu.Location = new Point(215, 304);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(92, 41);
-            btnLuu.TabIndex = 24;
+            btnLuu.TabIndex = 6;
             btnLuu.Text = "Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;

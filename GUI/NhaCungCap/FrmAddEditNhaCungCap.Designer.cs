@@ -49,7 +49,7 @@
             btnThoat.Location = new Point(284, 171);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(92, 41);
-            btnThoat.TabIndex = 23;
+            btnThoat.TabIndex = 3;
             btnThoat.Text = "Thoát";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnThoat.UseVisualStyleBackColor = false;
@@ -67,7 +67,7 @@
             btnLuu.Location = new Point(105, 171);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(92, 41);
-            btnLuu.TabIndex = 22;
+            btnLuu.TabIndex = 2;
             btnLuu.Text = "Lưu";
             btnLuu.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnLuu.UseVisualStyleBackColor = false;
@@ -79,7 +79,7 @@
             txtDiaChi.Location = new Point(212, 106);
             txtDiaChi.Name = "txtDiaChi";
             txtDiaChi.Size = new Size(175, 27);
-            txtDiaChi.TabIndex = 21;
+            txtDiaChi.TabIndex = 1;
             // 
             // label2
             // 
@@ -107,7 +107,7 @@
             txtTenNCC.Location = new Point(212, 39);
             txtTenNCC.Name = "txtTenNCC";
             txtTenNCC.Size = new Size(175, 27);
-            txtTenNCC.TabIndex = 24;
+            txtTenNCC.TabIndex = 0;
             // 
             // FrmAddEditNhaCungCap
             // 
