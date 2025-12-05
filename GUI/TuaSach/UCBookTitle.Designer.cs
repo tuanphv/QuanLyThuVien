@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             panel1 = new Panel();
             btnExport = new Button();
             btnImport = new Button();
@@ -79,7 +79,7 @@
             btnExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnExport.Image = Properties.Resources.excel;
             btnExport.ImageAlign = ContentAlignment.TopCenter;
-            btnExport.Location = new Point(1526, 5);
+            btnExport.Location = new Point(1526, 7);
             btnExport.Name = "btnExport";
             btnExport.Size = new Size(65, 55);
             btnExport.TabIndex = 15;
@@ -96,7 +96,7 @@
             btnImport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnImport.Image = Properties.Resources.upload;
             btnImport.ImageAlign = ContentAlignment.TopCenter;
-            btnImport.Location = new Point(1443, 5);
+            btnImport.Location = new Point(1443, 7);
             btnImport.Name = "btnImport";
             btnImport.Size = new Size(65, 55);
             btnImport.TabIndex = 15;
@@ -147,26 +147,26 @@
             dgvBookTitles.BackgroundColor = Color.White;
             dgvBookTitles.BorderStyle = BorderStyle.None;
             dgvBookTitles.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle9.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle9.ForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle9.SelectionBackColor = Color.CornflowerBlue;
-            dataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
-            dgvBookTitles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionBackColor = Color.CornflowerBlue;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvBookTitles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvBookTitles.ColumnHeadersHeight = 40;
             dgvBookTitles.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvBookTitles.Columns.AddRange(new DataGridViewColumn[] { BookTitleID, BookTitleName, Image, Genres, Authors });
-            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = SystemColors.Window;
-            dataGridViewCellStyle12.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle12.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle12.Padding = new Padding(5);
-            dataGridViewCellStyle12.SelectionBackColor = SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle12.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.False;
-            dgvBookTitles.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new Padding(5);
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvBookTitles.DefaultCellStyle = dataGridViewCellStyle4;
             dgvBookTitles.EnableHeadersVisualStyles = false;
             dgvBookTitles.GridColor = SystemColors.ControlLight;
             dgvBookTitles.Location = new Point(20, 69);
@@ -184,6 +184,7 @@
             dgvBookTitles.ShowEditButton = true;
             dgvBookTitles.ShowEditingIcon = false;
             dgvBookTitles.ShowExtendButton = false;
+            dgvBookTitles.ShowPrintButton = false;
             dgvBookTitles.ShowReturnButton = false;
             dgvBookTitles.ShowRowErrors = false;
             dgvBookTitles.ShowViewButton = true;
@@ -215,8 +216,8 @@
             // Genres
             // 
             Genres.DataPropertyName = "TheLoai";
-            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
-            Genres.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            Genres.DefaultCellStyle = dataGridViewCellStyle2;
             Genres.HeaderText = "Thể loại";
             Genres.Name = "Genres";
             Genres.ReadOnly = true;
@@ -224,8 +225,8 @@
             // Authors
             // 
             Authors.DataPropertyName = "TacGia";
-            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.True;
-            Authors.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            Authors.DefaultCellStyle = dataGridViewCellStyle3;
             Authors.HeaderText = "Tác giả";
             Authors.Name = "Authors";
             Authors.ReadOnly = true;
@@ -293,6 +294,7 @@
             textBox1.Location = new Point(5, 5);
             textBox1.Margin = new Padding(5);
             textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "Nhập tên tác giả cần tìm";
             textBox1.Size = new Size(295, 18);
             textBox1.TabIndex = 0;
             // 

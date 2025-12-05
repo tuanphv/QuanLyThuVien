@@ -1,5 +1,6 @@
 ﻿using BUS;
 using DTO;
+using GUI.Helpers;
 using System.ComponentModel;
 using System.Data;
 
@@ -30,6 +31,16 @@ namespace GUI.Sach
             // 3. Gán sự kiện (Chỉ còn Sửa và Xem)
             dgvSach.EditButtonClicked += EditButtonClicked;
             dgvSach.ViewButtonClicked += ViewButtonClicked;
+
+            // 4. Áp dụng phân quyền
+            LoadPermissions();
+        }
+
+        private void LoadPermissions()
+        {
+            int permissionCode = (int)Helpers.Permission.Sach;
+            bool canEdit = SessionManager.HasPermission(permissionCode, Helpers.Action.Edit);
+            dgvSach.ShowEditButton = canEdit;
         }
 
         private void LoadData()

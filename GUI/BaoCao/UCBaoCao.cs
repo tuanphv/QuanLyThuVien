@@ -86,7 +86,7 @@ namespace GUI.BaoCao
                     dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.Font = 
                         new Font(dgvQuaHan.Font, FontStyle.Bold);
                     dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.ForeColor = Color.Red;
-                    dgvQuaHan.Columns["TongNoUocTinh"].Width = 150;
+                    dgvQuaHan.Columns["TongNoUocTinh"].Width = 200;
                 }
 
                 // Ẩn các cột không cần thiết nếu có

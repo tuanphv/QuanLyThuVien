@@ -1,5 +1,6 @@
 ﻿using BUS;
 using DTO;
+using GUI.Helpers;
 using System.ComponentModel;
 using System.Data;
 
@@ -37,6 +38,8 @@ namespace GUI.Sach
 
             // 4. Tải dữ liệu
             LoadData();
+
+            btnCapNhat.Visible = SessionManager.HasPermission((int)Helpers.Permission.Sach, Helpers.Action.Edit);
         }
 
         private void LoadComboBoxTinhTrang()

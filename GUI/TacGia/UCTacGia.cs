@@ -49,6 +49,10 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                 if (dgvTacGia.Columns.Contains("Actions"))
                     dgvTacGia.Columns["Actions"].Visible = false;
             }
+
+            bool isReader = SessionManager.CurrentUser.TenNhomNguoiDung.Equals("Độc giả", StringComparison.OrdinalIgnoreCase);
+            btnImport.Visible = !isReader;
+            btnExport.Visible = !isReader;
         }
 
         private void DgvTacGia_ViewButtonClicked(object? sender, int e)
