@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UCSach));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
@@ -96,11 +97,14 @@
             btnReload.FlatAppearance.BorderSize = 0;
             btnReload.FlatStyle = FlatStyle.Flat;
             btnReload.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReload.Image = (Image)resources.GetObject("btnReload.Image");
+            btnReload.ImageAlign = ContentAlignment.MiddleLeft;
             btnReload.Location = new Point(1246, 29);
             btnReload.Name = "btnReload";
-            btnReload.Size = new Size(117, 37);
+            btnReload.Size = new Size(100, 37);
             btnReload.TabIndex = 22;
             btnReload.Text = "Tải lại";
+            btnReload.TextAlign = ContentAlignment.MiddleRight;
             btnReload.UseVisualStyleBackColor = false;
             btnReload.Click += btnReload_Click;
             // 
@@ -195,6 +199,7 @@
             dgvSach.ShowEditButton = true;
             dgvSach.ShowEditingIcon = false;
             dgvSach.ShowExtendButton = false;
+            dgvSach.ShowPrintButton = false;
             dgvSach.ShowReturnButton = false;
             dgvSach.ShowRowErrors = false;
             dgvSach.ShowViewButton = true;
