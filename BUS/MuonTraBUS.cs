@@ -175,6 +175,14 @@ namespace BUS
             };
         }
 
+        public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra)
+        {
+            if (string.IsNullOrWhiteSpace(tinhTrangMuon))
+                throw new Exception("Tình trạng mượn không được để trống.");
+
+            return MuonTraDAO.CapNhatTinhTrangCuonSach(idPhieuMuon, idCuonSach, tinhTrangMuon.Trim(), tinhTrangTra?.Trim(), daTra);
+        }
+
         public static byte[] ExportPhieuMuonToExcel()
         {
             var danhSachPhieuMuon = MuonTraDAO.LayTatCaPhieuMuon();

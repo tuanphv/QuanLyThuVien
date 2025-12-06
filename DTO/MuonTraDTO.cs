@@ -43,6 +43,10 @@ namespace DTO
         public string TenSach { get; set; } = string.Empty;
         public DateTime? NgayTraThucTe { get; set; }
         public DateTime NgayTraDuKien { get; set; }
+        public string? TinhTrangMuon { get; set; }
+        public string? TinhTrangTra { get; set; }
+
+        public string? TinhTrangHienTai => string.IsNullOrWhiteSpace(TinhTrangTra) ? TinhTrangMuon : TinhTrangTra;
     }
 
     public class PhieuTraDTO

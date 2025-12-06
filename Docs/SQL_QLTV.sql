@@ -131,12 +131,13 @@ CREATE TABLE SACH
 -- Bảng CUONSACH (Cuốn sách vật lý)
 CREATE TABLE CUONSACH
 (
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaCuonSach CHAR(6),
-	IDSach INT NOT NULL,
-	TinhTrang INT NOT NULL DEFAULT 1, -- (0: Đang mượn, 1: Sẵn sàng, 2: Không khả dụng, bị ẩn)
-	DaAn INT NOT NULL DEFAULT 0,
-	FOREIGN KEY (IDSach) REFERENCES SACH(ID)
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        MaCuonSach CHAR(6),
+        IDSach INT NOT NULL,
+        TinhTrang INT NOT NULL DEFAULT 1, -- (0: Đang mượn, 1: Sẵn sàng, 2: Không khả dụng, bị ẩn)
+        ChiTietTinhTrang VARCHAR(255) NULL,
+        DaAn INT NOT NULL DEFAULT 0,
+        FOREIGN KEY (IDSach) REFERENCES SACH(ID)
 );
 
 -- Bảng NHAXUATBAN (Nhà xuất bản sách)
@@ -163,14 +164,16 @@ CREATE TABLE PHIEUMUON
 -- Bảng CT_PHIEUMUON (Chi tiết cuốn sách mượn/trả)
 CREATE TABLE CT_PHIEUMUON
 (
-	IDPhieuMuon INT,
-	IDCuonSach INT,
-	NgayTraThucTe DATETIME,
-	SoNgayTre INT DEFAULT 0,
-	TienPhat INT DEFAULT 0,
-	PRIMARY KEY (IDPhieuMuon, IDCuonSach),
-	FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE,
-	FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
+        IDPhieuMuon INT,
+        IDCuonSach INT,
+        NgayTraThucTe DATETIME,
+        SoNgayTre INT DEFAULT 0,
+        TienPhat INT DEFAULT 0,
+        TinhTrangMuon VARCHAR(255),
+        TinhTrangTra VARCHAR(255),
+        PRIMARY KEY (IDPhieuMuon, IDCuonSach),
+        FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE,
+        FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
 );
 
 -- Bảng PHIEUTHU
@@ -219,14 +222,25 @@ CREATE TABLE CT_PHIEUNHAP
 -- Bảng THAMSO
 CREATE TABLE THAMSO
 (
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	TuoiToiThieu INT NOT NULL,
-	TuoiToiDa INT NOT NULL,
-	ThoiHanThe INT NOT NULL,
-	KhoangCachXuatBan INT NOT NULL,
-	SoSachMuonToiDa INT NOT NULL,
-	SoNgayMuonToiDa INT NOT NULL,
-	DonGiaPhatMoiNgay INT NOT NULL
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        TuoiToiThieu INT NOT NULL,
+        TuoiToiDa INT NOT NULL,
+        ThoiHanThe INT NOT NULL,
+        KhoangCachXuatBan INT NOT NULL,
+        SoSachMuonToiDa INT NOT NULL,
+        SoNgayMuonToiDa INT NOT NULL,
+        DonGiaPhatMoiNgay INT NOT NULL
+);
+
+-- Bảng THAMSOPHAT (quy định xử phạt theo tình trạng sách)
+CREATE TABLE THAMSOPHAT
+(
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        MaQuyDinh CHAR(6),
+        LoaiTinhTrang ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT') NOT NULL,
+        MucDo VARCHAR(50),
+        TienPhat INT NOT NULL,
+        GhiChu VARCHAR(255)
 );
 
 -- =========================================================================
@@ -402,6 +416,17 @@ DELIMITER ;
 -- 1. THAM SỐ (THAMSO)
 INSERT INTO THAMSO (TuoiToiThieu, TuoiToiDa, ThoiHanThe, KhoangCachXuatBan, SoSachMuonToiDa, SoNgayMuonToiDa, DonGiaPhatMoiNgay)
 VALUES(18, 55, 6, 8, 5, 4, 1000);
+
+
+-- 1b. Quy định phạt (THAMSOPHAT)
+INSERT INTO THAMSOPHAT (MaQuyDinh, LoaiTinhTrang, MucDo, TienPhat, GhiChu) VALUES
+('QD001', 'MOI', NULL, 0, 'Sách mới, không phạt'),
+('QD002', 'BAN', 'NHẸ', 5000, 'Lau sạch được'),
+('QD003', 'UOT', 'NHẸ', 8000, 'Ẩm nhẹ, chưa rách'),
+('QD004', 'RACH', 'DUOI3', 10000, 'Rách dưới 3 trang'),
+('QD005', 'RACH', 'DUOI5', 20000, 'Rách dưới 5 trang'),
+('QD006', 'RACH', 'TREN5', 40000, 'Rách trên 5 trang'),
+('QD007', 'MAT', NULL, 100000, 'Mất sách, yêu cầu đền bù');
 
 
 -- 2. DỮ LIỆU CƠ BẢN: NHÓM NGƯỜI DÙNG & CHỨC NĂNG

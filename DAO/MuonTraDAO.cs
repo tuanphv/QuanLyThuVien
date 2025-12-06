@@ -179,7 +179,8 @@ namespace DAO
 
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
-            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, cp.NgayTraThucTe, pm.NgayTraDuKien
+            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, cp.NgayTraThucTe, pm.NgayTraDuKien,
+                                    cp.TinhTrangMuon, cp.TinhTrangTra
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
@@ -189,6 +190,48 @@ namespace DAO
             using var connection = OpenConnection();
             var list = connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
             return new BindingList<ChiTietPhieuMuonDTO>(list);
+        }
+
+        public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra)
+        {
+            string chiTietCuon = string.IsNullOrWhiteSpace(tinhTrangTra) ? tinhTrangMuon : tinhTrangTra;
+
+            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            {
+                const string updateChiTiet = @"UPDATE CT_PHIEUMUON
+                                              SET TinhTrangMuon = @TinhTrangMuon,
+                                                  TinhTrangTra = @TinhTrangTra,
+                                                  NgayTraThucTe = CASE WHEN @DaTra = 1 THEN IFNULL(NgayTraThucTe, CURRENT_DATE()) ELSE NgayTraThucTe END
+                                              WHERE IDPhieuMuon = @IDPhieuMuon AND IDCuonSach = @IDCuonSach";
+
+                connection.Execute(updateChiTiet, new
+                {
+                    TinhTrangMuon = tinhTrangMuon,
+                    TinhTrangTra = (object?)tinhTrangTra ?? DBNull.Value,
+                    DaTra = daTra ? 1 : 0,
+                    IDPhieuMuon = idPhieuMuon,
+                    IDCuonSach = idCuonSach
+                }, transaction);
+
+                const string updateCuon = @"UPDATE CUONSACH
+                                         SET ChiTietTinhTrang = @ChiTietTinhTrang,
+                                             TinhTrang = CASE WHEN @DaTra = 1 THEN 1 ELSE TinhTrang END
+                                         WHERE ID = @IDCuon";
+
+                connection.Execute(updateCuon, new
+                {
+                    ChiTietTinhTrang = (object?)chiTietCuon ?? DBNull.Value,
+                    DaTra = daTra ? 1 : 0,
+                    IDCuon = idCuonSach
+                }, transaction);
+
+                const string queryDemChuaTra = "SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
+                int soSachChuaTra = connection.ExecuteScalar<int>(queryDemChuaTra, new { ID = idPhieuMuon }, transaction);
+
+                const string updateTrangThaiPhieu = "UPDATE PHIEUMUON SET TrangThai = CASE WHEN @ConSach = 0 THEN 0 ELSE 1 END WHERE ID = @ID";
+                connection.Execute(updateTrangThaiPhieu, new { ConSach = soSachChuaTra, ID = idPhieuMuon }, transaction);
+                return true;
+            });
         }
 
         public static bool GiaHanPhieuMuon(int idPhieuMuon, DateTime hanTraMoi)
@@ -265,6 +308,12 @@ namespace DAO
                     const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
                     connection.Execute(queryUpdateCuon, new { ID = idCuon }, transaction);
                 }
+
+                const string queryConLai = "SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
+                int soSachChuaTra = connection.ExecuteScalar<int>(queryConLai, new { ID = idPhieuMuon }, transaction);
+
+                const string updateTrangThai = "UPDATE PHIEUMUON SET TrangThai = CASE WHEN @ConLai = 0 THEN 0 ELSE 1 END WHERE ID = @ID";
+                connection.Execute(updateTrangThai, new { ConLai = soSachChuaTra, ID = idPhieuMuon }, transaction);
 
                 return true;
             });

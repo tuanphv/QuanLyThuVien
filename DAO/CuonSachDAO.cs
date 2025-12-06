@@ -1,5 +1,6 @@
 ﻿using DTO;
 using MySql.Data.MySqlClient;
+using System;
 using System.ComponentModel;
 using System.Data;
 
@@ -19,7 +20,8 @@ namespace DAO
                     Convert.ToInt32(item["ID"]),
                     item["MaCuonSach"].ToString(),
                     Convert.ToInt32(item["IDSach"]),
-                    Convert.ToInt32(item["TinhTrang"])
+                    Convert.ToInt32(item["TinhTrang"]),
+                    item.Table.Columns.Contains("ChiTietTinhTrang") ? item["ChiTietTinhTrang"]?.ToString() : null
                 );
                 list.Add(cs);
             }
@@ -44,6 +46,16 @@ namespace DAO
             string query = "UPDATE CUONSACH SET TinhTrang = @TinhTrang WHERE ID = @ID";
             int result = DataProvider.Instance.ExecuteNonQuery(query,
                 new MySqlParameter("@TinhTrang", tinhTrangMoi),
+                new MySqlParameter("@ID", idCuonSach)
+            );
+            return result > 0;
+        }
+
+        public static bool CapNhatChiTietTinhTrang(int idCuonSach, string? chiTietTinhTrang)
+        {
+            string query = "UPDATE CUONSACH SET ChiTietTinhTrang = @ChiTiet WHERE ID = @ID";
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@ChiTiet", (object?)chiTietTinhTrang ?? DBNull.Value),
                 new MySqlParameter("@ID", idCuonSach)
             );
             return result > 0;
