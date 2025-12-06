@@ -51,6 +51,8 @@ namespace DTO
 
     public class PhieuTraDTO
     {
+        public int ID { get; set; }
+        public string MaPhieuTra { get; set; } = string.Empty;
         public int IDPhieuMuon { get; set; }
         public string MaPhieuMuon { get; set; } = string.Empty;
         public string MaDocGia { get; set; } = string.Empty;

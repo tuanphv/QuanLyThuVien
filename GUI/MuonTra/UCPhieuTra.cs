@@ -31,7 +31,7 @@ namespace GUI.MuonTra
             dgvPhieuTra.DeleteButtonClicked += DgvPhieuTra_DeleteButtonClicked;
             dgvPhieuTra.ViewButtonClicked += DgvPhieuTra_ViewButtonClicked;
             dgvPhieuTra.ShowEditButton = false;
-            colMaPhieu.DataPropertyName = nameof(PhieuTraDTO.MaPhieuMuon);
+            colMaPhieu.DataPropertyName = nameof(PhieuTraDTO.MaPhieuTra);
             colDocGia.DataPropertyName = nameof(PhieuTraDTO.HoTenDocGia);
             colNgayTra.DataPropertyName = nameof(PhieuTraDTO.NgayTra);
             colTongSach.DataPropertyName = nameof(PhieuTraDTO.TongSachTra);
@@ -81,6 +81,7 @@ namespace GUI.MuonTra
 
             keyword = keyword.ToLower().Trim();
             var filtered = _list.Where(p =>
+                (p.MaPhieuTra ?? string.Empty).ToLower().Contains(keyword) ||
                 (p.MaPhieuMuon ?? string.Empty).ToLower().Contains(keyword) ||
                 (p.HoTenDocGia ?? string.Empty).ToLower().Contains(keyword) ||
                 (p.MaDocGia ?? string.Empty).ToLower().Contains(keyword))
@@ -114,7 +115,7 @@ namespace GUI.MuonTra
             if (phieu == null) return;
 
             var confirm = MessageBox.Show(
-                $"Xóa phiếu trả của {phieu.HoTenDocGia} (mã {phieu.MaPhieuMuon})?\nSách sẽ trở lại trạng thái đang mượn.",
+                $"Xóa phiếu trả {phieu.MaPhieuTra} của {phieu.HoTenDocGia} (phiếu mượn {phieu.MaPhieuMuon})?\nSách sẽ trở lại trạng thái đang mượn.",
                 "Xác nhận",
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning);
@@ -123,7 +124,7 @@ namespace GUI.MuonTra
 
             try
             {
-                if (MuonTraBUS.XoaPhieuTra(phieu.IDPhieuMuon))
+                if (MuonTraBUS.XoaPhieuTra(phieu.ID))
                 {
                     LoadData();
                     MessageBox.Show("Đã xóa phiếu trả.");

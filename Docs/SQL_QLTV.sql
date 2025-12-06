@@ -176,10 +176,33 @@ CREATE TABLE CT_PHIEUMUON
         FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
 );
 
+-- Bảng PHIEUTRA (Lưu phiếu trả riêng biệt)
+CREATE TABLE PHIEUTRA
+(
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        MaPhieuTra CHAR(8),
+        IDPhieuMuon INT NOT NULL,
+        NgayTra DATETIME NOT NULL,
+        TongTienPhat INT DEFAULT 0,
+        FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE
+);
+
+-- Bảng CT_PHIEUTRA (Chi tiết từng cuốn trong phiếu trả)
+CREATE TABLE CT_PHIEUTRA
+(
+        IDPhieuTra INT,
+        IDCuonSach INT,
+        SoNgayTre INT DEFAULT 0,
+        TienPhat INT DEFAULT 0,
+        PRIMARY KEY (IDPhieuTra, IDCuonSach),
+        FOREIGN KEY (IDPhieuTra) REFERENCES PHIEUTRA(ID) ON DELETE CASCADE,
+        FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
+);
+
 -- Bảng PHIEUTHU
 CREATE TABLE PHIEUTHU
 (
-	ID INT AUTO_INCREMENT PRIMARY KEY,
+        ID INT AUTO_INCREMENT PRIMARY KEY,
 	MaPhieuThu CHAR(8),
 	IDDocGia INT NOT NULL,
 	SoTienThu INT NOT NULL DEFAULT 0,
@@ -592,6 +615,11 @@ UPDATE CT_PHIEUMUON
 SET NgayTraThucTe = '2025-03-05 09:30:00', SoNgayTre = 0, TienPhat = 0
 WHERE IDPhieuMuon = 1 AND IDCuonSach IN (1, 16);
 
+INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
+VALUES ('PT000001', 1, '2025-03-05 09:30:00', 0);
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
+VALUES (1, 1, 0, 0), (1, 16, 0, 0);
+
 
 -- 7.2. Phiếu Mượn 2: DG2 (Lê Thành Đô) - Trễ 2 ngày
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien)
@@ -608,6 +636,11 @@ WHERE IDPhieuMuon = 2 AND IDCuonSach = 2; -- Nợ DG2: 5000 + 2000 = 7000
 UPDATE CT_PHIEUMUON
 SET NgayTraThucTe = '2025-03-16 10:00:00', SoNgayTre = 2, TienPhat = 2000
 WHERE IDPhieuMuon = 2 AND IDCuonSach = 17; -- Nợ DG2: 7000 + 2000 = 9000
+
+INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
+VALUES ('PT000002', 2, '2025-03-16 10:00:00', 4000);
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
+VALUES (2, 2, 2, 2000), (2, 17, 2, 2000);
 
 
 -- 7.3. Phiếu Thu (DG2 thanh toán 5000 VND)
