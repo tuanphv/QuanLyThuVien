@@ -70,14 +70,14 @@ namespace DAO
                 if (sach.SoLuongTong > 0)
                 {
                     // Tạo chuỗi Insert nhiều dòng một lúc cho nhanh (Bulk Insert)
-                    // INSERT INTO CUONSACH (IDSach, TinhTrang) VALUES (1, 1), (1, 1), ...
+                    // INSERT INTO CUONSACH (IDSach, TrangThai) VALUES (1, 1), (1, 1), ...
                     List<string> values = new List<string>();
                     for (int i = 0; i < sach.SoLuongTong; i++)
                     {
-                        values.Add($"({idSachMoi}, 1)"); // 1 là TinhTrang: Sẵn sàng
+                        values.Add($"({idSachMoi}, 1)"); // 1 là TrangThai: Sẵn sàng
                     }
 
-                    string queryCuonSach = $"INSERT INTO CUONSACH (IDSach, TinhTrang) VALUES {string.Join(",", values)}";
+                    string queryCuonSach = $"INSERT INTO CUONSACH (IDSach, TrangThai) VALUES {string.Join(",", values)}";
                     DataProvider.Instance.ExecuteNonQuery(queryCuonSach);
                 }
 

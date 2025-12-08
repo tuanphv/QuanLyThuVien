@@ -20,7 +20,7 @@ namespace DAO
                     Convert.ToInt32(item["ID"]),
                     item["MaCuonSach"].ToString(),
                     Convert.ToInt32(item["IDSach"]),
-                    Convert.ToInt32(item["TinhTrang"]),
+                    Convert.ToInt32(item["TrangThai"]),
                     item.Table.Columns.Contains("ChiTietTinhTrang") ? item["ChiTietTinhTrang"]?.ToString() : null
                 );
                 list.Add(cs);
@@ -31,8 +31,8 @@ namespace DAO
         // Kiểm tra xem Lô sách này có cuốn nào đang bị mượn không
         public static bool IsBatchBeingBorrowed(int idSach)
         {
-            // TinhTrang = 0 nghĩa là Đang mượn
-            string query = "SELECT COUNT(*) FROM CUONSACH WHERE IDSach = @IDSach AND TinhTrang = 0 AND DaAn = 0";
+            // TrangThai = 0 nghĩa là Đang mượn
+            string query = "SELECT COUNT(*) FROM CUONSACH WHERE IDSach = @IDSach AND TrangThai = 0 AND DaAn = 0";
 
             int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(query,
                 new MySqlParameter("@IDSach", idSach)
@@ -43,7 +43,7 @@ namespace DAO
 
         public static bool UpdateTinhTrang(int idCuonSach, int tinhTrangMoi)
         {
-            string query = "UPDATE CUONSACH SET TinhTrang = @TinhTrang WHERE ID = @ID";
+            string query = "UPDATE CUONSACH SET TrangThai = @TinhTrang WHERE ID = @ID";
             int result = DataProvider.Instance.ExecuteNonQuery(query,
                 new MySqlParameter("@TinhTrang", tinhTrangMoi),
                 new MySqlParameter("@ID", idCuonSach)
