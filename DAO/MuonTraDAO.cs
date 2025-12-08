@@ -169,9 +169,14 @@ namespace DAO
                 int idPhieu = Convert.ToInt32(idResult);
                 foreach (var cuon in danhSachCuon)
                 {
-                    const string queryCT = @"INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, TinhTrangMuon)
-                                        VALUES (@IDPhieuMuon, @IDCuonSach, @TinhTrangMuon);";
-                    connection.Execute(queryCT, new { IDPhieuMuon = idPhieu, IDCuonSach = cuon.idCuon, TinhTrangMuon = cuon.tinhTrangMuon }, transaction);
+                    const string queryCT = @"INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
+                                        VALUES (@IDPhieuMuon, @IDCuonSach);";
+                    connection.Execute(queryCT, new { IDPhieuMuon = idPhieu, IDCuonSach = cuon.idCuon }, transaction);
+
+                    const string queryTinhTrang = @"INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
+                                                    VALUES (@IDPhieuMuon, @IDCuonSach, (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1), @TinhTrangMuon)
+                                                    ON DUPLICATE KEY UPDATE ChiTietTinhTrang = VALUES(ChiTietTinhTrang);";
+                    connection.Execute(queryTinhTrang, new { IDPhieuMuon = idPhieu, IDCuonSach = cuon.idCuon, TinhTrangMuon = cuon.tinhTrangMuon }, transaction);
 
                     const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @IDCuon";
                     connection.Execute(queryUpdateCuon, new { IDCuon = cuon.idCuon }, transaction);
@@ -249,19 +254,27 @@ namespace DAO
         {
             const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, s.DonGia,
                                     pm.NgayMuon, cp.NgayTraThucTe, pm.NgayTraDuKien,
-                                    cp.TinhTrangMuon,
-                                    (SELECT ctt.TinhTrangTra FROM CT_PHIEUTRA ctt
+                                    cptt.ChiTietTinhTrang AS TinhTrangMuon,
+                                    (SELECT cttt.ChiTietTinhTrang FROM CT_PHIEUTRA_TINHTRANG cttt
+                                        INNER JOIN CT_PHIEUTRA ctt ON ctt.IDPhieuTra = cttt.IDPhieuTra AND ctt.IDCuonSach = cttt.IDCuonSach
                                         INNER JOIN PHIEUTRA pt ON pt.ID = ctt.IDPhieuTra
                                         WHERE pt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach
-                                        ORDER BY pt.NgayTra DESC, ctt.IDPhieuTra DESC LIMIT 1) AS TinhTrangTra,
-                                    (SELECT tsp.MucPhat FROM THAMSOPHAT tsp WHERE tsp.LoaiTinhTrang = cp.TinhTrangTra ORDER BY tsp.MucPhat DESC LIMIT 1) AS MucPhatTra,
-                                    (SELECT tsp.MucPhat FROM THAMSOPHAT tsp WHERE tsp.LoaiTinhTrang = cp.TinhTrangMuon ORDER BY tsp.MucPhat DESC LIMIT 1) AS MucPhatMuon
+                                        ORDER BY pt.NgayTra DESC, ctt.IDPhieuTra DESC, cttt.IDThamSoPhat DESC LIMIT 1) AS TinhTrangTra,
+                                    (SELECT tsp.MucPhat FROM CT_PHIEUTRA_TINHTRANG cttt
+                                        INNER JOIN THAMSOPHAT tsp ON tsp.ID = cttt.IDThamSoPhat
+                                        INNER JOIN CT_PHIEUTRA ctt ON ctt.IDPhieuTra = cttt.IDPhieuTra AND ctt.IDCuonSach = cttt.IDCuonSach
+                                        INNER JOIN PHIEUTRA pt ON pt.ID = ctt.IDPhieuTra
+                                        WHERE pt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach
+                                        ORDER BY pt.NgayTra DESC, ctt.IDPhieuTra DESC, tsp.MucPhat DESC LIMIT 1) AS MucPhatTra,
+                                    tspMuon.MucPhat AS MucPhatMuon
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
                              INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
                              INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
-                             WHERE cp.IDPhieuMuon = @ID"; 
+                             LEFT JOIN CT_PHIEUMUON_TINHTRANG cptt ON cptt.IDPhieuMuon = cp.IDPhieuMuon AND cptt.IDCuonSach = cp.IDCuonSach
+                             LEFT JOIN THAMSOPHAT tspMuon ON tspMuon.ID = cptt.IDThamSoPhat
+                             WHERE cp.IDPhieuMuon = @ID";
             using var connection = OpenConnection();
             var list = connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
             return new BindingList<ChiTietPhieuMuonDTO>(list);
@@ -274,16 +287,24 @@ namespace DAO
             return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
                 const string updateChiTiet = @"UPDATE CT_PHIEUMUON
-                                              SET TinhTrangMuon = @TinhTrangMuon,
-                                                  NgayTraThucTe = CASE WHEN @DaTra = 1 THEN IFNULL(NgayTraThucTe, CURRENT_DATE()) ELSE NgayTraThucTe END
+                                              SET NgayTraThucTe = CASE WHEN @DaTra = 1 THEN IFNULL(NgayTraThucTe, CURRENT_DATE()) ELSE NgayTraThucTe END
                                               WHERE IDPhieuMuon = @IDPhieuMuon AND IDCuonSach = @IDCuonSach";
 
                 connection.Execute(updateChiTiet, new
                 {
-                    TinhTrangMuon = tinhTrangMuon,
                     DaTra = daTra ? 1 : 0,
                     IDPhieuMuon = idPhieuMuon,
                     IDCuonSach = idCuonSach
+                }, transaction);
+
+                const string upsertTinhTrangMuon = @"INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
+                                                     VALUES (@IDPhieuMuon, @IDCuonSach, (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1), @TinhTrangMuon)
+                                                     ON DUPLICATE KEY UPDATE ChiTietTinhTrang = VALUES(ChiTietTinhTrang)";
+                connection.Execute(upsertTinhTrangMuon, new
+                {
+                    IDPhieuMuon = idPhieuMuon,
+                    IDCuonSach = idCuonSach,
+                    TinhTrangMuon = tinhTrangMuon
                 }, transaction);
 
                 if (daTra && !string.IsNullOrWhiteSpace(tinhTrangTra))
@@ -296,8 +317,10 @@ namespace DAO
                     int? idPhieuTra = connection.QueryFirstOrDefault<int?>(idPhieuTraQuery, new { IDCuonSach = idCuonSach, IDPhieuMuon = idPhieuMuon }, transaction);
                     if (idPhieuTra.HasValue)
                     {
-                        const string updateTinhTrangTra = "UPDATE CT_PHIEUTRA SET TinhTrangTra = @TinhTrangTra WHERE IDPhieuTra = @IDPhieuTra AND IDCuonSach = @IDCuonSach";
-                        connection.Execute(updateTinhTrangTra, new { TinhTrangTra = tinhTrangTra, IDPhieuTra = idPhieuTra.Value, IDCuonSach = idCuonSach }, transaction);
+                        const string upsertTinhTrangTra = @"INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
+                                                            VALUES (@IDPhieuTra, @IDCuonSach, (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1), @TinhTrangTra)
+                                                            ON DUPLICATE KEY UPDATE ChiTietTinhTrang = VALUES(ChiTietTinhTrang)";
+                        connection.Execute(upsertTinhTrangTra, new { TinhTrangTra = tinhTrangTra, IDPhieuTra = idPhieuTra.Value, IDCuonSach = idCuonSach }, transaction);
                     }
                 }
 
@@ -374,9 +397,10 @@ namespace DAO
 
             bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
-                const string querySelectCT = @"SELECT IDCuonSach, NgayTraDuKien, TinhTrangMuon
-                                           FROM CT_PHIEUMUON
-                                           WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
+                const string querySelectCT = @"SELECT cp.IDCuonSach, cp.NgayTraDuKien, cptt.ChiTietTinhTrang AS TinhTrangMuon
+                                           FROM CT_PHIEUMUON cp
+                                           LEFT JOIN CT_PHIEUMUON_TINHTRANG cptt ON cptt.IDPhieuMuon = cp.IDPhieuMuon AND cptt.IDCuonSach = cp.IDCuonSach
+                                           WHERE cp.IDPhieuMuon = @ID AND cp.NgayTraThucTe IS NULL";
                 var cuonChuaTra = connection.Query<(int IDCuonSach, DateTime NgayTraDuKien, string? TinhTrangMuon)>(querySelectCT, new { ID = idPhieuMuon }, transaction).ToList();
 
                 if (cuonChuaTra.Count == 0)
@@ -423,8 +447,8 @@ namespace DAO
 
                 idPhieuTraLocal = Convert.ToInt32(phieuTraId);
 
-                const string insertChiTietTra = @"INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat, TinhTrangTra)
-                                                 VALUES (@IDPhieuTra, @IDCuonSach, @SoNgayTre, @TienPhat, @TinhTrangTra)";
+                const string insertChiTietTra = @"INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
+                                                 VALUES (@IDPhieuTra, @IDCuonSach, @SoNgayTre, @TienPhat)";
 
                 const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
                                           SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
@@ -439,7 +463,16 @@ namespace DAO
                         IDPhieuTra = idPhieuTraLocal,
                         IDCuonSach = cuon.ChiTiet.IDCuonSach,
                         SoNgayTre = cuon.SoNgayTre,
-                        TienPhat = cuon.ChiTiet.TienPhat,
+                        TienPhat = cuon.ChiTiet.TienPhat
+                    }, transaction);
+
+                    const string insertTinhTrangTra = @"INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
+                                                           VALUES (@IDPhieuTra, @IDCuonSach, (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1), @TinhTrangTra)
+                                                           ON DUPLICATE KEY UPDATE ChiTietTinhTrang = VALUES(ChiTietTinhTrang)";
+                    connection.Execute(insertTinhTrangTra, new
+                    {
+                        IDPhieuTra = idPhieuTraLocal,
+                        IDCuonSach = cuon.ChiTiet.IDCuonSach,
                         TinhTrangTra = cuon.TinhTrangTra
                     }, transaction);
 
@@ -508,7 +541,10 @@ namespace DAO
             const string query = @"SELECT ct.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayMuon, pm.NgayTraDuKien,
                                     pt.NgayTra AS NgayTraThucTe,
                                     IFNULL(ct.SoNgayTre, 0) AS SoNgayTre, IFNULL(ct.TienPhat, 0) AS TienPhat,
-                                    ct.TinhTrangTra
+                                    (SELECT cttt.ChiTietTinhTrang
+                                        FROM CT_PHIEUTRA_TINHTRANG cttt
+                                        WHERE cttt.IDPhieuTra = ct.IDPhieuTra AND cttt.IDCuonSach = ct.IDCuonSach
+                                        ORDER BY cttt.IDThamSoPhat DESC LIMIT 1) AS TinhTrangTra
                              FROM CT_PHIEUTRA ct
                              INNER JOIN CUONSACH cs ON ct.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
