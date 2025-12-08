@@ -30,6 +30,8 @@ namespace GUI.MuonTra
             colTenSach.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TenSach);
             colHanTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraDuKien);
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraThucTe);
+            colTinhTrangMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangMuon);
+            colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangTra);
             colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
         }
@@ -124,7 +126,9 @@ namespace GUI.MuonTra
             colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", MinimumWidth = 180 };
             colHanTra = new DataGridViewTextBoxColumn { HeaderText = "Hạn trả", MinimumWidth = 90 };
             colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90 };
-            dgvSach.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra);
+            colTinhTrangMuon = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng mượn", MinimumWidth = 120 };
+            colTinhTrangTra = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 120 };
+            dgvSach.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra, colTinhTrangMuon, colTinhTrangTra);
 
             btnTaoPhieu = new Button { Text = "Tạo phiếu trả", Left = 560, Top = 450, Width = 160, Height = 32, BackColor = System.Drawing.Color.SeaGreen, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat, Enabled = false };
             btnTaoPhieu.Click += btnTaoPhieu_Click;
@@ -144,6 +148,8 @@ namespace GUI.MuonTra
         private DataGridViewTextBoxColumn colTenSach = null!;
         private DataGridViewTextBoxColumn colHanTra = null!;
         private DataGridViewTextBoxColumn colNgayTra = null!;
+        private DataGridViewTextBoxColumn colTinhTrangMuon = null!;
+        private DataGridViewTextBoxColumn colTinhTrangTra = null!;
         private Button btnTaoPhieu = null!;
     }
 }

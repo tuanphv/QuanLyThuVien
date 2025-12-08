@@ -16,16 +16,27 @@ namespace BUS
             return MuonTraDAO.LayTatCaPhieuMuon();
         }
 
+        public static BindingList<SachMuonLuaChonDTO> TimCuonSachSanSang(string keyword, IEnumerable<string> maLoaiTru)
+        {
+            return MuonTraDAO.TimCuonSachSanSang(keyword, maLoaiTru?.ToList() ?? new List<string>());
+        }
+
+        public static SachMuonLuaChonDTO? LayCuonSachSanSang(string maCuonSach)
+        {
+            if (string.IsNullOrWhiteSpace(maCuonSach)) return null;
+            return MuonTraDAO.LayCuonSachSanSang(maCuonSach.Trim());
+        }
+
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
             return MuonTraDAO.LayChiTietPhieuMuon(idPhieuMuon);
         }
 
-        public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<string> danhSachMaCuon, DateTime? ngayTraDuKien = null)
+        public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<SachMuonLuaChonDTO> danhSachCuon, DateTime? ngayTraDuKien = null)
         {
             if (string.IsNullOrWhiteSpace(maDocGia))
                 throw new Exception("Mã độc giả không được trống.");
-            if (danhSachMaCuon == null || danhSachMaCuon.Count == 0)
+            if (danhSachCuon == null || danhSachCuon.Count == 0)
                 throw new Exception("Cần nhập ít nhất một cuốn sách để mượn.");
 
             var docGia = MuonTraDAO.LayThongTinDocGia(maDocGia.Trim());
@@ -44,19 +55,30 @@ namespace BUS
             if (docGia.NgayHetHan.Date < DateTime.Today)
                 throw new Exception("Thẻ độc giả đã hết hạn.");
 
+            var danhSachHopLe = danhSachCuon
+                .Where(s => !string.IsNullOrWhiteSpace(s.MaCuonSach))
+                .GroupBy(s => s.MaCuonSach.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.First())
+                .ToList();
+
             int soDangMuon = MuonTraDAO.DemSoSachDangMuon(docGia.ID);
-            if (thamSo.SoSachMuonToiDa > 0 && soDangMuon + danhSachMaCuon.Count > thamSo.SoSachMuonToiDa)
+            if (thamSo.SoSachMuonToiDa > 0 && soDangMuon + danhSachHopLe.Count > thamSo.SoSachMuonToiDa)
                 throw new Exception($"Độc giả chỉ được mượn tối đa {thamSo.SoSachMuonToiDa} sách. Hiện đang giữ {soDangMuon} sách.");
 
-            List<int> danhSachIdCuon = new();
-            foreach (var maCuon in danhSachMaCuon.Select(m => m.Trim()).Where(m => !string.IsNullOrWhiteSpace(m)))
+            List<(int idCuon, string tinhTrangMuon)> danhSachIdCuon = new();
+            foreach (var cuon in danhSachHopLe)
             {
-                int? idCuon = MuonTraDAO.LayIDCuonSach(maCuon);
-                if (idCuon == null)
-                    throw new Exception($"Không tìm thấy cuốn sách {maCuon}.");
-                if (!MuonTraDAO.CuonSachSanSang(idCuon.Value))
-                    throw new Exception($"Cuốn sách {maCuon} không sẵn sàng cho mượn.");
-                danhSachIdCuon.Add(idCuon.Value);
+                var thongTin = MuonTraDAO.LayCuonSachSanSang(cuon.MaCuonSach);
+                if (thongTin == null)
+                    throw new Exception($"Không tìm thấy cuốn sách {cuon.MaCuonSach}.");
+                if (!MuonTraDAO.CuonSachSanSang(thongTin.IDCuonSach))
+                    throw new Exception($"Cuốn sách {cuon.MaCuonSach} không sẵn sàng cho mượn.");
+
+                string tinhTrangMuon = string.IsNullOrWhiteSpace(cuon.TinhTrangMuon)
+                    ? thongTin.TinhTrangHienTai ?? "Bình thường"
+                    : cuon.TinhTrangMuon.Trim();
+
+                danhSachIdCuon.Add((thongTin.IDCuonSach, tinhTrangMuon));
             }
 
             DateTime ngayMuon = DateTime.Today;
@@ -71,6 +93,16 @@ namespace BUS
                 throw new Exception("Ngày trả dự kiến không được vượt quá ngày hết hạn thẻ độc giả.");
 
             return MuonTraDAO.TaoPhieuMuonVaChiTiet(docGia, danhSachIdCuon, ngayMuon, ngayTra);
+        }
+
+        public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<string> danhSachMaCuon, DateTime? ngayTraDuKien = null)
+        {
+            var danhSach = danhSachMaCuon
+                .Where(m => !string.IsNullOrWhiteSpace(m))
+                .Select(m => new SachMuonLuaChonDTO { MaCuonSach = m.Trim(), TinhTrangMuon = "Bình thường" })
+                .ToList();
+
+            return LapPhieuMuon(maDocGia, danhSach, ngayTraDuKien);
         }
 
         public static DateTime TinhHanTraMacDinh(DateTime ngayMuon)

@@ -71,6 +71,7 @@ namespace DTO
         public DateTime NgayTraThucTe { get; set; }
         public int SoNgayTre { get; set; }
         public int TienPhat { get; set; }
+        public string? TinhTrangTra { get; set; }
     }
 
     public class ThamSoMuonTraDTO
@@ -90,5 +91,16 @@ namespace DTO
         public DateTime NgaySinh { get; set; }
         public DateTime NgayHetHan { get; set; }
         public int TongNoHienTai { get; set; }
+    }
+
+    public class SachMuonLuaChonDTO
+    {
+        public int IDCuonSach { get; set; }
+        public string MaCuonSach { get; set; } = string.Empty;
+        public string TenSach { get; set; } = string.Empty;
+        public string TacGia { get; set; } = string.Empty;
+        public string NhaXuatBan { get; set; } = string.Empty;
+        public string? TinhTrangMuon { get; set; }
+        public string? TinhTrangHienTai { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace GUI.MuonTra
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuTraDTO.NgayTraThucTe);
             colSoNgayTre.DataPropertyName = nameof(ChiTietPhieuTraDTO.SoNgayTre);
             colTienPhat.DataPropertyName = nameof(ChiTietPhieuTraDTO.TienPhat);
+            colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuTraDTO.TinhTrangTra);
             colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
 
@@ -86,7 +87,8 @@ namespace GUI.MuonTra
             colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90 };
             colSoNgayTre = new DataGridViewTextBoxColumn { HeaderText = "Số ngày trễ", MinimumWidth = 70 };
             colTienPhat = new DataGridViewTextBoxColumn { HeaderText = "Tiền phạt", MinimumWidth = 90 };
-            dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra, colSoNgayTre, colTienPhat);
+            colTinhTrangTra = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 120 };
+            dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra, colSoNgayTre, colTienPhat, colTinhTrangTra);
 
             Controls.AddRange(new Control[] { lblTitle, lblMaTra, lblMaPhieuTra, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayT, lblNgayTra, lblTong, lblTongSach, lblPhat, lblTongTienPhat, btnExportPdf, dgvChiTiet });
         }
@@ -172,5 +174,6 @@ namespace GUI.MuonTra
         private DataGridViewTextBoxColumn colNgayTra = null!;
         private DataGridViewTextBoxColumn colSoNgayTre = null!;
         private DataGridViewTextBoxColumn colTienPhat = null!;
+        private DataGridViewTextBoxColumn colTinhTrangTra = null!;
     }
 }
