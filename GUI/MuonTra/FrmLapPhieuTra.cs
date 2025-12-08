@@ -1,6 +1,7 @@
 using BUS;
 using DTO;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace GUI.MuonTra
         private BindingList<ChiTietPhieuMuonDTO> _chiTiet = new();
         private readonly bool _khoiTaoSanChiTiet;
         private ThamSoMuonTraDTO? _thamSo;
+        private List<ThamSoPhatDTO> _thamSoPhat = new();
         public PhieuTraDTO? PhieuTra { get; private set; }
 
         public FrmLapPhieuTra(string? maPhieu = null)
@@ -35,6 +37,7 @@ namespace GUI.MuonTra
         private void FrmLapPhieuTra_Load(object? sender, EventArgs e)
         {
             _thamSo = MuonTraBUS.LayThamSoMuonTra();
+            _thamSoPhat = ThamSoPhatBUS.LayTatCa().ToList();
 
             dgvSach.AutoGenerateColumns = false;
             colMaCuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.MaCuonSach);
@@ -42,7 +45,15 @@ namespace GUI.MuonTra
             colHanTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraDuKien);
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraThucTe);
             colTinhTrangMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangMuon);
-            colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangTra);
+            colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.IDThamSoPhatTra);
+            if (colTinhTrangTra is DataGridViewComboBoxColumn comboTinhTrang)
+            {
+                comboTinhTrang.DataSource = _thamSoPhat;
+                comboTinhTrang.DisplayMember = nameof(ThamSoPhatDTO.TenHienThi);
+                comboTinhTrang.ValueMember = nameof(ThamSoPhatDTO.ID);
+                comboTinhTrang.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
+                comboTinhTrang.FlatStyle = FlatStyle.Flat;
+            }
             colTrangThai.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TrangThai);
             colChonTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.ChonTra);
             colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -81,6 +92,10 @@ namespace GUI.MuonTra
             if (_thamSo == null) return;
             var item = dgvSach.Rows[e.RowIndex].DataBoundItem as ChiTietPhieuMuonDTO;
             if (item == null) return;
+            if (e.ColumnIndex == colTinhTrangTra.Index)
+            {
+                CapNhatThamSoPhatTra(item);
+            }
             CapNhatTienPhat(item);
             CapNhatThongTinPhat();
             btnTaoPhieu.Enabled = _chiTiet.Any(c => !c.NgayTraThucTe.HasValue);
@@ -142,6 +157,11 @@ namespace GUI.MuonTra
             foreach (var ct in chiTiet)
             {
                 ct.ChonTra = !ct.DaTra;
+                if (!ct.IDThamSoPhatTra.HasValue && ct.IDThamSoPhatMuon.HasValue)
+                {
+                    ct.IDThamSoPhatTra = ct.IDThamSoPhatMuon;
+                }
+                CapNhatThamSoPhatTra(ct);
                 CapNhatTienPhat(ct);
             }
 
@@ -160,6 +180,30 @@ namespace GUI.MuonTra
             int mucPhat = chiTiet.MucPhatTra ?? chiTiet.MucPhatMuon ?? 0;
             int phatHuHong = (chiTiet.DonGia * mucPhat) / 100;
             chiTiet.TienPhat = phatTreHen + phatHuHong;
+        }
+
+        private void CapNhatThamSoPhatTra(ChiTietPhieuMuonDTO chiTiet)
+        {
+            if (chiTiet == null) return;
+
+            if (chiTiet.IDThamSoPhatTra.HasValue)
+            {
+                var thamSo = _thamSoPhat.FirstOrDefault(t => t.ID == chiTiet.IDThamSoPhatTra.Value);
+                if (thamSo != null)
+                {
+                    chiTiet.TinhTrangTra = thamSo.TenHienThi;
+                    chiTiet.MucPhatTra = thamSo.TienPhat;
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(chiTiet.TinhTrangTra))
+            {
+                var thamSo = _thamSoPhat.FirstOrDefault(t => t.TenHienThi.Equals(chiTiet.TinhTrangTra, StringComparison.OrdinalIgnoreCase));
+                if (thamSo != null)
+                {
+                    chiTiet.IDThamSoPhatTra = thamSo.ID;
+                    chiTiet.MucPhatTra = thamSo.TienPhat;
+                }
+            }
         }
 
         private void CapNhatThongTinPhat()
@@ -212,7 +256,7 @@ namespace GUI.MuonTra
             colHanTra = new DataGridViewTextBoxColumn { HeaderText = "Hạn trả", MinimumWidth = 90, ReadOnly = true };
             colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90, ReadOnly = true };
             colTinhTrangMuon = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng mượn", MinimumWidth = 120, ReadOnly = true };
-            colTinhTrangTra = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 150 };
+            colTinhTrangTra = new DataGridViewComboBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 150, FlatStyle = FlatStyle.Flat };
             colTrangThai = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", MinimumWidth = 90, ReadOnly = true };
             dgvSach.Columns.AddRange(colChonTra, colMaCuon, colTenSach, colHanTra, colNgayTra, colTinhTrangMuon, colTinhTrangTra, colTrangThai);
 
@@ -236,7 +280,7 @@ namespace GUI.MuonTra
         private DataGridViewTextBoxColumn colHanTra = null!;
         private DataGridViewTextBoxColumn colNgayTra = null!;
         private DataGridViewTextBoxColumn colTinhTrangMuon = null!;
-        private DataGridViewTextBoxColumn colTinhTrangTra = null!;
+        private DataGridViewComboBoxColumn colTinhTrangTra = null!;
         private DataGridViewTextBoxColumn colTrangThai = null!;
         private Button btnTaoPhieu = null!;
     }

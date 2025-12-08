@@ -11,5 +11,9 @@ namespace DTO
         public string? MucDo { get; set; }
         public int TienPhat { get; set; }
         public string? GhiChu { get; set; }
+
+        public string TenHienThi => string.IsNullOrWhiteSpace(MucDo)
+            ? LoaiTinhTrang
+            : $"{LoaiTinhTrang} - {MucDo}";
     }
 }

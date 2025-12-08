@@ -50,6 +50,9 @@ namespace DTO
         public int? MucPhatMuon { get; set; }
         public int? MucPhatTra { get; set; }
 
+        public int? IDThamSoPhatMuon { get; set; }
+        public int? IDThamSoPhatTra { get; set; }
+
         public bool ChonTra { get; set; }
         public int SoNgayTre { get; set; }
         public int TienPhat { get; set; }
@@ -114,5 +117,7 @@ namespace DTO
         public string NhaXuatBan { get; set; } = string.Empty;
         public string? TinhTrangMuon { get; set; }
         public string? TinhTrangHienTai { get; set; }
+
+        public int? IDThamSoPhatMuon { get; set; }
     }
 }

@@ -70,7 +70,7 @@ namespace BUS
             if (thamSo.SoSachMuonToiDa > 0 && soDangMuon + danhSachHopLe.Count > thamSo.SoSachMuonToiDa)
                 throw new Exception($"Độc giả chỉ được mượn tối đa {thamSo.SoSachMuonToiDa} sách. Hiện đang giữ {soDangMuon} sách.");
 
-            List<(int idCuon, string tinhTrangMuon)> danhSachIdCuon = new();
+            List<(int idCuon, string tinhTrangMuon, int? idThamSoPhat)> danhSachIdCuon = new();
             foreach (var cuon in danhSachHopLe)
             {
                 var thongTin = MuonTraDAO.LayCuonSachSanSang(cuon.MaCuonSach);
@@ -83,7 +83,7 @@ namespace BUS
                     ? thongTin.TinhTrangHienTai ?? "Bình thường"
                     : cuon.TinhTrangMuon.Trim();
 
-                danhSachIdCuon.Add((thongTin.IDCuonSach, tinhTrangMuon));
+                danhSachIdCuon.Add((thongTin.IDCuonSach, tinhTrangMuon, cuon.IDThamSoPhatMuon));
             }
 
             DateTime ngayMuon = DateTime.Today;
@@ -257,12 +257,12 @@ namespace BUS
             chiTiet.TienPhat = phatTreHen + phatHuHong;
         }
 
-        public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra)
+        public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra, int? idThamSoPhatMuon = null, int? idThamSoPhatTra = null)
         {
             if (string.IsNullOrWhiteSpace(tinhTrangMuon))
                 throw new Exception("Tình trạng mượn không được để trống.");
 
-            return MuonTraDAO.CapNhatTinhTrangCuonSach(idPhieuMuon, idCuonSach, tinhTrangMuon.Trim(), tinhTrangTra?.Trim(), daTra);
+            return MuonTraDAO.CapNhatTinhTrangCuonSach(idPhieuMuon, idCuonSach, tinhTrangMuon.Trim(), tinhTrangTra?.Trim(), daTra, idThamSoPhatMuon, idThamSoPhatTra);
         }
 
         public static byte[] ExportPhieuMuonToExcel()

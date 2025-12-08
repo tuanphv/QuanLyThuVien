@@ -12,9 +12,10 @@ namespace GUI.MuonTra
     {
         private readonly HashSet<string> _maDaChon;
         private BindingList<SachMuonLuaChonDTO> _danhSach = new();
+        private List<ThamSoPhatDTO> _thamSoPhat = new();
 
         private TextBox txtSearch = null!;
-        private TextBox txtTinhTrang = null!;
+        private ComboBox cboTinhTrang = null!;
         private DataGridView dgvCuonSach = null!;
 
         public SachMuonLuaChonDTO? SachChon { get; private set; }
@@ -28,6 +29,15 @@ namespace GUI.MuonTra
 
         private void FrmAddSachToPhieuMuon_Load(object? sender, EventArgs e)
         {
+            _thamSoPhat = ThamSoPhatBUS.LayTatCa().ToList();
+            cboTinhTrang.DataSource = _thamSoPhat;
+            cboTinhTrang.DisplayMember = nameof(ThamSoPhatDTO.TenHienThi);
+            cboTinhTrang.ValueMember = nameof(ThamSoPhatDTO.ID);
+            if (_thamSoPhat.Any())
+            {
+                cboTinhTrang.SelectedIndex = 0;
+            }
+
             TaiDanhSach();
         }
 
@@ -45,9 +55,10 @@ namespace GUI.MuonTra
                 return;
             }
 
-            string tinhTrang = string.IsNullOrWhiteSpace(txtTinhTrang.Text)
-                ? cuon.TinhTrangHienTai ?? "Bình thường"
-                : txtTinhTrang.Text.Trim();
+            var thamSoChon = cboTinhTrang.SelectedItem as ThamSoPhatDTO;
+            string tinhTrang = thamSoChon?.TenHienThi
+                ?? cuon.TinhTrangHienTai
+                ?? "Bình thường";
 
             SachChon = new SachMuonLuaChonDTO
             {
@@ -57,7 +68,8 @@ namespace GUI.MuonTra
                 TacGia = cuon.TacGia,
                 NhaXuatBan = cuon.NhaXuatBan,
                 TinhTrangMuon = tinhTrang,
-                TinhTrangHienTai = cuon.TinhTrangHienTai
+                TinhTrangHienTai = cuon.TinhTrangHienTai,
+                IDThamSoPhatMuon = thamSoChon?.ID
             };
 
             DialogResult = DialogResult.OK;
@@ -97,7 +109,12 @@ namespace GUI.MuonTra
             {
                 if (dgvCuonSach.CurrentRow?.DataBoundItem is SachMuonLuaChonDTO cuon)
                 {
-                    txtTinhTrang.Text = cuon.TinhTrangHienTai ?? txtTinhTrang.Text;
+                    var macDinh = _thamSoPhat.FirstOrDefault();
+                    var thamSo = _thamSoPhat.FirstOrDefault(t => t.TenHienThi.Equals(cuon.TinhTrangHienTai ?? string.Empty, StringComparison.OrdinalIgnoreCase)) ?? macDinh;
+                    if (thamSo != null)
+                    {
+                        cboTinhTrang.SelectedValue = thamSo.ID;
+                    }
                 }
             };
 
@@ -108,15 +125,17 @@ namespace GUI.MuonTra
             var colTinhTrang = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng hiện tại", DataPropertyName = nameof(SachMuonLuaChonDTO.TinhTrangHienTai), MinimumWidth = 150 };
             dgvCuonSach.Columns.AddRange(colMaCuon, colTenSach, colTacGia, colNxb, colTinhTrang);
 
-            var lblTinhTrang = new Label { Text = "Ghi chú tình trạng khi mượn", Left = 20, Top = 445, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            txtTinhTrang = new TextBox { Left = 220, Top = 440, Width = 300, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblTinhTrang = new Label { Text = "Tình trạng mượn", Left = 20, Top = 445, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            cboTinhTrang = new ComboBox { Left = 220, Top = 440, Width = 300, Font = new System.Drawing.Font("Segoe UI", 10F), DropDownStyle = ComboBoxStyle.DropDownList };
+            cboTinhTrang.DisplayMember = nameof(ThamSoPhatDTO.TenHienThi);
+            cboTinhTrang.ValueMember = nameof(ThamSoPhatDTO.ID);
 
             var btnChon = new Button { Text = "Thêm vào phiếu", Left = 540, Top = 438, Width = 120, Height = 32, BackColor = System.Drawing.Color.SeaGreen, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnChon.Click += (s, e) => ChonCuonSach();
             var btnHuy = new Button { Text = "Hủy", Left = 670, Top = 438, Width = 110, Height = 32, FlatStyle = FlatStyle.Flat };
             btnHuy.Click += (s, e) => Close();
 
-            Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, dgvCuonSach, lblTinhTrang, txtTinhTrang, btnChon, btnHuy });
+            Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, dgvCuonSach, lblTinhTrang, cboTinhTrang, btnChon, btnHuy });
         }
     }
 }
