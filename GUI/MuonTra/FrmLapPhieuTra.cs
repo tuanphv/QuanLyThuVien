@@ -157,9 +157,8 @@ namespace GUI.MuonTra
             int soNgayTre = Math.Max(0, (DateTime.Today.Date - chiTiet.NgayTraDuKien.Date).Days);
             chiTiet.SoNgayTre = soNgayTre;
             int phatTreHen = soNgayTre * _thamSo.DonGiaPhatMoiNgay;
-            int phatHuHong = (!string.IsNullOrWhiteSpace(chiTiet.TinhTrangTra) && !string.Equals(chiTiet.TinhTrangTra, chiTiet.TinhTrangMuon, StringComparison.OrdinalIgnoreCase))
-                ? _thamSo.DonGiaPhatMoiNgay
-                : 0;
+            int mucPhat = chiTiet.MucPhatTra ?? chiTiet.MucPhatMuon ?? 0;
+            int phatHuHong = (chiTiet.DonGia * mucPhat) / 100;
             chiTiet.TienPhat = phatTreHen + phatHuHong;
         }
 

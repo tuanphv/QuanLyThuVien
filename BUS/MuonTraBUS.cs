@@ -251,11 +251,8 @@ namespace BUS
             chiTiet.SoNgayTre = soNgayTre;
 
             int phatTreHen = soNgayTre * thamSo.DonGiaPhatMoiNgay;
-            int phatHuHong = 0;
-            if (!string.IsNullOrWhiteSpace(chiTiet.TinhTrangTra) && !string.Equals(chiTiet.TinhTrangTra, chiTiet.TinhTrangMuon, StringComparison.OrdinalIgnoreCase))
-            {
-                phatHuHong = thamSo.DonGiaPhatMoiNgay;
-            }
+            int mucPhat = chiTiet.MucPhatTra ?? chiTiet.MucPhatMuon ?? 0;
+            int phatHuHong = (chiTiet.DonGia * mucPhat) / 100;
 
             chiTiet.TienPhat = phatTreHen + phatHuHong;
         }
