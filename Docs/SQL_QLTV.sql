@@ -444,9 +444,11 @@ BEFORE INSERT ON CT_PHIEUMUON_TINHTRANG
 FOR EACH ROW
 BEGIN
         DECLARE v_loai ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT');
+		DECLARE v_default_thamso INT;
 
         IF NEW.IDThamSoPhat IS NULL THEN
-                SELECT ID INTO NEW.IDThamSoPhat FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
+                SELECT ID INTO v_default_thamso FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
+                SET NEW.IDThamSoPhat = v_default_thamso;
         END IF;
 
         SELECT LoaiTinhTrang INTO v_loai FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
@@ -496,9 +498,11 @@ BEFORE INSERT ON CT_PHIEUTRA_TINHTRANG
 FOR EACH ROW
 BEGIN
         DECLARE v_loai ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT');
-
+		DECLARE v_default_thamso INT;
+        
         IF NEW.IDThamSoPhat IS NULL THEN
-                SELECT ID INTO NEW.IDThamSoPhat FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
+                SELECT ID INTO v_default_thamso FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
+                SET NEW.IDThamSoPhat = v_default_thamso;
         END IF;
 
         SELECT LoaiTinhTrang INTO v_loai FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
