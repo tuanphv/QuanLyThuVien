@@ -32,6 +32,11 @@ namespace BUS
             return MuonTraDAO.LayChiTietPhieuMuon(idPhieuMuon);
         }
 
+        public static ThamSoMuonTraDTO LayThamSoMuonTra()
+        {
+            return MuonTraDAO.LayThamSoMuonTra();
+        }
+
         public static PhieuMuonDTO LapPhieuMuon(string maDocGia, List<SachMuonLuaChonDTO> danhSachCuon, DateTime? ngayTraDuKien = null)
         {
             if (string.IsNullOrWhiteSpace(maDocGia))
@@ -142,8 +147,16 @@ namespace BUS
             var phieu = MuonTraDAO.LayPhieuMuonTheoID(idPhieuMuon)
                 ?? throw new Exception("Không tìm thấy phiếu mượn.");
             var thamSo = MuonTraDAO.LayThamSoMuonTra();
+            var chiTiet = MuonTraDAO.LayChiTietPhieuMuon(idPhieuMuon)
+                .Where(c => !c.NgayTraThucTe.HasValue)
+                .ToList();
 
-            if (!MuonTraDAO.TraPhieuMuon(idPhieuMuon, DateTime.Today, thamSo.DonGiaPhatMoiNgay, out tongTienPhat, out _))
+            foreach (var ct in chiTiet)
+            {
+                CapNhatTienPhatChiTiet(ct, thamSo);
+            }
+
+            if (!MuonTraDAO.TraPhieuMuon(idPhieuMuon, DateTime.Today, chiTiet, out tongTienPhat, out _))
             {
                 throw new Exception("Không thể cập nhật trả sách.");
             }
@@ -191,12 +204,34 @@ namespace BUS
             var phieu = LayPhieuMuonTheoMa(maPhieuMuon)
                 ?? throw new Exception("Không tìm thấy phiếu mượn.");
 
-            if (phieu.SoSachChuaTra <= 0)
-                throw new Exception("Phiếu này đã trả hết sách.");
+            var chiTiet = MuonTraDAO.LayChiTietPhieuMuon(phieu.ID);
+            foreach (var ct in chiTiet)
+            {
+                ct.ChonTra = !ct.DaTra;
+            }
+
+            return LapPhieuTra(phieu.ID, chiTiet, out tongTienPhat);
+        }
+
+        public static PhieuTraDTO LapPhieuTra(int idPhieuMuon, IEnumerable<ChiTietPhieuMuonDTO> danhSachTra, out int tongTienPhat)
+        {
+            var phieu = LayPhieuMuonTheoID(idPhieuMuon)
+                ?? throw new Exception("Không tìm thấy phiếu mượn.");
+
+            var danhSach = danhSachTra
+                .Where(c => !c.NgayTraThucTe.HasValue && c.ChonTra)
+                .ToList();
+
+            if (danhSach.Count == 0)
+                throw new Exception("Vui lòng chọn ít nhất một cuốn sách để trả.");
 
             var thamSo = MuonTraDAO.LayThamSoMuonTra();
+            foreach (var ct in danhSach)
+            {
+                CapNhatTienPhatChiTiet(ct, thamSo);
+            }
 
-            if (!MuonTraDAO.TraPhieuMuon(phieu.ID, DateTime.Today, thamSo.DonGiaPhatMoiNgay, out tongTienPhat, out int idPhieuTra))
+            if (!MuonTraDAO.TraPhieuMuon(idPhieuMuon, DateTime.Today, danhSach, out tongTienPhat, out int idPhieuTra))
             {
                 throw new Exception("Không thể cập nhật trả sách.");
             }
@@ -208,6 +243,21 @@ namespace BUS
             }
 
             return phieuTra;
+        }
+
+        private static void CapNhatTienPhatChiTiet(ChiTietPhieuMuonDTO chiTiet, ThamSoMuonTraDTO thamSo)
+        {
+            int soNgayTre = Math.Max(0, (DateTime.Today.Date - chiTiet.NgayTraDuKien.Date).Days);
+            chiTiet.SoNgayTre = soNgayTre;
+
+            int phatTreHen = soNgayTre * thamSo.DonGiaPhatMoiNgay;
+            int phatHuHong = 0;
+            if (!string.IsNullOrWhiteSpace(chiTiet.TinhTrangTra) && !string.Equals(chiTiet.TinhTrangTra, chiTiet.TinhTrangMuon, StringComparison.OrdinalIgnoreCase))
+            {
+                phatHuHong = thamSo.DonGiaPhatMoiNgay;
+            }
+
+            chiTiet.TienPhat = phatTreHen + phatHuHong;
         }
 
         public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra)
