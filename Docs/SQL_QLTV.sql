@@ -136,7 +136,7 @@ CREATE TABLE CUONSACH
         IDSach INT NOT NULL,
         TrangThai INT NOT NULL DEFAULT 1, -- 0: Đang mượn, 1: Sẵn sàng, 2: Không khả dụng
         DaAn INT NOT NULL DEFAULT 0,
-        FOREIGN KEY (IDSach) REFERENCES SACH(ID),
+        FOREIGN KEY (IDSach) REFERENCES SACH(ID)
 );
 
 -- Bảng NHAXUATBAN (Nhà xuất bản sách)
@@ -145,6 +145,17 @@ CREATE TABLE NHAXUATBAN
 	ID INT AUTO_INCREMENT PRIMARY KEY,
     TenNXB VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
 	DiaChi VARCHAR(255) CHARACTER SET UTF8MB4
+);
+
+-- Bảng THAMSOPHAT (quy định xử phạt theo tình trạng sách)
+CREATE TABLE THAMSOPHAT
+(
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+        MaQuyDinh CHAR(6),
+        LoaiTinhTrang ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT') NOT NULL,
+        MucDo VARCHAR(50),
+        MucPhat INT NOT NULL, -- % mức phạt theo đơn giá sách
+        GhiChu VARCHAR(255)
 );
 
 -- Bảng PHIEUMUON (Phiếu tổng)
@@ -276,16 +287,7 @@ CREATE TABLE THAMSO
         DonGiaPhatMoiNgay INT NOT NULL
 );
 
--- Bảng THAMSOPHAT (quy định xử phạt theo tình trạng sách)
-CREATE TABLE THAMSOPHAT
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaQuyDinh CHAR(6),
-        LoaiTinhTrang ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT') NOT NULL,
-        MucDo VARCHAR(50),
-        MucPhat INT NOT NULL, -- % mức phạt theo đơn giá sách
-        GhiChu VARCHAR(255)
-);
+
 
 -- Bảng nhiều - nhiều lưu các tình trạng đang áp dụng cho từng cuốn sách
 CREATE TABLE CUONSACH_TINHTRANG
