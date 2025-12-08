@@ -36,13 +36,12 @@ namespace GUI.MuonTra
             colChonTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.ChonTra);
             colMaCuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.MaCuonSach);
             colTenSach.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TenSach);
-            colHanTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraDuKien);
+            colNgayMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayMuon);
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraThucTe);
             colTinhTrangMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangMuon);
-            colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangTra);
             colTrangThai.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TrangThai);
 
-            colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
+            colNgayMuon.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
 
             _chiTiet = MuonTraBUS.LayChiTietPhieuMuon(_phieu.ID);
@@ -161,12 +160,11 @@ namespace GUI.MuonTra
             colChonTra = new DataGridViewCheckBoxColumn { HeaderText = "Chọn", MinimumWidth = 60 };
             colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", MinimumWidth = 80, ReadOnly = true };
             colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", MinimumWidth = 180, ReadOnly = true };
-            colHanTra = new DataGridViewTextBoxColumn { HeaderText = "Hạn trả", MinimumWidth = 90, ReadOnly = true };
-            colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90, ReadOnly = true };
+            colNgayMuon = new DataGridViewTextBoxColumn { HeaderText = "Ngày mượn", MinimumWidth = 100, ReadOnly = true };
+            colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 100, ReadOnly = true };
             colTinhTrangMuon = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng mượn", MinimumWidth = 120, ReadOnly = true };
-            colTinhTrangTra = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 120, ReadOnly = true };
             colTrangThai = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", MinimumWidth = 100, ReadOnly = true };
-            dgvChiTiet.Columns.AddRange(colChonTra, colMaCuon, colTenSach, colHanTra, colNgayTra, colTinhTrangMuon, colTinhTrangTra, colTrangThai);
+            dgvChiTiet.Columns.AddRange(colChonTra, colMaCuon, colTenSach, colNgayMuon, colNgayTra, colTrangThai, colTinhTrangMuon);
 
             btnGiaHan = new Button { Text = "Gia hạn", Left = 400, Top = 440, Width = 120, Height = 32, BackColor = System.Drawing.Color.DodgerBlue, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnGiaHan.Click += btnGiaHan_Click;
@@ -214,9 +212,9 @@ namespace GUI.MuonTra
                         doc.Add(new Paragraph("\n"));
 
                         // Table for details
-                        PdfPTable table = new PdfPTable(4) { WidthPercentage = 100 };
-                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.5f, 1.5f });
-                        string[] headers = { "Mã cuốn", "Tên sách", "Hạn trả", "Ngày trả" };
+                        PdfPTable table = new PdfPTable(6) { WidthPercentage = 100 };
+                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.3f, 1.3f, 1.3f, 2f });
+                        string[] headers = { "Mã cuốn", "Tên sách", "Ngày mượn", "Ngày trả", "Trạng thái", "Tình trạng mượn" };
                         foreach (var h in headers)
                         {
                             var cell = new PdfPCell(new Phrase(h, fontLabel)) { BackgroundColor = new BaseColor(220, 220, 220), HorizontalAlignment = Element.ALIGN_CENTER };
@@ -226,7 +224,7 @@ namespace GUI.MuonTra
                         {
                             table.AddCell(new PdfPCell(new Phrase(ct.MaCuonSach, fontValue)));
                             table.AddCell(new PdfPCell(new Phrase(ct.TenSach, fontLabel)));
-                            table.AddCell(new PdfPCell(new Phrase(ct.NgayTraDuKien.ToString("dd/MM/yyyy"), fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.NgayMuon.ToString("dd/MM/yyyy"), fontLabel)));
                             table.AddCell(new PdfPCell(
                                 new Phrase(
                                     ct.NgayTraThucTe.HasValue
@@ -235,6 +233,8 @@ namespace GUI.MuonTra
                                     fontLabel
                                 )
                             ));
+                            table.AddCell(new PdfPCell(new Phrase(ct.TrangThai, fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.TinhTrangMuon ?? string.Empty, fontLabel)));
 
                         }
                         doc.Add(table);
@@ -258,10 +258,9 @@ namespace GUI.MuonTra
         private DataGridViewCheckBoxColumn colChonTra = null!;
         private DataGridViewTextBoxColumn colMaCuon = null!;
         private DataGridViewTextBoxColumn colTenSach = null!;
-        private DataGridViewTextBoxColumn colHanTra = null!;
+        private DataGridViewTextBoxColumn colNgayMuon = null!;
         private DataGridViewTextBoxColumn colNgayTra = null!;
         private DataGridViewTextBoxColumn colTinhTrangMuon = null!;
-        private DataGridViewTextBoxColumn colTinhTrangTra = null!;
         private DataGridViewTextBoxColumn colTrangThai = null!;
         private Button btnGiaHan = null!;
         private Button btnTraSach = null!;

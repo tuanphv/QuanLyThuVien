@@ -41,10 +41,14 @@ namespace DTO
         public int IDCuonSach { get; set; }
         public string MaCuonSach { get; set; } = string.Empty;
         public string TenSach { get; set; } = string.Empty;
+        public DateTime NgayMuon { get; set; }
         public DateTime? NgayTraThucTe { get; set; }
         public DateTime NgayTraDuKien { get; set; }
         public string? TinhTrangMuon { get; set; }
         public string? TinhTrangTra { get; set; }
+        public int DonGia { get; set; }
+        public int? MucPhatMuon { get; set; }
+        public int? MucPhatTra { get; set; }
 
         public bool ChonTra { get; set; }
         public int SoNgayTre { get; set; }
@@ -74,6 +78,7 @@ namespace DTO
         public int IDCuonSach { get; set; }
         public string MaCuonSach { get; set; } = string.Empty;
         public string TenSach { get; set; } = string.Empty;
+        public DateTime NgayMuon { get; set; }
         public DateTime NgayTraDuKien { get; set; }
         public DateTime NgayTraThucTe { get; set; }
         public int SoNgayTre { get; set; }

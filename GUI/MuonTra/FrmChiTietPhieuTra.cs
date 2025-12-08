@@ -32,12 +32,11 @@ namespace GUI.MuonTra
             dgvChiTiet.AutoGenerateColumns = false;
             colMaCuon.DataPropertyName = nameof(ChiTietPhieuTraDTO.MaCuonSach);
             colTenSach.DataPropertyName = nameof(ChiTietPhieuTraDTO.TenSach);
-            colHanTra.DataPropertyName = nameof(ChiTietPhieuTraDTO.NgayTraDuKien);
+            colNgayMuon.DataPropertyName = nameof(ChiTietPhieuTraDTO.NgayMuon);
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuTraDTO.NgayTraThucTe);
-            colSoNgayTre.DataPropertyName = nameof(ChiTietPhieuTraDTO.SoNgayTre);
             colTienPhat.DataPropertyName = nameof(ChiTietPhieuTraDTO.TienPhat);
             colTinhTrangTra.DataPropertyName = nameof(ChiTietPhieuTraDTO.TinhTrangTra);
-            colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
+            colNgayMuon.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
 
             _chiTiet = MuonTraBUS.LayChiTietPhieuTra(_phieu.ID);
@@ -83,12 +82,11 @@ namespace GUI.MuonTra
 
             colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", MinimumWidth = 80 };
             colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", MinimumWidth = 180 };
-            colHanTra = new DataGridViewTextBoxColumn { HeaderText = "Hạn trả", MinimumWidth = 90 };
+            colNgayMuon = new DataGridViewTextBoxColumn { HeaderText = "Ngày mượn", MinimumWidth = 90 };
             colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90 };
-            colSoNgayTre = new DataGridViewTextBoxColumn { HeaderText = "Số ngày trễ", MinimumWidth = 70 };
             colTienPhat = new DataGridViewTextBoxColumn { HeaderText = "Tiền phạt", MinimumWidth = 90 };
             colTinhTrangTra = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng trả", MinimumWidth = 120 };
-            dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra, colSoNgayTre, colTienPhat, colTinhTrangTra);
+            dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colNgayMuon, colNgayTra, colTinhTrangTra, colTienPhat);
 
             Controls.AddRange(new Control[] { lblTitle, lblMaTra, lblMaPhieuTra, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayT, lblNgayTra, lblTong, lblTongSach, lblPhat, lblTongTienPhat, btnExportPdf, dgvChiTiet });
         }
@@ -132,9 +130,9 @@ namespace GUI.MuonTra
                         doc.Add(new Paragraph("\n"));
 
                         // Table for details
-                        PdfPTable table = new PdfPTable(6) { WidthPercentage = 100 };
-                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.5f, 1.5f, 1.2f, 1.5f });
-                        string[] headers = { "Mã cuốn", "Tên sách", "Hạn trả", "Ngày trả", "Số ngày trễ", "Tiền phạt" };
+                        PdfPTable table = new PdfPTable(5) { WidthPercentage = 100 };
+                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.5f, 1.5f, 1.5f });
+                        string[] headers = { "Mã cuốn", "Tên sách", "Ngày mượn", "Ngày trả", "Tiền phạt" };
                         foreach (var h in headers)
                         {
                             var cell = new PdfPCell(new Phrase(h, fontLabel)) { BackgroundColor = new BaseColor(220, 220, 220), HorizontalAlignment = Element.ALIGN_CENTER };
@@ -144,9 +142,8 @@ namespace GUI.MuonTra
                         {
                             table.AddCell(new PdfPCell(new Phrase(ct.MaCuonSach, fontValue)));
                             table.AddCell(new PdfPCell(new Phrase(ct.TenSach, fontLabel)));
-                            table.AddCell(new PdfPCell(new Phrase(ct.NgayTraDuKien.ToString("dd/MM/yyyy"), fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.NgayMuon.ToString("dd/MM/yyyy"), fontLabel)));
                             table.AddCell(new PdfPCell(new Phrase(ct.NgayTraThucTe.ToString("dd/MM/yyyy"), fontLabel)));
-                            table.AddCell(new PdfPCell(new Phrase(ct.SoNgayTre.ToString(), fontLabel)));
                             table.AddCell(new PdfPCell(new Phrase(ct.TienPhat.ToString("N0"), fontValue)));
                         }
                         doc.Add(table);
@@ -170,9 +167,8 @@ namespace GUI.MuonTra
         private DataGridView dgvChiTiet = null!;
         private DataGridViewTextBoxColumn colMaCuon = null!;
         private DataGridViewTextBoxColumn colTenSach = null!;
-        private DataGridViewTextBoxColumn colHanTra = null!;
+        private DataGridViewTextBoxColumn colNgayMuon = null!;
         private DataGridViewTextBoxColumn colNgayTra = null!;
-        private DataGridViewTextBoxColumn colSoNgayTre = null!;
         private DataGridViewTextBoxColumn colTienPhat = null!;
         private DataGridViewTextBoxColumn colTinhTrangTra = null!;
     }

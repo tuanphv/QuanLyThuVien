@@ -247,18 +247,21 @@ namespace DAO
 
         public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
         {
-            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, cp.NgayTraThucTe, pm.NgayTraDuKien,
+            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, s.DonGia,
+                                    pm.NgayMuon, cp.NgayTraThucTe, pm.NgayTraDuKien,
                                     cp.TinhTrangMuon,
                                     (SELECT ctt.TinhTrangTra FROM CT_PHIEUTRA ctt
                                         INNER JOIN PHIEUTRA pt ON pt.ID = ctt.IDPhieuTra
                                         WHERE pt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach
-                                        ORDER BY pt.NgayTra DESC, ctt.IDPhieuTra DESC LIMIT 1) AS TinhTrangTra
+                                        ORDER BY pt.NgayTra DESC, ctt.IDPhieuTra DESC LIMIT 1) AS TinhTrangTra,
+                                    (SELECT tsp.MucPhat FROM THAMSOPHAT tsp WHERE tsp.LoaiTinhTrang = cp.TinhTrangTra ORDER BY tsp.MucPhat DESC LIMIT 1) AS MucPhatTra,
+                                    (SELECT tsp.MucPhat FROM THAMSOPHAT tsp WHERE tsp.LoaiTinhTrang = cp.TinhTrangMuon ORDER BY tsp.MucPhat DESC LIMIT 1) AS MucPhatMuon
                              FROM CT_PHIEUMUON cp
                              INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                              INNER JOIN SACH s ON cs.IDSach = s.ID
                              INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
                              INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
-                             WHERE cp.IDPhieuMuon = @ID";
+                             WHERE cp.IDPhieuMuon = @ID"; 
             using var connection = OpenConnection();
             var list = connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
             return new BindingList<ChiTietPhieuMuonDTO>(list);
@@ -502,7 +505,7 @@ namespace DAO
 
         public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuTra)
         {
-            const string query = @"SELECT ct.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayTraDuKien,
+            const string query = @"SELECT ct.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayMuon, pm.NgayTraDuKien,
                                     pt.NgayTra AS NgayTraThucTe,
                                     IFNULL(ct.SoNgayTre, 0) AS SoNgayTre, IFNULL(ct.TienPhat, 0) AS TienPhat,
                                     ct.TinhTrangTra
