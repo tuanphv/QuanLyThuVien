@@ -169,8 +169,7 @@ CREATE TABLE CT_PHIEUMUON
         NgayTraThucTe DATETIME,
         SoNgayTre INT DEFAULT 0,
         TienPhat INT DEFAULT 0,
-        TinhTrangMuon VARCHAR(255),
-        TinhTrangTra VARCHAR(255),
+        TinhTrangMuon VARCHAR(255) NOT NULL DEFAULT 'Bình thường',
         PRIMARY KEY (IDPhieuMuon, IDCuonSach),
         FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE,
         FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
@@ -194,6 +193,7 @@ CREATE TABLE CT_PHIEUTRA
         IDCuonSach INT,
         SoNgayTre INT DEFAULT 0,
         TienPhat INT DEFAULT 0,
+        TinhTrangTra VARCHAR(255) NOT NULL DEFAULT 'Bình thường',
         PRIMARY KEY (IDPhieuTra, IDCuonSach),
         FOREIGN KEY (IDPhieuTra) REFERENCES PHIEUTRA(ID) ON DELETE CASCADE,
         FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
@@ -609,6 +609,9 @@ VALUES (1, '2025-03-01 10:00:00', '2025-03-05 10:00:00'); -- ID = 1
 
 -- Chi tiết Mượn (Trigger cập nhật CUONSACH và SACH)
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (1, 1), (1, 16);
+UPDATE CT_PHIEUMUON
+SET TinhTrangMuon = CASE IDCuonSach WHEN 1 THEN 'Bìa mới, không gấp mép' ELSE 'Sách sạch sẽ' END
+WHERE IDPhieuMuon = 1;
 
 -- Trả sách (Ngày 05/03/2025 - Đúng hạn)
 UPDATE CT_PHIEUMUON
@@ -619,6 +622,9 @@ INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
 VALUES ('PT000001', 1, '2025-03-05 09:30:00', 0);
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
 VALUES (1, 1, 0, 0), (1, 16, 0, 0);
+UPDATE CT_PHIEUTRA
+SET TinhTrangTra = CASE IDCuonSach WHEN 1 THEN 'Giữ nguyên trạng' ELSE 'Trả đúng hạn, sạch sẽ' END
+WHERE IDPhieuTra = 1;
 
 
 -- 7.2. Phiếu Mượn 2: DG2 (Lê Thành Đô) - Trễ 2 ngày
@@ -627,6 +633,9 @@ VALUES (2, '2025-03-10 14:00:00', '2025-03-14 14:00:00'); -- ID = 2
 
 -- Chi tiết Mượn
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (2, 2), (2, 17);
+UPDATE CT_PHIEUMUON
+SET TinhTrangMuon = CASE IDCuonSach WHEN 2 THEN 'Có đánh dấu trang nhẹ' ELSE 'Còn tem thư viện mới' END
+WHERE IDPhieuMuon = 2;
 
 -- Trả sách (Ngày 16/03/2025 - Trễ 2 ngày, Phạt 2000/cuốn)
 UPDATE CT_PHIEUMUON
@@ -641,6 +650,9 @@ INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
 VALUES ('PT000002', 2, '2025-03-16 10:00:00', 4000);
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
 VALUES (2, 2, 2, 2000), (2, 17, 2, 2000);
+UPDATE CT_PHIEUTRA
+SET TinhTrangTra = CASE IDCuonSach WHEN 2 THEN 'Trả muộn, gáy hơi cong' ELSE 'Trả muộn nhưng còn tốt' END
+WHERE IDPhieuTra = 2;
 
 
 -- 7.3. Phiếu Thu (DG2 thanh toán 5000 VND)
@@ -655,6 +667,7 @@ VALUES (3, NOW(), DATE_ADD(NOW(), INTERVAL 4 DAY)); -- ID = 3
 
 -- Chi tiết Mượn
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (3, 3);
+UPDATE CT_PHIEUMUON SET TinhTrangMuon = 'Mượn mới, còn bọc plastic' WHERE IDPhieuMuon = 3;
 -- Cuốn sách 3 (CS0003) đang ở trạng thái 0 (Đang mượn). SoLuongConLai của S1 (CSDL Nâng cao) giảm 1.
 -- =========================================================================
 -- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
