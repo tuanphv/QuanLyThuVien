@@ -15,7 +15,7 @@ namespace GUI.MuonTra
         private List<ThamSoPhatDTO> _thamSoPhat = new();
 
         private TextBox txtSearch = null!;
-        private ComboBox cboTinhTrang = null!;
+        private CheckedListBox clbTinhTrang = null!;
         private DataGridView dgvCuonSach = null!;
 
         public SachMuonLuaChonDTO? SachChon { get; private set; }
@@ -30,12 +30,10 @@ namespace GUI.MuonTra
         private void FrmAddSachToPhieuMuon_Load(object? sender, EventArgs e)
         {
             _thamSoPhat = ThamSoPhatBUS.LayTatCa().ToList();
-            cboTinhTrang.DataSource = _thamSoPhat;
-            cboTinhTrang.DisplayMember = nameof(ThamSoPhatDTO.TenHienThi);
-            cboTinhTrang.ValueMember = nameof(ThamSoPhatDTO.ID);
-            if (_thamSoPhat.Any())
+            clbTinhTrang.Items.Clear();
+            foreach (var item in _thamSoPhat)
             {
-                cboTinhTrang.SelectedIndex = 0;
+                clbTinhTrang.Items.Add(item, false);
             }
 
             TaiDanhSach();
@@ -55,10 +53,11 @@ namespace GUI.MuonTra
                 return;
             }
 
-            var thamSoChon = cboTinhTrang.SelectedItem as ThamSoPhatDTO;
-            string tinhTrang = thamSoChon?.TenHienThi
-                ?? cuon.TinhTrangHienTai
-                ?? "Bình thường";
+            var danhSachChon = clbTinhTrang.CheckedItems.Cast<ThamSoPhatDTO>().ToList();
+            string? tinhTrang = danhSachChon.Any()
+                ? string.Join(", ", danhSachChon.Select(t => t.TenHienThi))
+                : (cuon.TinhTrangHienTai ?? "Mới");
+            int? idThamSoPhatMuon = danhSachChon.FirstOrDefault()?.ID;
 
             SachChon = new SachMuonLuaChonDTO
             {
@@ -69,7 +68,7 @@ namespace GUI.MuonTra
                 NhaXuatBan = cuon.NhaXuatBan,
                 TinhTrangMuon = tinhTrang,
                 TinhTrangHienTai = cuon.TinhTrangHienTai,
-                IDThamSoPhatMuon = thamSoChon?.ID
+                IDThamSoPhatMuon = idThamSoPhatMuon
             };
 
             DialogResult = DialogResult.OK;
@@ -109,14 +108,63 @@ namespace GUI.MuonTra
             {
                 if (dgvCuonSach.CurrentRow?.DataBoundItem is SachMuonLuaChonDTO cuon)
                 {
-                    var macDinh = _thamSoPhat.FirstOrDefault();
-                    var thamSo = _thamSoPhat.FirstOrDefault(t => t.TenHienThi.Equals(cuon.TinhTrangHienTai ?? string.Empty, StringComparison.OrdinalIgnoreCase)) ?? macDinh;
-                    if (thamSo != null)
+                    clbTinhTrang.ItemCheck -= ClbTinhTrang_ItemCheck;
+                    try
                     {
-                        cboTinhTrang.SelectedValue = thamSo.ID;
+                        for (int i = 0; i < clbTinhTrang.Items.Count; i++)
+                        {
+                            clbTinhTrang.SetItemChecked(i, false);
+                        }
+
+                        bool daChonTheoMa = false;
+                        if (cuon.IDThamSoPhatMuon.HasValue)
+                        {
+                            for (int i = 0; i < clbTinhTrang.Items.Count; i++)
+                            {
+                                if (clbTinhTrang.Items[i] is ThamSoPhatDTO thamSo && thamSo.ID == cuon.IDThamSoPhatMuon)
+                                {
+                                    clbTinhTrang.SetItemChecked(i, true);
+                                    daChonTheoMa = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!daChonTheoMa && !string.IsNullOrWhiteSpace(cuon.TinhTrangHienTai))
+                        {
+                            for (int i = 0; i < clbTinhTrang.Items.Count; i++)
+                            {
+                                if (clbTinhTrang.Items[i] is ThamSoPhatDTO thamSo && thamSo.TenHienThi.Equals(cuon.TinhTrangHienTai, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    clbTinhTrang.SetItemChecked(i, true);
+                                    daChonTheoMa = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!daChonTheoMa)
+                        {
+                            for (int i = 0; i < clbTinhTrang.Items.Count; i++)
+                            {
+                                if (clbTinhTrang.Items[i] is ThamSoPhatDTO thamSo &&
+                                    (thamSo.LoaiTinhTrang.Equals("MOI", StringComparison.OrdinalIgnoreCase) ||
+                                     thamSo.TenHienThi.Equals("Mới", StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    clbTinhTrang.SetItemChecked(i, true);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        clbTinhTrang.ItemCheck += ClbTinhTrang_ItemCheck;
                     }
                 }
             };
+
+            clbTinhTrang.ItemCheck += ClbTinhTrang_ItemCheck;
 
             var colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", DataPropertyName = nameof(SachMuonLuaChonDTO.MaCuonSach), MinimumWidth = 80 };
             var colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", DataPropertyName = nameof(SachMuonLuaChonDTO.TenSach), MinimumWidth = 160 };
@@ -126,16 +174,27 @@ namespace GUI.MuonTra
             dgvCuonSach.Columns.AddRange(colMaCuon, colTenSach, colTacGia, colNxb, colTinhTrang);
 
             var lblTinhTrang = new Label { Text = "Tình trạng mượn", Left = 20, Top = 445, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            cboTinhTrang = new ComboBox { Left = 220, Top = 440, Width = 300, Font = new System.Drawing.Font("Segoe UI", 10F), DropDownStyle = ComboBoxStyle.DropDownList };
-            cboTinhTrang.DisplayMember = nameof(ThamSoPhatDTO.TenHienThi);
-            cboTinhTrang.ValueMember = nameof(ThamSoPhatDTO.ID);
+            clbTinhTrang = new CheckedListBox
+            {
+                Left = 220,
+                Top = 440,
+                Width = 300,
+                Height = 70,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                CheckOnClick = true
+            };
 
             var btnChon = new Button { Text = "Thêm vào phiếu", Left = 540, Top = 438, Width = 120, Height = 32, BackColor = System.Drawing.Color.SeaGreen, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnChon.Click += (s, e) => ChonCuonSach();
             var btnHuy = new Button { Text = "Hủy", Left = 670, Top = 438, Width = 110, Height = 32, FlatStyle = FlatStyle.Flat };
             btnHuy.Click += (s, e) => Close();
 
-            Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, dgvCuonSach, lblTinhTrang, cboTinhTrang, btnChon, btnHuy });
+            Controls.AddRange(new Control[] { lblSearch, txtSearch, btnSearch, dgvCuonSach, lblTinhTrang, clbTinhTrang, btnChon, btnHuy });
+        }
+
+        private void ClbTinhTrang_ItemCheck(object? sender, ItemCheckEventArgs e)
+        {
+            // No-op handler used to temporarily detach events when syncing selection.
         }
     }
 }

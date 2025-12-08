@@ -80,7 +80,7 @@ namespace BUS
                     throw new Exception($"Cuốn sách {cuon.MaCuonSach} không sẵn sàng cho mượn.");
 
                 string tinhTrangMuon = string.IsNullOrWhiteSpace(cuon.TinhTrangMuon)
-                    ? thongTin.TinhTrangHienTai ?? "Bình thường"
+                    ? thongTin.TinhTrangHienTai ?? "Mới"
                     : cuon.TinhTrangMuon.Trim();
 
                 danhSachIdCuon.Add((thongTin.IDCuonSach, tinhTrangMuon, cuon.IDThamSoPhatMuon));
@@ -104,7 +104,7 @@ namespace BUS
         {
             var danhSach = danhSachMaCuon
                 .Where(m => !string.IsNullOrWhiteSpace(m))
-                .Select(m => new SachMuonLuaChonDTO { MaCuonSach = m.Trim(), TinhTrangMuon = "Bình thường" })
+                .Select(m => new SachMuonLuaChonDTO { MaCuonSach = m.Trim(), TinhTrangMuon = "Mới" })
                 .ToList();
 
             return LapPhieuMuon(maDocGia, danhSach, ngayTraDuKien);
