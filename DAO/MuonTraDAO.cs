@@ -39,13 +39,18 @@ namespace DAO
             string query = @"SELECT cs.ID AS IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach,
                                      IFNULL(GROUP_CONCAT(DISTINCT tg.TenTacGia SEPARATOR ', '), 'Đang cập nhật') AS TacGia,
                                      nxb.TenNXB AS NhaXuatBan,
-                                     IFNULL(cs.ChiTietTinhTrang, 'Sẵn sàng') AS TinhTrangHienTai
+                                     IFNULL(cst.ChiTietTinhTrang, 'Sẵn sàng') AS TinhTrangHienTai
                               FROM CUONSACH cs
                               INNER JOIN SACH s ON cs.IDSach = s.ID AND s.DaAn = 0
                               INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID AND ts.DaAn = 0
                               INNER JOIN NHAXUATBAN nxb ON s.IDNhaXuatBan = nxb.ID
                               LEFT JOIN CT_TACGIA cttg ON cttg.IDTuaSach = ts.ID
                               LEFT JOIN TACGIA tg ON tg.ID = cttg.IDTacGia
+                              LEFT JOIN (
+                                    SELECT IDCuonSach, MAX(ChiTietTinhTrang) AS ChiTietTinhTrang
+                                    FROM CUONSACH_TINHTRANG
+                                    GROUP BY IDCuonSach
+                              ) cst ON cst.IDCuonSach = cs.ID
                               WHERE cs.TinhTrang = 1";
 
             var parameters = new DynamicParameters();
@@ -62,7 +67,7 @@ namespace DAO
                 parameters.Add("Excluded", maLoaiTru);
             }
 
-            query += " GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB, cs.ChiTietTinhTrang ORDER BY ts.TenTuaSach";
+            query += " GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB, cst.ChiTietTinhTrang ORDER BY ts.TenTuaSach";
 
             using var connection = OpenConnection();
             var result = connection.Query<SachMuonLuaChonDTO>(query, parameters).ToList();
@@ -74,15 +79,20 @@ namespace DAO
             const string query = @"SELECT cs.ID AS IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach,
                                           IFNULL(GROUP_CONCAT(DISTINCT tg.TenTacGia SEPARATOR ', '), 'Đang cập nhật') AS TacGia,
                                           nxb.TenNXB AS NhaXuatBan,
-                                          IFNULL(cs.ChiTietTinhTrang, 'Sẵn sàng') AS TinhTrangHienTai
+                                          IFNULL(cst.ChiTietTinhTrang, 'Sẵn sàng') AS TinhTrangHienTai
                                    FROM CUONSACH cs
                                    INNER JOIN SACH s ON cs.IDSach = s.ID AND s.DaAn = 0
                                    INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID AND ts.DaAn = 0
                                    INNER JOIN NHAXUATBAN nxb ON s.IDNhaXuatBan = nxb.ID
                                    LEFT JOIN CT_TACGIA cttg ON cttg.IDTuaSach = ts.ID
                                    LEFT JOIN TACGIA tg ON tg.ID = cttg.IDTacGia
+                                   LEFT JOIN (
+                                         SELECT IDCuonSach, MAX(ChiTietTinhTrang) AS ChiTietTinhTrang
+                                         FROM CUONSACH_TINHTRANG
+                                         GROUP BY IDCuonSach
+                                   ) cst ON cst.IDCuonSach = cs.ID
                                    WHERE cs.MaCuonSach = @Ma AND cs.TinhTrang = 1
-                                   GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB, cs.ChiTietTinhTrang";
+                                   GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB, cst.ChiTietTinhTrang";
             using var connection = OpenConnection();
             return connection.QueryFirstOrDefault<SachMuonLuaChonDTO>(query, new { Ma = maCuonSach });
         }
