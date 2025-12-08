@@ -46,6 +46,13 @@ namespace DTO
         public string? TinhTrangMuon { get; set; }
         public string? TinhTrangTra { get; set; }
 
+        public bool ChonTra { get; set; }
+        public int SoNgayTre { get; set; }
+        public int TienPhat { get; set; }
+
+        public bool DaTra => NgayTraThucTe.HasValue;
+        public string TrangThai => DaTra ? "Đã trả" : "Đang mượn";
+
         public string? TinhTrangHienTai => string.IsNullOrWhiteSpace(TinhTrangTra) ? TinhTrangMuon : TinhTrangTra;
     }
 

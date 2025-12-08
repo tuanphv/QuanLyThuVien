@@ -357,33 +357,48 @@ namespace DAO
             });
         }
 
-        public static bool TraPhieuMuon(int idPhieuMuon, DateTime ngayTra, int donGiaPhatMoiNgay, out int tongTienPhat, out int idPhieuTra)
+        public static bool TraPhieuMuon(int idPhieuMuon, DateTime ngayTra, IEnumerable<ChiTietPhieuMuonDTO> danhSachTra, out int tongTienPhat, out int idPhieuTra)
         {
             int tongTienPhatLocal = 0;
             int idPhieuTraLocal = 0;
+            var danhSach = danhSachTra?.ToList() ?? new List<ChiTietPhieuMuonDTO>();
+            if (danhSach.Count == 0)
+            {
+                tongTienPhat = 0;
+                idPhieuTra = 0;
+                return false;
+            }
 
             bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
             {
-                const string queryNgayTraDuKien = "SELECT NgayTraDuKien FROM PHIEUMUON WHERE ID = @ID";
-                DateTime? ngayTraDuKien = connection.QueryFirstOrDefault<DateTime?>(queryNgayTraDuKien, new { ID = idPhieuMuon }, transaction);
-                if (ngayTraDuKien == null)
-                {
-                    return false;
-                }
-
-                const string querySelectCT = @"SELECT IDCuonSach FROM CT_PHIEUMUON
+                const string querySelectCT = @"SELECT IDCuonSach, NgayTraDuKien, TinhTrangMuon
+                                           FROM CT_PHIEUMUON
                                            WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                List<int> cuonChuaTra = connection.Query<int>(querySelectCT, new { ID = idPhieuMuon }, transaction).ToList();
+                var cuonChuaTra = connection.Query<(int IDCuonSach, DateTime NgayTraDuKien, string? TinhTrangMuon)>(querySelectCT, new { ID = idPhieuMuon }, transaction).ToList();
 
                 if (cuonChuaTra.Count == 0)
                 {
                     return false;
                 }
 
-                int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Value.Date).Days);
-                int tienPhatMoiCuon = soNgayTre * donGiaPhatMoiNgay;
-                tongTienPhatLocal = tienPhatMoiCuon * cuonChuaTra.Count;
-                string tinhTrangTra = soNgayTre > 0 ? $"Trả trễ {soNgayTre} ngày" : "Trả nguyên vẹn";
+                var cuonHopLe = danhSach.Join(cuonChuaTra, c => c.IDCuonSach, db => db.IDCuonSach, (c, db) =>
+                {
+                    int soNgayTre = c.SoNgayTre > 0 ? c.SoNgayTre : Math.Max(0, (ngayTra.Date - db.NgayTraDuKien.Date).Days);
+                    return new
+                    {
+                        ChiTiet = c,
+                        ThongTinDb = db,
+                        SoNgayTre = soNgayTre,
+                        TinhTrangTra = string.IsNullOrWhiteSpace(c.TinhTrangTra) ? c.TinhTrangMuon : c.TinhTrangTra
+                    };
+                }).ToList();
+
+                if (cuonHopLe.Count == 0)
+                {
+                    return false;
+                }
+
+                tongTienPhatLocal = cuonHopLe.Sum(c => c.ChiTiet.TienPhat);
 
                 string maPhieuTra = TaoMaPhieuTraMoi(connection, transaction);
                 const string insertPhieuTra = @"INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
@@ -408,33 +423,33 @@ namespace DAO
                 const string insertChiTietTra = @"INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat, TinhTrangTra)
                                                  VALUES (@IDPhieuTra, @IDCuonSach, @SoNgayTre, @TienPhat, @TinhTrangTra)";
 
-                foreach (int idCuon in cuonChuaTra)
+                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
+                                          SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
+                                          WHERE IDPhieuMuon = @ID AND IDCuonSach = @IDCuon";
+
+                const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1, ChiTietTinhTrang = @TinhTrang WHERE ID = @ID";
+
+                foreach (var cuon in cuonHopLe)
                 {
                     connection.Execute(insertChiTietTra, new
                     {
                         IDPhieuTra = idPhieuTraLocal,
-                        IDCuonSach = idCuon,
-                        SoNgayTre = soNgayTre,
-                        TienPhat = tienPhatMoiCuon,
-                        TinhTrangTra = tinhTrangTra
+                        IDCuonSach = cuon.ChiTiet.IDCuonSach,
+                        SoNgayTre = cuon.SoNgayTre,
+                        TienPhat = cuon.ChiTiet.TienPhat,
+                        TinhTrangTra = cuon.TinhTrangTra
                     }, transaction);
-                }
 
-                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
-                                          SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
-                                          WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                connection.Execute(queryUpdateCT, new
-                {
-                    NgayTra = ngayTra,
-                    SoNgayTre = soNgayTre,
-                    TienPhat = tienPhatMoiCuon,
-                    ID = idPhieuMuon
-                }, transaction);
+                    connection.Execute(queryUpdateCT, new
+                    {
+                        NgayTra = ngayTra,
+                        SoNgayTre = cuon.SoNgayTre,
+                        TienPhat = cuon.ChiTiet.TienPhat,
+                        ID = idPhieuMuon,
+                        IDCuon = cuon.ChiTiet.IDCuonSach
+                    }, transaction);
 
-                foreach (int idCuon in cuonChuaTra)
-                {
-                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1, ChiTietTinhTrang = @TinhTrang WHERE ID = @ID";
-                    connection.Execute(queryUpdateCuon, new { ID = idCuon, TinhTrang = tinhTrangTra }, transaction);
+                    connection.Execute(queryUpdateCuon, new { ID = cuon.ChiTiet.IDCuonSach, TinhTrang = cuon.TinhTrangTra }, transaction);
                 }
 
                 const string queryConLai = "SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
