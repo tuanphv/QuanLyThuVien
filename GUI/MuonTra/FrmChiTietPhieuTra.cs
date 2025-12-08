@@ -22,6 +22,7 @@ namespace GUI.MuonTra
 
         private void FrmChiTietPhieuTra_Load(object? sender, EventArgs e)
         {
+            lblMaPhieuTra.Text = _phieu.MaPhieuTra;
             lblMaPhieu.Text = _phieu.MaPhieuMuon;
             lblDocGia.Text = $"{_phieu.HoTenDocGia} ({_phieu.MaDocGia})";
             lblNgayTra.Text = _phieu.NgayTra.ToString("dd/MM/yyyy");
@@ -38,7 +39,7 @@ namespace GUI.MuonTra
             colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
 
-            _chiTiet = MuonTraBUS.LayChiTietPhieuTra(_phieu.IDPhieuMuon);
+            _chiTiet = MuonTraBUS.LayChiTietPhieuTra(_phieu.ID);
             dgvChiTiet.DataSource = _chiTiet;
         }
 
@@ -50,24 +51,26 @@ namespace GUI.MuonTra
             StartPosition = FormStartPosition.CenterParent;
 
             var lblTitle = new Label { Text = "Thông tin phiếu trả", Left = 20, Top = 15, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold) };
-            var lblMa = new Label { Text = "Mã phiếu mượn:", Left = 20, Top = 50, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            lblMaPhieu = new Label { Left = 150, Top = 50, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold) };
-            var lblDG = new Label { Text = "Độc giả:", Left = 20, Top = 80, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            lblDocGia = new Label { Left = 150, Top = 80, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var lblNgayT = new Label { Text = "Ngày trả:", Left = 20, Top = 110, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            lblNgayTra = new Label { Left = 150, Top = 110, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var lblTong = new Label { Text = "Tổng sách trả:", Left = 20, Top = 140, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            lblTongSach = new Label { Left = 150, Top = 140, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            var lblPhat = new Label { Text = "Tiền phạt:", Left = 20, Top = 170, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            lblTongTienPhat = new Label { Left = 150, Top = 170, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold) };
+            var lblMaTra = new Label { Text = "Mã phiếu trả:", Left = 20, Top = 50, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblMaPhieuTra = new Label { Left = 150, Top = 50, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold) };
+            var lblMa = new Label { Text = "Mã phiếu mượn:", Left = 20, Top = 80, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblMaPhieu = new Label { Left = 150, Top = 80, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblDG = new Label { Text = "Độc giả:", Left = 20, Top = 110, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblDocGia = new Label { Left = 150, Top = 110, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblNgayT = new Label { Text = "Ngày trả:", Left = 20, Top = 140, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblNgayTra = new Label { Left = 150, Top = 140, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblTong = new Label { Text = "Tổng sách trả:", Left = 20, Top = 170, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblTongSach = new Label { Left = 150, Top = 170, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            var lblPhat = new Label { Text = "Tiền phạt:", Left = 20, Top = 200, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
+            lblTongTienPhat = new Label { Left = 150, Top = 200, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold) };
 
-            btnExportPdf = new Button { Text = "Xuất PDF", Left = 600, Top = 170, Width = 120, Height = 32 };
+            btnExportPdf = new Button { Text = "Xuất PDF", Left = 600, Top = 200, Width = 120, Height = 32 };
             btnExportPdf.Click += BtnExportPdf_Click;
 
             dgvChiTiet = new DataGridView
             {
                 Left = 20,
-                Top = 210,
+                Top = 250,
                 Width = 700,
                 Height = 240,
                 ReadOnly = true,
@@ -85,7 +88,7 @@ namespace GUI.MuonTra
             colTienPhat = new DataGridViewTextBoxColumn { HeaderText = "Tiền phạt", MinimumWidth = 90 };
             dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra, colSoNgayTre, colTienPhat);
 
-            Controls.AddRange(new Control[] { lblTitle, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayT, lblNgayTra, lblTong, lblTongSach, lblPhat, lblTongTienPhat, btnExportPdf, dgvChiTiet });
+            Controls.AddRange(new Control[] { lblTitle, lblMaTra, lblMaPhieuTra, lblMa, lblMaPhieu, lblDG, lblDocGia, lblNgayT, lblNgayTra, lblTong, lblTongSach, lblPhat, lblTongTienPhat, btnExportPdf, dgvChiTiet });
         }
 
         private void BtnExportPdf_Click(object? sender, EventArgs e)
@@ -93,7 +96,7 @@ namespace GUI.MuonTra
             using (var sfd = new SaveFileDialog())
             {
                 sfd.Filter = "PDF file|*.pdf";
-                sfd.FileName = $"PhieuTra_{_phieu.MaPhieuMuon}.pdf";
+                sfd.FileName = $"PhieuTra_{_phieu.MaPhieuTra}.pdf";
                 if (sfd.ShowDialog() != DialogResult.OK) return;
 
                 try
@@ -118,6 +121,7 @@ namespace GUI.MuonTra
 
                         doc.Add(new Paragraph("PHIẾU TRẢ SÁCH", fontTitle) { Alignment = Element.ALIGN_CENTER });
                         doc.Add(new Paragraph("\n"));
+                        doc.Add(new Paragraph($"Mã phiếu trả: {_phieu.MaPhieuTra}", fontLabel));
                         doc.Add(new Paragraph($"Mã phiếu mượn: {_phieu.MaPhieuMuon}", fontLabel));
                         doc.Add(new Paragraph($"Độc giả: {_phieu.HoTenDocGia} ({_phieu.MaDocGia})", fontLabel));
                         doc.Add(new Paragraph($"Ngày trả: {_phieu.NgayTra:dd/MM/yyyy}", fontLabel));
@@ -156,6 +160,7 @@ namespace GUI.MuonTra
         }
 
         private Label lblMaPhieu = null!;
+        private Label lblMaPhieuTra = null!;
         private Label lblDocGia = null!;
         private Label lblNgayTra = null!;
         private Label lblTongSach = null!;

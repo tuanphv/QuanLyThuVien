@@ -111,7 +111,7 @@ namespace BUS
                 ?? throw new Exception("Không tìm thấy phiếu mượn.");
             var thamSo = MuonTraDAO.LayThamSoMuonTra();
 
-            if (!MuonTraDAO.TraPhieuMuon(idPhieuMuon, DateTime.Today, thamSo.DonGiaPhatMoiNgay, out tongTienPhat))
+            if (!MuonTraDAO.TraPhieuMuon(idPhieuMuon, DateTime.Today, thamSo.DonGiaPhatMoiNgay, out tongTienPhat, out _))
             {
                 throw new Exception("Không thể cập nhật trả sách.");
             }
@@ -141,14 +141,14 @@ namespace BUS
             return MuonTraDAO.LayTatCaPhieuTra();
         }
 
-        public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
+        public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuTra)
         {
-            return MuonTraDAO.LayChiTietPhieuTra(idPhieuMuon);
+            return MuonTraDAO.LayChiTietPhieuTra(idPhieuTra);
         }
 
-        public static bool XoaPhieuTra(int idPhieuMuon)
+        public static bool XoaPhieuTra(int idPhieuTra)
         {
-            return MuonTraDAO.XoaPhieuTra(idPhieuMuon);
+            return MuonTraDAO.XoaPhieuTra(idPhieuTra);
         }
 
         public static PhieuTraDTO LapPhieuTra(string maPhieuMuon, out int tongTienPhat)
@@ -162,17 +162,20 @@ namespace BUS
             if (phieu.SoSachChuaTra <= 0)
                 throw new Exception("Phiếu này đã trả hết sách.");
 
-            TraPhieuMuon(phieu.ID, out tongTienPhat);
-            return new PhieuTraDTO
+            var thamSo = MuonTraDAO.LayThamSoMuonTra();
+
+            if (!MuonTraDAO.TraPhieuMuon(phieu.ID, DateTime.Today, thamSo.DonGiaPhatMoiNgay, out tongTienPhat, out int idPhieuTra))
             {
-                IDPhieuMuon = phieu.ID,
-                MaPhieuMuon = phieu.MaPhieuMuon,
-                MaDocGia = phieu.MaDocGia,
-                HoTenDocGia = phieu.HoTenDocGia,
-                NgayTra = DateTime.Today,
-                TongSachTra = phieu.SoSachChuaTra,
-                TongTienPhat = tongTienPhat
-            };
+                throw new Exception("Không thể cập nhật trả sách.");
+            }
+
+            var phieuTra = MuonTraDAO.LayPhieuTraTheoID(idPhieuTra);
+            if (phieuTra == null)
+            {
+                throw new Exception("Không thể tải thông tin phiếu trả vừa tạo.");
+            }
+
+            return phieuTra;
         }
 
         public static bool CapNhatTinhTrangCuonSach(int idPhieuMuon, int idCuonSach, string tinhTrangMuon, string? tinhTrangTra, bool daTra)
@@ -221,22 +224,24 @@ namespace BUS
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("PhieuTra");
 
-            worksheet.Cell(1, 1).Value = "Mã phiếu mượn";
-            worksheet.Cell(1, 2).Value = "Mã độc giả";
-            worksheet.Cell(1, 3).Value = "Họ tên độc giả";
-            worksheet.Cell(1, 4).Value = "Ngày trả";
-            worksheet.Cell(1, 5).Value = "Sách đã trả";
-            worksheet.Cell(1, 6).Value = "Tiền phạt";
+            worksheet.Cell(1, 1).Value = "Mã phiếu trả";
+            worksheet.Cell(1, 2).Value = "Mã phiếu mượn";
+            worksheet.Cell(1, 3).Value = "Mã độc giả";
+            worksheet.Cell(1, 4).Value = "Họ tên độc giả";
+            worksheet.Cell(1, 5).Value = "Ngày trả";
+            worksheet.Cell(1, 6).Value = "Sách đã trả";
+            worksheet.Cell(1, 7).Value = "Tiền phạt";
 
             int row = 2;
             foreach (var pt in danhSachPhieuTra)
             {
-                worksheet.Cell(row, 1).Value = pt.MaPhieuMuon;
-                worksheet.Cell(row, 2).Value = pt.MaDocGia;
-                worksheet.Cell(row, 3).Value = pt.HoTenDocGia;
-                worksheet.Cell(row, 4).Value = pt.NgayTra;
-                worksheet.Cell(row, 5).Value = pt.TongSachTra;
-                worksheet.Cell(row, 6).Value = pt.TongTienPhat;
+                worksheet.Cell(row, 1).Value = pt.MaPhieuTra;
+                worksheet.Cell(row, 2).Value = pt.MaPhieuMuon;
+                worksheet.Cell(row, 3).Value = pt.MaDocGia;
+                worksheet.Cell(row, 4).Value = pt.HoTenDocGia;
+                worksheet.Cell(row, 5).Value = pt.NgayTra;
+                worksheet.Cell(row, 6).Value = pt.TongSachTra;
+                worksheet.Cell(row, 7).Value = pt.TongTienPhat;
                 row++;
             }
 
