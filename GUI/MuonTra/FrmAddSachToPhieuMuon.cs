@@ -89,6 +89,16 @@ namespace GUI.MuonTra
             var btnSearch = new Button { Text = "Tìm", Left = 300, Top = 43, Width = 80, Height = 30, BackColor = System.Drawing.Color.RoyalBlue, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnSearch.Click += (s, e) => TaiDanhSach();
 
+            clbTinhTrang = new CheckedListBox
+            {
+                Left = 220,
+                Top = 440,
+                Width = 300,
+                Height = 70,
+                Font = new System.Drawing.Font("Segoe UI", 10F),
+                CheckOnClick = true
+            };
+
             dgvCuonSach = new DataGridView
             {
                 Left = 20,
@@ -164,8 +174,6 @@ namespace GUI.MuonTra
                 }
             };
 
-            clbTinhTrang.ItemCheck += ClbTinhTrang_ItemCheck;
-
             var colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", DataPropertyName = nameof(SachMuonLuaChonDTO.MaCuonSach), MinimumWidth = 80 };
             var colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", DataPropertyName = nameof(SachMuonLuaChonDTO.TenSach), MinimumWidth = 160 };
             var colTacGia = new DataGridViewTextBoxColumn { HeaderText = "Tác giả", DataPropertyName = nameof(SachMuonLuaChonDTO.TacGia), MinimumWidth = 140 };
@@ -174,15 +182,7 @@ namespace GUI.MuonTra
             dgvCuonSach.Columns.AddRange(colMaCuon, colTenSach, colTacGia, colNxb, colTinhTrang);
 
             var lblTinhTrang = new Label { Text = "Tình trạng mượn", Left = 20, Top = 445, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
-            clbTinhTrang = new CheckedListBox
-            {
-                Left = 220,
-                Top = 440,
-                Width = 300,
-                Height = 70,
-                Font = new System.Drawing.Font("Segoe UI", 10F),
-                CheckOnClick = true
-            };
+            clbTinhTrang.ItemCheck += ClbTinhTrang_ItemCheck;
 
             var btnChon = new Button { Text = "Thêm vào phiếu", Left = 540, Top = 438, Width = 120, Height = 32, BackColor = System.Drawing.Color.SeaGreen, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnChon.Click += (s, e) => ChonCuonSach();
