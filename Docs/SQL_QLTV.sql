@@ -829,8 +829,6 @@ VALUES (1, '2025-03-01 10:00:00', '2025-03-05 10:00:00'); -- ID = 1
 
 -- Chi tiết Mượn (Trigger cập nhật CUONSACH và SACH)
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (1, 1), (1, 16);
-INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
-VALUES (1, 1, @TT_MOI), (1, 16, @TT_MOI);
 
 -- Trả sách (Ngày 05/03/2025 - Đúng hạn)
 UPDATE CT_PHIEUMUON
@@ -851,8 +849,15 @@ VALUES (2, '2025-03-10 14:00:00', '2025-03-14 14:00:00'); -- ID = 2
 
 -- Chi tiết Mượn
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (2, 2), (2, 17);
-INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
-VALUES (2, 2, @TT_BAN), (2, 17, @TT_MOI);
+UPDATE CT_PHIEUMUON_TINHTRANG
+SET IDThamSoPhat = @TT_BAN
+WHERE IDPhieuMuon = 2 AND IDCuonSach = 2;
+
+UPDATE CT_PHIEUMUON_TINHTRANG
+SET ChiTietTinhTrang="NHẸ"
+WHERE IDPhieuMuon = 2 AND IDCuonSach = 2;
+
+
 
 -- Trả sách (Ngày 16/03/2025 - Trễ 2 ngày, Phạt 2000/cuốn)
 UPDATE CT_PHIEUMUON
@@ -883,8 +888,6 @@ VALUES (3, NOW(), DATE_ADD(NOW(), INTERVAL 4 DAY)); -- ID = 3
 
 -- Chi tiết Mượn
 INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (3, 3);
-INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
-VALUES (3, 3, @TT_MOI);
 -- Cuốn sách 3 (CS0003) đang được mượn với tình trạng 'MOI'. SoLuongConLai của S1 (CSDL Nâng cao) giảm 1.
 -- =========================================================================
 -- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
