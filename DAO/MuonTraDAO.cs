@@ -51,7 +51,7 @@ namespace DAO
                                     FROM CUONSACH_TINHTRANG
                                     GROUP BY IDCuonSach
                               ) cst ON cst.IDCuonSach = cs.ID
-                              WHERE cs.TinhTrang = 1";
+                              WHERE cs.TrangThai = 1";
 
             var parameters = new DynamicParameters();
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -91,7 +91,7 @@ namespace DAO
                                          FROM CUONSACH_TINHTRANG
                                          GROUP BY IDCuonSach
                                    ) cst ON cst.IDCuonSach = cs.ID
-                                   WHERE cs.MaCuonSach = @Ma AND cs.TinhTrang = 1
+                                   WHERE cs.MaCuonSach = @Ma AND cs.TrangThai = 1
                                    GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB, cst.ChiTietTinhTrang";
             using var connection = OpenConnection();
             return connection.QueryFirstOrDefault<SachMuonLuaChonDTO>(query, new { Ma = maCuonSach });
@@ -106,7 +106,7 @@ namespace DAO
 
         public static bool CuonSachSanSang(int idCuonSach)
         {
-            const string query = "SELECT TinhTrang FROM CUONSACH WHERE ID = @ID";
+            const string query = "SELECT TrangThai FROM CUONSACH WHERE ID = @ID";
             using var connection = OpenConnection();
             int? tinhTrang = connection.QuerySingleOrDefault<int?>(query, new { ID = idCuonSach });
             return tinhTrang == 1;
@@ -188,7 +188,7 @@ namespace DAO
                                                     ON DUPLICATE KEY UPDATE ChiTietTinhTrang = VALUES(ChiTietTinhTrang);";
                     connection.Execute(queryTinhTrang, new { IDPhieuMuon = idPhieu, IDCuonSach = cuon.idCuon, TinhTrangMuon = cuon.tinhTrangMuon }, transaction);
 
-                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @IDCuon";
+                    const string queryUpdateCuon = "UPDATE CUONSACH SET TrangThai = 0 WHERE ID = @IDCuon";
                     connection.Execute(queryUpdateCuon, new { IDCuon = cuon.idCuon }, transaction);
                 }
 
@@ -264,8 +264,8 @@ namespace DAO
         {
             const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, s.DonGia,
                                     pm.NgayMuon, cp.NgayTraThucTe, pm.NgayTraDuKien,
-                                    cptt.ChiTietTinhTrang AS TinhTrangMuon,
-                                    (SELECT cttt.ChiTietTinhTrang FROM CT_PHIEUTRA_TINHTRANG cttt
+                                    IFNULL(cptt.ChiTietTinhTrang, 'Bình thường') AS TinhTrangMuon,
+                                    (SELECT IFNULL(cttt.ChiTietTinhTrang, 'Bình thường') FROM CT_PHIEUTRA_TINHTRANG cttt
                                         INNER JOIN CT_PHIEUTRA ctt ON ctt.IDPhieuTra = cttt.IDPhieuTra AND ctt.IDCuonSach = cttt.IDCuonSach
                                         INNER JOIN PHIEUTRA pt ON pt.ID = ctt.IDPhieuTra
                                         WHERE pt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach
@@ -336,7 +336,7 @@ namespace DAO
 
                 const string updateCuon = @"UPDATE CUONSACH
                                          SET ChiTietTinhTrang = @ChiTietTinhTrang,
-                                             TinhTrang = CASE WHEN @DaTra = 1 THEN 1 ELSE TinhTrang END
+                                             TrangThai = CASE WHEN @DaTra = 1 THEN 1 ELSE TrangThai END
                                          WHERE ID = @IDCuon";
 
                 connection.Execute(updateCuon, new
@@ -382,7 +382,7 @@ namespace DAO
 
                 foreach (int idCuon in cuonSach)
                 {
-                    const string updateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
+                    const string updateCuon = "UPDATE CUONSACH SET TrangThai = 1 WHERE ID = @ID";
                     connection.Execute(updateCuon, new { ID = idCuon }, transaction);
                 }
 
@@ -464,7 +464,7 @@ namespace DAO
                                           SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
                                           WHERE IDPhieuMuon = @ID AND IDCuonSach = @IDCuon";
 
-                const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1, ChiTietTinhTrang = @TinhTrang WHERE ID = @ID";
+                const string queryUpdateCuon = "UPDATE CUONSACH SET TrangThai = 1, ChiTietTinhTrang = @TinhTrang WHERE ID = @ID";
 
                 foreach (var cuon in cuonHopLe)
                 {
@@ -551,7 +551,7 @@ namespace DAO
             const string query = @"SELECT ct.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayMuon, pm.NgayTraDuKien,
                                     pt.NgayTra AS NgayTraThucTe,
                                     IFNULL(ct.SoNgayTre, 0) AS SoNgayTre, IFNULL(ct.TienPhat, 0) AS TienPhat,
-                                    (SELECT cttt.ChiTietTinhTrang
+                                    (SELECT IFNULL(cttt.ChiTietTinhTrang, 'Bình thường')
                                         FROM CT_PHIEUTRA_TINHTRANG cttt
                                         WHERE cttt.IDPhieuTra = ct.IDPhieuTra AND cttt.IDCuonSach = ct.IDCuonSach
                                         ORDER BY cttt.IDThamSoPhat DESC LIMIT 1) AS TinhTrangTra
@@ -591,7 +591,7 @@ namespace DAO
                                           WHERE IDPhieuMuon = @IDPhieuMuon AND IDCuonSach IN @CuonSach";
                 connection.Execute(queryUpdateCT, new { IDPhieuMuon = idPhieuMuon, CuonSach = danhSachCuon }, transaction);
 
-                const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID IN @CuonSach";
+                const string queryUpdateCuon = "UPDATE CUONSACH SET TrangThai = 0 WHERE ID IN @CuonSach";
                 connection.Execute(queryUpdateCuon, new { CuonSach = danhSachCuon }, transaction);
 
                 const string deleteChiTiet = "DELETE FROM CT_PHIEUTRA WHERE IDPhieuTra = @ID";
