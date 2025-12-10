@@ -41,7 +41,7 @@ namespace DAO
         // Thêm Lô sách mới
         // Trong DAO/SachDAO.cs
 
-        public static bool Add(SachDTO sach)
+        public static int Add(SachDTO sach)
         {
             // Sử dụng Transaction để đảm bảo tính toàn vẹn dữ liệu
             //using var connection = DataProvider.Instance.GetConnection();
@@ -63,7 +63,6 @@ namespace DAO
                     new MySqlParameter("@IDNXB", sach.IDNhaXuatBan)
                 );
 
-                if (resultID == null) return false;
                 int idSachMoi = Convert.ToInt32(resultID);
 
                 // 2. Tự động sinh các Cuốn sách con (Ví dụ: Nhập 5 cuốn -> Insert 5 dòng vào CUONSACH)
@@ -81,11 +80,11 @@ namespace DAO
                     DataProvider.Instance.ExecuteNonQuery(queryCuonSach);
                 }
 
-                return true;
+                return idSachMoi;
             }
             catch
             {
-                return false;
+                return -1;
             }
         }
 

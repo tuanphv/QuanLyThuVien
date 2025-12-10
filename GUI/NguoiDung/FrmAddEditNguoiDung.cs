@@ -13,7 +13,6 @@ namespace GUI.NguoiDung
             {
                 _nguoiDungDTO.TenNguoiDung = txtTenNguoiDung.Text.Trim();
                 _nguoiDungDTO.NgaySinh = dtpNgaySinh.Checked ? dtpNgaySinh.Value : (DateTime?)null;
-                _nguoiDungDTO.ChucVu = txtChucVu.Text.Trim();
                 _nguoiDungDTO.TenDangNhap = txtTenDangNhap.Text.Trim();
                 _nguoiDungDTO.MatKhau = txtMatKhau.Text.Trim();
 
@@ -40,11 +39,10 @@ namespace GUI.NguoiDung
                     dtpNgaySinh.Checked = false;
                 }
 
-                txtChucVu.Text = _nguoiDungDTO.ChucVu;
                 txtTenDangNhap.Text = _nguoiDungDTO.TenDangNhap;
                 txtMatKhau.Text = _nguoiDungDTO.MatKhau;
                 cboNhomNguoiDung.SelectedValue = _nguoiDungDTO.IDNhomNguoiDung;
-
+                //cboNhomNguoiDung.DisplayMember = _nguoiDungDTO.TenNhomNguoiDung;
                 _isEditMode = true;
             }
         }
@@ -60,7 +58,6 @@ namespace GUI.NguoiDung
       
             LoadNhomNguoiDung();
 
-    
             if (string.IsNullOrEmpty(txtMaNguoiDung.Text))
             {
                 try
@@ -82,8 +79,8 @@ namespace GUI.NguoiDung
             {
                 var listNhom = BUS.NhomNguoiDungBUS.GetAll();
                 cboNhomNguoiDung.DataSource = listNhom;
-                cboNhomNguoiDung.DisplayMember = "TenNhomNguoiDung";
                 cboNhomNguoiDung.ValueMember = "ID";
+                cboNhomNguoiDung.DisplayMember = "TenNhom";
             }
             catch (Exception ex)
             {

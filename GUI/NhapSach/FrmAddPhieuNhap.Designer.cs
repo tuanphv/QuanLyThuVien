@@ -74,6 +74,7 @@
             // dtpNgayNhap
             // 
             dtpNgayNhap.CustomFormat = "dd/MM/yyyy HH:mm";
+            dtpNgayNhap.Enabled = false;
             dtpNgayNhap.Font = new Font("Segoe UI", 10F);
             dtpNgayNhap.Format = DateTimePickerFormat.Custom;
             dtpNgayNhap.Location = new Point(593, 43);
@@ -135,7 +136,6 @@
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông tin sách nhập";
-            groupBox1.Enter += groupBox1_Enter;
             // 
             // btnXoa
             // 
@@ -273,7 +273,6 @@
             label3.Size = new Size(65, 19);
             label3.TabIndex = 0;
             label3.Text = "Tựa sách:";
-            label3.Click += label3_Click;
             // 
             // dgvChiTiet
             // 

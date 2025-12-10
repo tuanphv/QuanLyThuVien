@@ -11,7 +11,7 @@ namespace BUS
             return SachDAO.GetAll();
         }
 
-        public static bool Add(SachDTO sach)
+        public static int Add(SachDTO sach)
         {
             // 1. Kiểm tra quy định Năm Xuất Bản
             if (!ThamSoBUS.KiemTraNamXuatBan(sach.NamXB))
@@ -24,7 +24,9 @@ namespace BUS
             if (sach.DonGia <= 0) throw new Exception("Đơn giá phải lớn hơn 0.");
             if (sach.SoLuongTong <= 0) throw new Exception("Số lượng nhập phải lớn hơn 0.");
 
-            return SachDAO.Add(sach);
+            int idSachNew = SachDAO.Add(sach);
+            if (idSachNew == -1) throw new Exception("Thêm sách thất bại.");
+            return idSachNew;
         }
 
         public static bool Update(SachDTO sach)
@@ -52,11 +54,6 @@ namespace BUS
         public static SachDTO? FindByTuaSachAndNXBAndNamXB(int idTuaSach, int idNhaXuatBan, int namXB)
         {
             return SachDAO.FindByTuaSachAndNXBAndNamXB(idTuaSach, idNhaXuatBan, namXB);
-        }
-
-        public static int GetLatestID()
-        {
-            return SachDAO.GetLatestID();
         }
     }
 }

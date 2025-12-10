@@ -7,11 +7,14 @@ namespace GUI.DocGia
 {
     public partial class UCDocGia : UserControl
     {
+        private bool _isLoaded = false;
+
         private BindingList<DocGiaDTO> list;
 
         public UCDocGia()
         {
             InitializeComponent();
+            this.VisibleChanged += UCDocGia_VisibleChanged;
         }
 
         private void LoadPermissions()
@@ -39,6 +42,15 @@ namespace GUI.DocGia
 
             // Apply permissions after DataGridView and its columns are ready
             LoadPermissions();
+            _isLoaded = true;
+        }
+
+        private void UCDocGia_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible && _isLoaded)
+            {
+                LoadData();
+            }
         }
 
         private void LoadData()
@@ -160,14 +172,13 @@ namespace GUI.DocGia
                         var worksheet = workbook.Worksheets.Add("Độc Giả");
 
                         // 4. Tạo tiêu đề cột (Header)
-                        worksheet.Cell(1, 1).Value = "Mã Độc Giả";
-                        worksheet.Cell(1, 2).Value = "Họ Tên";
-                        worksheet.Cell(1, 3).Value = "Ngày Sinh";
-                        worksheet.Cell(1, 4).Value = "Địa Chỉ";
-                        worksheet.Cell(1, 5).Value = "Ngày Lập Thẻ";
-                        worksheet.Cell(1, 6).Value = "Ngày Hết Hạn";
-                        worksheet.Cell(1, 7).Value = "Tổng Nợ Hiện Tại";
-                        worksheet.Cell(1, 8).Value = "Tên Đăng Nhập";
+                        worksheet.Cell(1, 1).Value = "Mã độc giả";
+                        worksheet.Cell(1, 2).Value = "Họ tên";
+                        worksheet.Cell(1, 3).Value = "Ngày sinh";
+                        worksheet.Cell(1, 4).Value = "Ngày lập thẻ";
+                        worksheet.Cell(1, 5).Value = "Ngày hết hạn";
+                        worksheet.Cell(1, 6).Value = "Tổng nợ";
+                        worksheet.Cell(1, 7).Value = "Tên đăng nhập";
 
                         // Định dạng Header cho đẹp (In đậm, nền xanh)
                         var headerRow = worksheet.Range("A1:H1");
@@ -185,11 +196,10 @@ namespace GUI.DocGia
                             worksheet.Cell(rowIndex, 1).Value = docGia.MaDocGia;
                             worksheet.Cell(rowIndex, 2).Value = docGia.HoTen;
                             worksheet.Cell(rowIndex, 3).Value = docGia.NgaySinh.ToString("dd/MM/yyyy");
-                            worksheet.Cell(rowIndex, 4).Value = docGia.DiaChi ?? "";
-                            worksheet.Cell(rowIndex, 5).Value = docGia.NgayLapThe.ToString("dd/MM/yyyy");
-                            worksheet.Cell(rowIndex, 6).Value = docGia.NgayHetHan.ToString("dd/MM/yyyy");
-                            worksheet.Cell(rowIndex, 7).Value = docGia.TongNoHienTai;
-                            worksheet.Cell(rowIndex, 8).Value = docGia.TenDangNhap ?? "";
+                            worksheet.Cell(rowIndex, 4).Value = docGia.NgayLapThe.ToString("dd/MM/yyyy");
+                            worksheet.Cell(rowIndex, 5).Value = docGia.NgayHetHan.ToString("dd/MM/yyyy");
+                            worksheet.Cell(rowIndex, 6).Value = docGia.TongNoHienTai;
+                            worksheet.Cell(rowIndex, 7).Value = docGia.TenDangNhap ?? "";
 
                             // Định dạng số tiền
                             worksheet.Cell(rowIndex, 7).Style.NumberFormat.Format = "#,##0";

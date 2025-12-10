@@ -1,6 +1,7 @@
 ﻿using BUS;
 using ClosedXML.Excel;
 using DTO;
+using GUI.Helpers;
 using System.ComponentModel;
 
 namespace GUI.BaoCao
@@ -9,6 +10,7 @@ namespace GUI.BaoCao
     {
         private BindingList<BaoCaoNoDocGiaDTO> listNoDocGia = new();
         private BindingList<BaoCaoNoDocGiaDTO> listNoDocGiaFiltered = new();
+        private string maDocGiaSelected = string.Empty;
 
         public UCBaoCao()
         {
@@ -18,6 +20,12 @@ namespace GUI.BaoCao
         private void UCBaoCao_Load(object sender, EventArgs e)
         {
             // Load báo cáo nợ theo độc giá (báo cáo mới)
+            bool _isReader = SessionManager.CurrentUser?.TenNhomNguoiDung?.Equals("Độc Giả", StringComparison.OrdinalIgnoreCase) == true;
+            if (_isReader && SessionManager.GetUserId() is int userId)
+            {
+                var docGia = DocGiaBUS.GetByUserId(userId);
+                maDocGiaSelected = docGia?.MaDocGia;
+            }
             LoadBaoCaoNoDocGia();
         }
 
@@ -37,6 +45,10 @@ namespace GUI.BaoCao
             try
             {
                 var list = BaoCaoBUS.GetBaoCaoNoDocGia();
+                if (!string.IsNullOrEmpty(maDocGiaSelected))
+                {
+                    list = list.Where(x => x.MaDocGia == maDocGiaSelected).ToList();
+                }
                 listNoDocGia = new BindingList<BaoCaoNoDocGiaDTO>(list);
                 listNoDocGiaFiltered = listNoDocGia;
 
@@ -98,17 +110,17 @@ namespace GUI.BaoCao
                     dgvQuaHan.Columns["NgayTraDuKien"].Visible = false;
 
                 // Highlight các dòng có tổng nợ cao (> 50,000)
-                foreach (DataGridViewRow row in dgvQuaHan.Rows)
-                {
-                    if (row.Cells["TongNoUocTinh"].Value != null)
-                    {
-                        int tongNo = Convert.ToInt32(row.Cells["TongNoUocTinh"].Value);
-                        if (tongNo > 50000)
-                        {
-                            row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
-                        }
-                    }
-                }
+                //foreach (DataGridViewRow row in dgvQuaHan.Rows)
+                //{
+                //    if (row.Cells["TongNoUocTinh"].Value != null)
+                //    {
+                //        int tongNo = Convert.ToInt32(row.Cells["TongNoUocTinh"].Value);
+                //        if (tongNo > 50000)
+                //        {
+                //            row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -125,7 +137,10 @@ namespace GUI.BaoCao
 
                 dgvQuaHan.DataSource = null;  // Clear trước
                 dgvQuaHan.DataSource = list;
-
+                if (!string.IsNullOrEmpty(maDocGiaSelected))
+                {
+                    list = list.Where(x => x.MaDocGia == maDocGiaSelected).ToList();
+                }
                 // Cập nhật label
                 label1.Text = $"Báo cáo quá hạn theo phiếu ({list.Count} phiếu)";
 

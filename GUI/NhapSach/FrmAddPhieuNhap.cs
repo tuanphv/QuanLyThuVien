@@ -43,7 +43,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nhà cung c?p: {ex.Message}", "Lỗi",
+                MessageBox.Show($"Lỗi khi tải nhà cung cấp: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -59,7 +59,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i t?a sách: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi tải tựa sách: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -75,7 +75,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nhà xu?t b?n: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi tải nhà xuất bản: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -104,7 +104,7 @@ namespace GUI.NhapSach
 
                 if (existing != null)
                 {
-                    MessageBox.Show("Sách v?i thông tin này ?ã có trong danh sách nh?p.", "Thông báo",
+                    MessageBox.Show("Sách với thông tin này đã có trong danh sách nhập.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -126,7 +126,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i: {ex.Message}", "L?i", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -179,20 +179,20 @@ namespace GUI.NhapSach
 
                 if (chiTietList.Count == 0)
                 {
-                    MessageBox.Show("Vui lòng thêm ít nh?t m?t sách vào phi?u nh?p.", "Thông báo",
+                    MessageBox.Show("Vui lòng thêm ít nhất một sách vào phiếu nhập.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.DialogResult = DialogResult.None;
                     return;
                 }
 
-                // T?o phi?u nh?p
+                // Tạo phiếu nhập
                 var phieu = new PhieuNhapSachDTO
                 {
                     IDNhaCungCap = (int)cbNhaCungCap.SelectedValue,
                     NgayNhap = dtpNgayNhap.Value
                 };
 
-                // T?o danh sách chi ti?t và x? lý Sach/CuonSach
+                // Tạo danh sách chi tiết và xử lý Sach/CuonSach
                 var chiTiet = new List<CT_PhieuNhapDTO>();
 
                 foreach (var item in chiTietList)
@@ -203,18 +203,17 @@ namespace GUI.NhapSach
                     int idSach;
                     if (sach == null)
                     {
-                        // T?o lô sách m?i
+                        // Tạo phiên bản sách mới
                         var sachMoi = new SachDTO
                         {
                             IDTuaSach = item.IDTuaSach,
                             IDNhaXuatBan = item.IDNhaXuatBan,
                             NamXB = item.NamXB,
-                            SoLuongTong = 0,
-                            SoLuongConLai = 0,
+                            SoLuongTong = item.SoLuong,
+                            SoLuongConLai = item.SoLuong,
                             DonGia = item.DonGia
                         };
-                        SachBUS.Add(sachMoi);
-                        idSach = SachBUS.GetLatestID();
+                        idSach = SachBUS.Add(sachMoi);
                     }
                     else
                     {
@@ -231,25 +230,15 @@ namespace GUI.NhapSach
                     });
                 }
 
-                // L?u phi?u nh?p
+                // Lỗi phiếu nhập
                 PhieuNhapSachBUS.Add(phieu, chiTiet);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi l?u phi?u nh?p: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi lưu phiếu nhập: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.DialogResult = DialogResult.None;
             }
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -4,13 +4,17 @@ using GUI.Helpers;
 
 namespace GUI.NguoiDung
 {
+
     public partial class UCNguoiDung : UserControl
     {
+        private bool _isLoaded = false;
+
         private BindingList<NguoiDungDTO> list;
 
         public UCNguoiDung()
         {
             InitializeComponent();
+            this.VisibleChanged += UCNguoiDung_VisibleChanged;
         }
 
         private void LoadPermissions()
@@ -43,6 +47,15 @@ namespace GUI.NguoiDung
             dgvNguoiDung.EditButtonClicked += EditButtonClicked;
             dgvNguoiDung.DeleteButtonClicked += DeleteButtonClicked;
             LoadPermissions();
+            _isLoaded = true;
+        }
+
+        private void UCNguoiDung_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible && _isLoaded)
+            {
+                LoadData();
+            }
         }
 
         private void LoadData()
@@ -95,7 +108,7 @@ namespace GUI.NguoiDung
 
             NguoiDungDTO selectedNguoiDung = list[index];
 
-            var confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa người dùng '{selectedNguoiDung.TenNguoiDung}'?", 
+            var confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa người dùng '{selectedNguoiDung.TenNguoiDung}'?",
                 "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)

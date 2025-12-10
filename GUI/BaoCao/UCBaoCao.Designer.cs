@@ -127,6 +127,7 @@
             btnLoadQuaHan.TabIndex = 1;
             btnLoadQuaHan.Text = "Báo cáo theo phiếu";
             btnLoadQuaHan.UseVisualStyleBackColor = false;
+            btnLoadQuaHan.Visible = false;
             btnLoadQuaHan.Click += btnLoadQuaHan_Click;
             // 
             // txtTimKiem
@@ -147,7 +148,7 @@
             label2.Font = new Font("Segoe UI", 10F);
             label2.Location = new Point(1050, 12);
             label2.Name = "label2";
-            label2.Size = new Size(70, 19);
+            label2.Size = new Size(67, 19);
             label2.TabIndex = 2;
             label2.Text = "Tìm kiếm:";
             // 

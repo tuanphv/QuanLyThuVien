@@ -1,4 +1,4 @@
-using DTO;
+Ôªøusing DTO;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -6,22 +6,20 @@ namespace DAO
 {
     public class ThongKeDAO
     {
-        /// <summary>
-        /// L?y th?ng kÍ t?ng quan
-        /// </summary>
+    
         public static ThongKeDTO GetThongKeTongQuan()
         {
             var thongKe = new ThongKeDTO();
 
             try
             {
-                // T?ng s? s·ch (cu?n s·ch v?t l˝)
+   
                 string sqlTongSach = "SELECT COUNT(*) FROM CUONSACH";
                 var resultTongSach = DataProvider.Instance.ExecuteScalar(sqlTongSach);
                 thongKe.TongSach = resultTongSach != null && resultTongSach != DBNull.Value 
                     ? Convert.ToInt32(resultTongSach) : 0;
 
-                // S? s·ch ?ang m??n (TinhTrang = 0)
+    
                 string sqlSachDangMuon = @"
                     SELECT COUNT(*) 
                     FROM CUONSACH 
@@ -30,13 +28,13 @@ namespace DAO
                 thongKe.SachDangMuon = resultSachDangMuon != null && resultSachDangMuon != DBNull.Value 
                     ? Convert.ToInt32(resultSachDangMuon) : 0;
 
-                // T?ng s? ??c gi?
+             
                 string sqlTongDocGia = "SELECT COUNT(*) FROM DOCGIA";
                 var resultTongDocGia = DataProvider.Instance.ExecuteScalar(sqlTongDocGia);
                 thongKe.TongDocGia = resultTongDocGia != null && resultTongDocGia != DBNull.Value 
                     ? Convert.ToInt32(resultTongDocGia) : 0;
 
-                // T?ng n?
+         
                 string sqlTongNo = "SELECT COALESCE(SUM(TongNoHienTai), 0) FROM DOCGIA";
                 var resultTongNo = DataProvider.Instance.ExecuteScalar(sqlTongNo);
                 thongKe.TongNo = resultTongNo != null && resultTongNo != DBNull.Value 
@@ -44,15 +42,15 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y th?ng kÍ t?ng quan: {ex.Message}", ex);
+                throw new Exception($"L·ªói: {ex.Message}", ex);
             }
 
             return thongKe;
         }
 
         /// <summary>
-        /// L?y top 5 s·ch m??n nhi?u nh?t
-        /// </summary>
+        /// L?y top 5 s√°ch m??n nhi?u nh?t
+        /// </summary>  
         public static List<SachMuonNhieuDTO> GetTop5SachMuonNhieu()
         {
             var list = new List<SachMuonNhieuDTO>();
@@ -85,15 +83,13 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y top s·ch m??n nhi?u: {ex.Message}", ex);
+                throw new Exception($"L·ªói khi l·∫•y top danh s√°ch m∆∞·ª£n nhi·ªÅu: {ex.Message}", ex);
             }
 
             return list;
         }
 
-        /// <summary>
-        /// L?y top 3 ??c gi? tÌch c?c (m??n nhi?u nh?t)
-        /// </summary>
+
         public static List<DocGiaTichCucDTO> GetTop3DocGiaTichCuc()
         {
             var list = new List<DocGiaTichCucDTO>();
@@ -125,15 +121,12 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y top ??c gi? tÌch c?c: {ex.Message}", ex);
+                throw new Exception($"L·ªói: {ex.Message}", ex);
             }
 
             return list;
         }
 
-        /// <summary>
-        /// Th?ng kÍ s? l??t m??n theo th·ng trong n?m hi?n t?i
-        /// </summary>
         public static List<ThongKeMuonTheoThangDTO> GetThongKeTheoThang(int? nam = null)
         {
             var list = new List<ThongKeMuonTheoThangDTO>();
@@ -152,13 +145,13 @@ namespace DAO
                 var param = new MySqlParameter("@Nam", namThongKe);
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql, param);
 
-                // Kh?i t?o 12 th·ng v?i gi· tr? 0
+                
                 for (int i = 1; i <= 12; i++)
                 {
                     list.Add(new ThongKeMuonTheoThangDTO(i, 0));
                 }
 
-                // C?p nh?t gi· tr? th?c t? database
+              
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
@@ -178,15 +171,13 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y th?ng kÍ theo th·ng: {ex.Message}", ex);
+                throw new Exception($"L·ªói khi th·∫•y th·ªëng k√™ theo th√°ng: {ex.Message}", ex);
             }
 
             return list;
         }
 
-        /// <summary>
-        /// Th?ng kÍ s? l??t m??n theo qu˝ trong n?m hi?n t?i
-        /// </summary>
+
         public static List<ThongKeMuonTheoQuyDTO> GetThongKeTheoQuy(int? nam = null)
         {
             var list = new List<ThongKeMuonTheoQuyDTO>();
@@ -205,13 +196,11 @@ namespace DAO
                 var param = new MySqlParameter("@Nam", namThongKe);
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql, param);
 
-                // Kh?i t?o 4 qu˝ v?i gi· tr? 0
                 for (int i = 1; i <= 4; i++)
                 {
                     list.Add(new ThongKeMuonTheoQuyDTO(i, 0));
                 }
 
-                // C?p nh?t gi· tr? th?c t? database
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
@@ -231,15 +220,13 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y th?ng kÍ theo qu˝: {ex.Message}", ex);
+                throw new Exception($"l·ªói khi l·∫•y th·ªëng k√™ theo qu√Ω: {ex.Message}", ex);
             }
 
             return list;
         }
 
-        /// <summary>
-        /// Th?ng kÍ s? l??t m??n theo kho?ng th?i gian
-        /// </summary>
+ 
         public static int GetThongKeTheoKhoang(DateTime tuNgay, DateTime denNgay)
         {
             try
@@ -261,7 +248,7 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi l?y th?ng kÍ theo kho?ng: {ex.Message}", ex);
+                throw new Exception($"L·ªói khi l·∫•y th·ªëng k√™ theo kho·∫£ng: {ex.Message}", ex);
             }
         }
     }
