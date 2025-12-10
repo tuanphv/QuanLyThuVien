@@ -46,7 +46,7 @@ namespace DAO
         }
 
         /// <summary>
-        /// L?y danh sách ??c gi? quá h?n (ch?a tr? sách)
+        /// L?y danh sách ??c gi? quá h?n (chưa trả sách)
         /// </summary>
         public static List<BaoCaoQuaHanDTO> GetBaoCaoQuaHan()
         {
@@ -66,9 +66,11 @@ namespace DAO
                     FROM CT_PHIEUMUON cp
                     INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                     INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
-                    WHERE cp.NgayTraThucTe IS NULL 
+                    LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
+                    WHERE pt.ID IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
-                    GROUP BY p.ID
+                      AND p.TrangThai = 1
+                    GROUP BY p.ID, dg.MaDocGia, dg.HoTen, p.MaPhieuMuon, p.NgayMuon, p.NgayTraDuKien
                     ORDER BY SoNgayQuaHan DESC";
 
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
@@ -230,8 +232,10 @@ namespace DAO
                             ) as TienPhatUocTinh
                         FROM CT_PHIEUMUON cp
                         INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-                        WHERE cp.NgayTraThucTe IS NULL 
+                        LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
+                        WHERE pt.ID IS NULL 
                           AND p.NgayTraDuKien < CURDATE()
+                          AND p.TrangThai = 1
                         GROUP BY p.IDDocGia
                     ) sach_qh ON dg.ID = sach_qh.IDDocGia
                     WHERE dg.TongNoHienTai > 0 OR COALESCE(sach_qh.SoSachQuaHan, 0) > 0
@@ -286,9 +290,11 @@ namespace DAO
                     INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
                     INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                     INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
+                    LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
                     WHERE dg.MaDocGia = @MaDocGia
-                      AND cp.NgayTraThucTe IS NULL 
+                      AND pt.ID IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
+                      AND p.TrangThai = 1
                     ORDER BY p.NgayTraDuKien ASC";
 
                 var param = new MySqlParameter("@MaDocGia", maDocGia);
@@ -313,6 +319,242 @@ namespace DAO
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi lấy chi tiết sách quá hạn: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy Top N sách mượn nhiều nhất theo khoảng thời gian
+        /// </summary>
+        public static List<BaoCaoTopSachDTO> GetTopSachMuonNhieuTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
+        {
+            var list = new List<BaoCaoTopSachDTO>();
+
+            try
+            {
+                string whereClause = "";
+                List<MySqlParameter> parameters = new List<MySqlParameter>();
+                
+                if (tuNgay.HasValue && denNgay.HasValue)
+                {
+                    whereClause = "WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay";
+                    parameters.Add(new MySqlParameter("@TuNgay", tuNgay.Value.Date));
+                    parameters.Add(new MySqlParameter("@DenNgay", denNgay.Value.Date.AddDays(1).AddSeconds(-1)));
+                }
+                
+                parameters.Add(new MySqlParameter("@Top", top));
+
+                string sql = $@"
+                    SELECT 
+                        ts.MaTuaSach,
+                        ts.TenTuaSach,
+                        GROUP_CONCAT(DISTINCT tl.TenTheLoai SEPARATOR ', ') as TheLoai,
+                        COUNT(cp.IDPhieuMuon) as SoLuotMuon,
+                        SUM(s.SoLuongConLai) as SoLuongHienCo
+                    FROM CT_PHIEUMUON cp
+                    INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                    INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
+                    INNER JOIN SACH s ON cs.IDSach = s.ID
+                    INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                    LEFT JOIN CT_THELOAI ctl ON ts.ID = ctl.IDTuaSach
+                    LEFT JOIN THELOAI tl ON ctl.IDTheLoai = tl.ID
+                    {whereClause}
+                    GROUP BY ts.ID, ts.MaTuaSach, ts.TenTuaSach
+                    ORDER BY SoLuotMuon DESC
+                    LIMIT @Top";
+
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql, parameters.ToArray());
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    int stt = 1;
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new BaoCaoTopSachDTO(
+                            stt++,
+                            row["MaTuaSach"]?.ToString() ?? "",
+                            row["TenTuaSach"]?.ToString() ?? "",
+                            row["TheLoai"]?.ToString() ?? "N/A",
+                            row["SoLuotMuon"] != DBNull.Value ? Convert.ToInt32(row["SoLuotMuon"]) : 0,
+                            row["SoLuongHienCo"] != DBNull.Value ? Convert.ToInt32(row["SoLuongHienCo"]) : 0
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy top sách theo khoảng: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy Top N độc giả tích cực theo khoảng thời gian
+        /// </summary>
+        public static List<BaoCaoTopDocGiaDTO> GetTopDocGiaTichCucTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
+        {
+            var list = new List<BaoCaoTopDocGiaDTO>();
+
+            try
+            {
+                string whereClause = "";
+                List<MySqlParameter> parameters = new List<MySqlParameter>();
+                
+                if (tuNgay.HasValue && denNgay.HasValue)
+                {
+                    whereClause = "WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay";
+                    parameters.Add(new MySqlParameter("@TuNgay", tuNgay.Value.Date));
+                    parameters.Add(new MySqlParameter("@DenNgay", denNgay.Value.Date.AddDays(1).AddSeconds(-1)));
+                }
+                
+                parameters.Add(new MySqlParameter("@Top", top));
+
+                string sql = $@"
+                    SELECT 
+                        dg.MaDocGia,
+                        dg.HoTen,
+                        COUNT(cp.IDPhieuMuon) as SoLuotMuon,
+                        dg.TongNoHienTai,
+                        dg.NgayLapThe
+                    FROM CT_PHIEUMUON cp
+                    INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                    INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
+                    {whereClause}
+                    GROUP BY dg.ID, dg.MaDocGia, dg.HoTen, dg.TongNoHienTai, dg.NgayLapThe
+                    ORDER BY SoLuotMuon DESC
+                    LIMIT @Top";
+
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql, parameters.ToArray());
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    int stt = 1;
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new BaoCaoTopDocGiaDTO(
+                            stt++,
+                            row["MaDocGia"]?.ToString() ?? "",
+                            row["HoTen"]?.ToString() ?? "",
+                            row["SoLuotMuon"] != DBNull.Value ? Convert.ToInt32(row["SoLuotMuon"]) : 0,
+                            row["TongNoHienTai"] != DBNull.Value ? Convert.ToInt32(row["TongNoHienTai"]) : 0,
+                            row["NgayLapThe"] != DBNull.Value ? Convert.ToDateTime(row["NgayLapThe"]) : DateTime.MinValue
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy top độc giả theo khoảng: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy thống kê tình trạng sách (tổng hợp theo tựa sách)
+        /// </summary>
+        public static List<ThongKeSachDTO> GetThongKeSach()
+        {
+            var list = new List<ThongKeSachDTO>();
+
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        ts.ID,
+                        ts.TenTuaSach,
+                        SUM(s.SoLuongTong) as TongSoLuong,
+                        SUM(s.SoLuongTong - s.SoLuongConLai) as DangMuon,
+                        SUM(s.SoLuongConLai) as ConLai,
+                        CASE 
+                            WHEN SUM(s.SoLuongTong) > 0 
+                            THEN ROUND((SUM(s.SoLuongTong - s.SoLuongConLai) * 100.0) / SUM(s.SoLuongTong), 1)
+                            ELSE 0 
+                        END as TyLeMuon
+                    FROM SACH s
+                    INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                    WHERE s.DaAn = 0 AND ts.DaAn = 0
+                    GROUP BY ts.ID, ts.TenTuaSach
+                    ORDER BY DangMuon DESC, TongSoLuong DESC";
+
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new ThongKeSachDTO(
+                            row["ID"] != DBNull.Value ? Convert.ToInt32(row["ID"]) : 0,
+                            row["TenTuaSach"]?.ToString() ?? "",
+                            row["TongSoLuong"] != DBNull.Value ? Convert.ToInt32(row["TongSoLuong"]) : 0,
+                            row["DangMuon"] != DBNull.Value ? Convert.ToInt32(row["DangMuon"]) : 0,
+                            row["ConLai"] != DBNull.Value ? Convert.ToInt32(row["ConLai"]) : 0,
+                            row["TyLeMuon"] != DBNull.Value ? Convert.ToDouble(row["TyLeMuon"]) : 0
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy thống kê sách: {ex.Message}", ex);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Lấy thống kê mượn/trả theo ngày trong khoảng thời gian
+        /// </summary>
+        public static List<ThongKeMuonTraTheoNgayDTO> GetThongKeMuonTraTheoNgay(DateTime tuNgay, DateTime denNgay)
+        {
+            var list = new List<ThongKeMuonTraTheoNgayDTO>();
+
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        DATE(p.NgayMuon) as Ngay,
+                        COUNT(DISTINCT p.ID) as SoPhieuMuon,
+                        COUNT(cp.IDCuonSach) as TongSachMuon,
+                        COUNT(DISTINCT CASE WHEN p.TrangThai = 0 THEN p.ID END) as SoPhieuDaTra,
+                        COUNT(DISTINCT CASE WHEN p.TrangThai = 1 THEN p.ID END) as SoPhieuChuaTra
+                    FROM PHIEUMUON p
+                    INNER JOIN CT_PHIEUMUON cp ON p.ID = cp.IDPhieuMuon
+                    WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay
+                    GROUP BY DATE(p.NgayMuon)
+                    ORDER BY Ngay ASC";
+
+                var parameters = new MySqlParameter[]
+                {
+                    new MySqlParameter("@TuNgay", tuNgay.Date),
+                    new MySqlParameter("@DenNgay", denNgay.Date.AddDays(1).AddSeconds(-1))
+                };
+
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql, parameters);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var item = new ThongKeMuonTraTheoNgayDTO(
+                            row["Ngay"] != DBNull.Value ? Convert.ToDateTime(row["Ngay"]) : DateTime.MinValue,
+                            row["SoPhieuMuon"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuMuon"]) : 0,
+                            row["TongSachMuon"] != DBNull.Value ? Convert.ToInt32(row["TongSachMuon"]) : 0,
+                            row["SoPhieuDaTra"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuDaTra"]) : 0,
+                            row["SoPhieuChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuChuaTra"]) : 0
+                        );
+                        list.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi lấy thống kê mượn/trả theo ngày: {ex.Message}", ex);
             }
 
             return list;

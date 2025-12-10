@@ -45,6 +45,7 @@
             MaSach = new DataGridViewTextBoxColumn();
             TenTuaSach = new DataGridViewTextBoxColumn();
             TenNXB = new DataGridViewTextBoxColumn();
+            NamXB = new DataGridViewTextBoxColumn();
             DonGia = new DataGridViewTextBoxColumn();
             SoLuongTong = new DataGridViewTextBoxColumn();
             SoLuongConLai = new DataGridViewTextBoxColumn();
@@ -60,17 +61,18 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1866, 93);
+            panel1.Size = new Size(1633, 70);
             panel1.TabIndex = 4;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(23, 25);
+            label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(225, 46);
+            label1.Size = new Size(180, 37);
             label1.TabIndex = 0;
             label1.Text = "Quản lý Sách";
             // 
@@ -85,14 +87,15 @@
             roundPanel1.Controls.Add(btnReload);
             roundPanel1.Controls.Add(panel4);
             roundPanel1.Controls.Add(dgvSach);
-            roundPanel1.Location = new Point(23, 120);
-            roundPanel1.Margin = new Padding(23, 27, 23, 27);
+            roundPanel1.Location = new Point(20, 90);
+            roundPanel1.Margin = new Padding(20);
             roundPanel1.Name = "roundPanel1";
-            roundPanel1.Size = new Size(1821, 859);
+            roundPanel1.Size = new Size(1593, 644);
             roundPanel1.TabIndex = 5;
             // 
             // btnReload
             // 
+            btnReload.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnReload.BackColor = Color.LightSeaGreen;
             btnReload.FlatAppearance.BorderSize = 0;
             btnReload.FlatStyle = FlatStyle.Flat;
@@ -100,9 +103,10 @@
             btnReload.ForeColor = Color.White;
             btnReload.Image = (Image)resources.GetObject("btnReload.Image");
             btnReload.ImageAlign = ContentAlignment.MiddleLeft;
-            btnReload.Location = new Point(1246, 29);
+            btnReload.Location = new Point(1485, 22);
+            btnReload.Margin = new Padding(3, 2, 3, 2);
             btnReload.Name = "btnReload";
-            btnReload.Size = new Size(100, 37);
+            btnReload.Size = new Size(88, 28);
             btnReload.TabIndex = 22;
             btnReload.Text = "Tải lại";
             btnReload.TextAlign = ContentAlignment.MiddleRight;
@@ -111,14 +115,13 @@
             // 
             // panel4
             // 
-            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel4.BorderStyle = BorderStyle.FixedSingle;
             panel4.Controls.Add(button3);
             panel4.Controls.Add(txtTimKiem);
-            panel4.Location = new Point(471, 27);
-            panel4.Margin = new Padding(23, 27, 23, 27);
+            panel4.Location = new Point(20, 20);
+            panel4.Margin = new Padding(20);
             panel4.Name = "panel4";
-            panel4.Size = new Size(465, 39);
+            panel4.Size = new Size(407, 30);
             panel4.TabIndex = 21;
             // 
             // button3
@@ -131,11 +134,11 @@
             button3.ForeColor = Color.White;
             button3.Image = Properties.Resources.search;
             button3.ImageAlign = ContentAlignment.MiddleLeft;
-            button3.Location = new Point(381, 0);
-            button3.Margin = new Padding(0, 27, 23, 0);
+            button3.Location = new Point(333, 0);
+            button3.Margin = new Padding(0, 20, 20, 0);
             button3.Name = "button3";
-            button3.Padding = new Padding(2, 3, 2, 3);
-            button3.Size = new Size(82, 37);
+            button3.Padding = new Padding(2);
+            button3.Size = new Size(72, 28);
             button3.TabIndex = 1;
             button3.Text = "  Tìm";
             button3.TextAlign = ContentAlignment.MiddleLeft;
@@ -147,10 +150,11 @@
             txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtTimKiem.BorderStyle = BorderStyle.None;
             txtTimKiem.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtTimKiem.Location = new Point(6, 7);
-            txtTimKiem.Margin = new Padding(6, 7, 6, 7);
+            txtTimKiem.Location = new Point(5, 5);
+            txtTimKiem.Margin = new Padding(5);
             txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.Size = new Size(369, 22);
+            txtTimKiem.PlaceholderText = "Tìm theo mã sách, tên tựa sách, nhà xuất bản";
+            txtTimKiem.Size = new Size(323, 18);
             txtTimKiem.TabIndex = 0;
             txtTimKiem.TextChanged += txtTimKiem_TextChanged;
             // 
@@ -175,7 +179,7 @@
             dgvSach.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvSach.ColumnHeadersHeight = 40;
             dgvSach.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvSach.Columns.AddRange(new DataGridViewColumn[] { MaSach, TenTuaSach, TenNXB, DonGia, SoLuongTong, SoLuongConLai });
+            dgvSach.Columns.AddRange(new DataGridViewColumn[] { MaSach, TenTuaSach, TenNXB, NamXB, DonGia, SoLuongTong, SoLuongConLai });
             dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = SystemColors.Window;
             dataGridViewCellStyle5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -187,8 +191,8 @@
             dgvSach.DefaultCellStyle = dataGridViewCellStyle5;
             dgvSach.EnableHeadersVisualStyles = false;
             dgvSach.GridColor = SystemColors.ControlLight;
-            dgvSach.Location = new Point(23, 92);
-            dgvSach.Margin = new Padding(23, 27, 23, 27);
+            dgvSach.Location = new Point(20, 69);
+            dgvSach.Margin = new Padding(20);
             dgvSach.Name = "dgvSach";
             dgvSach.RowHeadersVisible = false;
             dgvSach.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
@@ -204,14 +208,14 @@
             dgvSach.ShowReturnButton = false;
             dgvSach.ShowRowErrors = false;
             dgvSach.ShowViewButton = true;
-            dgvSach.Size = new Size(1775, 740);
+            dgvSach.Size = new Size(1553, 555);
             dgvSach.TabIndex = 17;
             // 
             // MaSach
             // 
             MaSach.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             MaSach.DataPropertyName = "MaSach";
-            MaSach.HeaderText = "Mã lô";
+            MaSach.HeaderText = "Mã sách";
             MaSach.MinimumWidth = 6;
             MaSach.Name = "MaSach";
             // 
@@ -229,6 +233,12 @@
             TenNXB.HeaderText = "Nhà XB";
             TenNXB.MinimumWidth = 6;
             TenNXB.Name = "TenNXB";
+            // 
+            // NamXB
+            // 
+            NamXB.DataPropertyName = "NamXB";
+            NamXB.HeaderText = "Năm XB";
+            NamXB.Name = "NamXB";
             // 
             // DonGia
             // 
@@ -260,13 +270,14 @@
             // 
             // UCSach
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             Controls.Add(roundPanel1);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "UCSach";
-            Size = new Size(1866, 1005);
+            Size = new Size(1633, 754);
             Load += UCSach_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -286,12 +297,13 @@
         private Panel panel4;
         private Button button3;
         private TextBox txtTimKiem;
+        private Button btnReload;
         private DataGridViewTextBoxColumn MaSach;
         private DataGridViewTextBoxColumn TenTuaSach;
         private DataGridViewTextBoxColumn TenNXB;
+        private DataGridViewTextBoxColumn NamXB;
         private DataGridViewTextBoxColumn DonGia;
         private DataGridViewTextBoxColumn SoLuongTong;
         private DataGridViewTextBoxColumn SoLuongConLai;
-        private Button btnReload;
     }
 }

@@ -135,4 +135,54 @@ namespace DTO
             NgayLapThe = ngayLapThe;
         }
     }
+
+    /// <summary>
+    /// DTO cho th?ng kê tình tr?ng sách (t?ng h?p theo t?a sách)
+    /// </summary>
+    public class ThongKeSachDTO
+    {
+        public int IDTuaSach { get; set; }
+        public string TenSach { get; set; }
+        public int TongSoLuong { get; set; }
+        public int DangMuon { get; set; }
+        public int ConLai { get; set; }
+        public double TyLeMuon { get; set; }
+
+        public ThongKeSachDTO() { }
+
+        public ThongKeSachDTO(int idTuaSach, string tenSach, int tongSoLuong, 
+            int dangMuon, int conLai, double tyLeMuon)
+        {
+            IDTuaSach = idTuaSach;
+            TenSach = tenSach;
+            TongSoLuong = tongSoLuong;
+            DangMuon = dangMuon;
+            ConLai = conLai;
+            TyLeMuon = tyLeMuon;
+        }
+    }
+
+    /// <summary>
+    /// DTO cho th?ng kê m??n/tr? theo ngày
+    /// </summary>
+    public class ThongKeMuonTraTheoNgayDTO
+    {
+        public DateTime Ngay { get; set; }
+        public int SoPhieuMuon { get; set; }
+        public int TongSachMuon { get; set; }
+        public int SoPhieuDaTra { get; set; }
+        public int SoPhieuChuaTra { get; set; }
+
+        public ThongKeMuonTraTheoNgayDTO() { }
+
+        public ThongKeMuonTraTheoNgayDTO(DateTime ngay, int soPhieuMuon, 
+            int tongSachMuon, int soPhieuDaTra, int soPhieuChuaTra)
+        {
+            Ngay = ngay;
+            SoPhieuMuon = soPhieuMuon;
+            TongSachMuon = tongSachMuon;
+            SoPhieuDaTra = soPhieuDaTra;
+            SoPhieuChuaTra = soPhieuChuaTra;
+        }
+    }
 }
