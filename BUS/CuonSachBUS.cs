@@ -18,6 +18,24 @@ namespace BUS
             // Nhưng với quyền Admin, ta cứ cho phép cập nhật.
             return CuonSachDAO.UpdateTinhTrang(idCuonSach, tinhTrangMoi);
         }
+
+        public static string KiemTraMaCuonSach(int idSach, int maDau, int maCuoi)
+        {
+            for (int i = maDau; i <= maCuoi; i++)
+            {
+                string maCuonSach = $"S{ idSach.ToString().PadLeft(4, '0') }-{ i.ToString().PadLeft(4, '0') }";
+                if (CuonSachDAO.TonTaiMaCuonSach(maCuonSach))
+                {
+                    return maCuonSach; // Tồn tại mã cuốn sách trùng
+                }
+            }
+            return string.Empty; // Không có mã cuốn sách trùng
+        }
+
+        public static bool ThemCuonSach(CuonSachDTO dto)
+        {
+            return CuonSachDAO.AddCuonSach(dto);
+        }
     }
 
 }

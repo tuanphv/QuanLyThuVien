@@ -13,16 +13,12 @@ namespace BUS
 
         public static int Add(SachDTO sach)
         {
-            // 1. Kiểm tra quy định Năm Xuất Bản
+            // Kiểm tra quy định Năm Xuất Bản
             if (!ThamSoBUS.KiemTraNamXuatBan(sach.NamXB))
             {
                 ThamSoDTO qd = ThamSoBUS.GetQuyDinh();
                 throw new Exception($"Chỉ nhận sách xuất bản trong vòng {qd.KhoangCachXuatBan} năm trở lại đây.");
             }
-
-            // 2. Kiểm tra giá tiền
-            if (sach.DonGia <= 0) throw new Exception("Đơn giá phải lớn hơn 0.");
-            if (sach.SoLuongTong <= 0) throw new Exception("Số lượng nhập phải lớn hơn 0.");
 
             int idSachNew = SachDAO.Add(sach);
             if (idSachNew == -1) throw new Exception("Thêm sách thất bại.");

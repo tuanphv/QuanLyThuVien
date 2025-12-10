@@ -169,7 +169,7 @@ namespace GUI
                 };
             }
 
-            //btnDashboard.PerformClick();
+            btnDashboard.PerformClick();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

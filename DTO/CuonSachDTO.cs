@@ -18,6 +18,14 @@
             }
         }
 
+        public CuonSachDTO()
+        {
+            ID = 0;
+            MaCuonSach = string.Empty;
+            IDSach = 0;
+            TinhTrang = 1; // Mặc định là Sẵn sàng
+        }
+
         public CuonSachDTO(int id, string maCuonSach, int idSach, int tinhTrang)
         {
             ID = id;

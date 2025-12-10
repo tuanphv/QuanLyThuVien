@@ -53,14 +53,11 @@
             panel1 = new Panel();
             sidebarTransition = new System.Windows.Forms.Timer(components);
             pnlMainContent = new Panel();
-            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             pnlSidebar.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             panel1.SuspendLayout();
-            pnlMainContent.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -161,7 +158,7 @@
             btnReportDebt.Size = new Size(280, 40);
             btnReportDebt.TabIndex = 3;
             btnReportDebt.Tag = "subItem";
-            btnReportDebt.Text = "    Báo cáo Nợ && Quá hạn";
+            btnReportDebt.Text = "    Báo cáo - Thống kê";
             btnReportDebt.TextAlign = ContentAlignment.MiddleLeft;
             btnReportDebt.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnReportDebt.UseVisualStyleBackColor = false;
@@ -224,7 +221,7 @@
             btnDashboard.Padding = new Padding(10, 0, 0, 0);
             btnDashboard.Size = new Size(280, 40);
             btnDashboard.TabIndex = 1;
-            btnDashboard.Text = "    Báo cáo - Thống kê";
+            btnDashboard.Text = "    Tổng quan";
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
             btnDashboard.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnDashboard.UseVisualStyleBackColor = false;
@@ -514,23 +511,11 @@
             pnlMainContent.BackColor = SystemColors.Window;
             pnlMainContent.BackgroundImage = Properties.Resources.loading;
             pnlMainContent.BackgroundImageLayout = ImageLayout.Center;
-            pnlMainContent.Controls.Add(pictureBox2);
             pnlMainContent.Dock = DockStyle.Fill;
             pnlMainContent.Location = new Point(280, 0);
             pnlMainContent.Name = "pnlMainContent";
             pnlMainContent.Size = new Size(1260, 791);
             pnlMainContent.TabIndex = 1;
-            // 
-            // pictureBox2
-            // 
-            pictureBox2.Dock = DockStyle.Fill;
-            pictureBox2.Image = Properties.Resources.home_page;
-            pictureBox2.Location = new Point(0, 0);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(1260, 791);
-            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox2.TabIndex = 0;
-            pictureBox2.TabStop = false;
             // 
             // FrmMain
             // 
@@ -551,8 +536,6 @@
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel2.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            pnlMainContent.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
         }
 
@@ -580,6 +563,5 @@
         private Button btnDashboard;
         private FlowLayoutPanel flowLayoutPanel1;
         private Panel pnlMainContent;
-        private PictureBox pictureBox2;
     }
 }

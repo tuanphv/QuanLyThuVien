@@ -5,6 +5,12 @@ namespace GUI.NhapSach
 {
     public partial class FrmAddPhieuNhap : Form
     {
+        private class Range
+        {
+            public int Start { get; set; }
+            public int End { get; set; }
+        }
+
         private class ChiTietNhapItem
         {
             public int IDTuaSach { get; set; }
@@ -15,6 +21,7 @@ namespace GUI.NhapSach
             public int SoLuong { get; set; }
             public int DonGia { get; set; }
             public int ThanhTien => SoLuong * DonGia;
+            public List<Range> MaCuonSach { get; set; } = new List<Range>();
         }
 
         private List<ChiTietNhapItem> chiTietList = new List<ChiTietNhapItem>();
@@ -90,13 +97,27 @@ namespace GUI.NhapSach
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
                 var tuaSach = cbTuaSach.SelectedItem as TuaSachDTO;
                 var nhaXuatBan = cbNhaXuatBan.SelectedItem as NhaXuatBanDTO;
 
                 if (tuaSach == null || nhaXuatBan == null) return;
 
-                // Ki?m tra xem ?ã có trong danh sách ch?a
+                // Kiểm tra mã cuốn sách đã tồn tại chưa
+                var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(tuaSach.ID, nhaXuatBan.ID, (int)nudNamXB.Value);
+
+                if (sach != null)
+                {
+
+                    string maCS = CuonSachBUS.KiemTraMaCuonSach(sach.ID, (int)nudMaDau.Value, (int)nudMaCuoi.Value);
+                    if (maCS != string.Empty)
+                    {
+                        MessageBox.Show($"Mã cuốn sách {maCS} đã tồn tại trong hệ thống. Vui lòng kiểm tra lại.", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                // Kiểm tra xem đã có trong danh sách chưa
                 var existing = chiTietList.FirstOrDefault(x =>
                     x.IDTuaSach == tuaSach.ID &&
                     x.IDNhaXuatBan == nhaXuatBan.ID &&
@@ -104,24 +125,42 @@ namespace GUI.NhapSach
 
                 if (existing != null)
                 {
-                    MessageBox.Show("Sách với thông tin này đã có trong danh sách nhập.", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // Nếu đã có
+                    // -> Cập nhật số lượng và mã sách
+                    foreach (var range in existing.MaCuonSach)
+                    {
+                        if (range.End >= (int)nudMaDau.Value && range.Start <= (int)nudMaCuoi.Value)
+                        {
+                            MessageBox.Show("Dãy mã cuốn sách bị trùng với dãy đã thêm trước đó.", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                    existing.SoLuong += (int)nudSoLuong.Value;
                 }
-
-                // Thêm vào danh sách
-                var item = new ChiTietNhapItem
+                else
                 {
-                    IDTuaSach = tuaSach.ID,
-                    TenTuaSach = tuaSach.TenTuaSach,
-                    IDNhaXuatBan = nhaXuatBan.ID,
-                    TenNhaXuatBan = nhaXuatBan.TenNXB,
-                    NamXB = (int)nudNamXB.Value,
-                    SoLuong = (int)nudSoLuong.Value,
-                    DonGia = (int)nudDonGia.Value
-                };
-
-                chiTietList.Add(item);
+                    // Thêm vào danh sách
+                    var item = new ChiTietNhapItem
+                    {
+                        IDTuaSach = tuaSach.ID,
+                        TenTuaSach = tuaSach.TenTuaSach,
+                        IDNhaXuatBan = nhaXuatBan.ID,
+                        TenNhaXuatBan = nhaXuatBan.TenNXB,
+                        NamXB = (int)nudNamXB.Value,
+                        SoLuong = (int)nudSoLuong.Value,
+                        DonGia = (int)nudDonGia.Value,
+                        MaCuonSach = new List<Range>
+                        {
+                            new Range
+                            {
+                                Start = (int)nudMaDau.Value,
+                                End = (int)nudMaCuoi.Value
+                            }
+                        }
+                    };
+                    chiTietList.Add(item);
+                }
                 RefreshDataGridView();
             }
             catch (Exception ex)
@@ -209,8 +248,8 @@ namespace GUI.NhapSach
                             IDTuaSach = item.IDTuaSach,
                             IDNhaXuatBan = item.IDNhaXuatBan,
                             NamXB = item.NamXB,
-                            SoLuongTong = item.SoLuong,
-                            SoLuongConLai = item.SoLuong,
+                            SoLuongTong = 0,
+                            SoLuongConLai = 0,
                             DonGia = item.DonGia
                         };
                         idSach = SachBUS.Add(sachMoi);
@@ -220,13 +259,28 @@ namespace GUI.NhapSach
                         idSach = sach.ID;
                     }
 
-                    // Thêm vào chi ti?t phi?u nh?p
+                    foreach (var range in item.MaCuonSach)
+                    {
+                        // Tạo danh sách mã cuốn sách từ dãy
+                        for (int ma = range.Start; ma <= range.End; ma++)
+                        {
+                            // Thêm mã cuốn sách vào danh sách
+                            var cuonSach = new CuonSachDTO
+                            {
+                                IDSach = idSach,
+                                MaCuonSach = $"S{idSach.ToString().PadLeft(4, '0')}-{ma.ToString().PadLeft(4, '0')}"
+                            };
+                            CuonSachBUS.ThemCuonSach(cuonSach);
+                        }
+                    }
+
+                    // Thêm vào chi tiết phiếu nhập
                     chiTiet.Add(new CT_PhieuNhapDTO
                     {
                         IDSach = idSach,
                         SoLuongNhap = item.SoLuong,
                         DonGiaNhap = item.DonGia,
-                        ThanhTien = item.ThanhTien
+                        ThanhTien = item.ThanhTien,
                     });
                 }
 
@@ -240,5 +294,58 @@ namespace GUI.NhapSach
                 this.DialogResult = DialogResult.None;
             }
         }
+
+        private void nudSoLuong_ValueChanged(object sender, EventArgs e)
+        {
+            nudMaCuoi.Value = nudSoLuong.Value + nudMaDau.Value - 1;
+        }
+
+        private void nudMaDau_ValueChanged(object sender, EventArgs e)
+        {
+            if (nudMaDau.Value > nudMaCuoi.Value)
+            {
+                nudMaCuoi.Value = nudMaDau.Value;
+            }
+            nudSoLuong.Value = nudMaCuoi.Value - nudMaDau.Value + 1;
+        }
+
+        private void nudMaCuoi_ValueChanged(object sender, EventArgs e)
+        {
+            if (nudMaDau.Value > nudMaCuoi.Value)
+            {
+                nudMaDau.Value = nudMaCuoi.Value;
+            }
+            nudSoLuong.Value = nudMaCuoi.Value - nudMaDau.Value + 1;
+        }
+
+        public List<int> ParseRanges(string input)
+        {
+            var result = new List<int>();
+            var parts = input.Split(',');
+
+            foreach (var part in parts)
+            {
+                var range = part.Trim();
+
+                if (range.Contains("-"))
+                {
+                    var bounds = range.Split('-');
+                    int start = int.Parse(bounds[0]);
+                    int end = int.Parse(bounds[1]);
+
+                    for (int i = start; i <= end; i++)
+                    {
+                        result.Add(i);
+                    }
+                }
+                else
+                {
+                    result.Add(int.Parse(range));
+                }
+            }
+
+            return result;
+        }
+
     }
 }

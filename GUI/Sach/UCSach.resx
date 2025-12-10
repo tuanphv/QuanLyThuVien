@@ -121,15 +121,15 @@
   <data name="btnReload.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        qwAAAKsB1E2SqwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAG+SURBVEhLrdY9
-        yI1hGAfwn8/XR0oGBqUkgyjTuxBlML6SkgGFkbLIKqOPmETZWFjYxEZmpTBgEcokCwP5OLof93u6zvU8
-        zofX8B/O//p/3M9zn/s+R6/XMw6wDg+xIs+GoUV0AfvwCeXDyjwfhhYxMGQJrtbgWfyfAmzCsxRe8AF3
-        cArbMJW9Iwvqyt92hHfhDaZzxtCCWrIWjzoCv3dw33AyZwwtqCXzcQY/QtgabMdpvExFt1oZmegCduB9
-        DelvMpbheio5MHFBDVtVVojlHbMToeAdlk5cMAp4HErO9vks/FdgS/gCfMHChs/CuSCdm60Nl0VzAe6G
-        goMNF4a7sTebJgEuhoIjDVcHO8NgJhvHBa6FnMOxYCYM7mfjuMCrkLMxFizCxzoop3Z1No8C1ofw130+
-        CK4EwfkcMAyYhwfBf7mrYDoICg7loL+hXHTBV85A83oGCqrwXBB+xbFy4eXAoJ/CJfwKvqMDmmQoj3oz
-        Pclz7McGLK6azTje8YN0u7WIFvFnw+8l4yzKSj938D/LvhVvKy8ToWgPnnaEZZTbc1f2jyyoJeV1lH8U
-        N8r5wJMa+AIX6gFdkH0RvwExBctAQf4eNwAAAABJRU5ErkJggg==
+        qQAAAKkBq7NRIgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHSSURBVEhLrdYx
+        SNRhGMfxUzu1RJAGGwJBwiEUmlyUggbHEwnCQYVsLHARV2nMxKYoaKvlXGyLc0uchaAc1EVKaIoWG4zS
+        8/u89z5/nnvvOT07H/gM/9/zvM//vPN/miuXyw2h+vAJ3V6/HjdMUQ/wC3LR483U44aK6sTruFhdzg2o
+        2/gSl1o/sIZ5jKDDO6/8sPLKv8Eurmcfw94e4YaCuokN2GXir5P9wZy7xwsV1YpF/IMuu4FRLGAnZqpY
+        syMNPNRdHMQl2YdMXcPbmKvJqrP24izUdRTR5fSeQm/wHVeznh1sBrUZbyCeZbkdagY1BP0F+I0rIU8H
+        m0HZ5+ZOyNKhZlAfzA2mQmaaY5jQ6/9BLUNv8ChksXHPNAr20EVQb8yemZDFRsE0SvbQRVC7Zs9AyGIj
+        j5+xIU9trz3YCKo/nhd7WW4GXpmBJc0bQbVgPZ4VL7OeGRo2A2Jae+eh5sw5eQbC2xN6yeDzOCSO8Bit
+        dsaiOrCCE+i52aqZqovKj/o+DqqveIhbaIfMDOIJ0j9Iq3Zf2FkTVD7wj/FASl7pYZKJYywhX7MvDRQ1
+        js+wizzy7Xnf2yHcUFHydsh/FO9QwhZk4TZeQB7QNu9sRTl3CjEFy0C+BqfFAAAAAElFTkSuQmCC
 </value>
   </data>
   <metadata name="MaSach.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -139,6 +139,9 @@
     <value>True</value>
   </metadata>
   <metadata name="TenNXB.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="NamXB.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="DonGia.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
