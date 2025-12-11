@@ -76,52 +76,48 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
 
         private void EditButtonClicked(object? sender, int index)
         {
-            if (index < 0 || index >= list.Count) return;
+            if (index < 0) return;
 
-            // Lấy DTO từ BindingList
-            TacGiaDTO selectedTacGia = list[index];
+            // [QUAN TRỌNG] Lấy object từ dòng hiện tại trên Grid (đã lọc) chứ không lấy từ list gốc
+            var selectedTacGia = dgvTacGia.Rows[index].DataBoundItem as TacGiaDTO;
+            if (selectedTacGia == null) return;
 
-            // Mở Form ở chế độ Sửa
             FrmAddEditTacGia frm = new FrmAddEditTacGia();
             frm.Text = "Chỉnh sửa Tác giả";
-            frm.TacGia = selectedTacGia; // Truyền DTO vào Form
+            frm.TacGia = selectedTacGia;
 
             var result = frm.ShowDialog();
-
-            // Nếu Form sửa trả về OK, cập nhật lại DTO trong BindingList
             if (result == DialogResult.OK)
-            {
-                list[index] = frm.TacGia; // DTO đã được cập nhật
+            {                
+                UCTacGia_Load(null, null);
             }
         }
 
         private void DeleteButtonClicked(object? sender, int index)
         {
-            if (index < 0 || index >= list.Count) return;
+            if (index < 0) return;
 
-            TacGiaDTO selectedTacGia = list[index];
+            // [QUAN TRỌNG] Lấy object từ dòng hiện tại
+            var selectedTacGia = dgvTacGia.Rows[index].DataBoundItem as TacGiaDTO;
+            if (selectedTacGia == null) return;
 
-            var confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa tác giả này?", "Xác nhận xóa",
-                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa tác giả: {selectedTacGia.TenTacGia}?",
+                                          "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
                 try
                 {
-                    // Gọi BUS để xóa
                     if (BUS.TacGiaBUS.Delete(selectedTacGia.MaTacGia))
                     {
-                        // Xóa khỏi BindingList, DataGridView tự cập nhật
-                        list.RemoveAt(index);
-                        MessageBox.Show("Xóa thành công.", "Thông báo",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // Load lại dữ liệu
+                        UCTacGia_Load(null, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Bắt lỗi nghiệp vụ (ví dụ: "Không thể xóa...")
-                    MessageBox.Show(ex.Message, "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -241,45 +237,49 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                 {
                     using (var workbook = new XLWorkbook(ofd.FileName))
                     {
-                        var worksheet = workbook.Worksheet(1); // Lấy sheet đầu tiên
-                        var rows = worksheet.RangeUsed().RowsUsed().Skip(1); // Bỏ qua dòng tiêu đề (dòng 1)
+                        var worksheet = workbook.Worksheet(1);
+                        var rows = worksheet.RangeUsed().RowsUsed().Skip(1); 
 
                         int countSuccess = 0;
-                        int countFail = 0;
+                        int countFail = 0; // Số dòng bị bỏ qua do trùng
 
                         foreach (var row in rows)
                         {
-                            // Đọc dữ liệu từ cột 2 (Tên Thể Loại). Cột 1 là Mã thì tự sinh nên ko cần đọc.
+                            // 1.Tên (Cột 2)
                             string tenTacGia = row.Cell(2).GetValue<string>().Trim();
-
                             if (string.IsNullOrEmpty(tenTacGia)) continue;
-                            int namSinh = 0; // Khai báo năm sinh mặc định là 0 cho file Excel
 
+                            // 2.Năm sinh (Cột 3) - [SỬA QUAN TRỌNG]
+                            int namSinh = 0;
+                            var cellNamSinh = row.Cell(3);
+                            if (!cellNamSinh.IsEmpty())
+                            {
+                                int.TryParse(cellNamSinh.GetValue<string>(), out namSinh);
+                            }
+
+                            // 3. Kiểm tra trùng
                             if (!DAO.TacGiaDAO.IsNameExist(tenTacGia, namSinh))
                             {
-                                // Tạo DTO mới
-                                TacGiaDTO newTG = new TacGiaDTO(tenTacGia, 0);
-
-                                // Gọi BUS để thêm vào DB (Hàm Add sẽ tự sinh Mã)
+                                TacGiaDTO newTG = new TacGiaDTO(tenTacGia, namSinh);
                                 BUS.TacGiaBUS.Add(newTG);
-
                                 countSuccess++;
                             }
                             else
                             {
-                                countFail++; // Bỏ qua vì trùng tên
+                                countFail++;
                             }
                         }
 
-                        // Load lại dữ liệu lên Grid
+                        // Load lại 
                         UCTacGia_Load(null, null);
 
-                        MessageBox.Show($"Đã nhập xong!\n- Thành công: {countSuccess}\n- Bỏ qua (trùng): {countFail}", "Kết quả");
+                        MessageBox.Show($"Nhập dữ liệu hoàn tất!\n- Thêm mới thành công: {countSuccess}\n- Bỏ qua (đã tồn tại): {countFail}",
+                            "Kết quả Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi khi đọc file: " + ex.Message, "Lỗi");
+                    MessageBox.Show("Lỗi khi đọc file Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
