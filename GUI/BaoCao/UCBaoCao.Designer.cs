@@ -59,12 +59,15 @@
             splitContainer1 = new SplitContainer();
             dgvTopSach = new DataGridView();
             panel5 = new Panel();
-            cboTimePeriod = new ComboBox();
+            btnRefreshTopSach = new Button();
+            cboTimePeriodSach = new ComboBox();
             label8 = new Label();
-            btnRefreshTop = new Button();
             label6 = new Label();
             dgvTopDocGia = new DataGridView();
             panel6 = new Panel();
+            btnRefreshTopDocGia = new Button();
+            cboTimePeriodDocGia = new ComboBox();
+            label9 = new Label();
             label7 = new Label();
             panel1.SuspendLayout();
             tabControl1.SuspendLayout();
@@ -386,6 +389,7 @@
             dtpDenNgay.Name = "dtpDenNgay";
             dtpDenNgay.Size = new Size(120, 25);
             dtpDenNgay.TabIndex = 5;
+            dtpDenNgay.ValueChanged += dtpDenNgay_ValueChanged;
             // 
             // label5
             // 
@@ -405,6 +409,7 @@
             dtpTuNgay.Name = "dtpTuNgay";
             dtpTuNgay.Size = new Size(120, 25);
             dtpTuNgay.TabIndex = 3;
+            dtpTuNgay.ValueChanged += dtpTuNgay_ValueChanged;
             // 
             // label4
             // 
@@ -445,6 +450,7 @@
             btnLoadThongKe.TabIndex = 0;
             btnLoadThongKe.Text = "Xem";
             btnLoadThongKe.UseVisualStyleBackColor = false;
+            btnLoadThongKe.Visible = false;
             btnLoadThongKe.Click += btnLoadThongKe_Click;
             // 
             // tabTopStatistics
@@ -503,8 +509,8 @@
             // 
             panel5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel5.BackColor = Color.White;
-            panel5.Controls.Add(btnRefreshTop);
-            panel5.Controls.Add(cboTimePeriod);
+            panel5.Controls.Add(btnRefreshTopSach);
+            panel5.Controls.Add(cboTimePeriodSach);
             panel5.Controls.Add(label8);
             panel5.Controls.Add(label6);
             panel5.Location = new Point(6, 6);
@@ -512,31 +518,31 @@
             panel5.Size = new Size(1567, 40);
             panel5.TabIndex = 0;
             // 
-            // btnRefreshTop
+            // btnRefreshTopSach
             // 
-            btnRefreshTop.BackColor = Color.RoyalBlue;
-            btnRefreshTop.FlatAppearance.BorderSize = 0;
-            btnRefreshTop.FlatStyle = FlatStyle.Flat;
-            btnRefreshTop.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            btnRefreshTop.ForeColor = Color.White;
-            btnRefreshTop.Location = new Point(580, 7);
-            btnRefreshTop.Name = "btnRefreshTop";
-            btnRefreshTop.Size = new Size(80, 26);
-            btnRefreshTop.TabIndex = 3;
-            btnRefreshTop.Text = "Xem";
-            btnRefreshTop.UseVisualStyleBackColor = false;
-            btnRefreshTop.Click += btnRefreshTop_Click;
+            btnRefreshTopSach.BackColor = Color.RoyalBlue;
+            btnRefreshTopSach.FlatAppearance.BorderSize = 0;
+            btnRefreshTopSach.FlatStyle = FlatStyle.Flat;
+            btnRefreshTopSach.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnRefreshTopSach.ForeColor = Color.White;
+            btnRefreshTopSach.Location = new Point(580, 7);
+            btnRefreshTopSach.Name = "btnRefreshTopSach";
+            btnRefreshTopSach.Size = new Size(80, 26);
+            btnRefreshTopSach.TabIndex = 3;
+            btnRefreshTopSach.Text = "Xem";
+            btnRefreshTopSach.UseVisualStyleBackColor = false;
+            btnRefreshTopSach.Click += btnRefreshTopSach_Click;
             // 
-            // cboTimePeriod
+            // cboTimePeriodSach
             // 
-            cboTimePeriod.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboTimePeriod.Font = new Font("Segoe UI", 10F);
-            cboTimePeriod.FormattingEnabled = true;
-            cboTimePeriod.Items.AddRange(new object[] { "Toàn thời gian", "Tuần này", "Tháng này", "7 ngày qua", "30 ngày qua" });
-            cboTimePeriod.Location = new Point(380, 8);
-            cboTimePeriod.Name = "cboTimePeriod";
-            cboTimePeriod.Size = new Size(180, 25);
-            cboTimePeriod.TabIndex = 2;
+            cboTimePeriodSach.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboTimePeriodSach.Font = new Font("Segoe UI", 10F);
+            cboTimePeriodSach.FormattingEnabled = true;
+            cboTimePeriodSach.Items.AddRange(new object[] { "Toàn thời gian", "7 ngày qua", "30 ngày qua" });
+            cboTimePeriodSach.Location = new Point(380, 8);
+            cboTimePeriodSach.Name = "cboTimePeriodSach";
+            cboTimePeriodSach.Size = new Size(180, 25);
+            cboTimePeriodSach.TabIndex = 2;
             // 
             // label8
             // 
@@ -583,11 +589,50 @@
             // 
             panel6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel6.BackColor = Color.White;
+            panel6.Controls.Add(btnRefreshTopDocGia);
+            panel6.Controls.Add(cboTimePeriodDocGia);
+            panel6.Controls.Add(label9);
             panel6.Controls.Add(label7);
             panel6.Location = new Point(6, 6);
             panel6.Name = "panel6";
             panel6.Size = new Size(1567, 40);
             panel6.TabIndex = 0;
+            // 
+            // btnRefreshTopDocGia
+            // 
+            btnRefreshTopDocGia.BackColor = Color.RoyalBlue;
+            btnRefreshTopDocGia.FlatAppearance.BorderSize = 0;
+            btnRefreshTopDocGia.FlatStyle = FlatStyle.Flat;
+            btnRefreshTopDocGia.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            btnRefreshTopDocGia.ForeColor = Color.White;
+            btnRefreshTopDocGia.Location = new Point(580, 7);
+            btnRefreshTopDocGia.Name = "btnRefreshTopDocGia";
+            btnRefreshTopDocGia.Size = new Size(80, 26);
+            btnRefreshTopDocGia.TabIndex = 3;
+            btnRefreshTopDocGia.Text = "Xem";
+            btnRefreshTopDocGia.UseVisualStyleBackColor = false;
+            btnRefreshTopDocGia.Click += btnRefreshTopDocGia_Click;
+            // 
+            // cboTimePeriodDocGia
+            // 
+            cboTimePeriodDocGia.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboTimePeriodDocGia.Font = new Font("Segoe UI", 10F);
+            cboTimePeriodDocGia.FormattingEnabled = true;
+            cboTimePeriodDocGia.Items.AddRange(new object[] { "Toàn thời gian", "7 ngày qua", "30 ngày qua" });
+            cboTimePeriodDocGia.Location = new Point(380, 8);
+            cboTimePeriodDocGia.Name = "cboTimePeriodDocGia";
+            cboTimePeriodDocGia.Size = new Size(180, 25);
+            cboTimePeriodDocGia.TabIndex = 2;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 10F);
+            label9.Location = new Point(280, 11);
+            label9.Name = "label9";
+            label9.Size = new Size(94, 19);
+            label9.TabIndex = 1;
+            label9.Text = "Khoảng thời gian:";
             // 
             // label7
             // 
@@ -670,12 +715,15 @@
         private SplitContainer splitContainer1;
         private DataGridView dgvTopSach;
         private Panel panel5;
-        private ComboBox cboTimePeriod;
+        private ComboBox cboTimePeriodSach;
         private Label label8;
-        private Button btnRefreshTop;
+        private Button btnRefreshTopSach;
         private Label label6;
         private DataGridView dgvTopDocGia;
         private Panel panel6;
+        private Button btnRefreshTopDocGia;
+        private ComboBox cboTimePeriodDocGia;
+        private Label label9;
         private Label label7;
     }
 }

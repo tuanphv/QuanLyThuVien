@@ -186,6 +186,7 @@
             dgvNhaCungCap.Location = new Point(23, 92);
             dgvNhaCungCap.Margin = new Padding(23, 27, 23, 27);
             dgvNhaCungCap.Name = "dgvNhaCungCap";
+            dgvNhaCungCap.ReadOnly = true;
             dgvNhaCungCap.RowHeadersVisible = false;
             dgvNhaCungCap.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dgvNhaCungCap.RowTemplate.Height = 50;
@@ -196,6 +197,7 @@
             dgvNhaCungCap.ShowEditButton = true;
             dgvNhaCungCap.ShowEditingIcon = false;
             dgvNhaCungCap.ShowExtendButton = false;
+            dgvNhaCungCap.ShowPrintButton = false;
             dgvNhaCungCap.ShowReturnButton = false;
             dgvNhaCungCap.ShowRowErrors = false;
             dgvNhaCungCap.ShowViewButton = false;
@@ -208,6 +210,7 @@
             ID.HeaderText = "ID";
             ID.MinimumWidth = 6;
             ID.Name = "ID";
+            ID.ReadOnly = true;
             // 
             // TenNCC
             // 
@@ -215,6 +218,7 @@
             TenNCC.HeaderText = "Tên Nhà cung cấp";
             TenNCC.MinimumWidth = 6;
             TenNCC.Name = "TenNCC";
+            TenNCC.ReadOnly = true;
             // 
             // DiaChi
             // 
@@ -222,6 +226,7 @@
             DiaChi.HeaderText = "Địa chỉ";
             DiaChi.MinimumWidth = 6;
             DiaChi.Name = "DiaChi";
+            DiaChi.ReadOnly = true;
             // 
             // UCNhaCungCap
             // 

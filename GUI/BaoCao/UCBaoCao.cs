@@ -17,6 +17,9 @@ namespace GUI.BaoCao
         public UCBaoCao()
         {
             InitializeComponent();
+            
+            // Đăng ký sự kiện khi chuyển tab
+            tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
         }
 
         private void UCBaoCao_Load(object sender, EventArgs e)
@@ -34,11 +37,41 @@ namespace GUI.BaoCao
             dtpDenNgay.Value = DateTime.Now;
             
             // Khởi tạo ComboBox khoảng thời gian
-            cboTimePeriod.SelectedIndex = 0; // Mặc định: Toàn thời gian
+            cboTimePeriodSach.SelectedIndex = 0; // Mặc định: Toàn thời gian
+            cboTimePeriodDocGia.SelectedIndex = 0; // Mặc định: Toàn thời gian
             
             LoadBaoCaoNoDocGia();
             LoadThongKeSach();
-            LoadTopStatistics();
+            LoadTopSachStatistics();
+            LoadTopDocGiaStatistics();
+        }
+
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Khi chuyển sang tab "Thống kê mượn/trả" (index 2)
+            if (tabControl1.SelectedIndex == 2)
+            {
+                // Tự động load dữ liệu với khoảng thời gian đã chọn
+                btnLoadThongKe_Click(sender, e);
+            }
+        }
+
+        private void dtpTuNgay_ValueChanged(object sender, EventArgs e)
+        {
+            // Tự động load lại khi thay đổi ngày bắt đầu
+            if (tabControl1.SelectedIndex == 2)
+            {
+                btnLoadThongKe_Click(sender, e);
+            }
+        }
+
+        private void dtpDenNgay_ValueChanged(object sender, EventArgs e)
+        {
+            // Tự động load lại khi thay đổi ngày kết thúc
+            if (tabControl1.SelectedIndex == 2)
+            {
+                btnLoadThongKe_Click(sender, e);
+            }
         }
 
         #region Báo cáo nợ độc giả
@@ -757,32 +790,18 @@ namespace GUI.BaoCao
         }
         #endregion
 
-        #region Thống kê Top sách và độc giả
-        private void LoadTopStatistics()
+        #region Thống kê Top sách
+        private void LoadTopSachStatistics()
         {
             try
             {
                 DateTime? tuNgay = null;
                 DateTime? denNgay = null;
                 
-                // Xác định khoảng thời gian dựa vào lựa chọn
-                string selectedPeriod = cboTimePeriod.SelectedItem?.ToString() ?? "Toàn thời gian";
+                string selectedPeriod = cboTimePeriodSach.SelectedItem?.ToString() ?? "Toàn thời gian";
                 
                 switch (selectedPeriod)
                 {
-                    case "Tuần này":
-                        // Tính từ thứ 2 tuần này
-                        DateTime today = DateTime.Now.Date;
-                        int daysFromMonday = ((int)today.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
-                        tuNgay = today.AddDays(-daysFromMonday);
-                        denNgay = DateTime.Now;
-                        break;
-                        
-                    case "Tháng này":
-                        tuNgay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                        denNgay = DateTime.Now;
-                        break;
-                        
                     case "7 ngày qua":
                         tuNgay = DateTime.Now.AddDays(-7);
                         denNgay = DateTime.Now;
@@ -799,44 +818,32 @@ namespace GUI.BaoCao
                         break;
                 }
 
-                // Load Top sách được mượn nhiều
                 var topSach = tuNgay.HasValue && denNgay.HasValue
                     ? BaoCaoBUS.GetTopSachMuonNhieuTheoKhoang(10, tuNgay, denNgay)
                     : BaoCaoBUS.GetTopSachMuonNhieu(10);
                     
                 dgvTopSach.DataSource = topSach;
                 ConfigureTopBooksColumns();
-
-                // Load Top độc giả tích cực
-                var topDocGia = tuNgay.HasValue && denNgay.HasValue
-                    ? BaoCaoBUS.GetTopDocGiaTichCucTheoKhoang(10, tuNgay, denNgay)
-                    : BaoCaoBUS.GetTopDocGiaTichCuc(10);
-                    
-                dgvTopDocGia.DataSource = topDocGia;
-                ConfigureTopReadersColumns();
                 
-                // Cập nhật label hiển thị khoảng thời gian
                 if (tuNgay.HasValue && denNgay.HasValue)
                 {
-                    label6.Text = $"● Top 10 sách mượn nhiều ({selectedPeriod}: {tuNgay.Value:dd/MM/yyyy} - {denNgay.Value:dd/MM/yyyy})";
-                    label7.Text = $"● Top 10 độc giả tích cực nhất ({selectedPeriod}: {tuNgay.Value:dd/MM/yyyy} - {denNgay.Value:dd/MM/yyyy})";
+                    label6.Text = $"🏆 Top 10 sách mượn nhiều ({selectedPeriod})";
                 }
                 else
                 {
-                    label6.Text = "● Top 10 sách mượn nhiều (Toàn thời gian)";
-                    label7.Text = "● Top 10 độc giả tích cực nhất (Toàn thời gian)";
+                    label6.Text = "🏆 Top 10 sách mượn nhiều (Toàn thời gian)";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải thống kê top: {ex.Message}", "Lỗi",
+                MessageBox.Show($"Lỗi khi tải thống kê top sách: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnRefreshTop_Click(object sender, EventArgs e)
+        private void btnRefreshTopSach_Click(object sender, EventArgs e)
         {
-            LoadTopStatistics();
+            LoadTopSachStatistics();
         }
 
         private void ConfigureTopBooksColumns()
@@ -880,6 +887,63 @@ namespace GUI.BaoCao
                 dgvTopSach.Columns["MaTuaSach"].Visible = false;
             if (dgvTopSach.Columns["SoLuongHienCo"] != null)
                 dgvTopSach.Columns["SoLuongHienCo"].Visible = false;
+        }
+        #endregion
+
+        #region Thống kê Top độc giả
+        private void LoadTopDocGiaStatistics()
+        {
+            try
+            {
+                DateTime? tuNgay = null;
+                DateTime? denNgay = null;
+                
+                string selectedPeriod = cboTimePeriodDocGia.SelectedItem?.ToString() ?? "Toàn thời gian";
+                
+                switch (selectedPeriod)
+                {
+                    case "7 ngày qua":
+                        tuNgay = DateTime.Now.AddDays(-7);
+                        denNgay = DateTime.Now;
+                        break;
+                        
+                    case "30 ngày qua":
+                        tuNgay = DateTime.Now.AddDays(-30);
+                        denNgay = DateTime.Now;
+                        break;
+                        
+                    default:
+                        tuNgay = null;
+                        denNgay = null;
+                        break;
+                }
+
+                var topDocGia = tuNgay.HasValue && denNgay.HasValue
+                    ? BaoCaoBUS.GetTopDocGiaTichCucTheoKhoang(10, tuNgay, denNgay)
+                    : BaoCaoBUS.GetTopDocGiaTichCuc(10);
+                    
+                dgvTopDocGia.DataSource = topDocGia;
+                ConfigureTopReadersColumns();
+                
+                if (tuNgay.HasValue && denNgay.HasValue)
+                {
+                    label7.Text = $"🏆 Top 10 độc giả tích cực nhất ({selectedPeriod})";
+                }
+                else
+                {
+                    label7.Text = "🏆 Top 10 độc giả tích cực nhất (Toàn thời gian)";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải thống kê top độc giả: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnRefreshTopDocGia_Click(object sender, EventArgs e)
+        {
+            LoadTopDocGiaStatistics();
         }
 
         private void ConfigureTopReadersColumns()
