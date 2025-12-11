@@ -14,22 +14,27 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
         public UCTacGia()
         {
             InitializeComponent();
+
+            dgvTacGia.EditButtonClicked += EditButtonClicked;
+            dgvTacGia.DeleteButtonClicked += DeleteButtonClicked;
+            dgvTacGia.ViewButtonClicked += ViewButtonClicked;
+        }
+
+        private void LoadData()
+        {
+            dgvTacGia.AutoGenerateColumns = false;
+
+            // Tải dữ liệu từ DB
+            list = BUS.TacGiaBUS.GetAll();
+            dgvTacGia.DataSource = list;
+
+            // Phân quyền lại (nếu cần)
+            LoadPermissions();
         }
 
         private void UCTacGia_Load(object sender, EventArgs e)
         {
-            dgvTacGia.AutoGenerateColumns = false;
-
-            // Tải dữ liệu
-            list = BUS.TacGiaBUS.GetAll();
-            dgvTacGia.DataSource = list;
-
-            // Gán sự kiện cho các nút Sửa/Xóa trong DataGridView
-            dgvTacGia.EditButtonClicked += EditButtonClicked;
-            dgvTacGia.DeleteButtonClicked += DeleteButtonClicked;
-            dgvTacGia.ViewButtonClicked += ViewButtonClicked;
-
-            LoadPermissions();
+            LoadData();
         }
 
         public void LoadPermissions()
@@ -88,16 +93,15 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
 
             var result = frm.ShowDialog();
             if (result == DialogResult.OK)
-            {                
-                UCTacGia_Load(null, null);
+            {
+                LoadData();
             }
         }
 
         private void DeleteButtonClicked(object? sender, int index)
         {
             if (index < 0) return;
-
-            // [QUAN TRỌNG] Lấy object từ dòng hiện tại
+                        
             var selectedTacGia = dgvTacGia.Rows[index].DataBoundItem as TacGiaDTO;
             if (selectedTacGia == null) return;
 
@@ -111,8 +115,7 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                     if (BUS.TacGiaBUS.Delete(selectedTacGia.MaTacGia))
                     {
                         MessageBox.Show("Xóa thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        // Load lại dữ liệu
-                        UCTacGia_Load(null, null);
+                        LoadData();
                     }
                 }
                 catch (Exception ex)
@@ -270,8 +273,7 @@ namespace GUI.TacGia // (Hoặc namespace GUI.DanhMuc... của bạn)
                             }
                         }
 
-                        // Load lại 
-                        UCTacGia_Load(null, null);
+                        LoadData();
 
                         MessageBox.Show($"Nhập dữ liệu hoàn tất!\n- Thêm mới thành công: {countSuccess}\n- Bỏ qua (đã tồn tại): {countFail}",
                             "Kết quả Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
