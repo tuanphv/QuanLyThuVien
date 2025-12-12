@@ -33,16 +33,30 @@ namespace GUI.MuonTra
             lblTinhTrang.Text = _phieu.TinhTrang;
 
             dgvChiTiet.AutoGenerateColumns = false;
+            colChonTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.ChonTra);
             colMaCuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.MaCuonSach);
             colTenSach.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TenSach);
-            colHanTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraDuKien);
+            colNgayMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayMuon);
             colNgayTra.DataPropertyName = nameof(ChiTietPhieuMuonDTO.NgayTraThucTe);
+            colTinhTrangMuon.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TinhTrangMuon);
+            colTrangThai.DataPropertyName = nameof(ChiTietPhieuMuonDTO.TrangThai);
 
-            colHanTra.DefaultCellStyle.Format = "dd/MM/yyyy";
+            colNgayMuon.DefaultCellStyle.Format = "dd/MM/yyyy";
             colNgayTra.DefaultCellStyle.Format = "dd/MM/yyyy";
 
             _chiTiet = MuonTraBUS.LayChiTietPhieuMuon(_phieu.ID);
+            foreach (var ct in _chiTiet)
+            {
+                ct.ChonTra = !ct.DaTra;
+            }
             dgvChiTiet.DataSource = _chiTiet;
+            dgvChiTiet.CurrentCellDirtyStateChanged += (s, args) =>
+            {
+                if (dgvChiTiet.IsCurrentCellDirty)
+                {
+                    dgvChiTiet.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                }
+            };
             btnTraSach.Enabled = _chiTiet.Any(c => !c.NgayTraThucTe.HasValue);
             btnGiaHan.Enabled = btnTraSach.Enabled;
 
@@ -65,26 +79,42 @@ namespace GUI.MuonTra
 
         private void btnTraSach_Click(object sender, EventArgs e)
         {
-            var confirm = MessageBox.Show("Xác nhận trả toàn bộ sách trong phiếu này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm != DialogResult.Yes) return;
+            var danhSachTra = _chiTiet.Where(c => c.ChonTra && !c.DaTra).ToList();
+            if (danhSachTra.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một cuốn sách đang mượn để trả.");
+                return;
+            }
 
             try
             {
-                var capNhat = MuonTraBUS.TraPhieuMuon(_phieu.ID, out int tienPhat);
-                _phieu.NgayTraThucTe = capNhat.NgayTraThucTe;
-                _phieu.SoSachChuaTra = capNhat.SoSachChuaTra;
-                lblTinhTrang.Text = _phieu.TinhTrang;
-                btnTraSach.Enabled = false;
-                btnGiaHan.Enabled = false;
-
-                _chiTiet = MuonTraBUS.LayChiTietPhieuMuon(_phieu.ID);
-                dgvChiTiet.DataSource = _chiTiet;
-                string message = "Trả sách thành công.";
-                if (tienPhat > 0)
+                using var frm = new FrmLapPhieuTra(_phieu, danhSachTra);
+                if (frm.ShowDialog() == DialogResult.OK && frm.PhieuTra != null)
                 {
-                    message += $"\nTiền phạt: {tienPhat:N0} đồng.";
+                    var capNhat = MuonTraBUS.LayPhieuMuonTheoID(_phieu.ID);
+                    if (capNhat != null)
+                    {
+                        _phieu.NgayTraThucTe = capNhat.NgayTraThucTe;
+                        _phieu.SoSachChuaTra = capNhat.SoSachChuaTra;
+                        lblTinhTrang.Text = _phieu.TinhTrang;
+                    }
+
+                    _chiTiet = MuonTraBUS.LayChiTietPhieuMuon(_phieu.ID);
+                    foreach (var ct in _chiTiet)
+                    {
+                        ct.ChonTra = !ct.DaTra;
+                    }
+                    dgvChiTiet.DataSource = _chiTiet;
+                    btnTraSach.Enabled = _chiTiet.Any(c => !c.NgayTraThucTe.HasValue);
+                    btnGiaHan.Enabled = btnTraSach.Enabled;
+
+                    string message = "Trả sách thành công.";
+                    if (frm.PhieuTra.TongTienPhat > 0)
+                    {
+                        message += $"\nTiền phạt: {frm.PhieuTra.TongTienPhat:N0} đồng.";
+                    }
+                    MessageBox.Show(message, "Thành công");
                 }
-                MessageBox.Show(message, "Thành công");
             }
             catch (Exception ex)
             {
@@ -120,18 +150,21 @@ namespace GUI.MuonTra
                 Top = 220,
                 Width = 660,
                 Height = 200,
-                ReadOnly = true,
+                ReadOnly = false,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
-            colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", MinimumWidth = 80 };
-            colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", MinimumWidth = 180 };
-            colHanTra = new DataGridViewTextBoxColumn { HeaderText = "Hạn trả", MinimumWidth = 90 };
-            colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 90 };
-            dgvChiTiet.Columns.AddRange(colMaCuon, colTenSach, colHanTra, colNgayTra);
+            colChonTra = new DataGridViewCheckBoxColumn { HeaderText = "Chọn", MinimumWidth = 60 };
+            colMaCuon = new DataGridViewTextBoxColumn { HeaderText = "Mã cuốn", MinimumWidth = 80, ReadOnly = true };
+            colTenSach = new DataGridViewTextBoxColumn { HeaderText = "Tên sách", MinimumWidth = 180, ReadOnly = true };
+            colNgayMuon = new DataGridViewTextBoxColumn { HeaderText = "Ngày mượn", MinimumWidth = 100, ReadOnly = true };
+            colNgayTra = new DataGridViewTextBoxColumn { HeaderText = "Ngày trả", MinimumWidth = 100, ReadOnly = true };
+            colTinhTrangMuon = new DataGridViewTextBoxColumn { HeaderText = "Tình trạng mượn", MinimumWidth = 120, ReadOnly = true };
+            colTrangThai = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", MinimumWidth = 100, ReadOnly = true };
+            dgvChiTiet.Columns.AddRange(colChonTra, colMaCuon, colTenSach, colNgayMuon, colNgayTra, colTrangThai, colTinhTrangMuon);
 
             btnGiaHan = new Button { Text = "Gia hạn", Left = 400, Top = 440, Width = 120, Height = 32, BackColor = System.Drawing.Color.DodgerBlue, ForeColor = System.Drawing.Color.White, FlatStyle = FlatStyle.Flat };
             btnGiaHan.Click += btnGiaHan_Click;
@@ -179,9 +212,9 @@ namespace GUI.MuonTra
                         doc.Add(new Paragraph("\n"));
 
                         // Table for details
-                        PdfPTable table = new PdfPTable(4) { WidthPercentage = 100 };
-                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.5f, 1.5f });
-                        string[] headers = { "Mã cuốn", "Tên sách", "Hạn trả", "Ngày trả" };
+                        PdfPTable table = new PdfPTable(6) { WidthPercentage = 100 };
+                        table.SetWidths(new float[] { 1.2f, 2.5f, 1.3f, 1.3f, 1.3f, 2f });
+                        string[] headers = { "Mã cuốn", "Tên sách", "Ngày mượn", "Ngày trả", "Trạng thái", "Tình trạng mượn" };
                         foreach (var h in headers)
                         {
                             var cell = new PdfPCell(new Phrase(h, fontLabel)) { BackgroundColor = new BaseColor(220, 220, 220), HorizontalAlignment = Element.ALIGN_CENTER };
@@ -191,7 +224,7 @@ namespace GUI.MuonTra
                         {
                             table.AddCell(new PdfPCell(new Phrase(ct.MaCuonSach, fontValue)));
                             table.AddCell(new PdfPCell(new Phrase(ct.TenSach, fontLabel)));
-                            table.AddCell(new PdfPCell(new Phrase(ct.NgayTraDuKien.ToString("dd/MM/yyyy"), fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.NgayMuon.ToString("dd/MM/yyyy"), fontLabel)));
                             table.AddCell(new PdfPCell(
                                 new Phrase(
                                     ct.NgayTraThucTe.HasValue
@@ -200,6 +233,8 @@ namespace GUI.MuonTra
                                     fontLabel
                                 )
                             ));
+                            table.AddCell(new PdfPCell(new Phrase(ct.TrangThai, fontLabel)));
+                            table.AddCell(new PdfPCell(new Phrase(ct.TinhTrangMuon ?? string.Empty, fontLabel)));
 
                         }
                         doc.Add(table);
@@ -220,10 +255,13 @@ namespace GUI.MuonTra
         private Label lblHanTra = null!;
         private Label lblTinhTrang = null!;
         private DataGridView dgvChiTiet = null!;
+        private DataGridViewCheckBoxColumn colChonTra = null!;
         private DataGridViewTextBoxColumn colMaCuon = null!;
         private DataGridViewTextBoxColumn colTenSach = null!;
-        private DataGridViewTextBoxColumn colHanTra = null!;
+        private DataGridViewTextBoxColumn colNgayMuon = null!;
         private DataGridViewTextBoxColumn colNgayTra = null!;
+        private DataGridViewTextBoxColumn colTinhTrangMuon = null!;
+        private DataGridViewTextBoxColumn colTrangThai = null!;
         private Button btnGiaHan = null!;
         private Button btnTraSach = null!;
     }

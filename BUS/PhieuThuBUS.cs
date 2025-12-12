@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DTO;
 
 namespace BUS
 {
     public class PhieuThuBUS
     {
-        public static List<DTO.PhieuThuDTO> GetAllPhieuThu()
+        public static List<PhieuThuDTO> GetAllPhieuThu()
         {
             try
             {
@@ -16,11 +14,11 @@ namespace BUS
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi lấy danh sách phiếu thu: {ex.Message}", ex);
+                throw new Exception($"Lỗi BUS: {ex.Message}", ex);
             }
         }
 
-        public static string AddPhieuThu(DTO.PhieuThuDTO phieuThu)
+        public static string AddPhieuThu(PhieuThuDTO phieuThu)
         {
             try
             {
@@ -28,11 +26,11 @@ namespace BUS
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi thêm phiếu thu: {ex.Message}", ex);
+                throw new Exception($"Lỗi BUS: {ex.Message}", ex);
             }
         }
 
-        public static List<(int ID, string HoTen)> GetAllDocGiaCoPhieuThu()
+        public static List<DocGiaSimpleDTO> GetAllDocGiaCoPhieuThu()
         {
             return DAO.PhieuThuDAO.GetAllDocGiaCoPhieuThu();
         }
@@ -45,7 +43,7 @@ namespace BUS
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi xóa phiếu thu: {ex.Message}", ex);
+                throw new Exception($"Lỗi BUS: {ex.Message}", ex);
             }
         }
     }
