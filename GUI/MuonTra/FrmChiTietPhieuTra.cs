@@ -48,7 +48,8 @@ namespace GUI.MuonTra
                 lblDocGia.Text = $"{_phieu.HoTenDocGia}";
                 lblNgayTra.Text = _phieu.NgayTra.ToString("dd/MM/yyyy");
                 lblTongSach.Text = _phieu.TongSachTra.ToString();
-                lblTongTienPhat.Text = _phieu.TongTienPhat.ToString("N0");
+                lblTongTienPhat.Text = $"{_phieu.TongTienPhat:N0} VNĐ";
+
 
                 dgvChiTiet.AutoGenerateColumns = false;
 
@@ -188,7 +189,7 @@ namespace GUI.MuonTra
             var lblPhat = new Label { Text = "Tiền phạt:", Left = 20, Top = 200, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
             lblTongTienPhat = new Label { Left = 150, Top = 200, AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 10F) };
 
-            btnExportPdf = new Button { Text = "Xuất PDF", Left = 560, Top = 170, Width = 120, Height = 32 };
+            btnExportPdf = new Button { Text = "Xuất PDF", Left = 640, Top = 200, Width = 120, Height = 32 };
             btnExportPdf.Click += BtnExportPdf_Click;
 
             dgvChiTiet = new DataGridView

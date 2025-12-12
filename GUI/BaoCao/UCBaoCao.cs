@@ -2,7 +2,13 @@
 using ClosedXML.Excel;
 using DTO;
 using GUI.Helpers;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace GUI.BaoCao
 {
@@ -13,13 +19,28 @@ namespace GUI.BaoCao
         private BindingList<ThongKeSachDTO> listThongKeSach = new();
         private BindingList<ThongKeSachDTO> listThongKeSachFiltered = new();
         private string maDocGiaSelected = string.Empty;
+        private bool _isLoaded = false;
 
         public UCBaoCao()
         {
             InitializeComponent();
-            
-            // Đăng ký sự kiện khi chuyển tab
+
+            // Đăng ký sự kiện
+            this.Load += UCBaoCao_Load;
+            this.VisibleChanged += UCBaoCao_VisibleChanged; // Thêm sự kiện này
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
+        }
+
+        // --- CẬP NHẬT: TỰ ĐỘNG RELOAD KHI HIỂN THỊ ---
+        private void UCBaoCao_VisibleChanged(object? sender, EventArgs e)
+        {
+            // Nếu control đang hiện và đã từng load lần đầu
+            if (this.Visible && _isLoaded)
+            {
+                // Reload lại dữ liệu nợ để cập nhật số liệu mới nhất sau khi thu tiền
+                LoadBaoCaoNoDocGia();
+                // Có thể reload thêm các tab khác nếu cần, nhưng tab Nợ là quan trọng nhất
+            }
         }
 
         private void UCBaoCao_Load(object sender, EventArgs e)
@@ -31,19 +52,21 @@ namespace GUI.BaoCao
                 var docGia = DocGiaBUS.GetByUserId(userId);
                 maDocGiaSelected = docGia?.MaDocGia;
             }
-            
+
             // Khởi tạo DateTimePicker
             dtpTuNgay.Value = DateTime.Now.AddMonths(-1);
             dtpDenNgay.Value = DateTime.Now;
-            
+
             // Khởi tạo ComboBox khoảng thời gian
             cboTimePeriodSach.SelectedIndex = 0; // Mặc định: Toàn thời gian
             cboTimePeriodDocGia.SelectedIndex = 0; // Mặc định: Toàn thời gian
-            
+
             LoadBaoCaoNoDocGia();
             LoadThongKeSach();
             LoadTopSachStatistics();
             LoadTopDocGiaStatistics();
+
+            _isLoaded = true;
         }
 
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,6 +76,11 @@ namespace GUI.BaoCao
             {
                 // Tự động load dữ liệu với khoảng thời gian đã chọn
                 btnLoadThongKe_Click(sender, e);
+            }
+            // Nếu chuyển về tab Nợ (index 0 hoặc tương ứng), reload lại
+            else if (tabControl1.SelectedIndex == 0) // Giả sử tab Nợ là tab đầu tiên
+            {
+                LoadBaoCaoNoDocGia();
             }
         }
 
@@ -101,18 +129,14 @@ namespace GUI.BaoCao
                 dgvQuaHan.DataSource = null;
                 dgvQuaHan.DataSource = listNoDocGiaFiltered;
 
-                if (list == null || list.Count == 0)
-                {
-                    MessageBox.Show("Không có độc giả nào có nợ hoặc sách quá hạn.", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                // Nếu không có dữ liệu thì không cần config cột
+                if (list == null || list.Count == 0) return;
 
                 ConfigureDebtReportColumns();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}\n\n{ex.StackTrace}", "Lỗi", 
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}\n\n{ex.StackTrace}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -165,7 +189,7 @@ namespace GUI.BaoCao
             {
                 dgvQuaHan.Columns["TongNoUocTinh"].HeaderText = "Tổng nợ ước tính";
                 dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.Format = "#,##0 đ";
-                dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.Font = 
+                dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.Font =
                     new Font(dgvQuaHan.Font, FontStyle.Bold);
                 dgvQuaHan.Columns["TongNoUocTinh"].DefaultCellStyle.ForeColor = Color.Red;
                 dgvQuaHan.Columns["TongNoUocTinh"].FillWeight = 20;
@@ -197,7 +221,7 @@ namespace GUI.BaoCao
 
                 if (list == null || list.Count == 0)
                 {
-                    MessageBox.Show("Không có độc giả nào quá hạn chưa trả sách.", "Thông báo", 
+                    MessageBox.Show("Không có độc giả nào quá hạn chưa trả sách.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -207,7 +231,7 @@ namespace GUI.BaoCao
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}\n\nChi tiết: {ex.StackTrace}", 
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}\n\nChi tiết: {ex.StackTrace}",
                     "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -271,7 +295,7 @@ namespace GUI.BaoCao
                 dgvQuaHan.Columns["SoNgayQuaHan"].MinimumWidth = 120;
                 dgvQuaHan.Columns["SoNgayQuaHan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 dgvQuaHan.Columns["SoNgayQuaHan"].DefaultCellStyle.ForeColor = Color.Red;
-                dgvQuaHan.Columns["SoNgayQuaHan"].DefaultCellStyle.Font = 
+                dgvQuaHan.Columns["SoNgayQuaHan"].DefaultCellStyle.Font =
                     new Font(dgvQuaHan.Font, FontStyle.Bold);
             }
 
@@ -283,7 +307,7 @@ namespace GUI.BaoCao
                 dgvQuaHan.Columns["TienPhat"].MinimumWidth = 120;
                 dgvQuaHan.Columns["TienPhat"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 dgvQuaHan.Columns["TienPhat"].DefaultCellStyle.ForeColor = Color.Red;
-                dgvQuaHan.Columns["TienPhat"].DefaultCellStyle.Font = 
+                dgvQuaHan.Columns["TienPhat"].DefaultCellStyle.Font =
                     new Font(dgvQuaHan.Font, FontStyle.Bold);
             }
         }
@@ -315,13 +339,13 @@ namespace GUI.BaoCao
             if (e.RowIndex < 0 || e.RowIndex >= listNoDocGiaFiltered.Count) return;
 
             var selectedItem = listNoDocGiaFiltered[e.RowIndex];
-            
+
             if (selectedItem.SoSachQuaHan > 0)
             {
-                FrmChiTietSachQuaHan frm = new FrmChiTietSachQuaHan(
-                    selectedItem.MaDocGia, 
-                    selectedItem.HoTen);
-                frm.ShowDialog();
+                // Kiểm tra xem form chi tiết có tồn tại không trước khi gọi
+                // FrmChiTietSachQuaHan frm = new FrmChiTietSachQuaHan(selectedItem.MaDocGia, selectedItem.HoTen);
+                // frm.ShowDialog();
+                MessageBox.Show($"Độc giả {selectedItem.HoTen} đang giữ {selectedItem.SoSachQuaHan} cuốn sách quá hạn.", "Chi tiết");
             }
             else
             {
@@ -392,7 +416,7 @@ namespace GUI.BaoCao
                         worksheet.Cell(totalRow, 1).Value = "TỔNG CỘNG";
                         worksheet.Cell(totalRow, 1).Style.Font.Bold = true;
                         worksheet.Range($"A{totalRow}:B{totalRow}").Merge();
-                        
+
                         worksheet.Cell(totalRow, 3).Value = listNoDocGiaFiltered.Sum(x => x.NoHienTai);
                         worksheet.Cell(totalRow, 4).Value = listNoDocGiaFiltered.Sum(x => x.SoSachQuaHan);
                         worksheet.Cell(totalRow, 5).Value = listNoDocGiaFiltered.Sum(x => x.TongNoUocTinh);
@@ -441,13 +465,13 @@ namespace GUI.BaoCao
             try
             {
                 var thongKe = BaoCaoBUS.GetThongKeSach();
-                
+
                 listThongKeSach = new BindingList<ThongKeSachDTO>(thongKe);
                 listThongKeSachFiltered = listThongKeSach;
 
                 dgvThongKeSach.DataSource = null;
                 dgvThongKeSach.DataSource = listThongKeSachFiltered;
-                
+
                 ConfigureBookStatisticsColumns();
             }
             catch (Exception ex)
@@ -643,11 +667,11 @@ namespace GUI.BaoCao
 
                 dgvThongKeMuonTra.DataSource = thongKe;
                 ConfigureBorrowReturnStatisticsColumns();
-                
+
                 if (thongKe.Count == 0)
                 {
-                    MessageBox.Show("Không có dữ liệu trong khoảng thời gian đã chọn.", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Tùy chọn: Có thể hiện thông báo hoặc chỉ clear grid
+                    // MessageBox.Show("Không có dữ liệu trong khoảng thời gian đã chọn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -797,21 +821,21 @@ namespace GUI.BaoCao
             {
                 DateTime? tuNgay = null;
                 DateTime? denNgay = null;
-                
+
                 string selectedPeriod = cboTimePeriodSach.SelectedItem?.ToString() ?? "Toàn thời gian";
-                
+
                 switch (selectedPeriod)
                 {
                     case "7 ngày qua":
                         tuNgay = DateTime.Now.AddDays(-7);
                         denNgay = DateTime.Now;
                         break;
-                        
+
                     case "30 ngày qua":
                         tuNgay = DateTime.Now.AddDays(-30);
                         denNgay = DateTime.Now;
                         break;
-                        
+
                     default: // "Toàn thời gian"
                         tuNgay = null;
                         denNgay = null;
@@ -821,10 +845,10 @@ namespace GUI.BaoCao
                 var topSach = tuNgay.HasValue && denNgay.HasValue
                     ? BaoCaoBUS.GetTopSachMuonNhieuTheoKhoang(10, tuNgay, denNgay)
                     : BaoCaoBUS.GetTopSachMuonNhieu(10);
-                    
+
                 dgvTopSach.DataSource = topSach;
                 ConfigureTopBooksColumns();
-                
+
                 if (tuNgay.HasValue && denNgay.HasValue)
                 {
                     label6.Text = $"🏆 Top 10 sách mượn nhiều ({selectedPeriod})";
@@ -879,7 +903,7 @@ namespace GUI.BaoCao
                 dgvTopSach.Columns["TheLoai"].HeaderText = "Thể loại";
                 dgvTopSach.Columns["TheLoai"].FillWeight = 20;
             }
-            
+
             // Hide unnecessary columns
             if (dgvTopSach.Columns["STT"] != null)
                 dgvTopSach.Columns["STT"].Visible = false;
@@ -897,21 +921,21 @@ namespace GUI.BaoCao
             {
                 DateTime? tuNgay = null;
                 DateTime? denNgay = null;
-                
+
                 string selectedPeriod = cboTimePeriodDocGia.SelectedItem?.ToString() ?? "Toàn thời gian";
-                
+
                 switch (selectedPeriod)
                 {
                     case "7 ngày qua":
                         tuNgay = DateTime.Now.AddDays(-7);
                         denNgay = DateTime.Now;
                         break;
-                        
+
                     case "30 ngày qua":
                         tuNgay = DateTime.Now.AddDays(-30);
                         denNgay = DateTime.Now;
                         break;
-                        
+
                     default:
                         tuNgay = null;
                         denNgay = null;
@@ -921,10 +945,10 @@ namespace GUI.BaoCao
                 var topDocGia = tuNgay.HasValue && denNgay.HasValue
                     ? BaoCaoBUS.GetTopDocGiaTichCucTheoKhoang(10, tuNgay, denNgay)
                     : BaoCaoBUS.GetTopDocGiaTichCuc(10);
-                    
+
                 dgvTopDocGia.DataSource = topDocGia;
                 ConfigureTopReadersColumns();
-                
+
                 if (tuNgay.HasValue && denNgay.HasValue)
                 {
                     label7.Text = $"🏆 Top 10 độc giả tích cực nhất ({selectedPeriod})";

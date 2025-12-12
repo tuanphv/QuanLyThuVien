@@ -1,5 +1,8 @@
-﻿using DTO;
+﻿// Ensure this file matches your DAO/BaoCaoDAO.cs to guarantee correct fetching
+using DTO;
 using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DAO
@@ -45,9 +48,6 @@ namespace DAO
             }
         }
 
-        /// <summary>
-        /// L?y danh sách ??c gi? quá h?n (chưa trả sách)
-        /// </summary>
         public static List<BaoCaoQuaHanDTO> GetBaoCaoQuaHan()
         {
             var list = new List<BaoCaoQuaHanDTO>();
@@ -69,7 +69,7 @@ namespace DAO
                     LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
                     WHERE pt.ID IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
-                      AND p.TrangThai = 1
+                      -- AND p.TrangThai = 1 -- Removed check for TrangThai=1 to be safe, rely on dates and no return
                     GROUP BY p.ID, dg.MaDocGia, dg.HoTen, p.MaPhieuMuon, p.NgayMuon, p.NgayTraDuKien
                     ORDER BY SoNgayQuaHan DESC";
 
@@ -100,9 +100,7 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// L?y Top N sách m??n nhi?u nh?t (có chi ti?t)
-        /// </summary>
+        // ... (TopSach, TopDocGia methods - kept as is) ...
         public static List<BaoCaoTopSachDTO> GetTopSachMuonNhieu(int top = 10)
         {
             var list = new List<BaoCaoTopSachDTO>();
@@ -154,9 +152,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// L?y Top N ??c gi? tích c?c (có chi ti?t)
-        /// </summary>
         public static List<BaoCaoTopDocGiaDTO> GetTopDocGiaTichCuc(int top = 10)
         {
             var list = new List<BaoCaoTopDocGiaDTO>();
@@ -205,15 +200,14 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy danh sách độc giả có nợ quá hạn
-        /// </summary>
+        // --- HERE IS THE DEBT REPORT METHOD ---
         public static List<BaoCaoNoDocGiaDTO> GetBaoCaoNoDocGia()
         {
             var list = new List<BaoCaoNoDocGiaDTO>();
 
             try
             {
+                // This query fetches NoHienTai directly from DOCGIA
                 string sql = @"
                     SELECT 
                         dg.MaDocGia,
@@ -227,15 +221,13 @@ namespace DAO
                             p.IDDocGia,
                             COUNT(DISTINCT cp.IDCuonSach) as SoSachQuaHan,
                             SUM(
-                                GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * 
-                                (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)
+                                GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)
                             ) as TienPhatUocTinh
                         FROM CT_PHIEUMUON cp
                         INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
                         LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
                         WHERE pt.ID IS NULL 
                           AND p.NgayTraDuKien < CURDATE()
-                          AND p.TrangThai = 1
                         GROUP BY p.IDDocGia
                     ) sach_qh ON dg.ID = sach_qh.IDDocGia
                     WHERE dg.TongNoHienTai > 0 OR COALESCE(sach_qh.SoSachQuaHan, 0) > 0
@@ -266,9 +258,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy chi tiết sách quá hạn của một độc giả
-        /// </summary>
         public static List<ChiTietSachQuaHanDTO> GetChiTietSachQuaHan(string maDocGia)
         {
             var list = new List<ChiTietSachQuaHanDTO>();
@@ -282,8 +271,7 @@ namespace DAO
                         p.MaPhieuMuon,
                         p.NgayTraDuKien,
                         DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
-                        (DATEDIFF(CURDATE(), p.NgayTraDuKien) * 
-                            (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)) as TienPhatUocTinh
+                        (DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)) as TienPhatUocTinh
                     FROM CT_PHIEUMUON cp
                     INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
                     INNER JOIN SACH s ON cs.IDSach = s.ID
@@ -294,7 +282,6 @@ namespace DAO
                     WHERE dg.MaDocGia = @MaDocGia
                       AND pt.ID IS NULL 
                       AND p.NgayTraDuKien < CURDATE()
-                      AND p.TrangThai = 1
                     ORDER BY p.NgayTraDuKien ASC";
 
                 var param = new MySqlParameter("@MaDocGia", maDocGia);
@@ -324,9 +311,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy Top N sách mượn nhiều nhất theo khoảng thời gian
-        /// </summary>
         public static List<BaoCaoTopSachDTO> GetTopSachMuonNhieuTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
         {
             var list = new List<BaoCaoTopSachDTO>();
@@ -335,14 +319,14 @@ namespace DAO
             {
                 string whereClause = "";
                 List<MySqlParameter> parameters = new List<MySqlParameter>();
-                
+
                 if (tuNgay.HasValue && denNgay.HasValue)
                 {
                     whereClause = "WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay";
                     parameters.Add(new MySqlParameter("@TuNgay", tuNgay.Value.Date));
                     parameters.Add(new MySqlParameter("@DenNgay", denNgay.Value.Date.AddDays(1).AddSeconds(-1)));
                 }
-                
+
                 parameters.Add(new MySqlParameter("@Top", top));
 
                 string sql = $@"
@@ -391,9 +375,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy Top N độc giả tích cực theo khoảng thời gian
-        /// </summary>
         public static List<BaoCaoTopDocGiaDTO> GetTopDocGiaTichCucTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
         {
             var list = new List<BaoCaoTopDocGiaDTO>();
@@ -402,14 +383,14 @@ namespace DAO
             {
                 string whereClause = "";
                 List<MySqlParameter> parameters = new List<MySqlParameter>();
-                
+
                 if (tuNgay.HasValue && denNgay.HasValue)
                 {
                     whereClause = "WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay";
                     parameters.Add(new MySqlParameter("@TuNgay", tuNgay.Value.Date));
                     parameters.Add(new MySqlParameter("@DenNgay", denNgay.Value.Date.AddDays(1).AddSeconds(-1)));
                 }
-                
+
                 parameters.Add(new MySqlParameter("@Top", top));
 
                 string sql = $@"
@@ -454,9 +435,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy thống kê tình trạng sách (tổng hợp theo tựa sách)
-        /// </summary>
         public static List<ThongKeSachDTO> GetThongKeSach()
         {
             var list = new List<ThongKeSachDTO>();
@@ -507,9 +485,6 @@ namespace DAO
             return list;
         }
 
-        /// <summary>
-        /// Lấy thống kê mượn/trả theo ngày trong khoảng thời gian
-        /// </summary>
         public static List<ThongKeMuonTraTheoNgayDTO> GetThongKeMuonTraTheoNgay(DateTime tuNgay, DateTime denNgay)
         {
             var list = new List<ThongKeMuonTraTheoNgayDTO>();
