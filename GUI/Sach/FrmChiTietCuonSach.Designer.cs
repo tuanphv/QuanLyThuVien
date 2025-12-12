@@ -53,17 +53,18 @@
             panel1.Controls.Add(lblTieuDe);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(921, 83);
+            panel1.Size = new Size(806, 62);
             panel1.TabIndex = 0;
             // 
             // lblTieuDe
             // 
             lblTieuDe.AutoSize = true;
             lblTieuDe.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTieuDe.Location = new Point(40, 21);
+            lblTieuDe.Location = new Point(35, 16);
             lblTieuDe.Name = "lblTieuDe";
-            lblTieuDe.Size = new Size(533, 46);
+            lblTieuDe.Size = new Size(426, 37);
             lblTieuDe.TabIndex = 0;
             lblTieuDe.Text = "Danh sách cuốn sách thuộc lô: ...";
             // 
@@ -72,9 +73,10 @@
             panel2.BackColor = Color.White;
             panel2.Controls.Add(dgvCuonSach);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 450);
+            panel2.Location = new Point(0, 337);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(921, 362);
+            panel2.Size = new Size(806, 272);
             panel2.TabIndex = 1;
             // 
             // dgvCuonSach
@@ -83,10 +85,11 @@
             dgvCuonSach.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCuonSach.Dock = DockStyle.Fill;
             dgvCuonSach.Location = new Point(0, 0);
+            dgvCuonSach.Margin = new Padding(3, 2, 3, 2);
             dgvCuonSach.Name = "dgvCuonSach";
             dgvCuonSach.RowHeadersWidth = 51;
             dgvCuonSach.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvCuonSach.Size = new Size(921, 362);
+            dgvCuonSach.Size = new Size(806, 272);
             dgvCuonSach.TabIndex = 0;
             dgvCuonSach.CellContentClick += dgvCuonSach_CellClick;
             // 
@@ -94,9 +97,10 @@
             // 
             panel3.BackColor = Color.White;
             panel3.Controls.Add(grpXuLy);
-            panel3.Location = new Point(24, 102);
+            panel3.Location = new Point(21, 76);
+            panel3.Margin = new Padding(3, 2, 3, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(874, 333);
+            panel3.Size = new Size(765, 250);
             panel3.TabIndex = 2;
             // 
             // grpXuLy
@@ -109,8 +113,10 @@
             grpXuLy.Dock = DockStyle.Fill;
             grpXuLy.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             grpXuLy.Location = new Point(0, 0);
+            grpXuLy.Margin = new Padding(3, 2, 3, 2);
             grpXuLy.Name = "grpXuLy";
-            grpXuLy.Size = new Size(874, 333);
+            grpXuLy.Padding = new Padding(3, 2, 3, 2);
+            grpXuLy.Size = new Size(765, 250);
             grpXuLy.TabIndex = 0;
             grpXuLy.TabStop = false;
             grpXuLy.Text = "Cập nhật trạng thái";
@@ -118,27 +124,28 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(79, 137);
+            label1.Location = new Point(69, 103);
             label1.Name = "label1";
-            label1.Size = new Size(105, 28);
+            label1.Size = new Size(82, 21);
             label1.TabIndex = 30;
-            label1.Text = "Tình trạng:";
+            label1.Text = "Trạng thái:";
             // 
             // cboTinhTrang
             // 
             cboTinhTrang.DropDownStyle = ComboBoxStyle.DropDownList;
             cboTinhTrang.FormattingEnabled = true;
-            cboTinhTrang.Location = new Point(190, 129);
+            cboTinhTrang.Location = new Point(166, 97);
+            cboTinhTrang.Margin = new Padding(3, 2, 3, 2);
             cboTinhTrang.Name = "cboTinhTrang";
-            cboTinhTrang.Size = new Size(221, 36);
+            cboTinhTrang.Size = new Size(194, 29);
             cboTinhTrang.TabIndex = 29;
             // 
             // lblMaDangChon
             // 
             lblMaDangChon.AutoSize = true;
-            lblMaDangChon.Location = new Point(79, 69);
+            lblMaDangChon.Location = new Point(69, 52);
             lblMaDangChon.Name = "lblMaDangChon";
-            lblMaDangChon.Size = new Size(221, 28);
+            lblMaDangChon.Size = new Size(176, 21);
             lblMaDangChon.TabIndex = 28;
             lblMaDangChon.Text = "Đang chọn: [Chưa chọn]";
             // 
@@ -151,9 +158,10 @@
             btnThoat.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnThoat.ForeColor = Color.White;
             btnThoat.Image = (Image)resources.GetObject("btnThoat.Image");
-            btnThoat.Location = new Point(548, 248);
+            btnThoat.Location = new Point(480, 186);
+            btnThoat.Margin = new Padding(3, 2, 3, 2);
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(90, 53);
+            btnThoat.Size = new Size(79, 40);
             btnThoat.TabIndex = 27;
             btnThoat.Text = "Đóng";
             btnThoat.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -169,9 +177,10 @@
             btnCapNhat.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnCapNhat.ForeColor = Color.White;
             btnCapNhat.Image = Properties.Resources.save;
-            btnCapNhat.Location = new Point(235, 248);
+            btnCapNhat.Location = new Point(206, 186);
+            btnCapNhat.Margin = new Padding(3, 2, 3, 2);
             btnCapNhat.Name = "btnCapNhat";
-            btnCapNhat.Size = new Size(176, 53);
+            btnCapNhat.Size = new Size(154, 40);
             btnCapNhat.TabIndex = 26;
             btnCapNhat.Text = "Lưu trạng thái";
             btnCapNhat.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -180,13 +189,14 @@
             // 
             // FrmChiTietCuonSach
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
-            ClientSize = new Size(921, 812);
+            ClientSize = new Size(806, 609);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FrmChiTietCuonSach";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Chi tiết";

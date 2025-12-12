@@ -187,9 +187,10 @@
             dgvBookTitles.ShowPrintButton = false;
             dgvBookTitles.ShowReturnButton = false;
             dgvBookTitles.ShowRowErrors = false;
-            dgvBookTitles.ShowViewButton = true;
+            dgvBookTitles.ShowViewButton = false;
             dgvBookTitles.Size = new Size(1551, 555);
             dgvBookTitles.TabIndex = 14;
+            dgvBookTitles.CellContentClick += dgvBookTitles_CellContentClick;
             // 
             // BookTitleID
             // 

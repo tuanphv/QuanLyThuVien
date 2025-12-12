@@ -215,5 +215,10 @@ namespace GUI.TuaSach
                 }
             }
         }
+
+        private void dgvBookTitles_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
