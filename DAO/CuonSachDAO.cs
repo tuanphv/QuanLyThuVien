@@ -1,63 +1,58 @@
-﻿using DTO;
+﻿using Dapper;
+using DTO;
 using MySql.Data.MySqlClient;
-using System;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 
 namespace DAO
 {
     public class CuonSachDAO
     {
+        private static MySqlConnection GetOpenConnection()
+        {
+            return DataProvider.Instance.GetOpenConnection();
+        }
+
         public static BindingList<CuonSachDTO> GetByIDSach(int idSach)
         {
             BindingList<CuonSachDTO> list = new BindingList<CuonSachDTO>();
-            string query = "SELECT * FROM CUONSACH WHERE IDSach = @IDSach AND DaAn = 0";
 
-            DataTable data = DataProvider.Instance.ExecuteQuery(query, new MySqlParameter("@IDSach", idSach));
-            foreach (DataRow item in data.Rows)
-            {
-                CuonSachDTO cs = new CuonSachDTO(
-                    Convert.ToInt32(item["ID"]),
-                    item["MaCuonSach"].ToString(),
-                    Convert.ToInt32(item["IDSach"]),
-                    Convert.ToInt32(item["TrangThai"]),
-                    item.Table.Columns.Contains("ChiTietTinhTrang") ? item["ChiTietTinhTrang"]?.ToString() : null
-                );
-                list.Add(cs);
-            }
-            return list;
+            string query = @"SELECT cs.ID, cs.MaCuonSach, cs.IDSach, cs.TrangThai,
+                                    GROUP_CONCAT(tsp.TenTinhTrang SEPARATOR ', ') AS ChiTietTinhTrang
+                             FROM CUONSACH cs
+                             LEFT JOIN CUONSACH_TINHTRANG cst ON cst.IDCuonSach = cs.ID
+                             LEFT JOIN THAMSOPHAT tsp ON tsp.ID = cst.IDThamSoPhat
+                             WHERE cs.IDSach = @IDSach AND cs.DaAn = 0
+                             GROUP BY cs.ID, cs.MaCuonSach, cs.IDSach, cs.TrangThai";
+
+            using var connection = GetOpenConnection();
+            var result = connection.Query<CuonSachDTO>(query, new { IDSach = idSach }).ToList();
+            return new BindingList<CuonSachDTO>(result);
         }
 
-        // Kiểm tra xem Lô sách này có cuốn nào đang bị mượn không
+        public static bool CallSP_ThemTinhTrang(int idCuonSach, int idThamSoPhat)
+        {
+            using var connection = GetOpenConnection();
+            int rows = connection.Execute("SP_ThemTinhTrang",
+                new { p_IDCuonSach = idCuonSach, p_IDThamSoPhat = idThamSoPhat },
+                commandType: CommandType.StoredProcedure);
+            return rows > 0;
+        }
+
         public static bool IsBatchBeingBorrowed(int idSach)
         {
-            // TrangThai = 0 nghĩa là Đang mượn
-            string query = "SELECT COUNT(*) FROM CUONSACH WHERE IDSach = @IDSach AND TrangThai = 0 AND DaAn = 0";
-
-            int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(query,
-                new MySqlParameter("@IDSach", idSach)
-            ));
-
-            return count > 0; // Trả về true nếu có sách đang mượn
+            const string query = "SELECT COUNT(*) FROM CUONSACH WHERE IDSach = @IDSach AND TrangThai = 0 AND DaAn = 0";
+            using var connection = GetOpenConnection();
+            int count = connection.ExecuteScalar<int>(query, new { IDSach = idSach });
+            return count > 0;
         }
 
         public static bool UpdateTinhTrang(int idCuonSach, int tinhTrangMoi)
         {
             string query = "UPDATE CUONSACH SET TrangThai = @TinhTrang WHERE ID = @ID";
-            int result = DataProvider.Instance.ExecuteNonQuery(query,
-                new MySqlParameter("@TinhTrang", tinhTrangMoi),
-                new MySqlParameter("@ID", idCuonSach)
-            );
-            return result > 0;
-        }
-
-        public static bool CapNhatChiTietTinhTrang(int idCuonSach, string? chiTietTinhTrang)
-        {
-            string query = "UPDATE CUONSACH SET ChiTietTinhTrang = @ChiTiet WHERE ID = @ID";
-            int result = DataProvider.Instance.ExecuteNonQuery(query,
-                new MySqlParameter("@ChiTiet", (object?)chiTietTinhTrang ?? DBNull.Value),
-                new MySqlParameter("@ID", idCuonSach)
-            );
+            using var connection = GetOpenConnection();
+            int result = connection.Execute(query, new { TinhTrang = tinhTrangMoi, ID = idCuonSach });
             return result > 0;
         }
     }

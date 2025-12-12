@@ -1,19 +1,26 @@
 namespace DTO
 {
-    /// <summary>
-    /// Quy định xử phạt cho từng tình trạng sách.
-    /// </summary>
     public class ThamSoPhatDTO
     {
         public int ID { get; set; }
         public string MaQuyDinh { get; set; } = string.Empty;
-        public string LoaiTinhTrang { get; set; } = string.Empty;
-        public string? MucDo { get; set; }
-        public int TienPhat { get; set; }
+        public string TenQuyDinh { get; set; } = string.Empty;
+        public int MucPhatPhanTram { get; set; }
         public string? GhiChu { get; set; }
 
-        public string TenHienThi => string.IsNullOrWhiteSpace(MucDo)
-            ? LoaiTinhTrang
-            : $"{LoaiTinhTrang} - {MucDo}";
+        // Trường mới để phân nhóm logic (Quan trọng)
+        public string? NhomTinhTrang { get; set; }
+
+        public bool CoLaDuyNhat { get; set; }
+        public bool CoLaMacDinh { get; set; }
+        public bool CoLaHuHong { get; set; }
+
+        public string TenHienThi => MucPhatPhanTram > 0
+            ? $"{TenQuyDinh} (Phạt {MucPhatPhanTram}%)"
+            : TenQuyDinh;
+
+        // Giữ lại property cũ để tương thích (nếu code cũ có dùng)
+        public string LoaiTinhTrang => TenQuyDinh;
+        public int MucPhat => MucPhatPhanTram;
     }
 }

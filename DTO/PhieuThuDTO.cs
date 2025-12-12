@@ -1,9 +1,4 @@
-﻿using DocumentFormat.OpenXml.Presentation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace DTO
 {
@@ -12,17 +7,12 @@ namespace DTO
         public int ID { get; set; }
         public string MaPhieuThu { get; set; } = string.Empty;
         public int IDDocGia { get; set; }
-        public string TenDocGia { get; set; }
+        public string TenDocGia { get; set; } = string.Empty;
         public int SoTienThu { get; set; }
         public DateTime NgayLapPhieu { get; set; }
 
         public PhieuThuDTO()
         {
-            ID = 0;
-            MaPhieuThu = string.Empty;
-            IDDocGia = 0;
-            TenDocGia = string.Empty;
-            SoTienThu = 0;
             NgayLapPhieu = DateTime.Now;
         }
 
@@ -35,5 +25,12 @@ namespace DTO
             SoTienThu = soTienThu;
             NgayLapPhieu = ngayLapPhieu;
         }
+    }
+
+    // DTO đơn giản dùng cho ComboBox lọc
+    public class DocGiaSimpleDTO
+    {
+        public int ID { get; set; }
+        public string HoTen { get; set; } = string.Empty;
     }
 }

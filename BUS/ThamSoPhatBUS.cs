@@ -1,4 +1,4 @@
-using DAO;
+﻿using DAO;
 using DTO;
 using System.Collections.Generic;
 
@@ -6,14 +6,10 @@ namespace BUS
 {
     public class ThamSoPhatBUS
     {
-        public static IEnumerable<ThamSoPhatDTO> LayTatCa()
+        // Lấy tất cả quy định phạt để đổ vào Combobox/Checklist
+        public static List<ThamSoPhatDTO> LayTatCa()
         {
-            return ThamSoPhatDAO.LayTatCa();
-        }
-
-        public static IEnumerable<ThamSoPhatDTO> LayTheoLoai(string loaiTinhTrang)
-        {
-            return ThamSoPhatDAO.LayTheoLoai(loaiTinhTrang);
+            return ThamSoPhatDAO.LayDanhSach();
         }
 
         public static ThamSoPhatDTO? Them(ThamSoPhatDTO thamSo)

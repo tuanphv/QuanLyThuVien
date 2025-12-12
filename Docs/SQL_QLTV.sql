@@ -1,1255 +1,567 @@
 -- =========================================================================
--- KHỞI TẠO CƠ SỞ DỮ LIỆU
+-- KHỞI TẠO DATABASE QUẢN LÝ THƯ VIỆN (FULL DATA & LOGIC)
 -- =========================================================================
 DROP DATABASE IF EXISTS QLTV;
-CREATE DATABASE QLTV;
+CREATE DATABASE QLTV CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE QLTV;
 
 -- =========================================================================
--- 1. ĐỊNH NGHĨA CÁC BẢNG (TABLES)
+-- I. CẤU TRÚC BẢNG (SCHEMA)
 -- =========================================================================
 
--- Bảng NHOMNGUOIDUNG
-CREATE TABLE NHOMNGUOIDUNG
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaNhomNguoiDung CHAR(6),
-	TenNhomNguoiDung VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL
+-- 1. HỆ THỐNG PHÂN QUYỀN (ID CỐ ĐỊNH ĐỂ KHỚP CODE C#)
+CREATE TABLE NHOMNGUOIDUNG (
+    ID INT PRIMARY KEY,
+    MaNhomNguoiDung CHAR(6),
+    TenNhomNguoiDung VARCHAR(255) NOT NULL
 );
 
--- Bảng CHUCNANG
-CREATE TABLE CHUCNANG
-(
-	ID INT PRIMARY KEY AUTO_INCREMENT,
-	MaChucNang CHAR(5),
-	TenChucNang VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL, -- Tên ngắn gọn của chức năng
-	TenManHinh VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL -- Tên chức năng hiển thị trên màn hình phân quyền
+CREATE TABLE CHUCNANG (
+    ID INT PRIMARY KEY, -- ID 1-15 khớp code
+    MaChucNang CHAR(10),
+    TenChucNang VARCHAR(255) NOT NULL,
+    TenManHinh VARCHAR(255) NOT NULL
 );
 
--- Bảng PHANQUYEN
-CREATE TABLE PHANQUYEN
-(
-	IDNhomNguoiDung INT,
-	IDChucNang INT,
+CREATE TABLE PHANQUYEN (
+    IDNhomNguoiDung INT,
+    IDChucNang INT,
     HanhDong ENUM('THEM', 'SUA', 'XOA', 'XEM'),
-	PRIMARY KEY (IDNhomNguoiDung, IDChucNang, HanhDong),
-	FOREIGN KEY (IDNhomNguoiDung) REFERENCES NHOMNGUOIDUNG(ID) ON DELETE CASCADE,
-	FOREIGN KEY (IDChucNang) REFERENCES CHUCNANG(ID) ON DELETE CASCADE
+    PRIMARY KEY (IDNhomNguoiDung, IDChucNang, HanhDong),
+    FOREIGN KEY (IDNhomNguoiDung) REFERENCES NHOMNGUOIDUNG(ID) ON DELETE CASCADE,
+    FOREIGN KEY (IDChucNang) REFERENCES CHUCNANG(ID) ON DELETE CASCADE
 );
 
--- Bảng NGUOIDUNG
-CREATE TABLE NGUOIDUNG
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaNguoiDung CHAR(6),
-	TenNguoiDung VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-	NgaySinh DATETIME,
-	ChucVu VARCHAR(255) CHARACTER SET UTF8MB4,
-	TenDangNhap VARCHAR(256) UNIQUE NOT NULL,
-	MatKhau VARCHAR(255) NOT NULL,
-	IDNhomNguoiDung INT NOT NULL,
-	FOREIGN KEY (IDNhomNguoiDung) REFERENCES NHOMNGUOIDUNG(ID) ON DELETE CASCADE
+CREATE TABLE NGUOIDUNG (
+    ID INT PRIMARY KEY, -- ID CỨNG
+    MaNguoiDung CHAR(6),
+    TenNguoiDung VARCHAR(255) NOT NULL,
+    NgaySinh DATETIME,
+    ChucVu VARCHAR(255),
+    TenDangNhap VARCHAR(256) UNIQUE NOT NULL,
+    MatKhau VARCHAR(255) NOT NULL,
+    IDNhomNguoiDung INT NOT NULL,
+    FOREIGN KEY (IDNhomNguoiDung) REFERENCES NHOMNGUOIDUNG(ID) ON DELETE CASCADE
 );
 
--- Bảng THELOAI
-CREATE TABLE THELOAI
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaTheLoai CHAR(6),
-        TenTheLoai VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL
+-- 2. DANH MỤC
+CREATE TABLE THELOAI (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaTheLoai CHAR(6),
+    TenTheLoai VARCHAR(255) NOT NULL
 );
 
--- Bảng TUASACH
-CREATE TABLE TUASACH
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaTuaSach CHAR(6),
-        TenTuaSach VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-        AnhBia MEDIUMBLOB,
-        DaAn INT DEFAULT 0
+CREATE TABLE TACGIA (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MATACGIA CHAR(6),
+    TenTacGia VARCHAR(255) NOT NULL,
+    NamSinh INT DEFAULT NULL
 );
 
--- Bảng CT_THELOAI (Bảng trung gian N:N: Tựa sách - Thể loại)
-CREATE TABLE CT_THELOAI
-(
-	IDTuaSach INT,
-	IDTheLoai INT,
-	PRIMARY KEY (IDTuaSach, IDTheLoai),
-	FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID) ON DELETE CASCADE,
-	FOREIGN KEY (IDTheLoai) REFERENCES THELOAI(ID) ON DELETE CASCADE
+CREATE TABLE NHAXUATBAN (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    TenNXB VARCHAR(255) NOT NULL,
+    DiaChi VARCHAR(255)
 );
 
--- Bảng TACGIA
-CREATE TABLE TACGIA
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MATACGIA CHAR(6),
-	TenTacGia VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-	NamSinh INT DEFAULT NULL
+CREATE TABLE NHACUNGCAP (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    TenNCC VARCHAR(255) NOT NULL, 
+    DiaChi VARCHAR(255)
 );
 
--- Bảng CT_TACGIA (Bảng trung gian N:N: Tác giả - Tựa sách)
-CREATE TABLE CT_TACGIA
-(
-	IDTacGia INT,
-	IDTuaSach INT,
-	primary key (IDTacGia, IDTuaSach),
-	FOREIGN KEY (IDTacGia) REFERENCES TACGIA(ID) ON DELETE CASCADE,
-	FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID) ON DELETE CASCADE
+-- 3. SÁCH (LOGIC MÃ SỐ & GIÁ)
+CREATE TABLE TUASACH (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaTuaSach CHAR(6), -- User nhập (VD: CS01)
+    TenTuaSach VARCHAR(255) NOT NULL,
+    AnhBia MEDIUMBLOB,
+    DaAn INT DEFAULT 0
 );
 
--- Bảng DOCGIA
-CREATE TABLE DOCGIA
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaDocGia CHAR(6),
-	HoTen VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-	NgaySinh DATETIME NOT NULL,
-	DiaChi VARCHAR(255) CHARACTER SET UTF8MB4,
-	NgayLapThe DATETIME NOT NULL,
-	NgayHetHan DATETIME NOT NULL,
-	TongNoHienTai INT NOT NULL DEFAULT 0,
-	IDNguoiDung INT UNIQUE,
-	FOREIGN KEY (IDNguoiDung) REFERENCES NGUOIDUNG(ID) ON DELETE SET NULL
+CREATE TABLE CT_THELOAI (
+    IDTuaSach INT, IDTheLoai INT, PRIMARY KEY (IDTuaSach, IDTheLoai),
+    FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID) ON DELETE CASCADE,
+    FOREIGN KEY (IDTheLoai) REFERENCES THELOAI(ID) ON DELETE CASCADE
+);
+CREATE TABLE CT_TACGIA (
+    IDTacGia INT, IDTuaSach INT, PRIMARY KEY (IDTacGia, IDTuaSach),
+    FOREIGN KEY (IDTacGia) REFERENCES TACGIA(ID) ON DELETE CASCADE,
+    FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID) ON DELETE CASCADE
 );
 
--- Bảng SACH (Lô sách)
-CREATE TABLE SACH
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaSach CHAR(12),
-        IDTuaSach INT NOT NULL,
-        SoLuongTong INT NOT NULL,
-        SoLuongConLai INT NOT NULL,
-        DonGia INT,
-        NamXB INT NOT NULL,
-        IDNhaXuatBan INT NOT NULL,
-        DaAn INT NOT NULL DEFAULT 0,
-        FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID)
+CREATE TABLE SACH (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaSach CHAR(12), -- Tự sinh: S + CS + 01 (SCS01)
+    IDTuaSach INT NOT NULL,
+    SoLuongTong INT NOT NULL DEFAULT 0,
+    SoLuongConLai INT NOT NULL DEFAULT 0,
+    DonGia DECIMAL(15,2) NOT NULL DEFAULT 0, -- Giá để tính phạt %
+    NamXB INT NOT NULL,
+    IDNhaXuatBan INT NOT NULL,
+    DaAn INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (IDTuaSach) REFERENCES TUASACH(ID),
+    FOREIGN KEY (IDNhaXuatBan) REFERENCES NHAXUATBAN(ID)
 );
 
--- Bảng CUONSACH (Cuốn sách vật lý)
-CREATE TABLE CUONSACH
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaCuonSach CHAR(18),
-        IDSach INT NOT NULL,
-        TrangThai INT NOT NULL DEFAULT 1, -- 0: Đang mượn, 1: Sẵn sàng, 2: Không khả dụng
-        DaAn INT NOT NULL DEFAULT 0,
-        FOREIGN KEY (IDSach) REFERENCES SACH(ID)
+CREATE TABLE CUONSACH (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaCuonSach CHAR(18), -- Tự sinh: C + SCS01 + 001 (CSCS01001)
+    IDSach INT NOT NULL,
+    TrangThai INT NOT NULL DEFAULT 1, -- 1: Sẵn sàng, 0: Đang mượn, 2: Hỏng/Mất
+    DaAn INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (IDSach) REFERENCES SACH(ID)
 );
 
--- Bảng NHAXUATBAN (Nhà xuất bản sách)
-CREATE TABLE NHAXUATBAN
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-    TenNXB VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-	DiaChi VARCHAR(255) CHARACTER SET UTF8MB4
+-- 4. QUY ĐỊNH PHẠT (CẤU TRÚC ĐỘNG + NHÓM)
+CREATE TABLE THAMSO (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    TuoiToiThieu INT DEFAULT 18, TuoiToiDa INT DEFAULT 55, ThoiHanThe INT DEFAULT 6,
+    KhoangCachXuatBan INT DEFAULT 8, SoSachMuonToiDa INT DEFAULT 5, SoNgayMuonToiDa INT DEFAULT 4,
+    DonGiaPhatMoiNgay INT DEFAULT 1000
 );
 
--- Bảng THAMSOPHAT (quy định xử phạt theo tình trạng sách)
-CREATE TABLE THAMSOPHAT
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaQuyDinh CHAR(6),
-        LoaiTinhTrang ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT') NOT NULL,
-        MucDo VARCHAR(50),
-        MucPhat INT NOT NULL, -- % mức phạt theo đơn giá sách
-        GhiChu VARCHAR(255)
+CREATE TABLE THAMSOPHAT (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaQuyDinh CHAR(6),
+    TenTinhTrang VARCHAR(255) NOT NULL, 
+    MucPhatPhanTram INT NOT NULL DEFAULT 0, -- Phạt theo % Giá sách
+    GhiChu VARCHAR(255),
+    
+    -- Cờ cấu hình Logic
+    CoLaDuyNhat BIT DEFAULT 0, -- 1: Độc quyền (Mới, Mất)
+    CoLaMacDinh BIT DEFAULT 0, -- 1: Tự động gán (Mới)
+    CoLaHuHong BIT DEFAULT 0,  -- 1: Loại khỏi lưu thông (Mất)
+    
+    -- Nhóm để loại trừ lẫn nhau (VD: Nhóm Rách)
+    NhomTinhTrang VARCHAR(50) NULL 
 );
 
--- Bảng PHIEUMUON (Phiếu tổng)
-CREATE TABLE PHIEUMUON
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaPhieuMuon CHAR(8),
-	IDDocGia INT NOT NULL,
-	NgayMuon Datetime NOT NULL,
-	NgayTraDuKien Datetime NOT NULL,
-	TrangThai INT NOT NULL DEFAULT 1, -- (0: Đã hoàn tất, 1: Đang hoạt động)
-	TongPhat INT DEFAULT 0,
-	FOREIGN KEY (IDDocGia) REFERENCES DOCGIA(ID)
+CREATE TABLE CUONSACH_TINHTRANG (
+    IDCuonSach INT,
+    IDThamSoPhat INT,
+    PRIMARY KEY (IDCuonSach, IDThamSoPhat),
+    FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE,
+    FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
 );
 
--- Bảng CT_PHIEUMUON (Chi tiết cuốn sách mượn/trả)
-CREATE TABLE CT_PHIEUMUON
-(
-        IDPhieuMuon INT,
-        IDCuonSach INT,
-        NgayTraThucTe DATETIME,
-        SoNgayTre INT DEFAULT 0,
-        TienPhat INT DEFAULT 0,
-        PRIMARY KEY (IDPhieuMuon, IDCuonSach),
-        FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE,
-        FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
+-- 5. NGHIỆP VỤ
+CREATE TABLE DOCGIA (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaDocGia CHAR(6),
+    HoTen VARCHAR(255) NOT NULL,
+    NgaySinh DATETIME NOT NULL,
+    DiaChi VARCHAR(255),
+    NgayLapThe DATETIME NOT NULL,
+    NgayHetHan DATETIME NOT NULL,
+    TongNoHienTai DECIMAL(15,2) NOT NULL DEFAULT 0,
+    IDNguoiDung INT UNIQUE,
+    FOREIGN KEY (IDNguoiDung) REFERENCES NGUOIDUNG(ID) ON DELETE SET NULL
 );
 
--- Nhiều - nhiều: tình trạng mượn theo THAMSOPHAT cho từng dòng phiếu mượn
-CREATE TABLE CT_PHIEUMUON_TINHTRANG
-(
-        IDPhieuMuon INT,
-        IDCuonSach INT,
-        IDThamSoPhat INT,
-        ChiTietTinhTrang VARCHAR(255) NULL,
-        PRIMARY KEY (IDPhieuMuon, IDCuonSach, IDThamSoPhat),
-        FOREIGN KEY (IDPhieuMuon, IDCuonSach) REFERENCES CT_PHIEUMUON(IDPhieuMuon, IDCuonSach) ON DELETE CASCADE,
-        FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
+CREATE TABLE PHIEUNHAPSACH (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaPhieuNhap CHAR(8),
+    IDNhaCungCap INT NOT NULL,
+    NgayNhap Datetime NOT NULL,
+    TongTien DECIMAL(15,2) NOT NULL DEFAULT 0,
+    FOREIGN KEY (IDNhaCungCap) REFERENCES NHACUNGCAP(ID)
 );
 
--- Bảng PHIEUTRA (Lưu phiếu trả riêng biệt)
-CREATE TABLE PHIEUTRA
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        MaPhieuTra CHAR(8),
-        IDPhieuMuon INT NOT NULL,
-        NgayTra DATETIME NOT NULL,
-        TongTienPhat INT DEFAULT 0,
-        FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE
+CREATE TABLE CT_PHIEUNHAP (
+    IDPhieuNhap INT, IDSach INT,
+    SoLuongNhap INT NOT NULL, DonGiaNhap DECIMAL(15,2) NOT NULL,
+    ThanhTien DECIMAL(15,2) AS (SoLuongNhap * DonGiaNhap) STORED,
+    PRIMARY KEY (IDPhieuNhap, IDSach),
+    FOREIGN KEY (IDPhieuNhap) REFERENCES PHIEUNHAPSACH(ID),
+    FOREIGN KEY (IDSach) REFERENCES SACH(ID) ON DELETE CASCADE
 );
 
--- Bảng CT_PHIEUTRA (Chi tiết từng cuốn trong phiếu trả)
-CREATE TABLE CT_PHIEUTRA
-(
-        IDPhieuTra INT,
-        IDCuonSach INT,
-        SoNgayTre INT DEFAULT 0,
-        TienPhat INT DEFAULT 0,
-        PRIMARY KEY (IDPhieuTra, IDCuonSach),
-        FOREIGN KEY (IDPhieuTra) REFERENCES PHIEUTRA(ID) ON DELETE CASCADE,
-        FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
+CREATE TABLE PHIEUMUON (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaPhieuMuon CHAR(8),
+    IDDocGia INT NOT NULL,
+    NgayMuon Datetime NOT NULL,
+    NgayTraDuKien Datetime NOT NULL,
+    TrangThai INT NOT NULL DEFAULT 1,
+    TongPhat DECIMAL(15,2) DEFAULT 0,
+    FOREIGN KEY (IDDocGia) REFERENCES DOCGIA(ID)
 );
 
--- Nhiều - nhiều: tình trạng trả theo THAMSOPHAT cho từng dòng phiếu trả
-CREATE TABLE CT_PHIEUTRA_TINHTRANG
-(
-        IDPhieuTra INT,
-        IDCuonSach INT,
-        IDThamSoPhat INT,
-        ChiTietTinhTrang VARCHAR(255) NULL,
-        PRIMARY KEY (IDPhieuTra, IDCuonSach, IDThamSoPhat),
-        FOREIGN KEY (IDPhieuTra, IDCuonSach) REFERENCES CT_PHIEUTRA(IDPhieuTra, IDCuonSach) ON DELETE CASCADE,
-        FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
+CREATE TABLE CT_PHIEUMUON (
+    IDPhieuMuon INT, IDCuonSach INT,
+    NgayTraThucTe DATETIME,
+    PRIMARY KEY (IDPhieuMuon, IDCuonSach),
+    FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID),
+    FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID)
 );
 
--- Bảng PHIEUTHU
-CREATE TABLE PHIEUTHU
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaPhieuThu CHAR(8),
-	IDDocGia INT NOT NULL,
-	SoTienThu INT NOT NULL DEFAULT 0,
-	NgayLap DATETIME NOT NULL,
-	FOREIGN KEY (IDDocGia) REFERENCES DOCGIA(ID)
+-- Snapshot tình trạng lúc mượn
+CREATE TABLE CT_PHIEUMUON_TINHTRANG (
+    IDPhieuMuon INT, IDCuonSach INT, IDThamSoPhat INT,
+    PRIMARY KEY (IDPhieuMuon, IDCuonSach, IDThamSoPhat),
+    FOREIGN KEY (IDPhieuMuon, IDCuonSach) REFERENCES CT_PHIEUMUON(IDPhieuMuon, IDCuonSach) ON DELETE CASCADE,
+    FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
 );
 
--- Bảng NHACUNGCAP
-CREATE TABLE NHACUNGCAP
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	TenNCC VARCHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-	DiaChi VARCHAR(255) CHARACTER SET UTF8MB4
+CREATE TABLE PHIEUTRA (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaPhieuTra CHAR(8),
+    IDPhieuMuon INT NOT NULL,
+    NgayTra DATETIME NOT NULL,
+    TongTienPhat DECIMAL(15,2) DEFAULT 0,
+    FOREIGN KEY (IDPhieuMuon) REFERENCES PHIEUMUON(ID) ON DELETE CASCADE
 );
 
--- Bảng PHIEUNHAPSACH
-CREATE TABLE PHIEUNHAPSACH
-(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-	MaPhieuNhap CHAR(8),
-	IDNhaCungCap INT NOT NULL,
-	NgayNhap Datetime NOT NULL,
-	TongTien INT NOT NULL DEFAULT 0,
-	FOREIGN KEY (IDNhaCungCap) REFERENCES NHACUNGCAP(ID)
+CREATE TABLE CT_PHIEUTRA (
+    IDPhieuTra INT, IDCuonSach INT,
+    TienPhat DECIMAL(15,2) DEFAULT 0,
+    PRIMARY KEY (IDPhieuTra, IDCuonSach),
+    FOREIGN KEY (IDPhieuTra) REFERENCES PHIEUTRA(ID) ON DELETE CASCADE,
+    FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE
 );
 
--- Bảng CT_PHIEUNHAP
-CREATE TABLE CT_PHIEUNHAP
-(
-	IDPhieuNhap INT,
-	IDSach INT,
-	SoLuongNhap INT NOT NULL,
-	DonGiaNhap INT NOT NULL,
-	ThanhTien INT AS (SoLuongNhap * DonGiaNhap) STORED,
-	PRIMARY KEY (IDPhieuNhap, IDSach),
-	FOREIGN KEY (IDPhieuNhap) REFERENCES PHIEUNHAPSACH(ID) ON DELETE CASCADE,
-	FOREIGN KEY (IDSach) REFERENCES SACH(ID) ON DELETE CASCADE
+-- Tình trạng lúc trả
+CREATE TABLE CT_PHIEUTRA_TINHTRANG (
+    IDPhieuTra INT, IDCuonSach INT, IDThamSoPhat INT,
+    PRIMARY KEY (IDPhieuTra, IDCuonSach, IDThamSoPhat),
+    FOREIGN KEY (IDPhieuTra, IDCuonSach) REFERENCES CT_PHIEUTRA(IDPhieuTra, IDCuonSach) ON DELETE CASCADE,
+    FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
 );
 
--- Bảng THAMSO
-CREATE TABLE THAMSO
-(
-        ID INT AUTO_INCREMENT PRIMARY KEY,
-        TuoiToiThieu INT NOT NULL,
-        TuoiToiDa INT NOT NULL,
-        ThoiHanThe INT NOT NULL,
-        KhoangCachXuatBan INT NOT NULL,
-        SoSachMuonToiDa INT NOT NULL,
-        SoNgayMuonToiDa INT NOT NULL,
-        DonGiaPhatMoiNgay INT NOT NULL
-);
-
-
-
--- Bảng nhiều - nhiều lưu các tình trạng đang áp dụng cho từng cuốn sách
-CREATE TABLE CUONSACH_TINHTRANG
-(
-        IDCuonSach INT,
-        IDThamSoPhat INT,
-        ChiTietTinhTrang VARCHAR(255) NULL,
-        PRIMARY KEY (IDCuonSach, IDThamSoPhat),
-        FOREIGN KEY (IDCuonSach) REFERENCES CUONSACH(ID) ON DELETE CASCADE,
-        FOREIGN KEY (IDThamSoPhat) REFERENCES THAMSOPHAT(ID)
+CREATE TABLE PHIEUTHU (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    MaPhieuThu CHAR(8),
+    IDDocGia INT NOT NULL,
+    SoTienThu DECIMAL(15,2) NOT NULL DEFAULT 0,
+    NgayLap DATETIME NOT NULL,
+    FOREIGN KEY (IDDocGia) REFERENCES DOCGIA(ID)
 );
 
 -- =========================================================================
--- 2. ĐỊNH NGHĨA TRIGGERS (Tự động tạo mã và Cập nhật Tồn kho/Trạng thái)
+-- II. LOGIC TỰ ĐỘNG (TRIGGERS & PROCEDURES)
 -- =========================================================================
-
 DELIMITER //
 
--- Triggers tạo mã nghiệp vụ (Ma...)
-CREATE TRIGGER before_insert_NHOMNGUOIDUNG BEFORE INSERT ON NHOMNGUOIDUNG
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM NHOMNGUOIDUNG);
-	SET NEW.MaNhomNguoiDung = CONCAT('NND', LPAD(@next_ID, 3, '0'));
+-- 1. Sinh Mã Tự Động
+CREATE TRIGGER bi_NHOMNGUOIDUNG BEFORE INSERT ON NHOMNGUOIDUNG FOR EACH ROW SET NEW.MaNhomNguoiDung = CONCAT('NND', LPAD(NEW.ID, 3, '0'));
+CREATE TRIGGER bi_NGUOIDUNG BEFORE INSERT ON NGUOIDUNG FOR EACH ROW SET NEW.MaNguoiDung = CONCAT('ND', LPAD(NEW.ID, 4, '0'));
+CREATE TRIGGER bi_DOCGIA BEFORE INSERT ON DOCGIA FOR EACH ROW SET NEW.MaDocGia = CONCAT('DG', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM DOCGIA), 4, '0'));
+CREATE TRIGGER bi_PHIEUMUON BEFORE INSERT ON PHIEUMUON FOR EACH ROW SET NEW.MaPhieuMuon = CONCAT('PM', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM PHIEUMUON), 6, '0'));
+CREATE TRIGGER bi_PHIEUTRA BEFORE INSERT ON PHIEUTRA FOR EACH ROW SET NEW.MaPhieuTra = CONCAT('PT', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM PHIEUTRA), 6, '0'));
+CREATE TRIGGER bi_PHIEUTHU BEFORE INSERT ON PHIEUTHU FOR EACH ROW SET NEW.MaPhieuThu = CONCAT('PT', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM PHIEUTHU), 6, '0'));
+CREATE TRIGGER bi_PHIEUNHAP BEFORE INSERT ON PHIEUNHAPSACH FOR EACH ROW SET NEW.MaPhieuNhap = CONCAT('P', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM PHIEUNHAPSACH), 6, '0'));
+CREATE TRIGGER bi_THELOAI BEFORE INSERT ON THELOAI FOR EACH ROW BEGIN IF NEW.MaTheLoai IS NULL THEN SET NEW.MaTheLoai = CONCAT(UPPER(LEFT(REPLACE(NEW.TenTheLoai, ' ', ''), 2)), LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM THELOAI), 2, '0')); END IF; END //
+CREATE TRIGGER bi_TACGIA BEFORE INSERT ON TACGIA FOR EACH ROW SET NEW.MATACGIA = CONCAT('TG', LPAD((SELECT IFNULL(MAX(ID),0)+1 FROM TACGIA), 4, '0'));
+CREATE TRIGGER bi_CHUCNANG BEFORE INSERT ON CHUCNANG FOR EACH ROW SET NEW.MaChucNang = CONCAT('C', LPAD(NEW.ID, 3, '0'));
+
+CREATE TRIGGER before_insert_SACH BEFORE INSERT ON SACH FOR EACH ROW BEGIN
+    DECLARE v_prefix VARCHAR(5);
+    DECLARE v_ma_tua VARCHAR(10);
+    SELECT MaTuaSach INTO v_ma_tua FROM TUASACH WHERE ID = NEW.IDTuaSach;
+    SET v_prefix = CONCAT('S', LEFT(v_ma_tua, 2));
+    SET NEW.MaSach = CONCAT(v_prefix, LPAD((SELECT IFNULL(COUNT(*),0)+1 FROM SACH WHERE MaSach LIKE CONCAT(v_prefix, '%')), 2, '0'));
 END //
 
-CREATE TRIGGER before_insert_CHUCNANG BEFORE INSERT ON CHUCNANG
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM CHUCNANG);
-	SET NEW.MaChucNang = CONCAT('C', LPAD(@next_ID, 3, '0'));
+CREATE TRIGGER before_insert_CUONSACH BEFORE INSERT ON CUONSACH FOR EACH ROW BEGIN
+    DECLARE v_ma_sach VARCHAR(12);
+    DECLARE v_prefix VARCHAR(15);
+    SELECT MaSach INTO v_ma_sach FROM SACH WHERE ID = NEW.IDSach;
+    SET v_prefix = CONCAT('C', v_ma_sach);
+    SET NEW.MaCuonSach = CONCAT(v_prefix, LPAD((SELECT IFNULL(COUNT(*),0)+1 FROM CUONSACH WHERE MaCuonSach LIKE CONCAT(v_prefix, '%')), 3, '0'));
 END //
 
-CREATE TRIGGER before_insert_NGUOIDUNG BEFORE INSERT ON NGUOIDUNG
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM NGUOIDUNG);
-	SET NEW.MaNguoiDung = CONCAT('ND', LPAD(@next_ID, 4, '0'));
+-- 2. Tự động set trạng thái 'MỚI' khi tạo cuốn sách
+CREATE TRIGGER ai_CUONSACH AFTER INSERT ON CUONSACH FOR EACH ROW BEGIN
+    DECLARE v_id_macdinh INT;
+    SELECT ID INTO v_id_macdinh FROM THAMSOPHAT WHERE CoLaMacDinh = 1 LIMIT 1;
+    IF v_id_macdinh IS NOT NULL THEN INSERT INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat) VALUES (NEW.ID, v_id_macdinh); END IF;
 END //
 
-CREATE TRIGGER before_insert_THELOAI BEFORE INSERT ON THELOAI
-FOR EACH ROW BEGIN
-        DECLARE v_prefix CHAR(2);
-        DECLARE v_next INT;
-
-        IF NEW.MaTheLoai IS NULL THEN
-                SET v_prefix = UPPER(LEFT(REPLACE(NEW.TenTheLoai, ' ', ''), 2));
-                SET v_next = (SELECT IFNULL(MAX(CAST(RIGHT(MaTheLoai, 2) AS UNSIGNED)), 0) + 1 FROM THELOAI WHERE MaTheLoai LIKE CONCAT(v_prefix, '%'));
-                SET NEW.MaTheLoai = CONCAT(v_prefix, LPAD(v_next, 2, '0'));
-        END IF;
-END //
-
-CREATE TRIGGER before_insert_TACGIA BEFORE INSERT ON TACGIA
-FOR EACH ROW BEGIN
-        SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM TACGIA);
-        SET NEW.MATACGIA = CONCAT('TG', LPAD(@next_ID, 4, '0'));
-END //
-
-CREATE TRIGGER before_insert_DOCGIA BEFORE INSERT ON DOCGIA
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM DOCGIA);
-	SET NEW.MaDocGia = CONCAT('DG', LPAD(@next_ID, 4, '0'));
-END //
-
-CREATE TRIGGER before_insert_SACH BEFORE INSERT ON SACH
-FOR EACH ROW BEGIN
-        DECLARE v_ma_tua CHAR(6);
-        DECLARE v_prefix VARCHAR(8);
-        DECLARE v_next_num INT;
-
-        SELECT MaTuaSach INTO v_ma_tua FROM TUASACH WHERE ID = NEW.IDTuaSach;
-        SET v_prefix = CONCAT('S', v_ma_tua);
-        SET v_next_num = (
-            SELECT IFNULL(MAX(CAST(SUBSTRING(MaSach, LENGTH(v_prefix) + 1) AS UNSIGNED)), 0) + 1
-            FROM SACH
-            WHERE MaSach LIKE CONCAT(v_prefix, '%')
-        );
-
-        SET NEW.MaSach = CONCAT(v_prefix, LPAD(v_next_num, 2, '0'));
-END //
-
-CREATE TRIGGER before_insert_CUONSACH BEFORE INSERT ON CUONSACH
-FOR EACH ROW BEGIN
-        DECLARE v_ma_sach CHAR(12);
-        DECLARE v_prefix VARCHAR(16);
-        DECLARE v_next_num INT;
-
-        SELECT MaSach INTO v_ma_sach FROM SACH WHERE ID = NEW.IDSach;
-        SET v_prefix = CONCAT('CS', v_ma_sach);
-        SET v_next_num = (
-            SELECT IFNULL(MAX(CAST(SUBSTRING(MaCuonSach, LENGTH(v_prefix) + 1) AS UNSIGNED)), 0) + 1
-            FROM CUONSACH
-            WHERE MaCuonSach LIKE CONCAT(v_prefix, '%')
-        );
-
-        SET NEW.MaCuonSach = CONCAT(v_prefix, LPAD(v_next_num, 3, '0'));
-        -- Mặc định trạng thái sẵn sàng khi tạo mới
-        IF NEW.TrangThai IS NULL THEN
-                SET NEW.TrangThai = 1;
-        END IF;
-END //
-
--- Sau khi tạo cuốn sách, gán mặc định tình trạng "mới" vào bảng nhiều - nhiều
-CREATE TRIGGER after_insert_CUONSACH
-AFTER INSERT ON CUONSACH
-FOR EACH ROW
+-- 3. Procedure: Thêm Tình Trạng Thông Minh (Dọn dẹp trạng thái cũ)
+CREATE PROCEDURE SP_ThemTinhTrang(IN p_IDCuonSach INT, IN p_IDThamSoPhat INT)
 BEGIN
-        DECLARE v_moi INT;
-
-        SELECT ID INTO v_moi FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
-
-        INSERT IGNORE INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
-        VALUES (NEW.ID, v_moi, NULL);
-END //
-
-CREATE TRIGGER before_insert_PHIEUMUON BEFORE INSERT ON PHIEUMUON
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM PHIEUMUON);
-	SET NEW.MaPhieuMuon = CONCAT('PM', LPAD(@next_ID, 6, '0'));
-END //
-
-CREATE TRIGGER before_insert_PHIEUTHU BEFORE INSERT ON PHIEUTHU
-FOR EACH ROW BEGIN
-	SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM PHIEUTHU);
-	SET NEW.MaPhieuThu = CONCAT('PT', LPAD(@next_ID, 6, '0'));
-END //
-
-CREATE TRIGGER before_insert_PHIEUNHAPSACH BEFORE INSERT ON PHIEUNHAPSACH
-FOR EACH ROW BEGIN
-        SET @next_ID = (SELECT IFNULL(MAX(ID), 0) + 1 FROM PHIEUNHAPSACH);
-        SET NEW.MaPhieuNhap = CONCAT('P', LPAD(@next_ID, 6, '0'));
-END //
-
--- Đảm bảo chỉ tồn tại duy nhất mã phạt "MOI" hoặc "MAT" cho mỗi cuốn sách
-CREATE TRIGGER before_insert_CUONSACH_TINHTRANG
-BEFORE INSERT ON CUONSACH_TINHTRANG
-FOR EACH ROW
-BEGIN
-        DECLARE v_loai ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT');
-
-        SELECT LoaiTinhTrang INTO v_loai FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
-
-        IF v_loai IN ('MOI', 'MAT') THEN
-                IF EXISTS (
-                        SELECT 1
-                        FROM CUONSACH_TINHTRANG cst
-                        JOIN THAMSOPHAT tsp ON cst.IDThamSoPhat = tsp.ID
-                        WHERE cst.IDCuonSach = NEW.IDCuonSach AND tsp.LoaiTinhTrang = v_loai
-                ) THEN
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Da ton tai tinh trang duy nhat MOI/MAT cho cuon sach';
-                END IF;
+    DECLARE v_IsDuyNhat BIT;
+    DECLARE v_IsHuHong BIT;
+    DECLARE v_Nhom VARCHAR(50);
+    
+    SELECT CoLaDuyNhat, CoLaHuHong, NhomTinhTrang INTO v_IsDuyNhat, v_IsHuHong, v_Nhom FROM THAMSOPHAT WHERE ID = p_IDThamSoPhat;
+    
+    IF v_IsDuyNhat = 1 THEN DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = p_IDCuonSach;
+    ELSE 
+        -- Xóa Mới/Mất cũ
+        IF EXISTS (SELECT 1 FROM CUONSACH_TINHTRANG ct JOIN THAMSOPHAT t ON ct.IDThamSoPhat = t.ID WHERE ct.IDCuonSach = p_IDCuonSach AND t.CoLaDuyNhat = 1) THEN 
+            DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = p_IDCuonSach; 
         END IF;
+        -- Xóa Cùng Nhóm
+        IF v_Nhom IS NOT NULL AND v_Nhom != '' THEN
+             DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = p_IDCuonSach AND IDThamSoPhat IN (SELECT ID FROM THAMSOPHAT WHERE NhomTinhTrang = v_Nhom);
+        END IF;
+    END IF;
+
+    INSERT IGNORE INTO CUONSACH_TINHTRANG (IDCuonSach, IDThamSoPhat) VALUES (p_IDCuonSach, p_IDThamSoPhat);
+    
+    IF v_IsHuHong = 1 THEN UPDATE CUONSACH SET TrangThai = 2 WHERE ID = p_IDCuonSach;
+    ELSE UPDATE CUONSACH SET TrangThai = 1 WHERE ID = p_IDCuonSach AND TrangThai != 0; END IF;
 END //
 
-CREATE TRIGGER before_insert_CT_PHIEUMUON_TINHTRANG
-BEFORE INSERT ON CT_PHIEUMUON_TINHTRANG
-FOR EACH ROW
+-- 4. Procedure: Mượn Sách
+CREATE PROCEDURE SP_ThemSachVaoPhieuMuon(IN p_IDPhieuMuon INT, IN p_IDCuonSach INT, IN p_DanhSachLoiMoi VARCHAR(255))
 BEGIN
-        DECLARE v_loai ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT');
-		DECLARE v_default_thamso INT;
+    DECLARE v_Pos INT DEFAULT 0;
+    DECLARE v_Val VARCHAR(10);
+    DECLARE v_TempList VARCHAR(255);
+    DECLARE v_TrangThai INT;
+    SELECT TrangThai INTO v_TrangThai FROM CUONSACH WHERE ID = p_IDCuonSach;
+    IF v_TrangThai != 1 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Lỗi: Sách đang bận.'; END IF;
 
-        IF NEW.IDThamSoPhat IS NULL THEN
-                SELECT ID INTO v_default_thamso FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
-                SET NEW.IDThamSoPhat = v_default_thamso;
-        END IF;
-
-        SELECT LoaiTinhTrang INTO v_loai FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
-
-        IF v_loai IN ('MOI', 'MAT') THEN
-                IF EXISTS (
-                        SELECT 1
-                        FROM CT_PHIEUMUON_TINHTRANG cpm
-                        JOIN THAMSOPHAT tsp ON cpm.IDThamSoPhat = tsp.ID
-                        WHERE cpm.IDPhieuMuon = NEW.IDPhieuMuon AND cpm.IDCuonSach = NEW.IDCuonSach AND tsp.LoaiTinhTrang = v_loai
-                ) THEN
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Da ton tai tinh trang duy nhat MOI/MAT cho chi tiet phieu muon';
-                END IF;
-        END IF;
+    IF p_DanhSachLoiMoi IS NOT NULL AND p_DanhSachLoiMoi != '' THEN
+        DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = p_IDCuonSach;
+        SET v_TempList = p_DanhSachLoiMoi;
+        WHILE LENGTH(v_TempList) > 0 DO
+            SET v_Pos = LOCATE(',', v_TempList);
+            IF v_Pos > 0 THEN SET v_Val = LEFT(v_TempList, v_Pos - 1); SET v_TempList = SUBSTRING(v_TempList, v_Pos + 1);
+            ELSE SET v_Val = v_TempList; SET v_TempList = ''; END IF;
+            -- Insert thủ công vì UI đã check logic rồi
+            INSERT IGNORE INTO CUONSACH_TINHTRANG (IDCuonSach, IDThamSoPhat) VALUES (p_IDCuonSach, CAST(v_Val AS UNSIGNED));
+        END WHILE;
+    END IF;
+    INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (p_IDPhieuMuon, p_IDCuonSach);
 END //
 
-CREATE TRIGGER after_insert_CT_PHIEUMUON_TINHTRANG
-AFTER INSERT ON CT_PHIEUMUON_TINHTRANG
-FOR EACH ROW
-BEGIN
-        DECLARE v_da_tra TINYINT;
-
-        SELECT CASE WHEN NgayTraThucTe IS NULL THEN 0 ELSE 1 END INTO v_da_tra
-        FROM CT_PHIEUMUON
-        WHERE IDPhieuMuon = NEW.IDPhieuMuon AND IDCuonSach = NEW.IDCuonSach;
-
-        IF v_da_tra = 0 THEN
-                DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach;
-
-                INSERT INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
-                SELECT IDCuonSach, IDThamSoPhat, ChiTietTinhTrang
-                FROM CT_PHIEUMUON_TINHTRANG
-                WHERE IDPhieuMuon = NEW.IDPhieuMuon AND IDCuonSach = NEW.IDCuonSach;
-
-                UPDATE CUONSACH
-                SET TrangThai = CASE WHEN EXISTS (
-                        SELECT 1 FROM CT_PHIEUMUON_TINHTRANG cpm
-                        JOIN THAMSOPHAT tsp ON cpm.IDThamSoPhat = tsp.ID
-                        WHERE cpm.IDPhieuMuon = NEW.IDPhieuMuon AND cpm.IDCuonSach = NEW.IDCuonSach AND tsp.LoaiTinhTrang = 'MAT'
-                ) THEN 2 ELSE 0 END
-                WHERE ID = NEW.IDCuonSach;
-        END IF;
+-- 5. Trigger Mượn
+CREATE TRIGGER ai_CT_PHIEUMUON AFTER INSERT ON CT_PHIEUMUON FOR EACH ROW BEGIN
+    UPDATE SACH SET SoLuongConLai = SoLuongConLai - 1 WHERE ID = (SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach);
+    UPDATE CUONSACH SET TrangThai = 0 WHERE ID = NEW.IDCuonSach;
+    INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
+    SELECT NEW.IDPhieuMuon, NEW.IDCuonSach, IDThamSoPhat FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach;
 END //
 
-CREATE TRIGGER before_insert_CT_PHIEUTRA_TINHTRANG
-BEFORE INSERT ON CT_PHIEUTRA_TINHTRANG
-FOR EACH ROW
-BEGIN
-        DECLARE v_loai ENUM('MOI', 'BAN', 'UOT', 'RACH', 'MAT');
-		DECLARE v_default_thamso INT;
+-- 6. Trigger Trả (Sync & Phạt)
+CREATE TRIGGER ai_CT_PHIEUTRA_TINHTRANG AFTER INSERT ON CT_PHIEUTRA_TINHTRANG FOR EACH ROW BEGIN
+    DECLARE v_PhanTramPhat INT;
+    DECLARE v_GiaSach DECIMAL(15,2);
+    DECLARE v_TienPhatCuThe DECIMAL(15,2);
+    DECLARE v_IDPhieuMuon INT;
+    DECLARE v_IsDuyNhat BIT; 
+    DECLARE v_IsHuHong BIT;
+    DECLARE v_Nhom VARCHAR(50);
+
+    SELECT CoLaDuyNhat, CoLaHuHong, NhomTinhTrang, MucPhatPhanTram INTO v_IsDuyNhat, v_IsHuHong, v_Nhom, v_PhanTramPhat FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
+    
+    -- Sync Sách
+    IF v_IsDuyNhat = 1 THEN DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach;
+    ELSE 
+        IF EXISTS (SELECT 1 FROM CUONSACH_TINHTRANG ct JOIN THAMSOPHAT t ON ct.IDThamSoPhat = t.ID WHERE ct.IDCuonSach = NEW.IDCuonSach AND t.CoLaDuyNhat = 1) THEN DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach; END IF;
+        IF v_Nhom IS NOT NULL AND v_Nhom != '' THEN DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach AND IDThamSoPhat IN (SELECT ID FROM THAMSOPHAT WHERE NhomTinhTrang = v_Nhom); END IF;
+    END IF;
+    INSERT IGNORE INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat) VALUES (NEW.IDCuonSach, NEW.IDThamSoPhat);
+
+    IF v_IsHuHong = 1 THEN UPDATE CUONSACH SET TrangThai=2 WHERE ID=NEW.IDCuonSach;
+    ELSE UPDATE CUONSACH SET TrangThai=1 WHERE ID=NEW.IDCuonSach; END IF;
+
+    -- Tính tiền
+    SELECT IDPhieuMuon INTO v_IDPhieuMuon FROM PHIEUTRA WHERE ID = NEW.IDPhieuTra;
+    IF NOT EXISTS (SELECT 1 FROM CT_PHIEUMUON_TINHTRANG WHERE IDPhieuMuon = v_IDPhieuMuon AND IDCuonSach = NEW.IDCuonSach AND IDThamSoPhat = NEW.IDThamSoPhat) THEN
+        SELECT s.DonGia INTO v_GiaSach FROM SACH s JOIN CUONSACH cs ON s.ID = cs.IDSach WHERE cs.ID = NEW.IDCuonSach;
+        SET v_TienPhatCuThe = (v_GiaSach * v_PhanTramPhat) / 100;
         
-        IF NEW.IDThamSoPhat IS NULL THEN
-                SELECT ID INTO v_default_thamso FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
-                SET NEW.IDThamSoPhat = v_default_thamso;
+        IF v_TienPhatCuThe > 0 THEN
+            UPDATE CT_PHIEUTRA SET TienPhat = TienPhat + v_TienPhatCuThe WHERE IDPhieuTra = NEW.IDPhieuTra AND IDCuonSach = NEW.IDCuonSach;
+            UPDATE PHIEUTRA SET TongTienPhat = TongTienPhat + v_TienPhatCuThe WHERE ID = NEW.IDPhieuTra;
+            UPDATE PHIEUMUON SET TongPhat = TongPhat + v_TienPhatCuThe WHERE ID = v_IDPhieuMuon;
+            UPDATE DOCGIA SET TongNoHienTai = TongNoHienTai + v_TienPhatCuThe WHERE ID = (SELECT IDDocGia FROM PHIEUMUON WHERE ID = v_IDPhieuMuon);
         END IF;
-
-        SELECT LoaiTinhTrang INTO v_loai FROM THAMSOPHAT WHERE ID = NEW.IDThamSoPhat;
-
-        IF v_loai IN ('MOI', 'MAT') THEN
-                IF EXISTS (
-                        SELECT 1
-                        FROM CT_PHIEUTRA_TINHTRANG cpt
-                        JOIN THAMSOPHAT tsp ON cpt.IDThamSoPhat = tsp.ID
-                        WHERE cpt.IDPhieuTra = NEW.IDPhieuTra AND cpt.IDCuonSach = NEW.IDCuonSach AND tsp.LoaiTinhTrang = v_loai
-                ) THEN
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Da ton tai tinh trang duy nhat MOI/MAT cho chi tiet phieu tra';
-                END IF;
-        END IF;
+    END IF;
 END //
 
-CREATE TRIGGER after_insert_CT_PHIEUTRA_TINHTRANG
-AFTER INSERT ON CT_PHIEUTRA_TINHTRANG
-FOR EACH ROW
-BEGIN
-        DELETE FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach;
-
-        INSERT INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
-        SELECT IDCuonSach, IDThamSoPhat, ChiTietTinhTrang
-        FROM CT_PHIEUTRA_TINHTRANG
-        WHERE IDPhieuTra = NEW.IDPhieuTra AND IDCuonSach = NEW.IDCuonSach;
-
-        UPDATE CUONSACH
-        SET TrangThai = CASE WHEN EXISTS (
-                SELECT 1 FROM CT_PHIEUTRA_TINHTRANG cpt
-                JOIN THAMSOPHAT tsp ON cpt.IDThamSoPhat = tsp.ID
-                WHERE cpt.IDPhieuTra = NEW.IDPhieuTra AND cpt.IDCuonSach = NEW.IDCuonSach AND tsp.LoaiTinhTrang = 'MAT'
-        ) THEN 2 ELSE 1 END
-        WHERE ID = NEW.IDCuonSach;
+CREATE TRIGGER ai_CT_PHIEUTRA AFTER INSERT ON CT_PHIEUTRA FOR EACH ROW BEGIN
+    UPDATE SACH SET SoLuongConLai = SoLuongConLai + 1 WHERE ID = (SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach);
+    UPDATE CT_PHIEUMUON SET NgayTraThucTe = NOW() WHERE IDPhieuMuon = (SELECT IDPhieuMuon FROM PHIEUTRA WHERE ID = NEW.IDPhieuTra) AND IDCuonSach = NEW.IDCuonSach;
 END //
 
--- Triggers xử lý nghiệp vụ Mượn, Trả, Nhập
-
--- TRIGGER khi MƯỢN SÁCH (INSERT vào CT_PHIEUMUON)
-CREATE TRIGGER after_insert_CT_PHIEUMUON
-AFTER INSERT ON CT_PHIEUMUON
-FOR EACH ROW
-BEGIN
-        -- 1. Giảm SoLuongConLai của Lô sách (SACH)
-        UPDATE SACH
-        SET SoLuongConLai = SoLuongConLai - 1
-        WHERE ID = (SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach);
-
-        -- 2. Đánh dấu cuốn sách đang mượn
-        UPDATE CUONSACH
-        SET TrangThai = 0
-        WHERE ID = NEW.IDCuonSach;
-
-        -- 3. Gán mặc định tình trạng mượn "mới" nếu chưa có dòng chi tiết tình trạng
-        IF NOT EXISTS (
-                SELECT 1 FROM CT_PHIEUMUON_TINHTRANG
-                WHERE IDPhieuMuon = NEW.IDPhieuMuon AND IDCuonSach = NEW.IDCuonSach
-        ) THEN
-                SELECT ID INTO @tt_moi FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1;
-                INSERT INTO CT_PHIEUMUON_TINHTRANG(IDPhieuMuon, IDCuonSach, IDThamSoPhat, ChiTietTinhTrang)
-                VALUES (NEW.IDPhieuMuon, NEW.IDCuonSach, @tt_moi, NULL);
-        END IF;
+CREATE TRIGGER ai_CT_PHIEUNHAP AFTER INSERT ON CT_PHIEUNHAP FOR EACH ROW BEGIN
+	UPDATE PHIEUNHAPSACH SET TongTien = TongTien + NEW.ThanhTien WHERE ID = NEW.IDPhieuNhap;
+	UPDATE SACH SET SoLuongTong = SoLuongTong + NEW.SoLuongNhap, SoLuongConLai = SoLuongConLai + NEW.SoLuongNhap WHERE ID = NEW.IDSach;
 END //
-
--- TRIGGER khi TRẢ SÁCH (UPDATE NgayTraThucTe trên CT_PHIEUMUON)
-CREATE TRIGGER after_update_CT_PHIEUMUON
-AFTER UPDATE ON CT_PHIEUMUON
-FOR EACH ROW
-BEGIN
-	DECLARE v_ID_sach INT;
-	DECLARE v_ID_docgia INT;
-
-        -- Chỉ xử lý khi NgayTraThucTe được cập nhật từ NULL sang giá trị thực
-        IF NEW.NgayTraThucTe IS NOT NULL AND OLD.NgayTraThucTe IS NULL THEN
-
-                -- 1. Tăng SoLuongConLai của Lô sách (SACH)
-                SELECT IDSach INTO v_ID_sach FROM CUONSACH WHERE ID = NEW.IDCuonSach;
-                UPDATE SACH
-                SET SoLuongConLai = SoLuongConLai + 1
-                WHERE ID = v_ID_sach;
-
-                -- 2. Đánh dấu cuốn sách đã được trả về kho (trạng thái sẵn sàng); tình trạng chi tiết sẽ được cập nhật khi lưu phiếu trả
-                UPDATE CUONSACH
-                SET TrangThai = 1
-                WHERE ID = NEW.IDCuonSach;
-
-                -- 3. Cập nhật Tổng nợ (TongNoHienTai) của Độc giả
-                IF NEW.TienPhat > 0 THEN
-                         SELECT IDDocGia INTO v_ID_docgia FROM PHIEUMUON WHERE ID = NEW.IDPhieuMuon;
-                         UPDATE DOCGIA
-                         SET TongNoHienTai = TongNoHienTai + NEW.TienPhat
-                         WHERE ID = v_ID_docgia;
-             
-             UPDATE PHIEUMUON
-             SET TongPhat = TongPhat + NEW.TienPhat
-             WHERE ID = NEW.IDPhieuMuon;
-		END IF;
-
-        END IF;
-END //
-
-
--- TRIGGER khi INSERT PHIEUTHU (Giảm nợ độc giả)
-CREATE TRIGGER after_insert_PHIEUTHU
-AFTER INSERT ON PHIEUTHU
-FOR EACH ROW
-BEGIN
-	UPDATE DOCGIA
-	SET TongNoHienTai = TongNoHienTai - NEW.SoTienThu
-	WHERE ID = NEW.IDDocGia;
-END //
-
--- TRIGGER khi NHẬP SÁCH (INSERT vào CT_PHIEUNHAP)
-CREATE TRIGGER after_insert_CT_PHIEUNHAP
-AFTER INSERT ON CT_PHIEUNHAP
-FOR EACH ROW
-BEGIN
-	-- 1. Cập nhật TongTien của Phiếu nhập
-	UPDATE PHIEUNHAPSACH
-	SET TongTien = TongTien + NEW.ThanhTien
-	WHERE ID = NEW.IDPhieuNhap;
-
-	-- 2. Cập nhật SoLuongTong và SoLuongConLai của Lô sách (SACH)
-	UPDATE SACH
-	SET SoLuongTong = SoLuongTong + NEW.SoLuongNhap,
-		SoLuongConLai = SoLuongConLai + NEW.SoLuongNhap
-	WHERE ID = NEW.IDSach;
-END //
-
-
--- Khôi phục DELIMITER
 DELIMITER ;
 
 -- =========================================================================
--- 3: CHÈN DỮ LIỆU MẪU (INSERT INTO ... VALUES)
+-- III. DỮ LIỆU MẪU (BƠM DỮ LIỆU GIAO DỊCH LỚN)
 -- =========================================================================
 
--- 1. THAM SỐ (THAMSO)
-INSERT INTO THAMSO (TuoiToiThieu, TuoiToiDa, ThoiHanThe, KhoangCachXuatBan, SoSachMuonToiDa, SoNgayMuonToiDa, DonGiaPhatMoiNgay)
-VALUES(18, 55, 6, 8, 5, 4, 1000);
-
-
--- 1b. Quy định phạt (THAMSOPHAT)
-INSERT INTO THAMSOPHAT (MaQuyDinh, LoaiTinhTrang, MucDo, MucPhat, GhiChu) VALUES
-('QD001', 'MOI', NULL, 0, 'Sách mới, không phạt'),
-('QD002', 'BAN', 'NHẸ', 5, 'Lau sạch được'),
-('QD003', 'UOT', 'NHẸ', 8, 'Ẩm nhẹ, chưa rách'),
-('QD004', 'RACH', 'DUOI3', 10, 'Rách dưới 3 trang'),
-('QD005', 'RACH', 'DUOI5', 20, 'Rách dưới 5 trang'),
-('QD006', 'RACH', 'TREN5', 40, 'Rách trên 5 trang'),
-('QD007', 'MAT', NULL, 100, 'Mất sách, yêu cầu đền bù');
-
--- Các biến tiện dụng để tham chiếu tình trạng theo THAMSOPHAT (đảm bảo đồng bộ khi có thay đổi)
-SET @TT_MOI = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MOI' ORDER BY ID LIMIT 1);
-SET @TT_BAN = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'BAN' ORDER BY ID LIMIT 1);
-SET @TT_UOT = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'UOT' ORDER BY ID LIMIT 1);
-SET @TT_RACH_DUOI3 = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'RACH' AND MucDo = 'DUOI3' ORDER BY ID LIMIT 1);
-SET @TT_RACH_DUOI5 = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'RACH' AND MucDo = 'DUOI5' ORDER BY ID LIMIT 1);
-SET @TT_RACH_TREN5 = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'RACH' AND MucDo = 'TREN5' ORDER BY ID LIMIT 1);
-SET @TT_MAT = (SELECT ID FROM THAMSOPHAT WHERE LoaiTinhTrang = 'MAT' ORDER BY ID LIMIT 1);
-
-
--- 2. DỮ LIỆU CƠ BẢN: NHÓM NGƯỜI DÙNG & CHỨC NĂNG
--- Triggers sẽ tự động sinh MaNhomNguoiDung và MaChucNang
-INSERT INTO NHOMNGUOIDUNG (TenNhomNguoiDung)
-VALUES ('Quản Lý'), ('Thủ Thư'), ('Độc Giả');
-
-INSERT INTO CHUCNANG (TenChucNang, TenManHinh)
-VALUES ('TQUAN', 'Tổng quan/Báo cáo nhanh'),	-- ID = 1
-       ('TL', 'Thể loại'),                     	-- ID = 2
-       ('TG', 'Tác giả'),                      	-- ID = 3
-	   ('NXB', 'Nhà xuất bản'),					-- ID = 4
-       ('NCC', 'Nhà cung cấp'),                	-- ID = 5
-       ('TS', 'Tựa sách'),                     	-- ID = 6
-       ('SACH', 'Lô sách & Cuốn sách'),        	-- ID = 7
-       ('PN', 'Phiếu nhập sách'),        		-- ID = 8
-       ('PMS', 'Phiếu mượn sách'),          	-- ID = 9
-       ('PTS', 'Phiếu trả sách'),				-- ID = 10
-       ('PT', 'Phiếu thu'),                    	-- ID = 11
-       ('BCQH', 'Báo cáo quá hạn/phạt'),       	-- ID = 12
-       ('ND', 'Người dùng (Tài khoản)'),      	-- ID = 13
-       ('DG', 'Độc giả'),        				-- ID = 14
-       ('PQ', 'Phân quyền');                   	-- ID = 15
-
--- 3. PHÂN QUYỀN (PHANQUYEN)
--- Gán quyền cho Admin (ID=1) - Toàn quyền trên mọi module (1-13)
-INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong)
-SELECT IDNhom, IDChucNang, HanhDong FROM (
-    SELECT 1 AS IDNhom, ID AS IDChucNang, 'THEM' AS HanhDong FROM CHUCNANG
-    UNION ALL SELECT 1, ID, 'SUA' FROM CHUCNANG
-    UNION ALL SELECT 1, ID, 'XOA' FROM CHUCNANG
-    UNION ALL SELECT 1, ID, 'XEM' FROM CHUCNANG
-) AS T;
-
--- Gán quyền cho Thủ thư (ID=2)
-INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong)
-VALUES
--- Module Độc giả, Danh mục (2, 3, 4, 5, 6, 7, 13): Thêm, Sửa, Xem
-(2, 2, 'THEM'), (2, 2, 'SUA'), (2, 2, 'XEM'), -- Thể loại
-(2, 3, 'THEM'), (2, 3, 'SUA'), (2, 3, 'XEM'), -- Tác giả
-(2, 4, 'THEM'), (2, 4, 'SUA'), (2, 4, 'XEM'), -- NXB
-(2, 5, 'THEM'), (2, 5, 'SUA'), (2, 5, 'XEM'), -- NCC
-(2, 6, 'THEM'), (2, 6, 'SUA'), (2, 6, 'XEM'), -- Tựa sách
-(2, 7, 'THEM'), (2, 7, 'SUA'), (2, 7, 'XEM'), -- Lô sách/CS
-(2, 9, 'THEM'), (2, 9, 'SUA'), (2, 9, 'XEM'), -- Phiếu mượn sách
-(2, 10, 'THEM'), (2, 10, 'SUA'), (2, 10, 'XEM'), -- Phiếu trả sách
-(2, 13, 'THEM'), (2, 13, 'SUA'), (2, 13, 'XEM'), -- Hồ sơ Độc giả
-
--- Module Phiếu Nhập (8): Nhập sách (THEM)
-(2, 8, 'THEM'), (2, 8, 'XEM'),
-
--- Module Phiếu Thu (11): Lập phiếu thu (THEM)
-(2, 11, 'THEM'), (2, 11, 'XEM'),
-
--- Module Báo cáo (1, 12): Xem
-(2, 1, 'XEM'),
-(2, 12, 'XEM');
-
-
--- Gán quyền cho Độc giả (ID=3)
-INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) VALUES
--- Quyền XEM (VIEW)
-(3, 1, 'XEM'), -- Tổng quan/Báo cáo nhanh
-(3, 2, 'XEM'), -- Thể loại
-(3, 3, 'XEM'), -- Tác giả
-(3, 4, 'XEM'), -- Nhà xuất bản
-(3, 5, 'XEM'), -- Nhà cung cấp (Tùy chọn)
-(3, 6, 'XEM'), -- Tựa sách (Rất quan trọng)
-(3, 7, 'XEM'), -- Lô sách & Cuốn sách
-(3, 9, 'XEM'), -- Phiếu mượn sách (Xem lịch sử)
-(3, 10, 'XEM'), -- Phiếu trả sách (Xem lịch sử)
-(3, 12, 'XEM'), -- Báo cáo quá hạn/phạt
-
--- Quyền THÊM (ADD) cho Phiếu mượn (đặt mượn sách)
-(3, 9, 'THEM');
-
--- 4. NGƯỜI DÙNG (NGUOIDUNG) & ĐỘC GIẢ (DOCGIA)
--- Tài khoản hệ thống
-INSERT INTO NGUOIDUNG(TenNguoiDung, NgaySinh, TenDangNhap, MatKhau, IDNhomNguoiDung)
-VALUES ('Admin Hệ Thống', '2000-01-01 00:00:00', 'admin', '123', 1), -- ID = 1
-       ('Thủ Thư Nguyễn Văn A', '2000-01-01 00:00:00', 'lib', '123', 2); -- ID = 2
-
--- Tài khoản Độc giả (ID = 3 đến 6)
-INSERT INTO NGUOIDUNG(TenNguoiDung, NgaySinh, TenDangNhap, MatKhau, IDNhomNguoiDung)
-VALUES ('Nguyễn Mai Anh', '2003-06-11 00:00:00', 'docgia1', '123', 3), -- ID = 3
-       ('Lê Thành Đô', '2003-01-08 00:00:00', 'docgia2', '123', 3), -- ID = 4
-       ('Huỳnh Hồng Thu Giang', '2003-02-24 00:00:00', 'docgia3', '123', 3), -- ID = 5
-       ('Trần Nhật Huy', '2003-01-03 00:00:00', 'docgia4', '123', 3); -- ID = 6
-
--- Hồ sơ Độc giả (DOCGIA)
-INSERT INTO DOCGIA (HoTen, NgaySinh, NgayLapThe, NgayHetHan, IDNguoiDung, TongNoHienTai)
-VALUES ('Nguyễn Mai Anh', '2003-06-11 00:00:00', '2025-01-01 00:00:00', '2025-07-01 00:00:00', 3, 0), -- ID = 1
-       ('Lê Thành Đô', '2003-01-08 00:00:00', '2024-12-10 00:00:00', '2025-06-10 00:00:00', 4, 5000), -- ID = 2, Đang nợ 5000
-       ('Huỳnh Hồng Thu Giang', '2003-02-24 00:00:00', '2025-02-05 00:00:00', '2025-08-05 00:00:00', 5, 0), -- ID = 3
-       ('Trần Nhật Huy', '2003-01-03 00:00:00', '2025-03-15 00:00:00', '2025-09-15 00:00:00', 6, 0); -- ID = 4
-
-
--- 5. DANH MỤC: THỂ LOẠI, TÁC GIẢ, TỰA SÁCH
-INSERT INTO THELOAI (MaTheLoai, TenTheLoai)
-VALUES ('KH01', 'Khoa học máy tính'),
-       ('TL01', 'Tài liệu tham khảo'),
-       ('TT01', 'Tiểu thuyết'),
-       ('KT01', 'Kinh tế học'),
-       ('VH01', 'Văn học thiếu nhi');
-
-INSERT INTO TACGIA (TenTacGia, NamSinh)
-VALUES ('Nguyễn Văn Trí', 1984), ('Phạm Thị La', 1980), ('Ernest Hemingway', 1975), ('Hector Malot', 1982);
-
--- Cột AnhBia (MEDIUMBLOB) để NULL
-INSERT INTO TUASACH (MaTuaSach, TenTuaSach)
-VALUES ('KHDL01', 'Cơ sở dữ liệu nâng cao'),
-       ('KHKP01', 'Khai phá dữ liệu (Data Mining)'),
-       ('TTOG01', 'Ông Già Và Biển Cả'),
-       ('TTKG01', 'Không Gia Đình');
-
--- Liên kết Thể loại (CT_THELOAI)
-INSERT INTO CT_THELOAI VALUES (1, 1), (1, 2); -- Tựa sách 1: Khoa học MT, TL tham khảo
-INSERT INTO CT_THELOAI VALUES (2, 1), (2, 2); -- Tựa sách 2: Khoa học MT, TL tham khảo
-INSERT INTO CT_THELOAI VALUES (3, 3);         -- Tựa sách 3: Tiểu thuyết
-INSERT INTO CT_THELOAI VALUES (4, 3), (4, 5); -- Tựa sách 4: Tiểu thuyết, Văn học thiếu nhi
-
--- Liên kết Tác giả (CT_TACGIA)
-INSERT INTO CT_TACGIA VALUES (1, 1), (1, 2);
-INSERT INTO CT_TACGIA VALUES (2, 2);
-INSERT INTO CT_TACGIA VALUES (3, 3);
-INSERT INTO CT_TACGIA VALUES (4, 4);
-
-
--- 6. NHẬP SÁCH & TỒN KHO
-INSERT INTO NHACUNGCAP (TenNCC, DiaChi)
-VALUES ('Vinabook', 'HCM'), ('Fahasa', 'Hà Nội');
-
-INSERT INTO PHIEUNHAPSACH (IDNhaCungCap, NgayNhap)
-VALUES (1, '2025-01-10 09:00:00'), -- ID = 1
-       (2, '2025-01-15 14:30:00'); -- ID = 2
-       
-INSERT INTO NHAXUATBAN (TenNXB, DiaChi)
-VALUES ('NXB Trẻ', 'HCM'), ('NXB Giáo dục Việt Nam', 'Hà Nội');
-
--- Lô sách (SACH) - SoLuongTong/ConLai ban đầu bằng 0, được cập nhật bởi Trigger CT_PHIEUNHAP
-INSERT INTO SACH (IDTuaSach, SoLuongTong, SoLuongConLai, DonGia, NamXB, IDNhaXuatBan)
-VALUES (1, 0, 0, 80000, 2020, 1), -- ID = 1 (CSDL Nâng cao)
-       (2, 0, 0, 120000, 2023, 1), -- ID = 2 (Data Mining)
-       (3, 0, 0, 65000, 2024, 2); -- ID = 3 (Ông Già Và Biển Cả)
-
--- Chi tiết Phiếu Nhập (Trigger cập nhật SACH và TongTien PHIEUNHAPSACH)
-INSERT INTO CT_PHIEUNHAP (IDPhieuNhap, IDSach, SoLuongNhap, DonGiaNhap)
-VALUES (1, 1, 10, 70000), -- Nhập 10 cuốn S1
-       (1, 2, 5, 100000),  -- Nhập 5 cuốn S2
-       (2, 3, 15, 60000);  -- Nhập 15 cuốn S3
-
--- Cuốn Sách Vật Lý (CUONSACH)
-INSERT INTO CUONSACH (IDSach)
-VALUES (1), (1), (1), (1), (1), (1), (1), (1), (1), (1), -- SCS001 (10 cuốn: CSCS001001 ... CSCS001010)
-       (2), (2), (2), (2), (2), -- SMT001 (5 cuốn: CSMT001001 ... CSMT001005)
-       (3), (3), (3), (3), (3), (3), (3), (3), (3), (3), (3), (3), (3), (3), (3); -- SOG001 (15 cuốn: CSOG001001 ... CSOG001015)
-
-
--- 7. MƯỢN TRẢ & PHẠT
-
--- 7.1. Phiếu Mượn 1: DG1 (Nguyễn Mai Anh) - Không trễ
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien)
-VALUES (1, '2025-03-01 10:00:00', '2025-03-05 10:00:00'); -- ID = 1
-
--- Chi tiết Mượn (Trigger cập nhật CUONSACH và SACH)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (1, 1), (1, 16);
-
--- Trả sách (Ngày 05/03/2025 - Đúng hạn)
-UPDATE CT_PHIEUMUON
-SET NgayTraThucTe = '2025-03-05 09:30:00', SoNgayTre = 0, TienPhat = 0
-WHERE IDPhieuMuon = 1 AND IDCuonSach IN (1, 16);
-
-INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
-VALUES ('PT000001', 1, '2025-03-05 09:30:00', 0);
-INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
-VALUES (1, 1, 0, 0), (1, 16, 0, 0);
-INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat)
-VALUES (1, 1, @TT_MOI), (1, 16, @TT_MOI);
-
-
--- 7.2. Phiếu Mượn 2: DG2 (Lê Thành Đô) - Trễ 2 ngày
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien)
-VALUES (2, '2025-03-10 14:00:00', '2025-03-14 14:00:00'); -- ID = 2
-
--- Chi tiết Mượn
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (2, 2), (2, 17);
-UPDATE CT_PHIEUMUON_TINHTRANG
-SET IDThamSoPhat = @TT_BAN
-WHERE IDPhieuMuon = 2 AND IDCuonSach = 2;
-
-UPDATE CT_PHIEUMUON_TINHTRANG
-SET ChiTietTinhTrang="NHẸ"
-WHERE IDPhieuMuon = 2 AND IDCuonSach = 2;
-
-
-
--- Trả sách (Ngày 16/03/2025 - Trễ 2 ngày, Phạt 2000/cuốn)
-UPDATE CT_PHIEUMUON
-SET NgayTraThucTe = '2025-03-16 10:00:00', SoNgayTre = 2, TienPhat = 2000
-WHERE IDPhieuMuon = 2 AND IDCuonSach = 2; -- Nợ DG2: 5000 + 2000 = 7000
-
-UPDATE CT_PHIEUMUON
-SET NgayTraThucTe = '2025-03-16 10:00:00', SoNgayTre = 2, TienPhat = 2000
-WHERE IDPhieuMuon = 2 AND IDCuonSach = 17; -- Nợ DG2: 7000 + 2000 = 9000
-
-INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
-VALUES ('PT000002', 2, '2025-03-16 10:00:00', 4000);
-INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, SoNgayTre, TienPhat)
-VALUES (2, 2, 2, 2000), (2, 17, 2, 2000);
-INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat)
-VALUES (2, 2, @TT_BAN), (2, 17, @TT_MOI);
-
-
--- 7.3. Phiếu Thu (DG2 thanh toán 5000 VND)
-INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
-VALUES (2, 5000, '2025-03-20 09:00:00');
--- Trigger cập nhật TongNoHienTai cho DG2: 9000 - 5000 = 4000 VND
-
-
--- 7.4. Phiếu Mượn 3: DG3 (Huỳnh Hồng Thu Giang) - Đang mượn (để kiểm tra tồn kho)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien)
-VALUES (3, NOW(), DATE_ADD(NOW(), INTERVAL 4 DAY)); -- ID = 3
-
--- Chi tiết Mượn
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (3, 3);
--- Cuốn sách 3 (CS0003) đang được mượn với tình trạng 'MOI'. SoLuongConLai của S1 (CSDL Nâng cao) giảm 1.
--- =========================================================================
--- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
--- Mục đích: Tạo dữ liệu phong phú để demo chức năng báo cáo/thống kê
--- =========================================================================
-
--- USE QLTV;
-
--- =========================================================================
--- SCRIPT THÊM DỮ LIỆU MẪU CHO THỐNG KÊ
--- Mục đích: Tạo dữ liệu phong phú để demo chức năng báo cáo/thống kê
--- =========================================================================
-
--- =========================================================================
--- 1. THÊM SÁCH MỚI (để có nhiều tựa sách cho thống kê)
--- =========================================================================
-
--- Thêm tựa sách mới
-INSERT INTO TUASACH (MaTuaSach, TenTuaSach)
-VALUES
-    ('LT01', 'Lập trình C# cơ bản'),           -- ID = 5
-    ('CT01', 'Cấu trúc dữ liệu và giải thuật'), -- ID = 6
-    ('HT01', 'Thiết kế hệ thống phân tán'),     -- ID = 7
-    ('AI01', 'Trí tuệ nhân tạo'),              -- ID = 8
-    ('HM01', 'Học máy (Machine Learning)'),    -- ID = 9
-    ('AT01', 'An toàn thông tin'),             -- ID = 10
-    ('MT01', 'Mạng máy tính'),                 -- ID = 11
-    ('LT02', 'Lập trình Python'),              -- ID = 12
-    ('TR01', 'Toán rời rạc'),                  -- ID = 13
-    ('DS01', 'Đại số tuyến tính');             -- ID = 14
-
--- Liên kết thể loại cho sách mới
-INSERT INTO CT_THELOAI VALUES 
-    (5, 1), (6, 1), (7, 1), (8, 1), (9, 1),
-    (10, 1), (11, 1), (12, 1), (13, 1), (14, 1);
-
--- Liên kết tác giả (dùng tác giả có sẵn)
-INSERT INTO CT_TACGIA VALUES 
-    (1, 5), (1, 6), (1, 7), (2, 8), (2, 9),
-    (2, 10), (1, 11), (2, 12), (1, 13), (2, 14);
-
--- Thêm lô sách mới
-INSERT INTO SACH (IDTuaSach, SoLuongTong, SoLuongConLai, DonGia, NamXB, IDNhaXuatBan)
-VALUES 
-    (5, 0, 0, 95000, 2023, 1),  -- ID = 4 (Lập trình C#)
-    (6, 0, 0, 110000, 2022, 1), -- ID = 5 (Cấu trúc DL)
-    (7, 0, 0, 130000, 2024, 2), -- ID = 6 (Hệ thống phân tán)
-    (8, 0, 0, 140000, 2024, 1), -- ID = 7 (AI)
-    (9, 0, 0, 150000, 2024, 1), -- ID = 8 (ML)
-    (10, 0, 0, 105000, 2023, 2), -- ID = 9 (An toàn TT)
-    (11, 0, 0, 98000, 2023, 1),  -- ID = 10 (Mạng MT)
-    (12, 0, 0, 88000, 2024, 1),  -- ID = 11 (Python)
-    (13, 0, 0, 92000, 2022, 2),  -- ID = 12 (Toán rời rạc)
-    (14, 0, 0, 90000, 2023, 2);  -- ID = 13 (Đại số tuyến tính)
-
--- Tạo phiếu nhập cho sách mới
-INSERT INTO PHIEUNHAPSACH (IDNhaCungCap, NgayNhap)
-VALUES 
-    (1, '2025-01-20 10:00:00'), -- ID = 3
-    (2, '2025-02-01 14:00:00'); -- ID = 4
-
--- Chi tiết phiếu nhập
-INSERT INTO CT_PHIEUNHAP (IDPhieuNhap, IDSach, SoLuongNhap, DonGiaNhap)
-VALUES 
-    (3, 4, 8, 85000),   -- C# (8 cuốn)
-    (3, 5, 10, 100000), -- CTDL (10 cuốn)
-    (3, 6, 6, 120000),  -- Phân tán (6 cuốn)
-    (4, 7, 12, 130000), -- AI (12 cuốn)
-    (4, 8, 10, 140000), -- ML (10 cuốn)
-    (4, 9, 8, 95000),   -- An toàn (8 cuốn)
-    (4, 10, 10, 88000), -- Mạng (10 cuốn)
-    (4, 11, 15, 80000), -- Python (15 cuốn)
-    (4, 12, 10, 85000), -- Toán rời rạc (10 cuốn)
-    (4, 13, 10, 85000); -- Đại số (10 cuốn)
-
--- Thêm cuốn sách vật lý (ID từ 31-129)
--- C# (8 cuốn): 31-38
-INSERT INTO CUONSACH (IDSach) VALUES (4), (4), (4), (4), (4), (4), (4), (4);
--- CTDL (10 cuốn): 39-48
-INSERT INTO CUONSACH (IDSach) VALUES (5), (5), (5), (5), (5), (5), (5), (5), (5), (5);
--- Phân tán (6 cuốn): 49-54
-INSERT INTO CUONSACH (IDSach) VALUES (6), (6), (6), (6), (6), (6);
--- AI (12 cuốn): 55-66
-INSERT INTO CUONSACH (IDSach) VALUES (7), (7), (7), (7), (7), (7), (7), (7), (7), (7), (7), (7);
--- ML (10 cuốn): 67-76
-INSERT INTO CUONSACH (IDSach) VALUES (8), (8), (8), (8), (8), (8), (8), (8), (8), (8);
--- An toàn (8 cuốn): 77-84
-INSERT INTO CUONSACH (IDSach) VALUES (9), (9), (9), (9), (9), (9), (9), (9);
--- Mạng (10 cuốn): 85-94
-INSERT INTO CUONSACH (IDSach) VALUES (10), (10), (10), (10), (10), (10), (10), (10), (10), (10);
--- Python (15 cuốn): 95-109
-INSERT INTO CUONSACH (IDSach) VALUES (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11), (11);
--- Toán rời rạc (10 cuốn): 110-119
-INSERT INTO CUONSACH (IDSach) VALUES (12), (12), (12), (12), (12), (12), (12), (12), (12), (12);
--- Đại số (10 cuốn): 120-129
-INSERT INTO CUONSACH (IDSach) VALUES (13), (13), (13), (13), (13), (13), (13), (13), (13), (13);
-
--- =========================================================================
--- 2. THÊM PHIẾU MƯỢN LỊCH SỬ (trải đều qua các tháng)
--- =========================================================================
-
--- THÁNG 1/2025 (5 phiếu mượn)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES 
-    (1, '2025-01-05 09:00:00', '2025-01-09 09:00:00', 0), -- PM000004
-    (2, '2025-01-10 10:30:00', '2025-01-14 10:30:00', 0), -- PM000005
-    (3, '2025-01-15 14:00:00', '2025-01-19 14:00:00', 0), -- PM000006
-    (4, '2025-01-20 11:00:00', '2025-01-24 11:00:00', 0), -- PM000007
-    (1, '2025-01-25 15:30:00', '2025-01-29 15:30:00', 0); -- PM000008
-
--- Chi tiết mượn tháng 1
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
-VALUES 
-    (4, 31, '2025-01-09 08:00:00', 0, 0),  -- DG1 mượn C#
-    (4, 39, '2025-01-09 08:00:00', 0, 0),  -- DG1 mượn CTDL
-    (5, 55, '2025-01-15 09:00:00', 1, 1000), -- DG2 mượn AI (trễ 1 ngày)
-    (5, 67, '2025-01-15 09:00:00', 1, 1000), -- DG2 mượn ML (trễ 1 ngày)
-    (6, 95, '2025-01-19 10:00:00', 0, 0),  -- DG3 mượn Python
-    (6, 110, '2025-01-19 10:00:00', 0, 0), -- DG3 mượn Toán rời rạc
-    (7, 85, '2025-01-24 13:00:00', 0, 0),  -- DG4 mượn Mạng
-    (8, 120, '2025-01-29 16:00:00', 0, 0); -- DG1 mượn Đại số
-
--- THÁNG 2/2025 (8 phiếu mượn)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES 
-    (2, '2025-02-02 09:00:00', '2025-02-06 09:00:00', 0), -- PM000009
-    (3, '2025-02-05 10:00:00', '2025-02-09 10:00:00', 0), -- PM000010
-    (4, '2025-02-08 11:00:00', '2025-02-12 11:00:00', 0), -- PM000011
-    (1, '2025-02-12 13:00:00', '2025-02-16 13:00:00', 0), -- PM000012
-    (2, '2025-02-15 14:00:00', '2025-02-19 14:00:00', 0), -- PM000013
-    (3, '2025-02-18 15:00:00', '2025-02-22 15:00:00', 0), -- PM000014
-    (4, '2025-02-22 09:30:00', '2025-02-26 09:30:00', 0), -- PM000015
-    (1, '2025-02-25 10:30:00', '2025-03-01 10:30:00', 0); -- PM000016
-
--- Chi tiết mượn tháng 2
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
-VALUES 
-    (9, 32, '2025-02-06 08:00:00', 0, 0),   -- DG2 mượn C#
-    (9, 96, '2025-02-06 08:00:00', 0, 0),   -- DG2 mượn Python
-    (10, 40, '2025-02-09 09:00:00', 0, 0),  -- DG3 mượn CTDL
-    (10, 111, '2025-02-09 09:00:00', 0, 0), -- DG3 mượn Toán rời rạc
-    (11, 56, '2025-02-12 10:00:00', 0, 0),  -- DG4 mượn AI
-    (11, 68, '2025-02-12 10:00:00', 0, 0),  -- DG4 mượn ML
-    (12, 97, '2025-02-16 12:00:00', 0, 0),  -- DG1 mượn Python
-    (12, 121, '2025-02-16 12:00:00', 0, 0), -- DG1 mượn Đại số
-    (13, 33, '2025-02-19 13:00:00', 0, 0),  -- DG2 mượn C#
-    (13, 57, '2025-02-19 13:00:00', 0, 0),  -- DG2 mượn AI
-    (14, 98, '2025-02-22 14:00:00', 0, 0),  -- DG3 mượn Python
-    (14, 112, '2025-02-22 14:00:00', 0, 0), -- DG3 mượn Toán rời rạc
-    (15, 69, '2025-02-26 08:30:00', 0, 0),  -- DG4 mượn ML
-    (15, 86, '2025-02-26 08:30:00', 0, 0),  -- DG4 mượn Mạng
-    (16, 99, '2025-03-01 09:30:00', 0, 0),  -- DG1 mượn Python
-    (16, 122, '2025-03-01 09:30:00', 0, 0); -- DG1 mượn Đại số
-
--- THÁNG 3/2025 (thêm 5 phiếu nữa, ngoài 3 phiếu có sẵn)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES 
-    (2, '2025-03-03 09:00:00', '2025-03-07 09:00:00', 0), -- PM000017
-    (3, '2025-03-08 10:00:00', '2025-03-12 10:00:00', 0), -- PM000018
-    (4, '2025-03-12 11:00:00', '2025-03-16 11:00:00', 0), -- PM000019
-    (1, '2025-03-17 13:00:00', '2025-03-21 13:00:00', 0), -- PM000020
-    (2, '2025-03-22 14:00:00', '2025-03-26 14:00:00', 0); -- PM000021
-
--- Chi tiết mượn tháng 3
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach, NgayTraThucTe, SoNgayTre, TienPhat)
-VALUES 
-    (17, 34, '2025-03-07 08:00:00', 0, 0),   -- DG2 mượn C#
-    (17, 100, '2025-03-07 08:00:00', 0, 0),  -- DG2 mượn Python
-    (18, 41, '2025-03-12 09:00:00', 0, 0),   -- DG3 mượn CTDL
-    (18, 113, '2025-03-12 09:00:00', 0, 0),  -- DG3 mượn Toán rời rạc
-    (19, 58, '2025-03-16 10:00:00', 0, 0),   -- DG4 mượn AI
-    (19, 70, '2025-03-16 10:00:00', 0, 0),   -- DG4 mượn ML
-    (20, 101, '2025-03-21 12:00:00', 0, 0),  -- DG1 mượn Python
-    (20, 123, '2025-03-21 12:00:00', 0, 0),  -- DG1 mượn Đại số
-    (21, 35, '2025-03-26 13:00:00', 0, 0),   -- DG2 mượn C#
-    (21, 59, '2025-03-26 13:00:00', 0, 0);   -- DG2 mượn AI
-
--- =========================================================================
--- 3. KẾT QUẢ THỐNG KÊ SAU KHI CHẠY SCRIPT
--- =========================================================================
--- 
--- ✅ Tổng sách: ~129 cuốn
--- ✅ Sách đang mượn: 1 cuốn (từ phiếu mượn gốc PM000003)
--- ✅ Tổng độc giả: 4 người
--- ✅ Tổng nợ: ~6000 VND (4000 + 2000 từ tháng 1)
---
--- ✅ Top 5 sách mượn nhiều:
---    1. Python: 8 lượt
---    2. Đại số tuyến tính: 5 lượt
---    3. Toán rời rạc: 5 lượt
---    4. C#: 5 lượt
---    5. AI: 5 lượt
---
--- ✅ Top 3 độc giả tích cực:
---    1. Nguyễn Mai Anh (DG1): 8 lượt
---    2. Lê Thành Đô (DG2): 8 lượt
---    3. Huỳnh Hồng Thu Giang (DG3): 6 lượt
---
--- ✅ Biểu đồ theo tháng:
---    - Tháng 1: 8 lượt
---    - Tháng 2: 16 lượt
---    - Tháng 3: 15 lượt (bao gồm 2 lượt từ phiếu gốc + 10 lượt mới)
---
--- =========================================================================
-
--- Kiểm tra kết quả
-SELECT '=== KIỂM TRA KẾT QUẢ ===' AS Info;
-
-SELECT 'Tổng sách:' AS ThongKe, COUNT(*) AS GiaTri FROM CUONSACH
-UNION ALL
-SELECT 'Sách đang mượn:', COUNT(*) FROM CT_PHIEUMUON WHERE NgayTraThucTe IS NULL
-UNION ALL
-SELECT 'Tổng độc giả:', COUNT(*) FROM DOCGIA
-UNION ALL
-SELECT 'Tổng nợ:', COALESCE(SUM(TongNoHienTai), 0) FROM DOCGIA;
-
-SELECT 'Top 5 sách mượn nhiều:' AS Info;
-SELECT ts.TenTuaSach, COUNT(cp.IDPhieuMuon) as SoLuotMuon
-FROM CT_PHIEUMUON cp
-INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
-INNER JOIN SACH s ON cs.IDSach = s.ID
-INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
-GROUP BY ts.ID, ts.TenTuaSach
-ORDER BY SoLuotMuon DESC
-LIMIT 5;
-
-SELECT 'Top 3 độc giả tích cực:' AS Info;
-SELECT dg.HoTen, COUNT(cp.IDPhieuMuon) as SoLuotMuon
-FROM CT_PHIEUMUON cp
-INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
-GROUP BY dg.ID, dg.HoTen
-ORDER BY SoLuotMuon DESC
-LIMIT 3;
-
-SELECT 'Thống kê theo tháng năm 2025:' AS Info;
-SELECT MONTH(p.NgayMuon) as Thang, COUNT(cp.IDPhieuMuon) as SoLuotMuon
-FROM CT_PHIEUMUON cp
-INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-WHERE YEAR(p.NgayMuon) = 2025
-GROUP BY MONTH(p.NgayMuon)
-ORDER BY Thang;
--- =========================================================================
--- SCRIPT THÊM DỮ LIỆU ĐỘC GIẢ QUÁ HẠN (Để test báo cáo)
--- =========================================================================
-
-USE QLTV;
-
--- =========================================================================
--- 1. THÊM CÁC PHIẾU MƯỢN QUÁ HẠN CHƯA TRẢ
--- =========================================================================
-
--- Phiếu mượn quá hạn 3 ngày (DG1 - Nguyễn Mai Anh)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES (1, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 1);
-
--- Lấy ID phiếu vừa tạo
-SET @lastPM = LAST_INSERT_ID();
-
--- Chi tiết mượn (2 cuốn sách chưa trả)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-VALUES 
-    (@lastPM, 4),   -- Cuốn CS0004 (CSDL Nâng cao)
-    (@lastPM, 18);  -- Cuốn CS0018 (Ông Già Và Biển Cả)
-
--- =========================================================================
-
--- Phiếu mượn quá hạn 7 ngày (DG2 - Lê Thành Đô) - Trường hợp nghiêm trọng
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES (2, DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY), 1);
-
-SET @lastPM = LAST_INSERT_ID();
-
--- Chi tiết mượn (3 cuốn sách chưa trả)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-VALUES 
-    (@lastPM, 5),   -- Cuốn CS0005 (CSDL Nâng cao)
-    (@lastPM, 19),  -- Cuốn CS0019 (Ông Già Và Biển Cả)
-    (@lastPM, 36);  -- Cuốn CS0036 (C#)
-
--- =========================================================================
-
--- Phiếu mượn quá hạn 15 ngày (DG4 - Trần Nhật Huy) - Rất nghiêm trọng
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES (4, DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY), 1);
-
-SET @lastPM = LAST_INSERT_ID();
-
--- Chi tiết mượn (1 cuốn sách chưa trả)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-VALUES 
-    (@lastPM, 20);  -- Cuốn CS0020 (Ông Già Và Biển Cả)
-
--- =========================================================================
-
--- Phiếu mượn quá hạn 1 ngày (DG3 - Huỳnh Hồng Thu Giang)
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES (3, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), 1);
-
-SET @lastPM = LAST_INSERT_ID();
-
--- Chi tiết mượn (2 cuốn sách chưa trả)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-VALUES 
-    (@lastPM, 42),  -- Cuốn CS0042 (CTDL)
-    (@lastPM, 102); -- Cuốn CS0102 (Python)
-
--- =========================================================================
-
--- Phiếu mượn quá hạn 10 ngày (DG1 - Nguyễn Mai Anh) - Phiếu thứ 2
-INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien, TrangThai)
-VALUES (1, DATE_SUB(NOW(), INTERVAL 17 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 1);
-
-SET @lastPM = LAST_INSERT_ID();
-
--- Chi tiết mượn (1 cuốn sách chưa trả)
-INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-VALUES 
-    (@lastPM, 60);  -- Cuốn CS0060 (AI)
-
--- =========================================================================
--- 2. KIỂM TRA KẾT QUẢ
--- =========================================================================
-
-SELECT '=== DANH SÁCH ĐỘC GIẢ QUÁ HẠN ===' AS ThongTin;
-
-SELECT 
-    dg.MaDocGia,
-    dg.HoTen,
-    p.MaPhieuMuon,
-    p.NgayMuon,
-    p.NgayTraDuKien,
-    DATEDIFF(CURDATE(), p.NgayTraDuKien) as SoNgayQuaHan,
-    DATEDIFF(CURDATE(), p.NgayTraDuKien) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1) as TienPhat
-FROM CT_PHIEUMUON cp
-INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-INNER JOIN DOCGIA dg ON p.IDDocGia = dg.ID
-WHERE cp.NgayTraThucTe IS NULL 
-  AND p.NgayTraDuKien < CURDATE()
-ORDER BY SoNgayQuaHan DESC;
-
-SET SQL_SAFE_UPDATES = 0;
-
-UPDATE PHIEUMUON pm
-SET TongPhat = (
-	SELECT COALESCE(SUM(ctpm.TienPhat), 0)
-    FROM CT_PHIEUMUON ctpm
-    WHERE ctpm.IDPhieuMuon = pm.ID
-);
-
-UPDATE DocGia dg
-SET TongNoHienTai = (
-    SELECT 
-        COALESCE(SUM(pm.TongPhat), 0) 
-        - COALESCE((
-            SELECT SUM(pt.SoTienThu)
-            FROM PhieuThu pt
-            WHERE pt.IDDocGia = dg.ID
-        ), 0)
-    FROM PhieuMuon pm
-    WHERE pm.IDDocGia = dg.ID
-);
-
-SET SQL_SAFE_UPDATES = 1;
-
+-- 1. QUY ĐỊNH PHẠT (CÓ NHÓM)
+INSERT INTO THAMSO (TuoiToiThieu, TuoiToiDa, DonGiaPhatMoiNgay) VALUES (18, 55, 1000);
+INSERT INTO THAMSOPHAT (MaQuyDinh, TenTinhTrang, MucPhatPhanTram, CoLaDuyNhat, CoLaMacDinh, CoLaHuHong, NhomTinhTrang) VALUES 
+('QD01', 'Mới nguyên', 0, 1, 1, 0, NULL), -- ID 1
+('QD02', 'Bẩn nhẹ', 5, 0, 0, 0, 'BAN'),    -- ID 2
+('QD03', 'Ướt nhẹ', 5, 0, 0, 0, 'UOT'),    -- ID 3
+('QD04', 'Rách dưới 3 trang', 10, 0, 0, 0, 'RACH'), -- ID 4 (Nhóm Rách)
+('QD05', 'Rách dưới 5 trang', 20, 0, 0, 0, 'RACH'), -- ID 5
+('QD06', 'Rách trên 5 trang', 40, 0, 0, 0, 'RACH'), -- ID 6
+('QD07', 'Mất sách', 100, 1, 0, 1, NULL); -- ID 7
+
+-- 2. NHÓM NGƯỜI DÙNG & CHỨC NĂNG (FULL)
+INSERT INTO NHOMNGUOIDUNG (ID, MaNhomNguoiDung, TenNhomNguoiDung) VALUES 
+(1, 'NND001', 'Quản Lý'), (2, 'NND002', 'Thủ Thư'), (3, 'NND003', 'Độc Giả');
+
+INSERT INTO CHUCNANG (ID, MaChucNang, TenChucNang, TenManHinh) VALUES 
+(1, 'DASH', 'Dashboard', 'Tổng quan'), (2, 'GENR', 'Thể loại', 'Thể loại'), (3, 'AUTH', 'Tác giả', 'Tác giả'),
+(4, 'PUBL', 'Nhà xuất bản', 'NXB'), (5, 'SUPP', 'Nhà cung cấp', 'NCC'), (6, 'TITL', 'Tựa sách', 'Tựa sách'),
+(7, 'BOOK', 'Sách', 'Kho sách'), (8, 'IMPO', 'Nhập sách', 'Phiếu nhập'), (9, 'BORR', 'Mượn sách', 'Phiếu mượn'),
+(10, 'RETU', 'Trả sách', 'Phiếu trả'), (11, 'PAYM', 'Phiếu thu', 'Phiếu thu'), (12, 'REPO', 'Báo cáo', 'Báo cáo'),
+(13, 'USER', 'Người dùng', 'Người dùng'), (14, 'READ', 'Độc giả', 'Độc giả'), (15, 'PERM', 'Phân quyền', 'Phân quyền');
+
+INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) SELECT 1, ID, 'XEM' FROM CHUCNANG;
+INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) SELECT 1, ID, 'THEM' FROM CHUCNANG;
+INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) SELECT 1, ID, 'SUA' FROM CHUCNANG;
+INSERT INTO PHANQUYEN (IDNhomNguoiDung, IDChucNang, HanhDong) SELECT 1, ID, 'XOA' FROM CHUCNANG;
+
+-- 3. NGƯỜI DÙNG & ĐỘC GIẢ
+INSERT INTO NGUOIDUNG (ID, TenNguoiDung, NgaySinh, TenDangNhap, MatKhau, IDNhomNguoiDung) VALUES 
+(1, 'Admin Hệ Thống', '2000-01-01', 'admin', '123', 1),
+(2, 'Thủ Thư A', '2000-01-01', 'lib', '123', 2),
+(3, 'Nguyễn Mai Anh', '2003-06-11', 'docgia1', '123', 3), 
+(4, 'Lê Thành Đô', '2003-01-08', 'docgia2', '123', 3),    
+(5, 'Huỳnh Hồng Thu Giang', '2003-02-24', 'docgia3', '123', 3), 
+(6, 'Trần Nhật Huy', '2003-01-03', 'docgia4', '123', 3); 
+
+INSERT INTO DOCGIA (HoTen, NgaySinh, NgayLapThe, NgayHetHan, IDNguoiDung, TongNoHienTai) VALUES 
+('Nguyễn Mai Anh', '2003-06-11', '2025-01-01', '2025-07-01', 3, 0), -- ID 1
+('Lê Thành Đô', '2003-01-08', '2024-12-10', '2025-06-10', 4, 5000), -- ID 2
+('Huỳnh Hồng Thu Giang', '2003-02-24', '2025-02-05', '2025-08-05', 5, 0), -- ID 3
+('Trần Nhật Huy', '2003-01-03', '2025-03-15', '2025-09-15', 6, 0); -- ID 4
+
+-- 4. DỮ LIỆU SÁCH (GỐC + MỞ RỘNG)
+INSERT INTO THELOAI (MaTheLoai, TenTheLoai) VALUES ('KH01', 'Khoa học máy tính'), ('TL01', 'Tài liệu tham khảo'), ('TT01', 'Tiểu thuyết'), ('KT01', 'Kinh tế');
+INSERT INTO TACGIA (TenTacGia, NamSinh) VALUES ('Nguyễn Văn Trí', 1984), ('Phạm Thị La', 1980), ('Ernest Hemingway', 1975), ('Robert C. Martin', 1960), ('Erich Gamma', 1961);
+INSERT INTO NHACUNGCAP (TenNCC) VALUES ('Vinabook'), ('Fahasa');
+INSERT INTO NHAXUATBAN (TenNXB) VALUES ('NXB Trẻ'), ('NXB Giáo dục');
+
+-- Tựa Sách
+INSERT INTO TUASACH (MaTuaSach, TenTuaSach) VALUES 
+('CS01', 'Cơ sở dữ liệu nâng cao'), -- ID 1
+('KP01', 'Khai phá dữ liệu (Data Mining)'), -- ID 2
+('OG01', 'Ông Già Và Biển Cả'), -- ID 3
+('CC01', 'Clean Code'), -- ID 4
+('DP01', 'Design Patterns'); -- ID 5
+
+INSERT INTO CT_THELOAI VALUES (1, 1), (2, 1), (3, 3), (4, 1), (5, 1);
+INSERT INTO CT_TACGIA VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5);
+
+-- Lô Sách
+INSERT INTO SACH (IDTuaSach, DonGia, NamXB, IDNhaXuatBan) VALUES 
+(1, 80000, 2020, 1),  -- CSDL (ID 1)
+(2, 120000, 2023, 1), -- KP (ID 2)
+(3, 65000, 2024, 2),  -- OG (ID 3)
+(4, 300000, 2018, 1), -- Clean Code (ID 4)
+(5, 250000, 2019, 1); -- Design Patterns (ID 5)
+
+-- Nhập kho
+INSERT INTO PHIEUNHAPSACH (IDNhaCungCap, NgayNhap) VALUES (1, '2025-01-10');
+INSERT INTO CT_PHIEUNHAP (IDPhieuNhap, IDSach, SoLuongNhap, DonGiaNhap) VALUES 
+(1, 1, 10, 70000), 
+(1, 2, 5, 100000), 
+(1, 3, 15, 60000),
+(1, 4, 10, 250000),
+(1, 5, 10, 200000);
+
+-- Tạo cuốn sách vật lý (Trigger tự gán MOI)
+INSERT INTO CUONSACH (IDSach) VALUES (1),(1),(1),(1),(1),(1),(1),(1),(1),(1); -- 1-10
+INSERT INTO CUONSACH (IDSach) VALUES (2),(2),(2),(2),(2); -- 11-15
+INSERT INTO CUONSACH (IDSach) VALUES (3),(3),(3),(3),(3),(3),(3),(3),(3),(3),(3),(3),(3),(3),(3); -- 16-30
+INSERT INTO CUONSACH (IDSach) VALUES (4),(4),(4),(4),(4),(4),(4),(4),(4),(4); -- 31-40
+INSERT INTO CUONSACH (IDSach) VALUES (5),(5),(5),(5),(5),(5),(5),(5),(5),(5); -- 41-50
+
+-- Cập nhật tình trạng xấu ban đầu (Để test mượn sách không mới)
+CALL SP_ThemTinhTrang(1, 2);  -- Cuốn 1 Bẩn
+CALL SP_ThemTinhTrang(11, 4); -- Cuốn 11 Rách < 3
+CALL SP_ThemTinhTrang(16, 7); -- Cuốn 16 Mất (Loại khỏi kho)
+
+-- 5. MASSIVE TRANSACTION DATA (DỮ LIỆU LỊCH SỬ)
+
+-- Tháng 1: Mượn trả tốt
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (1, '2025-01-05', '2025-01-10'); -- PM1
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 2, NULL);
+CALL SP_ThemSachVaoPhieuMuon(@PM, 31, NULL);
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-01-09');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 2);
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 31);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 2, 1), (@PT, 31, 1);
+
+-- Tháng 1: Mượn trả tốt
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (2, '2025-01-10', '2025-01-15'); -- PM2
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 41, NULL);
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-01-14');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 41);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 41, 1);
+
+-- Tháng 2: Bắt đầu có phạt (Rách)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (3, '2025-02-05', '2025-02-10'); -- PM3
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 12, NULL); -- KP (Mới)
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-12'); -- Trễ 2 ngày (2000đ)
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 12);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 12, 4); -- Bị Rách < 3 (Phạt 10% = 12k) -> Tổng 14k
+
+-- Tháng 2: Mượn nhiều, Trả lắt nhắt
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (4, '2025-02-15', '2025-02-20'); -- PM4
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 3, NULL);
+CALL SP_ThemSachVaoPhieuMuon(@PM, 4, NULL);
+CALL SP_ThemSachVaoPhieuMuon(@PM, 5, NULL);
+-- Trả cuốn 3 (Sớm)
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-18');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 3);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 3, 1);
+-- Trả cuốn 4, 5 (Trễ)
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-22');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 4);
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 5);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 4, 1), (@PT, 5, 2); -- 5 bị bẩn
+
+-- Tháng 3: Mượn sách Bẩn -> Trả Bẩn (Ko phạt)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (1, '2025-03-01', '2025-03-05'); -- PM5
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 1, NULL); -- Mượn sách Bẩn (ID 1)
+CALL SP_ThemSachVaoPhieuMuon(@PM, 32, NULL); 
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-03-05');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 1);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 1, 2); -- Trả Bẩn (Ko phạt)
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 32);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 32, 1);
+
+-- Tháng 3: Mất sách
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (2, '2025-03-10', '2025-03-15'); -- PM6
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 42, NULL);
+INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-03-15');
+SET @PT = LAST_INSERT_ID();
+INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 42);
+INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 42, 7); -- Mất (Phạt 100%)
+
+-- HIỆN TẠI: Đang mượn (Chưa trả)
+-- DG3 mượn Clean Code & Design Patterns
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (3, NOW(), DATE_ADD(NOW(), INTERVAL 5 DAY));
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 33, NULL);
+CALL SP_ThemSachVaoPhieuMuon(@PM, 43, NULL);
+
+-- DG4 mượn Ông Già (Quá hạn 10 ngày)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (4, DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY));
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 18, NULL);
+CALL SP_ThemSachVaoPhieuMuon(@PM, 19, NULL);
+
+-- DG1 mượn CSDL (Quá hạn 3 ngày)
+INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (1, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
+SET @PM = LAST_INSERT_ID();
+CALL SP_ThemSachVaoPhieuMuon(@PM, 6, NULL);

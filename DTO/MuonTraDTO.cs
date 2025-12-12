@@ -13,26 +13,18 @@ namespace DTO
         public DateTime? NgayTraThucTe { get; set; }
         public int TongSach { get; set; }
         public int SoSachChuaTra { get; set; }
+        public decimal TongPhat { get; set; }
 
         public string TinhTrang
         {
             get
             {
-                if (SoSachChuaTra > 0 && DateTime.Today.Date > NgayTraDuKien.Date)
-                {
-                    return "Quá hạn";
-                }
-                if (SoSachChuaTra > 0)
-                {
-                    return "Đang mượn";
-                }
+                if (SoSachChuaTra > 0 && DateTime.Today.Date > NgayTraDuKien.Date) return "Quá hạn";
+                if (SoSachChuaTra > 0) return "Đang mượn";
                 return "Đã trả";
             }
         }
-
-        public string GhiChu => TongSach > 0
-            ? $"Còn {SoSachChuaTra}/{TongSach} sách"
-            : string.Empty;
+        public string GhiChu => TongSach > 0 ? $"Còn {SoSachChuaTra}/{TongSach} sách" : string.Empty;
     }
 
     public class ChiTietPhieuMuonDTO
@@ -44,22 +36,28 @@ namespace DTO
         public DateTime NgayMuon { get; set; }
         public DateTime? NgayTraThucTe { get; set; }
         public DateTime NgayTraDuKien { get; set; }
-        public string? TinhTrangMuon { get; set; }
-        public string? TinhTrangTra { get; set; }
-        public int DonGia { get; set; }
-        public int? MucPhatMuon { get; set; }
-        public int? MucPhatTra { get; set; }
 
+        public string? TinhTrangMuon { get; set; }
+        public string? TinhTrangTra { get; set; } // Tên hiển thị các lỗi trả
+
+        public decimal DonGia { get; set; }
+
+        // --- CÁC TRƯỜNG MỚI HỖ TRỢ ĐA TÌNH TRẠNG ---
+        // Chuỗi ID ngăn cách bởi dấu phẩy (VD: "2,4,5")
+        public string? DanhSachIdLoiMuon { get; set; }
+        public string? DanhSachIdLoiTra { get; set; }
+
+        // Giữ lại để tương thích code cũ (nếu cần), nhưng logic chính sẽ dùng DanhSachId
         public int? IDThamSoPhatMuon { get; set; }
         public int? IDThamSoPhatTra { get; set; }
+        public int? MucPhatTra { get; set; }
 
         public bool ChonTra { get; set; }
         public int SoNgayTre { get; set; }
-        public int TienPhat { get; set; }
+        public decimal TienPhat { get; set; }
 
         public bool DaTra => NgayTraThucTe.HasValue;
         public string TrangThai => DaTra ? "Đã trả" : "Đang mượn";
-
         public string? TinhTrangHienTai => string.IsNullOrWhiteSpace(TinhTrangTra) ? TinhTrangMuon : TinhTrangTra;
     }
 
@@ -73,7 +71,7 @@ namespace DTO
         public string HoTenDocGia { get; set; } = string.Empty;
         public DateTime NgayTra { get; set; }
         public int TongSachTra { get; set; }
-        public int TongTienPhat { get; set; }
+        public decimal TongTienPhat { get; set; }
     }
 
     public class ChiTietPhieuTraDTO
@@ -85,7 +83,7 @@ namespace DTO
         public DateTime NgayTraDuKien { get; set; }
         public DateTime NgayTraThucTe { get; set; }
         public int SoNgayTre { get; set; }
-        public int TienPhat { get; set; }
+        public decimal TienPhat { get; set; }
         public string? TinhTrangTra { get; set; }
     }
 
@@ -98,16 +96,6 @@ namespace DTO
         public int TuoiToiDa { get; set; }
     }
 
-    public class DocGiaMuonInfoDTO
-    {
-        public int ID { get; set; }
-        public string MaDocGia { get; set; } = string.Empty;
-        public string HoTen { get; set; } = string.Empty;
-        public DateTime NgaySinh { get; set; }
-        public DateTime NgayHetHan { get; set; }
-        public int TongNoHienTai { get; set; }
-    }
-
     public class SachMuonLuaChonDTO
     {
         public int IDCuonSach { get; set; }
@@ -117,7 +105,17 @@ namespace DTO
         public string NhaXuatBan { get; set; } = string.Empty;
         public string? TinhTrangMuon { get; set; }
         public string? TinhTrangHienTai { get; set; }
-
+        public string? DanhSachLoiMoi { get; set; }
         public int? IDThamSoPhatMuon { get; set; }
+    }
+
+    public class DocGiaMuonInfoDTO
+    {
+        public int ID { get; set; }
+        public string MaDocGia { get; set; } = string.Empty;
+        public string HoTen { get; set; } = string.Empty;
+        public DateTime NgaySinh { get; set; }
+        public DateTime NgayHetHan { get; set; }
+        public decimal TongNoHienTai { get; set; }
     }
 }
