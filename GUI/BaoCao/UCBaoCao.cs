@@ -870,6 +870,11 @@ namespace GUI.BaoCao
             LoadTopSachStatistics();
         }
 
+        private void cboTimePeriodSach_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadTopSachStatistics();
+        }
+
         private void ConfigureTopBooksColumns()
         {
             var style = new DataGridViewCellStyle
@@ -885,7 +890,7 @@ namespace GUI.BaoCao
 
             if (dgvTopSach.Columns["TenTuaSach"] != null)
             {
-                dgvTopSach.Columns["TenTuaSach"].HeaderText = "Tên sách";
+                dgvTopSach.Columns["TenTuaSach"].HeaderText = "Tên tựa sách";
                 dgvTopSach.Columns["TenTuaSach"].FillWeight = 50;
             }
 
@@ -966,6 +971,10 @@ namespace GUI.BaoCao
         }
 
         private void btnRefreshTopDocGia_Click(object sender, EventArgs e)
+        {
+            LoadTopDocGiaStatistics();
+        }
+        private void cboTimePeriodDocGia_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadTopDocGiaStatistics();
         }

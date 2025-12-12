@@ -160,6 +160,7 @@
             groupBox2.TabIndex = 12;
             groupBox2.TabStop = false;
             groupBox2.Text = "Mã cuốn";
+            groupBox2.Visible = false;
             // 
             // label10
             // 

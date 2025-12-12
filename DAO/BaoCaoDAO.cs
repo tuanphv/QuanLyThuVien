@@ -492,17 +492,21 @@ namespace DAO
             try
             {
                 string sql = @"
-                    SELECT 
-                        DATE(p.NgayMuon) as Ngay,
-                        COUNT(DISTINCT p.ID) as SoPhieuMuon,
-                        COUNT(cp.IDCuonSach) as TongSachMuon,
-                        COUNT(DISTINCT CASE WHEN p.TrangThai = 0 THEN p.ID END) as SoPhieuDaTra,
-                        COUNT(DISTINCT CASE WHEN p.TrangThai = 1 THEN p.ID END) as SoPhieuChuaTra
-                    FROM PHIEUMUON p
-                    INNER JOIN CT_PHIEUMUON cp ON p.ID = cp.IDPhieuMuon
-                    WHERE p.NgayMuon BETWEEN @TuNgay AND @DenNgay
-                    GROUP BY DATE(p.NgayMuon)
-                    ORDER BY Ngay ASC";
+                    SELECT
+                        DATE(PM.NgayMuon) AS NgayMuon,
+                        COUNT(DISTINCT PM.ID) AS SoLuongPhieuMuon,
+                        COUNT(CTPM.IDCuonSach) AS TongSachMuon,
+                        SUM(CASE WHEN CTPM.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS SachDaTra,
+                        SUM(CASE WHEN CTPM.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SachChuaTra
+                    FROM
+                        PHIEUMUON PM
+                    JOIN
+                        CT_PHIEUMUON CTPM ON PM.ID = CTPM.IDPhieuMuon
+                    WHERE PM.NgayMuon BETWEEN @TuNgay AND @DenNgay
+                    GROUP BY
+                        DATE(PM.NgayMuon)
+                    ORDER BY
+                        NgayMuon DESC;";
 
                 var parameters = new MySqlParameter[]
                 {
@@ -517,11 +521,11 @@ namespace DAO
                     foreach (DataRow row in dt.Rows)
                     {
                         var item = new ThongKeMuonTraTheoNgayDTO(
-                            row["Ngay"] != DBNull.Value ? Convert.ToDateTime(row["Ngay"]) : DateTime.MinValue,
-                            row["SoPhieuMuon"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuMuon"]) : 0,
+                            row["NgayMuon"] != DBNull.Value ? Convert.ToDateTime(row["NgayMuon"]) : DateTime.MinValue,
+                            row["SoLuongPhieuMuon"] != DBNull.Value ? Convert.ToInt32(row["SoLuongPhieuMuon"]) : 0,
                             row["TongSachMuon"] != DBNull.Value ? Convert.ToInt32(row["TongSachMuon"]) : 0,
-                            row["SoPhieuDaTra"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuDaTra"]) : 0,
-                            row["SoPhieuChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SoPhieuChuaTra"]) : 0
+                            row["SachDaTra"] != DBNull.Value ? Convert.ToInt32(row["SachDaTra"]) : 0,
+                            row["SachChuaTra"] != DBNull.Value ? Convert.ToInt32(row["SachChuaTra"]) : 0
                         );
                         list.Add(item);
                     }

@@ -435,8 +435,8 @@ INSERT INTO DOCGIA (HoTen, NgaySinh, NgayLapThe, NgayHetHan, IDNguoiDung, TongNo
 -- 4. DỮ LIỆU SÁCH (GỐC + MỞ RỘNG)
 INSERT INTO THELOAI (MaTheLoai, TenTheLoai) VALUES ('KH01', 'Khoa học máy tính'), ('TL01', 'Tài liệu tham khảo'), ('TT01', 'Tiểu thuyết'), ('KT01', 'Kinh tế');
 INSERT INTO TACGIA (TenTacGia, NamSinh) VALUES ('Nguyễn Văn Trí', 1984), ('Phạm Thị La', 1980), ('Ernest Hemingway', 1975), ('Robert C. Martin', 1960), ('Erich Gamma', 1961);
-INSERT INTO NHACUNGCAP (TenNCC) VALUES ('Vinabook'), ('Fahasa');
-INSERT INTO NHAXUATBAN (TenNXB) VALUES ('NXB Trẻ'), ('NXB Giáo dục');
+INSERT INTO NHACUNGCAP (TenNCC, DiaChi) VALUES ('Vinabook', 'HCM'), ('Fahasa', 'Hà Nội');
+INSERT INTO NHAXUATBAN (TenNXB, DiaChi) VALUES ('NXB Trẻ', 'HCM'), ('NXB Giáo dục', 'Hà Nội');
 
 -- Tựa Sách
 INSERT INTO TUASACH (MaTuaSach, TenTuaSach) VALUES 

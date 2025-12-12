@@ -103,19 +103,19 @@ namespace GUI.NhapSach
                 if (tuaSach == null || nhaXuatBan == null) return;
 
                 // Kiểm tra mã cuốn sách đã tồn tại chưa
-                var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(tuaSach.ID, nhaXuatBan.ID, (int)nudNamXB.Value);
+                //var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(tuaSach.ID, nhaXuatBan.ID, (int)nudNamXB.Value);
 
-                if (sach != null)
-                {
+                //if (sach != null)
+                //{
 
-                    string maCS = CuonSachBUS.KiemTraMaCuonSach(sach.ID, (int)nudMaDau.Value, (int)nudMaCuoi.Value);
-                    if (maCS != string.Empty)
-                    {
-                        MessageBox.Show($"Mã cuốn sách {maCS} đã tồn tại trong hệ thống. Vui lòng kiểm tra lại.", "Thông báo",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
+                //    string maCS = CuonSachBUS.KiemTraMaCuonSach(sach.ID, (int)nudMaDau.Value, (int)nudMaCuoi.Value);
+                //    if (maCS != string.Empty)
+                //    {
+                //        MessageBox.Show($"Mã cuốn sách {maCS} đã tồn tại trong hệ thống. Vui lòng kiểm tra lại.", "Thông báo",
+                //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //        return;
+                //    }
+                //}
 
                 // Kiểm tra xem đã có trong danh sách chưa
                 var existing = chiTietList.FirstOrDefault(x =>
@@ -127,15 +127,15 @@ namespace GUI.NhapSach
                 {
                     // Nếu đã có
                     // -> Cập nhật số lượng và mã sách
-                    foreach (var range in existing.MaCuonSach)
-                    {
-                        if (range.End >= (int)nudMaDau.Value && range.Start <= (int)nudMaCuoi.Value)
-                        {
-                            MessageBox.Show("Dãy mã cuốn sách bị trùng với dãy đã thêm trước đó.", "Thông báo",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                    }
+                    //foreach (var range in existing.MaCuonSach)
+                    //{
+                    //    if (range.End >= (int)nudMaDau.Value && range.Start <= (int)nudMaCuoi.Value)
+                    //    {
+                    //        MessageBox.Show("Dãy mã cuốn sách bị trùng với dãy đã thêm trước đó.", "Thông báo",
+                    //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //        return;
+                    //    }
+                    //}
                     existing.SoLuong += (int)nudSoLuong.Value;
                     existing.MaCuonSach.Add(new Range
                     {

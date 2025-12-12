@@ -545,6 +545,7 @@
             cboTimePeriodSach.Name = "cboTimePeriodSach";
             cboTimePeriodSach.Size = new Size(180, 25);
             cboTimePeriodSach.TabIndex = 2;
+            cboTimePeriodSach.SelectedIndexChanged += cboTimePeriodSach_SelectedIndexChanged;
             // 
             // label8
             // 
@@ -628,6 +629,7 @@
             cboTimePeriodDocGia.Name = "cboTimePeriodDocGia";
             cboTimePeriodDocGia.Size = new Size(180, 25);
             cboTimePeriodDocGia.TabIndex = 2;
+            cboTimePeriodDocGia.SelectedIndexChanged += cboTimePeriodDocGia_SelectedIndexChanged;
             // 
             // label9
             // 
