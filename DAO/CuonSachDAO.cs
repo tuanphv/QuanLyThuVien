@@ -55,5 +55,27 @@ namespace DAO
             int result = connection.Execute(query, new { TinhTrang = tinhTrangMoi, ID = idCuonSach });
             return result > 0;
         }
+
+        public static bool AddCuonSach(CuonSachDTO dto)
+        {
+            string query = @"
+                INSERT INTO CUONSACH (IDSach, MaCuonSach)
+                VALUES (@IDSach, @MaCuonSach);
+            ";
+            int result = DataProvider.Instance.ExecuteNonQuery(query,
+                new MySqlParameter("@IDSach", dto.IDSach),
+                new MySqlParameter("@MaCuonSach", dto.MaCuonSach)
+            );
+            return result > 0;
+        }
+
+        public static bool TonTaiMaCuonSach(string maCuonSach)
+        {
+            string query = "SELECT COUNT(*) FROM CUONSACH WHERE MaCuonSach = @MaCuonSach";
+            int count = Convert.ToInt32(DataProvider.Instance.ExecuteScalar(query,
+                new MySqlParameter("@MaCuonSach", maCuonSach)
+            ));
+            return count > 0;
+        }
     }
 }

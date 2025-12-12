@@ -24,6 +24,11 @@
             cbNhaCungCap = new ComboBox();
             label1 = new Label();
             groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            label10 = new Label();
+            nudMaDau = new NumericUpDown();
+            label11 = new Label();
+            nudMaCuoi = new NumericUpDown();
             btnXoa = new Button();
             btnThem = new Button();
             nudSoLuong = new NumericUpDown();
@@ -50,6 +55,9 @@
             label8 = new Label();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudMaDau).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nudMaCuoi).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudSoLuong).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudDonGia).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudNamXB).BeginInit();
@@ -74,9 +82,10 @@
             // dtpNgayNhap
             // 
             dtpNgayNhap.CustomFormat = "dd/MM/yyyy HH:mm";
+            dtpNgayNhap.Enabled = false;
             dtpNgayNhap.Font = new Font("Segoe UI", 10F);
             dtpNgayNhap.Format = DateTimePickerFormat.Custom;
-            dtpNgayNhap.Location = new Point(593, 43);
+            dtpNgayNhap.Location = new Point(503, 43);
             dtpNgayNhap.Name = "dtpNgayNhap";
             dtpNgayNhap.Size = new Size(200, 25);
             dtpNgayNhap.TabIndex = 3;
@@ -85,7 +94,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 10F);
-            label2.Location = new Point(593, 20);
+            label2.Location = new Point(503, 20);
             label2.Name = "label2";
             label2.Size = new Size(79, 19);
             label2.TabIndex = 2;
@@ -114,6 +123,7 @@
             // groupBox1
             // 
             groupBox1.BackColor = Color.White;
+            groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(btnXoa);
             groupBox1.Controls.Add(btnThem);
             groupBox1.Controls.Add(nudSoLuong);
@@ -131,11 +141,71 @@
             groupBox1.Location = new Point(0, 90);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(20);
-            groupBox1.Size = new Size(984, 160);
+            groupBox1.Size = new Size(984, 173);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông tin sách nhập";
-            groupBox1.Enter += groupBox1_Enter;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(label10);
+            groupBox2.Controls.Add(nudMaDau);
+            groupBox2.Controls.Add(label11);
+            groupBox2.Controls.Add(nudMaCuoi);
+            groupBox2.Font = new Font("Segoe UI", 10F);
+            groupBox2.Location = new Point(503, 90);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(15);
+            groupBox2.Size = new Size(330, 64);
+            groupBox2.TabIndex = 12;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Mã cuốn";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label10.Location = new Point(18, 28);
+            label10.Name = "label10";
+            label10.Size = new Size(24, 19);
+            label10.TabIndex = 8;
+            label10.Text = "Từ";
+            // 
+            // nudMaDau
+            // 
+            nudMaDau.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            nudMaDau.Location = new Point(48, 23);
+            nudMaDau.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            nudMaDau.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudMaDau.Name = "nudMaDau";
+            nudMaDau.Size = new Size(91, 25);
+            nudMaDau.TabIndex = 5;
+            nudMaDau.TextAlign = HorizontalAlignment.Right;
+            nudMaDau.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            nudMaDau.ValueChanged += nudMaDau_ValueChanged;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label11.Location = new Point(179, 28);
+            label11.Name = "label11";
+            label11.Size = new Size(34, 19);
+            label11.TabIndex = 8;
+            label11.Text = "Đến";
+            // 
+            // nudMaCuoi
+            // 
+            nudMaCuoi.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            nudMaCuoi.Location = new Point(219, 22);
+            nudMaCuoi.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            nudMaCuoi.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudMaCuoi.Name = "nudMaCuoi";
+            nudMaCuoi.Size = new Size(93, 25);
+            nudMaCuoi.TabIndex = 5;
+            nudMaCuoi.TextAlign = HorizontalAlignment.Right;
+            nudMaCuoi.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            nudMaCuoi.ValueChanged += nudMaCuoi_ValueChanged;
             // 
             // btnXoa
             // 
@@ -146,9 +216,9 @@
             btnXoa.ForeColor = Color.White;
             btnXoa.Location = new Point(887, 102);
             btnXoa.Name = "btnXoa";
-            btnXoa.Size = new Size(75, 35);
+            btnXoa.Size = new Size(75, 39);
             btnXoa.TabIndex = 11;
-            btnXoa.Text = "Xóa";
+            btnXoa.Text = "Xóa dòng đã chọn";
             btnXoa.UseVisualStyleBackColor = false;
             btnXoa.Click += btnXoa_Click;
             // 
@@ -170,20 +240,21 @@
             // nudSoLuong
             // 
             nudSoLuong.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            nudSoLuong.Location = new Point(593, 112);
+            nudSoLuong.Location = new Point(682, 50);
             nudSoLuong.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             nudSoLuong.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudSoLuong.Name = "nudSoLuong";
-            nudSoLuong.Size = new Size(120, 25);
+            nudSoLuong.Size = new Size(151, 25);
             nudSoLuong.TabIndex = 9;
             nudSoLuong.TextAlign = HorizontalAlignment.Right;
             nudSoLuong.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            nudSoLuong.ValueChanged += nudSoLuong_ValueChanged;
             // 
             // label6
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.Location = new Point(593, 90);
+            label6.Location = new Point(682, 28);
             label6.Name = "label6";
             label6.Size = new Size(66, 19);
             label6.TabIndex = 8;
@@ -193,19 +264,21 @@
             // 
             nudDonGia.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             nudDonGia.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            nudDonGia.Location = new Point(593, 50);
+            nudDonGia.Location = new Point(503, 50);
             nudDonGia.Maximum = new decimal(new int[] { 100000000, 0, 0, 0 });
+            nudDonGia.Minimum = new decimal(new int[] { 1000, 0, 0, 0 });
             nudDonGia.Name = "nudDonGia";
-            nudDonGia.Size = new Size(200, 25);
+            nudDonGia.Size = new Size(151, 25);
             nudDonGia.TabIndex = 7;
             nudDonGia.TextAlign = HorizontalAlignment.Right;
             nudDonGia.ThousandsSeparator = true;
+            nudDonGia.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(593, 28);
+            label5.Location = new Point(503, 28);
             label5.Name = "label5";
             label5.Size = new Size(73, 19);
             label5.TabIndex = 6;
@@ -261,7 +334,7 @@
             cbTuaSach.FormattingEnabled = true;
             cbTuaSach.Location = new Point(23, 50);
             cbTuaSach.Name = "cbTuaSach";
-            cbTuaSach.Size = new Size(500, 25);
+            cbTuaSach.Size = new Size(400, 25);
             cbTuaSach.TabIndex = 1;
             // 
             // label3
@@ -273,7 +346,6 @@
             label3.Size = new Size(65, 19);
             label3.TabIndex = 0;
             label3.Text = "Tựa sách:";
-            label3.Click += label3_Click;
             // 
             // dgvChiTiet
             // 
@@ -285,14 +357,14 @@
             dgvChiTiet.ColumnHeadersHeight = 35;
             dgvChiTiet.Columns.AddRange(new DataGridViewColumn[] { colTenTuaSach, colNhaXuatBan, colNamXB, colSoLuong, colDonGia, colThanhTien });
             dgvChiTiet.Dock = DockStyle.Fill;
-            dgvChiTiet.Location = new Point(0, 250);
+            dgvChiTiet.Location = new Point(0, 263);
             dgvChiTiet.Name = "dgvChiTiet";
             dgvChiTiet.ReadOnly = true;
             dgvChiTiet.RowHeadersVisible = false;
             dgvChiTiet.RowHeadersWidth = 51;
             dgvChiTiet.RowTemplate.Height = 30;
             dgvChiTiet.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvChiTiet.Size = new Size(984, 308);
+            dgvChiTiet.Size = new Size(984, 295);
             dgvChiTiet.TabIndex = 2;
             // 
             // colTenTuaSach
@@ -428,6 +500,10 @@
             panel1.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudMaDau).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nudMaCuoi).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudSoLuong).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudDonGia).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudNamXB).EndInit();
@@ -470,5 +546,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSoLuong;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDonGia;
         private System.Windows.Forms.DataGridViewTextBoxColumn colThanhTien;
+        private GroupBox groupBox2;
+        private Label label10;
+        private NumericUpDown nudMaDau;
+        private Label label11;
+        private NumericUpDown nudMaCuoi;
     }
 }

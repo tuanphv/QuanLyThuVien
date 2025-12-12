@@ -1,4 +1,4 @@
-using DAO;
+﻿using DAO;
 using DTO;
 using System.ComponentModel;
 
@@ -14,22 +14,22 @@ namespace BUS
         public static int Add(PhieuNhapSachDTO phieu, List<CT_PhieuNhapDTO> chiTietList)
         {
             if (phieu.IDNhaCungCap <= 0)
-                throw new Exception("Vui l�ng ch?n nh� cung c?p.");
+                throw new Exception("Vui lòng chọn nhà cung cấp.");
             if (chiTietList == null || chiTietList.Count == 0)
-                throw new Exception("Vui l�ng th�m �t nh?t m?t s�ch v�o phi?u nh?p.");
+                throw new Exception("Vui lòng thêm ít nhất một sách vào phiếu nhập.");
 
-            // T?o phi?u nh?p
+            // Tạo phiếu nhập
             int idPhieuNhap = PhieuNhapSachDAO.Add(phieu);
             if (idPhieuNhap <= 0)
-                throw new Exception("Kh�ng th? t?o phi?u nh?p.");
+                throw new Exception("Không thể tạo phiếu nhập.");
 
-            // Th�m chi ti?t
+            // Thêm chi ti?t
             foreach (var ct in chiTietList)
             {
                 ct.IDPhieuNhap = idPhieuNhap;
                 bool success = CT_PhieuNhapDAO.Add(ct);
                 if (!success)
-                    throw new Exception($"Kh�ng th? th�m chi ti?t nh?p cho s�ch ID {ct.IDSach}.");
+                    throw new Exception($"Không thể thêm chi tiết nhập cho sách ID {ct.IDSach}.");
             }
 
             return idPhieuNhap;

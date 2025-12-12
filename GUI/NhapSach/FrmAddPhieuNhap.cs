@@ -5,6 +5,12 @@ namespace GUI.NhapSach
 {
     public partial class FrmAddPhieuNhap : Form
     {
+        private class Range
+        {
+            public int Start { get; set; }
+            public int End { get; set; }
+        }
+
         private class ChiTietNhapItem
         {
             public int IDTuaSach { get; set; }
@@ -15,6 +21,7 @@ namespace GUI.NhapSach
             public int SoLuong { get; set; }
             public int DonGia { get; set; }
             public int ThanhTien => SoLuong * DonGia;
+            public List<Range> MaCuonSach { get; set; } = new List<Range>();
         }
 
         private List<ChiTietNhapItem> chiTietList = new List<ChiTietNhapItem>();
@@ -43,7 +50,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nhà cung c?p: {ex.Message}", "Lỗi",
+                MessageBox.Show($"Lỗi khi tải nhà cung cấp: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -59,7 +66,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i t?a sách: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi tải tựa sách: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -75,7 +82,7 @@ namespace GUI.NhapSach
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi t?i nhà xu?t b?n: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi tải nhà xuất bản: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -90,13 +97,27 @@ namespace GUI.NhapSach
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
                 var tuaSach = cbTuaSach.SelectedItem as TuaSachDTO;
                 var nhaXuatBan = cbNhaXuatBan.SelectedItem as NhaXuatBanDTO;
 
                 if (tuaSach == null || nhaXuatBan == null) return;
 
-                // Ki?m tra xem ?ã có trong danh sách ch?a
+                // Kiểm tra mã cuốn sách đã tồn tại chưa
+                var sach = SachBUS.FindByTuaSachAndNXBAndNamXB(tuaSach.ID, nhaXuatBan.ID, (int)nudNamXB.Value);
+
+                if (sach != null)
+                {
+
+                    string maCS = CuonSachBUS.KiemTraMaCuonSach(sach.ID, (int)nudMaDau.Value, (int)nudMaCuoi.Value);
+                    if (maCS != string.Empty)
+                    {
+                        MessageBox.Show($"Mã cuốn sách {maCS} đã tồn tại trong hệ thống. Vui lòng kiểm tra lại.", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                // Kiểm tra xem đã có trong danh sách chưa
                 var existing = chiTietList.FirstOrDefault(x =>
                     x.IDTuaSach == tuaSach.ID &&
                     x.IDNhaXuatBan == nhaXuatBan.ID &&
@@ -104,29 +125,47 @@ namespace GUI.NhapSach
 
                 if (existing != null)
                 {
-                    MessageBox.Show("Sách v?i thông tin này ?ã có trong danh sách nh?p.", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // Nếu đã có
+                    // -> Cập nhật số lượng và mã sách
+                    foreach (var range in existing.MaCuonSach)
+                    {
+                        if (range.End >= (int)nudMaDau.Value && range.Start <= (int)nudMaCuoi.Value)
+                        {
+                            MessageBox.Show("Dãy mã cuốn sách bị trùng với dãy đã thêm trước đó.", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                    existing.SoLuong += (int)nudSoLuong.Value;
                 }
-
-                // Thêm vào danh sách
-                var item = new ChiTietNhapItem
+                else
                 {
-                    IDTuaSach = tuaSach.ID,
-                    TenTuaSach = tuaSach.TenTuaSach,
-                    IDNhaXuatBan = nhaXuatBan.ID,
-                    TenNhaXuatBan = nhaXuatBan.TenNXB,
-                    NamXB = (int)nudNamXB.Value,
-                    SoLuong = (int)nudSoLuong.Value,
-                    DonGia = (int)nudDonGia.Value
-                };
-
-                chiTietList.Add(item);
+                    // Thêm vào danh sách
+                    var item = new ChiTietNhapItem
+                    {
+                        IDTuaSach = tuaSach.ID,
+                        TenTuaSach = tuaSach.TenTuaSach,
+                        IDNhaXuatBan = nhaXuatBan.ID,
+                        TenNhaXuatBan = nhaXuatBan.TenNXB,
+                        NamXB = (int)nudNamXB.Value,
+                        SoLuong = (int)nudSoLuong.Value,
+                        DonGia = (int)nudDonGia.Value,
+                        MaCuonSach = new List<Range>
+                        {
+                            new Range
+                            {
+                                Start = (int)nudMaDau.Value,
+                                End = (int)nudMaCuoi.Value
+                            }
+                        }
+                    };
+                    chiTietList.Add(item);
+                }
                 RefreshDataGridView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i: {ex.Message}", "L?i", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -179,20 +218,20 @@ namespace GUI.NhapSach
 
                 if (chiTietList.Count == 0)
                 {
-                    MessageBox.Show("Vui lòng thêm ít nh?t m?t sách vào phi?u nh?p.", "Thông báo",
+                    MessageBox.Show("Vui lòng thêm ít nhất một sách vào phiếu nhập.", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     this.DialogResult = DialogResult.None;
                     return;
                 }
 
-                // T?o phi?u nh?p
+                // Tạo phiếu nhập
                 var phieu = new PhieuNhapSachDTO
                 {
                     IDNhaCungCap = (int)cbNhaCungCap.SelectedValue,
                     NgayNhap = dtpNgayNhap.Value
                 };
 
-                // T?o danh sách chi ti?t và x? lý Sach/CuonSach
+                // Tạo danh sách chi tiết và xử lý Sach/CuonSach
                 var chiTiet = new List<CT_PhieuNhapDTO>();
 
                 foreach (var item in chiTietList)
@@ -203,7 +242,7 @@ namespace GUI.NhapSach
                     int idSach;
                     if (sach == null)
                     {
-                        // T?o lô sách m?i
+                        // Tạo phiên bản sách mới
                         var sachMoi = new SachDTO
                         {
                             IDTuaSach = item.IDTuaSach,
@@ -213,43 +252,100 @@ namespace GUI.NhapSach
                             SoLuongConLai = 0,
                             DonGia = item.DonGia
                         };
-                        SachBUS.Add(sachMoi);
-                        idSach = SachBUS.GetLatestID();
+                        idSach = SachBUS.Add(sachMoi);
                     }
                     else
                     {
                         idSach = sach.ID;
                     }
 
-                    // Thêm vào chi ti?t phi?u nh?p
+                    foreach (var range in item.MaCuonSach)
+                    {
+                        // Tạo danh sách mã cuốn sách từ dãy
+                        for (int ma = range.Start; ma <= range.End; ma++)
+                        {
+                            // Thêm mã cuốn sách vào danh sách
+                            var cuonSach = new CuonSachDTO
+                            {
+                                IDSach = idSach,
+                                MaCuonSach = $"S{idSach.ToString().PadLeft(4, '0')}-{ma.ToString().PadLeft(4, '0')}"
+                            };
+                            CuonSachBUS.ThemCuonSach(cuonSach);
+                        }
+                    }
+
+                    // Thêm vào chi tiết phiếu nhập
                     chiTiet.Add(new CT_PhieuNhapDTO
                     {
                         IDSach = idSach,
                         SoLuongNhap = item.SoLuong,
                         DonGiaNhap = item.DonGia,
-                        ThanhTien = item.ThanhTien
+                        ThanhTien = item.ThanhTien,
                     });
                 }
 
-                // L?u phi?u nh?p
+                // Lỗi phiếu nhập
                 PhieuNhapSachBUS.Add(phieu, chiTiet);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i khi l?u phi?u nh?p: {ex.Message}", "L?i",
+                MessageBox.Show($"Lỗi khi lưu phiếu nhập: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.DialogResult = DialogResult.None;
             }
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void nudSoLuong_ValueChanged(object sender, EventArgs e)
         {
-
+            nudMaCuoi.Value = nudSoLuong.Value + nudMaDau.Value - 1;
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+        private void nudMaDau_ValueChanged(object sender, EventArgs e)
         {
-
+            if (nudMaDau.Value > nudMaCuoi.Value)
+            {
+                nudMaCuoi.Value = nudMaDau.Value;
+            }
+            nudSoLuong.Value = nudMaCuoi.Value - nudMaDau.Value + 1;
         }
+
+        private void nudMaCuoi_ValueChanged(object sender, EventArgs e)
+        {
+            if (nudMaDau.Value > nudMaCuoi.Value)
+            {
+                nudMaDau.Value = nudMaCuoi.Value;
+            }
+            nudSoLuong.Value = nudMaCuoi.Value - nudMaDau.Value + 1;
+        }
+
+        public List<int> ParseRanges(string input)
+        {
+            var result = new List<int>();
+            var parts = input.Split(',');
+
+            foreach (var part in parts)
+            {
+                var range = part.Trim();
+
+                if (range.Contains("-"))
+                {
+                    var bounds = range.Split('-');
+                    int start = int.Parse(bounds[0]);
+                    int end = int.Parse(bounds[1]);
+
+                    for (int i = start; i <= end; i++)
+                    {
+                        result.Add(i);
+                    }
+                }
+                else
+                {
+                    result.Add(int.Parse(range));
+                }
+            }
+
+            return result;
+        }
+
     }
 }

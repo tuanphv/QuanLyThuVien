@@ -105,7 +105,7 @@
             roundPanel1.BackgroundColor = Color.White;
             roundPanel1.BorderColor = Color.White;
             roundPanel1.BorderRadius = 20;
-            roundPanel1.BorderWidth = 0F;
+            roundPanel1.BorderWidth = 2F;
             roundPanel1.Controls.Add(txtUsername);
             roundPanel1.Cursor = Cursors.IBeam;
             roundPanel1.Location = new Point(43, 225);

@@ -38,14 +38,11 @@ namespace DAO
             return list;
         }
 
-        // Thêm Lô sách mới
+        // Thêm sách mới
         // Trong DAO/SachDAO.cs
 
-        public static bool Add(SachDTO sach)
+        public static int Add(SachDTO sach)
         {
-            // Sử dụng Transaction để đảm bảo tính toàn vẹn dữ liệu
-            //using var connection = DataProvider.Instance.GetConnection();
-
             try
             {
                 // 1. Insert Lô Sách
@@ -63,33 +60,17 @@ namespace DAO
                     new MySqlParameter("@IDNXB", sach.IDNhaXuatBan)
                 );
 
-                if (resultID == null) return false;
                 int idSachMoi = Convert.ToInt32(resultID);
 
-                // 2. Tự động sinh các Cuốn sách con (Ví dụ: Nhập 5 cuốn -> Insert 5 dòng vào CUONSACH)
-                if (sach.SoLuongTong > 0)
-                {
-                    // Tạo chuỗi Insert nhiều dòng một lúc cho nhanh (Bulk Insert)
-                    // INSERT INTO CUONSACH (IDSach, TrangThai) VALUES (1, 1), (1, 1), ...
-                    List<string> values = new List<string>();
-                    for (int i = 0; i < sach.SoLuongTong; i++)
-                    {
-                        values.Add($"({idSachMoi}, 1)"); // 1 là TrangThai: Sẵn sàng
-                    }
-
-                    string queryCuonSach = $"INSERT INTO CUONSACH (IDSach, TrangThai) VALUES {string.Join(",", values)}";
-                    DataProvider.Instance.ExecuteNonQuery(queryCuonSach);
-                }
-
-                return true;
+                return idSachMoi;
             }
             catch
             {
-                return false;
+                return -1;
             }
         }
 
-        // Cập nhật thông tin lô sách
+        // Cập nhật thông tin sách
         public static bool Update(SachDTO sach)
         {
             string query = @"
@@ -108,7 +89,7 @@ namespace DAO
             return result > 0;
         }
 
-        // Xóa lô sách (Soft Delete)
+        // Xóa sách (Soft Delete)
         public static bool Delete(int id)
         {
             string query = "UPDATE SACH SET DaAn = 1 WHERE ID = @ID";

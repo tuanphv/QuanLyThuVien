@@ -54,5 +54,56 @@ namespace BUS
 
             return BaoCaoDAO.GetChiTietSachQuaHan(maDocGia);
         }
+
+        public static List<BaoCaoTopSachDTO> GetTopSachMuonNhieuTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
+        {
+            if (top <= 0 || top > 100)
+            {
+                throw new Exception("Số lượng top phải từ 1 đến 100!");
+            }
+
+            if (tuNgay.HasValue && denNgay.HasValue && tuNgay.Value > denNgay.Value)
+            {
+                throw new Exception("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!");
+            }
+
+            return BaoCaoDAO.GetTopSachMuonNhieuTheoKhoang(top, tuNgay, denNgay);
+        }
+
+        public static List<BaoCaoTopDocGiaDTO> GetTopDocGiaTichCucTheoKhoang(int top, DateTime? tuNgay, DateTime? denNgay)
+        {
+            if (top <= 0 || top > 100)
+            {
+                throw new Exception("Số lượng top phải từ 1 đến 100!");
+            }
+
+            if (tuNgay.HasValue && denNgay.HasValue && tuNgay.Value > denNgay.Value)
+            {
+                throw new Exception("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!");
+            }
+
+            return BaoCaoDAO.GetTopDocGiaTichCucTheoKhoang(top, tuNgay, denNgay);
+        }
+
+        /// <summary>
+        /// Lấy thống kê tình trạng sách (tổng hợp theo tựa sách)
+        /// </summary>
+        public static List<ThongKeSachDTO> GetThongKeSach()
+        {
+            return BaoCaoDAO.GetThongKeSach();
+        }
+
+        /// <summary>
+        /// Lấy thống kê mượn/trả theo ngày trong khoảng thời gian
+        /// </summary>
+        public static List<ThongKeMuonTraTheoNgayDTO> GetThongKeMuonTraTheoNgay(DateTime tuNgay, DateTime denNgay)
+        {
+            if (tuNgay > denNgay)
+            {
+                throw new Exception("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!");
+            }
+
+            return BaoCaoDAO.GetThongKeMuonTraTheoNgay(tuNgay, denNgay);
+        }
     }
 }
