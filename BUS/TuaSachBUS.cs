@@ -19,6 +19,7 @@ namespace BUS
             {
                 throw new Exception("Tựa sách với tên này đã tồn tại.");
             }
+            tuaSach.MaTuaSach = TaoVietTat(tuaSach.TenTuaSach);
             return DAO.TuaSachDAO.AddBookTitle(tuaSach);
         }
 
@@ -101,18 +102,18 @@ namespace BUS
                     {
                         var tuaSach = new TuaSachDTO
                         {
-                            TenTuaSach = row.Cell(2).GetValue<string>(),
-                            TheLoai = row.Cell(3).GetValue<string>(),
-                            TacGia = row.Cell(4).GetValue<string>()
+                            TenTuaSach = row.Cell(1).GetValue<string>(),
+                            TheLoai = row.Cell(2).GetValue<string>(),
+                            TacGia = row.Cell(3).GetValue<string>()
                         };
 
                         if (ValidateTuaSach(tuaSach))
                         {
                             // Chèn vào DB
+                            tuaSach.MaTuaSach = TaoVietTat(tuaSach.TenTuaSach);
                             string maTS = AddBookTitle(tuaSach);
                             if (maTS != string.Empty)
                             {
-                                tuaSach.MaTuaSach = maTS;
                                 importedList.Add(tuaSach);
                             }
                         }
@@ -136,6 +137,25 @@ namespace BUS
             if (string.IsNullOrWhiteSpace(tuaSach.TacGia))
                 throw new Exception("Tác giả không được để trống.");
             return true;
+        }
+
+        public static string TaoVietTat(string tenSach)
+        {
+            if (string.IsNullOrWhiteSpace(tenSach))
+                return string.Empty;
+
+            // Tách tên sách thành các từ
+            string[] tu = tenSach.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            // Nếu ít hơn 2 từ thì chỉ lấy chữ cái đầu của từ đầu tiên
+            if (tu.Length == 0) return string.Empty;
+            if (tu.Length == 1) return tu[0][0].ToString().ToUpper();
+
+            // Lấy chữ cái đầu của 2 từ đầu tiên
+            char c1 = char.ToUpper(tu[0][0]);
+            char c2 = char.ToUpper(tu[1][0]);
+
+            return $"{c1}{c2}";
         }
     }
 }

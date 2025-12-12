@@ -46,15 +46,38 @@ namespace DAO
 
         public static string AddBookTitle(TuaSachDTO tuaSach)
         {
+            // Kiểm tra mẫ tựa sách đã tồn tại
+            object? existing = DataProvider.Instance.ExecuteScalar(
+                "SELECT MaTuaSach FROM TuaSach WHERE LEFT(MaTuaSach, 2) = @MaTuaSach ORDER BY MaTuaSach desc LIMIT 1",
+                new MySqlParameter("@MaTuaSach", tuaSach.MaTuaSach)
+            );
+
+            if (existing != null)
+            {
+                // Tăng số cuối cùng lên 1
+                string existingMa = existing.ToString() ?? string.Empty;
+                string numberPart = existingMa.Substring(2);
+                if (int.TryParse(numberPart, out int number))
+                {
+                    number += 1;
+                    tuaSach.MaTuaSach = existingMa.Substring(0, 2) + number.ToString("D2");
+                }
+            }
+            else
+            {
+                // Chưa có mã nào, bắt đầu từ TS001
+                tuaSach.MaTuaSach = tuaSach.MaTuaSach + "01";
+            }   
             // Thêm Tựa sách và lấy ID + mã vừa tạo
             string insertQuery = @"
-                INSERT INTO TuaSach (TenTuaSach, AnhBia)
-                VALUES (@TenTuaSach, @AnhBia);
+                INSERT INTO TuaSach (MaTuaSach, TenTuaSach, AnhBia)
+                VALUES (@MaTuaSach, @TenTuaSach, @AnhBia);
 
                 SELECT ID, MaTuaSach FROM TuaSach WHERE ID = LAST_INSERT_ID();
             ";
 
             DataTable result = DataProvider.Instance.ExecuteQuery(insertQuery,
+                new MySqlParameter("@MaTuaSach", tuaSach.MaTuaSach),
                 new MySqlParameter("@TenTuaSach", tuaSach.TenTuaSach),
                 new MySqlParameter("@AnhBia", tuaSach.AnhBia ?? (object)DBNull.Value)
             );
