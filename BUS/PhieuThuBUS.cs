@@ -22,7 +22,8 @@ namespace BUS
         {
             try
             {
-                return DAO.PhieuThuDAO.AddPhieuThu(phieuThu);
+                // Gọi hàm Fixed có Transaction cập nhật nợ
+                return DAO.PhieuThuDAO.AddPhieuThu_Fixed(phieuThu);
             }
             catch (Exception ex)
             {

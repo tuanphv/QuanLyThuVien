@@ -7,6 +7,8 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -27,43 +29,38 @@ namespace GUI.PhieuThu
         private void UCPhieuThu_Load(object sender, EventArgs e)
         {
             dgvPhieuThu.AutoGenerateColumns = false;
-            LoadPhieuThuData();
 
-            // --- KHẮC PHỤC LỖI CAST ---
+            // Format cột số tiền nếu có
+            if (dgvPhieuThu.Columns["SoTienThu"] != null)
+                dgvPhieuThu.Columns["SoTienThu"].DefaultCellStyle.Format = "N0";
+            if (dgvPhieuThu.Columns["NgayLap"] != null)
+                dgvPhieuThu.Columns["NgayLap"].DefaultCellStyle.Format = "dd/MM/yyyy";
+
+            LoadPhieuThuData();
             LoadDocGiaCombobox();
 
+            // Đăng ký sự kiện
             cbDocGia.SelectedIndexChanged += cbDocGia_SelectedIndexChanged;
-
             dgvPhieuThu.DeleteButtonClicked += DeleteButtonClicked;
             dgvPhieuThu.PrintButtonClicked += PrintButtonClicked;
         }
 
         private void LoadDocGiaCombobox()
         {
-            // Lấy danh sách từ BUS (đang trả về Tuple)
-            var rawList = BUS.PhieuThuBUS.GetAllDocGiaCoPhieuThu();
+            // Lấy danh sách từ BUS (List<DocGiaSimpleDTO>)
+            var listDocGia = PhieuThuBUS.GetAllDocGiaCoPhieuThu();
 
-            // Chuyển sang List<DocGiaSimpleDTO>
-            List<DocGiaSimpleDTO> displayList = new List<DocGiaSimpleDTO>();
+            // Thêm mục mặc định "Tất cả"
+            listDocGia.Insert(0, new DocGiaSimpleDTO { ID = 0, HoTen = "Tất cả" });
 
-            // Thêm mục mặc định
-            displayList.Add(new DocGiaSimpleDTO { ID = 0, HoTen = "Tất cả" });
-
-            // Map dữ liệu
-            foreach (var item in rawList)
-            {
-                displayList.Add(new DocGiaSimpleDTO { ID = item.ID, HoTen = item.HoTen });
-            }
-
-            // Gán DataSource
-            cbDocGia.DataSource = displayList;
+            cbDocGia.DataSource = listDocGia;
             cbDocGia.DisplayMember = "HoTen";
             cbDocGia.ValueMember = "ID";
         }
 
         private void LoadPhieuThuData()
         {
-            phieuThuList = new BindingList<DTO.PhieuThuDTO>(BUS.PhieuThuBUS.GetAllPhieuThu());
+            phieuThuList = new BindingList<PhieuThuDTO>(PhieuThuBUS.GetAllPhieuThu());
             dgvPhieuThu.DataSource = phieuThuList;
         }
 
@@ -77,7 +74,7 @@ namespace GUI.PhieuThu
                 var confirmResult = MessageBox.Show("Bạn có chắc chắn muốn xóa phiếu thu này?", "Xác nhận xóa", MessageBoxButtons.YesNo);
                 if (confirmResult == DialogResult.Yes)
                 {
-                    bool success = BUS.PhieuThuBUS.DeletePhieuThu(selectedPhieuThu.ID);
+                    bool success = PhieuThuBUS.DeletePhieuThu(selectedPhieuThu.ID);
                     if (success)
                     {
                         phieuThuList.RemoveAt(index);
@@ -141,17 +138,20 @@ namespace GUI.PhieuThu
             var frmAddPhieuThu = new FrmAddPhieuThu();
             if (frmAddPhieuThu.ShowDialog() == DialogResult.OK)
             {
-                PhieuThuDTO? newPhieuThu = frmAddPhieuThu.GetPhieuThu();
+                // Lấy phiếu thu mới từ Form con (Bạn cần đảm bảo FrmAddPhieuThu có property PhieuThuMoi hoặc method GetPhieuThu)
+                // Giả sử FrmAddPhieuThu đã được cập nhật
+                PhieuThuDTO? newPhieuThu = frmAddPhieuThu.PhieuThuMoi;
+
                 if (newPhieuThu != null)
                 {
-                    phieuThuList.Add(newPhieuThu);
+                    // Reload danh sách phiếu thu để hiển thị mới nhất
+                    LoadPhieuThuData();
 
-                    // Cập nhật Combobox nếu độc giả mới chưa có
+                    // Kiểm tra và cập nhật ComboBox lọc nếu có độc giả mới
                     if (!KiemTraTenDocGiaTonTai(newPhieuThu.TenDocGia))
                     {
-                        // SỬA LỖI TẠI ĐÂY: Cast sang List<DocGiaSimpleDTO>
+                        // FIX LỖI CAST TẠI ĐÂY: Cast về List<DocGiaSimpleDTO>
                         var currentList = cbDocGia.DataSource as List<DocGiaSimpleDTO>;
-
                         if (currentList != null)
                         {
                             currentList.Add(new DocGiaSimpleDTO
@@ -160,7 +160,7 @@ namespace GUI.PhieuThu
                                 HoTen = newPhieuThu.TenDocGia
                             });
 
-                            // Refresh binding
+                            // Refresh DataSource
                             cbDocGia.DataSource = null;
                             cbDocGia.DataSource = currentList;
                             cbDocGia.DisplayMember = "HoTen";
@@ -168,7 +168,7 @@ namespace GUI.PhieuThu
                         }
                         else
                         {
-                            // Fallback: reload từ đầu
+                            // Nếu cast lỗi, load lại từ DB cho chắc
                             LoadDocGiaCombobox();
                         }
                     }
@@ -179,7 +179,6 @@ namespace GUI.PhieuThu
 
         public bool KiemTraTenDocGiaTonTai(string ten)
         {
-            // Kiểm tra dựa trên DTO mới
             if (cbDocGia.DataSource is List<DocGiaSimpleDTO> list)
             {
                 return list.Any(d => d.HoTen.Equals(ten, StringComparison.OrdinalIgnoreCase));
@@ -195,14 +194,14 @@ namespace GUI.PhieuThu
 
                 if (int.TryParse(cbDocGia.SelectedValue.ToString(), out int selectedId))
                 {
-                    if (selectedId == 0) // Tất cả
+                    if (selectedId == 0) // "Tất cả"
                     {
                         dgvPhieuThu.DataSource = phieuThuList;
                     }
                     else
                     {
                         var filtered = phieuThuList.Where(p => p.IDDocGia == selectedId).ToList();
-                        dgvPhieuThu.DataSource = new BindingList<DTO.PhieuThuDTO>(filtered);
+                        dgvPhieuThu.DataSource = new BindingList<PhieuThuDTO>(filtered);
                     }
                 }
             }
