@@ -1,4 +1,6 @@
 ﻿using DTO;
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DAO
@@ -11,8 +13,9 @@ namespace DAO
             try
             {
                 string sql = @"SELECT pt.ID, MaPhieuThu, IDDocGia, dg.HoTen AS TenDocGia, SoTienThu, NgayLap 
-                    FROM PHIEUTHU pt
-                    JOIN DocGia dg ON dg.ID = IDDocGia";
+                               FROM PHIEUTHU pt
+                               JOIN DOCGIA dg ON dg.ID = IDDocGia
+                               ORDER BY NgayLap DESC";
                 var dt = DataProvider.Instance.ExecuteQuery(sql);
                 foreach (DataRow row in dt.Rows)
                 {
@@ -39,20 +42,19 @@ namespace DAO
         {
             try
             {
-                string sql = @"
-                    INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
-                    VALUES (@IDDocGia, @SoTienThu, @NgayLapPhieu);
+                string sql = @"INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
+                               VALUES (@IDDocGia, @SoTienThu, @NgayLapPhieu);
+                               SELECT MaPhieuThu FROM PHIEUTHU WHERE ID = LAST_INSERT_ID()";
 
-                    SELECT ID, MaPhieuThu FROM PhieuThu WHERE ID = LAST_INSERT_ID()";
                 var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
                 {
                     new MySql.Data.MySqlClient.MySqlParameter("@IDDocGia", phieuThu.IDDocGia),
                     new MySql.Data.MySqlClient.MySqlParameter("@SoTienThu", phieuThu.SoTienThu),
                     new MySql.Data.MySqlClient.MySqlParameter("@NgayLapPhieu", phieuThu.NgayLapPhieu)
                 };
-                DataTable result = DataProvider.Instance.ExecuteQuery(sql, parameters);
 
-                return result.Rows[0]["MaPhieuThu"].ToString() ?? string.Empty;
+                object result = DataProvider.Instance.ExecuteScalar(sql, parameters);
+                return result?.ToString() ?? string.Empty;
             }
             catch (Exception ex)
             {
@@ -60,21 +62,24 @@ namespace DAO
             }
         }
 
-        public static List<(int ID, string HoTen)> GetAllDocGiaCoPhieuThu()
+        // Trả về List<DocGiaSimpleDTO> để dễ binding và cast
+        public static List<DocGiaSimpleDTO> GetAllDocGiaCoPhieuThu()
         {
-            List<(int ID, string HoTen)> list = new List<(int ID, string HoTen)>();
+            var list = new List<DocGiaSimpleDTO>();
             try
             {
-                string sql = @"
-                    SELECT DISTINCT dg.ID, dg.HoTen
-                    FROM DocGia dg
-                    JOIN PhieuThu pt ON dg.ID = pt.IDDocGia";
+                string sql = @"SELECT DISTINCT dg.ID, dg.HoTen
+                               FROM DOCGIA dg
+                               JOIN PHIEUTHU pt ON dg.ID = pt.IDDocGia
+                               ORDER BY dg.HoTen";
                 DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
                 foreach (DataRow row in dt.Rows)
                 {
-                    int id = Convert.ToInt32(row["ID"]);
-                    string hoTen = row["HoTen"].ToString() ?? string.Empty;
-                    list.Add((id, hoTen));
+                    list.Add(new DocGiaSimpleDTO
+                    {
+                        ID = Convert.ToInt32(row["ID"]),
+                        HoTen = row["HoTen"].ToString() ?? string.Empty
+                    });
                 }
             }
             catch (Exception ex)
@@ -88,7 +93,7 @@ namespace DAO
         {
             try
             {
-                string sql = "DELETE FROM PhieuThu WHERE ID = @IDPhieuThu";
+                string sql = "DELETE FROM PHIEUTHU WHERE ID = @IDPhieuThu";
                 var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
                 {
                     new MySql.Data.MySqlClient.MySqlParameter("@IDPhieuThu", idPhieuThu)

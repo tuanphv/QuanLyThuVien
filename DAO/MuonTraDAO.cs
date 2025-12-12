@@ -4,13 +4,15 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 
 namespace DAO
 {
     public class MuonTraDAO
     {
-        private static MySqlConnection OpenConnection()
+        // Hàm này lấy kết nối ĐÃ MỞ từ DataProvider
+        private static MySqlConnection GetOpenConnection()
         {
             return DataProvider.Instance.GetOpenConnection();
         }
@@ -18,319 +20,385 @@ namespace DAO
         public static ThamSoMuonTraDTO LayThamSoMuonTra()
         {
             const string query = @"SELECT SoSachMuonToiDa, SoNgayMuonToiDa, DonGiaPhatMoiNgay, TuoiToiThieu, TuoiToiDa FROM THAMSO LIMIT 1";
-            using var connection = OpenConnection();
+            using var connection = GetOpenConnection();
             var thamSo = connection.QueryFirstOrDefault<ThamSoMuonTraDTO>(query);
-
-            if (thamSo == null)
-                throw new Exception("Chưa cấu hình bảng THAMSO.");
-
+            if (thamSo == null) throw new Exception("Chưa cấu hình bảng THAMSO.");
             return thamSo;
         }
 
         public static DocGiaMuonInfoDTO? LayThongTinDocGia(string maDocGia)
         {
             const string query = @"SELECT ID, MaDocGia, HoTen, NgaySinh, NgayHetHan, TongNoHienTai FROM DOCGIA WHERE MaDocGia = @MaDocGia";
-            using var connection = OpenConnection();
+            using var connection = GetOpenConnection();
             return connection.QueryFirstOrDefault<DocGiaMuonInfoDTO>(query, new { MaDocGia = maDocGia });
         }
 
-        public static int? LayIDCuonSach(string maCuonSach)
+        public static List<SachMuonLuaChonDTO> TimCuonSachSanSang(string keyword)
         {
-            const string query = "SELECT ID FROM CUONSACH WHERE MaCuonSach = @Ma";
-            using var connection = OpenConnection();
-            return connection.QuerySingleOrDefault<int?>(query, new { Ma = maCuonSach });
-        }
+            string query = @"SELECT cs.ID AS IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach,
+                                    IFNULL(GROUP_CONCAT(DISTINCT tg.TenTacGia SEPARATOR ', '), 'Đang cập nhật') AS TacGia,
+                                    nxb.TenNXB AS NhaXuatBan,
+                                    IFNULL(GROUP_CONCAT(DISTINCT tsp.TenTinhTrang SEPARATOR ', '), 'Mới nguyên') AS TinhTrangHienTai
+                             FROM CUONSACH cs
+                             INNER JOIN SACH s ON cs.IDSach = s.ID AND s.DaAn = 0
+                             INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID AND ts.DaAn = 0
+                             INNER JOIN NHAXUATBAN nxb ON s.IDNhaXuatBan = nxb.ID
+                             LEFT JOIN CT_TACGIA cttg ON cttg.IDTuaSach = ts.ID
+                             LEFT JOIN TACGIA tg ON tg.ID = cttg.IDTacGia
+                             LEFT JOIN CUONSACH_TINHTRANG cst ON cst.IDCuonSach = cs.ID
+                             LEFT JOIN THAMSOPHAT tsp ON tsp.ID = cst.IDThamSoPhat
+                             WHERE cs.TrangThai = 1 AND cs.DaAn = 0 ";
 
-        public static bool CuonSachSanSang(int idCuonSach)
-        {
-            const string query = "SELECT TinhTrang FROM CUONSACH WHERE ID = @ID";
-            using var connection = OpenConnection();
-            int? tinhTrang = connection.QuerySingleOrDefault<int?>(query, new { ID = idCuonSach });
-            return tinhTrang == 1;
+            var parameters = new DynamicParameters();
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query += " AND (ts.TenTuaSach LIKE @Keyword OR cs.MaCuonSach LIKE @Keyword)";
+                parameters.Add("Keyword", $"%{keyword}%");
+            }
+
+            query += " GROUP BY cs.ID, cs.MaCuonSach, ts.TenTuaSach, nxb.TenNXB ORDER BY ts.TenTuaSach LIMIT 50";
+
+            using var connection = GetOpenConnection();
+            return connection.Query<SachMuonLuaChonDTO>(query, parameters).ToList();
         }
 
         public static int DemSoSachDangMuon(int idDocGia)
         {
             const string query = @"SELECT COUNT(*) FROM CT_PHIEUMUON cp
-                             INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-                             WHERE p.IDDocGia = @IDDocGia AND cp.NgayTraThucTe IS NULL";
-            using var connection = OpenConnection();
+                                   INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                                   WHERE p.IDDocGia = @IDDocGia AND cp.NgayTraThucTe IS NULL";
+            using var connection = GetOpenConnection();
             return connection.ExecuteScalar<int>(query, new { IDDocGia = idDocGia });
         }
 
-        private static string TaoMaPhieuMuonMoi(MySqlConnection connection, MySqlTransaction transaction)
+        // ========================================================================
+        // 1. TẠO PHIẾU MƯỢN (ĐÃ SỬA LỖI)
+        // ========================================================================
+        public static int TaoPhieuMuon(PhieuMuonDTO phieu, List<SachMuonLuaChonDTO> danhSachCuon)
         {
-            const string query = "SELECT MaPhieuMuon FROM PHIEUMUON ORDER BY ID DESC LIMIT 1";
-            string? maCuoi = connection.QueryFirstOrDefault<string>(query, transaction: transaction);
+            using var connection = GetOpenConnection(); // Kết nối đã mở sẵn
+                                                        // KHÔNG GỌI connection.Open() Ở ĐÂY NỮA
 
-            if (string.IsNullOrEmpty(maCuoi))
-            {
-                return "PM000001";
-            }
+            using var transaction = connection.BeginTransaction();
 
-            string phanSo = maCuoi.Substring(2);
-            int so = int.Parse(phanSo) + 1;
-            return "PM" + so.ToString("D6");
-        }
-
-        public static PhieuMuonDTO TaoPhieuMuonVaChiTiet(DocGiaMuonInfoDTO docGia, List<int> danhSachCuon,
-            DateTime ngayMuon, DateTime ngayTraDuKien)
-        {
-            PhieuMuonDTO phieu = new();
-
-            bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            try
             {
                 string maMoi = TaoMaPhieuMuonMoi(connection, transaction);
-                const string queryInsert = @"INSERT INTO PHIEUMUON (MaPhieuMuon, IDDocGia, NgayMuon, NgayTraDuKien)
-                                        VALUES (@MaPhieuMuon, @IDDocGia, @NgayMuon, @NgayTraDuKien);
-                                        SELECT LAST_INSERT_ID();";
 
-                long idResult = connection.ExecuteScalar<long>(queryInsert, new
+                const string insertPhieu = @"INSERT INTO PHIEUMUON (MaPhieuMuon, IDDocGia, NgayMuon, NgayTraDuKien)
+                                             VALUES (@MaPhieu, (SELECT ID FROM DOCGIA WHERE MaDocGia = @MaDG), @NgayMuon, @HanTra);
+                                             SELECT LAST_INSERT_ID();";
+
+                int idPhieu = connection.ExecuteScalar<int>(insertPhieu, new
                 {
-                    MaPhieuMuon = maMoi,
-                    IDDocGia = docGia.ID,
-                    NgayMuon = ngayMuon,
-                    NgayTraDuKien = ngayTraDuKien
+                    MaPhieu = maMoi,
+                    MaDG = phieu.MaDocGia,
+                    NgayMuon = phieu.NgayMuon,
+                    HanTra = phieu.NgayTraDuKien
                 }, transaction);
 
-                if (idResult == 0)
+                foreach (var sach in danhSachCuon)
                 {
-                    return false;
+                    // p_DanhSachLoiMoi là chuỗi ID lỗi, VD: "2,4,5"
+                    connection.Execute("SP_ThemSachVaoPhieuMuon", new
+                    {
+                        p_IDPhieuMuon = idPhieu,
+                        p_IDCuonSach = sach.IDCuonSach,
+                        p_DanhSachLoiMoi = sach.DanhSachLoiMoi
+                    }, transaction, commandType: CommandType.StoredProcedure);
                 }
 
-                int idPhieu = Convert.ToInt32(idResult);
-                foreach (int idCuon in danhSachCuon)
-                {
-                    const string queryCT = @"INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach)
-                                        VALUES (@IDPhieuMuon, @IDCuonSach);";
-                    connection.Execute(queryCT, new { IDPhieuMuon = idPhieu, IDCuonSach = idCuon }, transaction);
+                transaction.Commit();
+                return idPhieu;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
 
-                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @IDCuon";
-                    connection.Execute(queryUpdateCuon, new { IDCuon = idCuon }, transaction);
+        // ========================================================================
+        // 2. TẠO PHIẾU TRẢ (ĐÃ SỬA LỖI)
+        // ========================================================================
+        public static int TaoPhieuTra(int idPhieuMuon, List<ChiTietPhieuMuonDTO> danhSachTra)
+        {
+            using var connection = GetOpenConnection(); // Kết nối đã mở sẵn
+                                                        // KHÔNG GỌI connection.Open() Ở ĐÂY NỮA
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                string maMoi = TaoMaPhieuTraMoi(connection, transaction);
+
+                const string insertPhieu = @"INSERT INTO PHIEUTRA (MaPhieuTra, IDPhieuMuon, NgayTra, TongTienPhat)
+                                             VALUES (@MaPhieu, @IDPM, NOW(), 0);
+                                             SELECT LAST_INSERT_ID();";
+
+                int idPhieuTra = connection.ExecuteScalar<int>(insertPhieu, new { MaPhieu = maMoi, IDPM = idPhieuMuon }, transaction);
+
+                foreach (var item in danhSachTra)
+                {
+                    // A. Insert CT_PHIEUTRA (Trigger hồi phục kho chạy tại đây)
+                    const string insertCT = @"INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach, TienPhat) 
+                                              VALUES (@IDPT, @IDCuon, 0);"; // TienPhat sẽ do Trigger update
+                    connection.Execute(insertCT, new { IDPT = idPhieuTra, IDCuon = item.IDCuonSach }, transaction);
+
+                    // B. Insert Tình Trạng Trả (Xử lý chuỗi ID: "2,4,5")
+                    if (!string.IsNullOrEmpty(item.DanhSachIdLoiTra))
+                    {
+                        var ids = item.DanhSachIdLoiTra.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        const string insertTinhTrang = @"INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat)
+                                                         VALUES (@IDPT, @IDCuon, @IDThamSo);";
+                        foreach (var idStr in ids)
+                        {
+                            if (int.TryParse(idStr, out int idLoi))
+                            {
+                                connection.Execute(insertTinhTrang, new { IDPT = idPhieuTra, IDCuon = item.IDCuonSach, IDThamSo = idLoi }, transaction);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Mặc định trả về Mới nếu không chọn gì
+                        var idMoi = connection.ExecuteScalar<int>("SELECT ID FROM THAMSOPHAT WHERE CoLaMacDinh = 1 LIMIT 1", transaction: transaction);
+                        connection.Execute("INSERT INTO CT_PHIEUTRA_TINHTRANG (IDPhieuTra, IDCuonSach, IDThamSoPhat) VALUES (@IDPT, @IDCuon, @IDMoi)",
+                            new { IDPT = idPhieuTra, IDCuon = item.IDCuonSach, IDMoi = idMoi }, transaction);
+                    }
                 }
 
-                phieu = new PhieuMuonDTO
-                {
-                    ID = idPhieu,
-                    MaPhieuMuon = maMoi,
-                    MaDocGia = docGia.MaDocGia,
-                    HoTenDocGia = docGia.HoTen,
-                    NgayMuon = ngayMuon,
-                    NgayTraDuKien = ngayTraDuKien,
-                    TongSach = danhSachCuon.Count,
-                    SoSachChuaTra = danhSachCuon.Count
-                };
-                return true;
-            });
-
-            if (!success)
-                throw new Exception("Không thể tạo phiếu mượn.");
-
-            return phieu;
+                transaction.Commit();
+                return idPhieuTra;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
-        public static BindingList<PhieuMuonDTO> LayTatCaPhieuMuon()
+        // ========================================================================
+        // 3. QUERY DỮ LIỆU
+        // ========================================================================
+
+        public static List<PhieuMuonDTO> LayDSPhieuMuon()
         {
-            BindingList<PhieuMuonDTO> list = new BindingList<PhieuMuonDTO>();
             const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
+                                          COUNT(cp.IDCuonSach) AS TongSach,
+                                          SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
+                                          pm.TongPhat
+                                   FROM PHIEUMUON pm
+                                   INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
+                                   LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
+                                   GROUP BY pm.ID ORDER BY pm.NgayMuon DESC";
+            using var connection = GetOpenConnection();
+            return connection.Query<PhieuMuonDTO>(query).ToList();
+        }
+
+        public static List<ChiTietPhieuMuonDTO> LayChiTietMuon(int idPhieuMuon)
+        {
+            // Join SACH để lấy DonGia tính phạt
+            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, 
+                                          s.DonGia, -- Giá sách
+                                          pm.NgayMuon, cp.NgayTraThucTe, pm.NgayTraDuKien,
+                                          
+                                          -- Lấy chuỗi tình trạng lúc mượn
+                                          (SELECT GROUP_CONCAT(tsp.TenTinhTrang SEPARATOR ', ') 
+                                           FROM CT_PHIEUMUON_TINHTRANG ctt 
+                                           JOIN THAMSOPHAT tsp ON ctt.IDThamSoPhat = tsp.ID 
+                                           WHERE ctt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach) AS TinhTrangMuon,
+                                          
+                                          -- Lấy danh sách ID lỗi mượn để so sánh
+                                          (SELECT GROUP_CONCAT(ctt.IDThamSoPhat) 
+                                           FROM CT_PHIEUMUON_TINHTRANG ctt 
+                                           WHERE ctt.IDPhieuMuon = cp.IDPhieuMuon AND ctt.IDCuonSach = cp.IDCuonSach) AS DanhSachIdLoiMuon
+
+                                   FROM CT_PHIEUMUON cp
+                                   INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
+                                   INNER JOIN SACH s ON cs.IDSach = s.ID
+                                   INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                                   INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
+                                   WHERE cp.IDPhieuMuon = @ID";
+            using var connection = GetOpenConnection();
+            return connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
+        }
+
+        public static PhieuMuonDTO? LayPhieuMuon(string? maPhieu, int? idPhieu)
+        {
+            string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
                                     COUNT(cp.IDCuonSach) AS TongSach,
                                     SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
-                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
+                                    pm.TongPhat
                              FROM PHIEUMUON pm
                              INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
                              LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
-                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien
-                             ORDER BY pm.NgayMuon DESC";
-            using var connection = OpenConnection();
-            var phieuMuonList = connection.Query<PhieuMuonDTO>(query).ToList();
-            return new BindingList<PhieuMuonDTO>(phieuMuonList);
+                             WHERE 1=1 ";
+
+            if (idPhieu.HasValue) query += " AND pm.ID = @ID ";
+            if (!string.IsNullOrEmpty(maPhieu)) query += " AND pm.MaPhieuMuon = @Ma ";
+
+            query += " GROUP BY pm.ID";
+
+            using var connection = GetOpenConnection();
+            return connection.QueryFirstOrDefault<PhieuMuonDTO>(query, new { ID = idPhieu, Ma = maPhieu });
         }
 
-        public static PhieuMuonDTO? LayPhieuMuonTheoID(int idPhieuMuon)
+        public static List<PhieuTraDTO> LayDSPhieuTra()
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
-                                    COUNT(cp.IDCuonSach) AS TongSach,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
-                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
-                             FROM PHIEUMUON pm
-                             INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
-                             LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
-                             WHERE pm.ID = @ID
-                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien";
-            using var connection = OpenConnection();
-            return connection.QueryFirstOrDefault<PhieuMuonDTO>(query, new { ID = idPhieuMuon });
+            const string query = @"SELECT pt.ID, pt.MaPhieuTra, pm.MaPhieuMuon, dg.HoTen AS HoTenDocGia, 
+                                          pt.NgayTra, pt.TongTienPhat,
+                                          COUNT(ct.IDCuonSach) AS TongSachTra
+                                   FROM PHIEUTRA pt
+                                   JOIN PHIEUMUON pm ON pt.IDPhieuMuon = pm.ID
+                                   JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
+                                   LEFT JOIN CT_PHIEUTRA ct ON ct.IDPhieuTra = pt.ID
+                                   GROUP BY pt.ID ORDER BY pt.NgayTra DESC";
+            using var connection = GetOpenConnection();
+            return connection.Query<PhieuTraDTO>(query).ToList();
         }
 
-        public static PhieuMuonDTO? LayPhieuMuonTheoMa(string maPhieuMuon)
+        public static List<ChiTietPhieuTraDTO> LayChiTietTra(int idPhieuTra)
         {
-            const string query = @"SELECT pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia, pm.NgayMuon, pm.NgayTraDuKien,
-                                    COUNT(cp.IDCuonSach) AS TongSach,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NULL THEN 1 ELSE 0 END) AS SoSachChuaTra,
-                                    MAX(cp.NgayTraThucTe) AS NgayTraThucTe
-                             FROM PHIEUMUON pm
-                             INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
-                             LEFT JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
-                             WHERE pm.MaPhieuMuon = @MaPhieu
-                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen, pm.NgayMuon, pm.NgayTraDuKien";
+            const string query = @"SELECT ct.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, 
+                                          pm.NgayMuon, pm.NgayTraDuKien, pt.NgayTra AS NgayTraThucTe,
+                                          ct.TienPhat, 
+                                          
+                                          (SELECT GROUP_CONCAT(tsp.TenTinhTrang SEPARATOR ', ') 
+                                           FROM CT_PHIEUTRA_TINHTRANG ctt 
+                                           JOIN THAMSOPHAT tsp ON ctt.IDThamSoPhat = tsp.ID 
+                                           WHERE ctt.IDPhieuTra = ct.IDPhieuTra AND ctt.IDCuonSach = ct.IDCuonSach) AS TinhTrangTra
 
-            using var connection = OpenConnection();
-            return connection.QueryFirstOrDefault<PhieuMuonDTO>(query, new { MaPhieu = maPhieuMuon });
+                                   FROM CT_PHIEUTRA ct
+                                   JOIN PHIEUTRA pt ON ct.IDPhieuTra = pt.ID
+                                   JOIN PHIEUMUON pm ON pt.IDPhieuMuon = pm.ID
+                                   JOIN CUONSACH cs ON ct.IDCuonSach = cs.ID
+                                   JOIN SACH s ON cs.IDSach = s.ID
+                                   JOIN TUASACH ts ON s.IDTuaSach = ts.ID
+                                   WHERE ct.IDPhieuTra = @ID";
+            using var connection = GetOpenConnection();
+            return connection.Query<ChiTietPhieuTraDTO>(query, new { ID = idPhieuTra }).ToList();
         }
 
-        public static BindingList<ChiTietPhieuMuonDTO> LayChiTietPhieuMuon(int idPhieuMuon)
+        public static PhieuTraDTO? LayPhieuTra(int id)
         {
-            const string query = @"SELECT cp.IDPhieuMuon, cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, cp.NgayTraThucTe, pm.NgayTraDuKien
-                             FROM CT_PHIEUMUON cp
-                             INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
-                             INNER JOIN SACH s ON cs.IDSach = s.ID
-                             INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
-                             INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
-                             WHERE cp.IDPhieuMuon = @ID";
-            using var connection = OpenConnection();
-            var list = connection.Query<ChiTietPhieuMuonDTO>(query, new { ID = idPhieuMuon }).ToList();
-            return new BindingList<ChiTietPhieuMuonDTO>(list);
+            const string query = @"SELECT pt.*, pm.MaPhieuMuon, dg.HoTen AS HoTenDocGia, dg.MaDocGia 
+                                   FROM PHIEUTRA pt
+                                   JOIN PHIEUMUON pm ON pt.IDPhieuMuon = pm.ID
+                                   JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
+                                   WHERE pt.ID = @ID";
+            using var connection = GetOpenConnection();
+            return connection.QueryFirstOrDefault<PhieuTraDTO>(query, new { ID = id });
         }
 
         public static bool GiaHanPhieuMuon(int idPhieuMuon, DateTime hanTraMoi)
         {
             const string query = "UPDATE PHIEUMUON SET NgayTraDuKien = @HanTraMoi WHERE ID = @ID";
-            using var connection = OpenConnection();
+            using var connection = GetOpenConnection();
             int count = connection.Execute(query, new { HanTraMoi = hanTraMoi, ID = idPhieuMuon });
             return count > 0;
         }
 
-        public static bool XoaPhieuMuon(int idPhieuMuon)
+        // ========================================================================
+        // 4. HÀM HỖ TRỢ SINH MÃ (Private, dùng chung Connection của Transaction)
+        // ========================================================================
+        private static string TaoMaPhieuMuonMoi(MySqlConnection conn, MySqlTransaction tran)
         {
-            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            string lastMa = conn.QueryFirstOrDefault<string>("SELECT MaPhieuMuon FROM PHIEUMUON ORDER BY ID DESC LIMIT 1", transaction: tran);
+            if (string.IsNullOrEmpty(lastMa)) return "PM000001";
+            int next = int.Parse(lastMa.Substring(2)) + 1;
+            return "PM" + next.ToString("D6");
+        }
+
+        private static string TaoMaPhieuTraMoi(MySqlConnection conn, MySqlTransaction tran)
+        {
+            string lastMa = conn.QueryFirstOrDefault<string>("SELECT MaPhieuTra FROM PHIEUTRA ORDER BY ID DESC LIMIT 1", transaction: tran);
+            if (string.IsNullOrEmpty(lastMa)) return "PT000001";
+            int next = int.Parse(lastMa.Substring(2)) + 1;
+            return "PT" + next.ToString("D6");
+        }
+
+        // --- XÓA PHIẾU MƯỢN (Xử lý toàn vẹn) ---
+        public static bool XoaPhieuMuon(int id)
+        {
+            using var connection = GetOpenConnection();
+            using var transaction = connection.BeginTransaction();
+            try
             {
-                const string queryCheck = @"SELECT COUNT(*) FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                int coLichSuTra = connection.ExecuteScalar<int>(queryCheck, new { ID = idPhieuMuon }, transaction);
-                if (coLichSuTra > 0)
+                // 1. Lấy danh sách sách trong phiếu này
+                var listCuon = connection.Query<int>("SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID", new { ID = id }, transaction).ToList();
+
+                // 2. Xóa các ràng buộc tình trạng mượn
+                connection.Execute("DELETE FROM CT_PHIEUMUON_TINHTRANG WHERE IDPhieuMuon = @ID", new { ID = id }, transaction);
+
+                // 3. Xóa chi tiết phiếu mượn
+                connection.Execute("DELETE FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID", new { ID = id }, transaction);
+
+                // 4. Cập nhật lại sách: Tăng tồn kho và set trạng thái Sẵn sàng (1)
+                foreach (var idCuon in listCuon)
                 {
-                    throw new Exception("Phiếu đã có lịch sử trả, không thể xóa.");
+                    // Lấy ID sách gốc (lô sách) để tăng tồn kho
+                    int idSach = connection.ExecuteScalar<int>("SELECT IDSach FROM CUONSACH WHERE ID = @ID", new { ID = idCuon }, transaction);
+                    connection.Execute("UPDATE SACH SET SoLuongConLai = SoLuongConLai + 1 WHERE ID = @ID", new { ID = idSach }, transaction);
+
+                    // Set cuốn sách về Sẵn sàng (Trừ khi nó đã bị Hỏng/Mất từ trước khi mượn - nhưng logic mượn chỉ cho mượn sách sẵn sàng nên set về 1 là an toàn)
+                    connection.Execute("UPDATE CUONSACH SET TrangThai = 1 WHERE ID = @ID", new { ID = idCuon }, transaction);
+
+                    // Reset tình trạng sách về "Mới" hoặc tình trạng mặc định nếu cần (Tùy chọn)
+                    // Ở đây ta giữ nguyên tình trạng cũ của sách trong CUONSACH_TINHTRANG vì xóa phiếu mượn coi như chưa từng mượn
                 }
 
-                const string queryCuon = "SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
-                List<int> cuonSach = connection.Query<int>(queryCuon, new { ID = idPhieuMuon }, transaction).ToList();
+                // 5. Xóa phiếu mượn
+                int rows = connection.Execute("DELETE FROM PHIEUMUON WHERE ID = @ID", new { ID = id }, transaction);
 
-                const string deleteCT = "DELETE FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID";
-                connection.Execute(deleteCT, new { ID = idPhieuMuon }, transaction);
-
-                foreach (int idCuon in cuonSach)
-                {
-                    const string updateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
-                    connection.Execute(updateCuon, new { ID = idCuon }, transaction);
-                }
-
-                const string deletePhieu = "DELETE FROM PHIEUMUON WHERE ID = @ID";
-                connection.Execute(deletePhieu, new { ID = idPhieuMuon }, transaction);
-
-                return true;
-            });
+                transaction.Commit();
+                return rows > 0;
+            }
+            catch { transaction.Rollback(); throw; }
         }
 
-        public static bool TraPhieuMuon(int idPhieuMuon, DateTime ngayTra, int donGiaPhatMoiNgay, out int tongTienPhat)
+        // --- XÓA PHIẾU TRẢ (Hồi phục trạng thái đang mượn) ---
+        public static bool XoaPhieuTra(int id)
         {
-            int tongTienPhatLocal = 0;
-            bool success = DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
+            using var connection = GetOpenConnection();
+            using var transaction = connection.BeginTransaction();
+            try
             {
-                const string queryNgayTraDuKien = "SELECT NgayTraDuKien FROM PHIEUMUON WHERE ID = @ID";
-                DateTime? ngayTraDuKien = connection.QueryFirstOrDefault<DateTime?>(queryNgayTraDuKien, new { ID = idPhieuMuon }, transaction);
-                if (ngayTraDuKien == null)
+                int idPhieuMuon = connection.ExecuteScalar<int>("SELECT IDPhieuMuon FROM PHIEUTRA WHERE ID = @ID", new { ID = id }, transaction);
+                decimal tongPhatPhieuTra = connection.ExecuteScalar<decimal>("SELECT TongTienPhat FROM PHIEUTRA WHERE ID = @ID", new { ID = id }, transaction);
+                int idDocGia = connection.ExecuteScalar<int>("SELECT IDDocGia FROM PHIEUMUON WHERE ID = @ID", new { ID = idPhieuMuon }, transaction);
+
+                var listCuonTra = connection.Query<int>("SELECT IDCuonSach FROM CT_PHIEUTRA WHERE IDPhieuTra = @ID", new { ID = id }, transaction).ToList();
+
+                connection.Execute("DELETE FROM CT_PHIEUTRA_TINHTRANG WHERE IDPhieuTra = @ID", new { ID = id }, transaction);
+                connection.Execute("DELETE FROM CT_PHIEUTRA WHERE IDPhieuTra = @ID", new { ID = id }, transaction);
+
+                foreach (var idCuon in listCuonTra)
                 {
-                    return false;
+                    // Lỗi xảy ra ở đây: Bảng CT_PHIEUMUON không có cột TienPhat ở database mới
+                    // Ta chỉ cần set NgayTraThucTe về NULL
+                    connection.Execute(@"UPDATE CT_PHIEUMUON SET NgayTraThucTe = NULL WHERE IDPhieuMuon = @IDPM AND IDCuonSach = @IDCS",
+                                         new { IDPM = idPhieuMuon, IDCS = idCuon }, transaction);
+
+                    connection.Execute("UPDATE CUONSACH SET TrangThai = 0 WHERE ID = @ID", new { ID = idCuon }, transaction);
+
+                    int idSach = connection.ExecuteScalar<int>("SELECT IDSach FROM CUONSACH WHERE ID = @ID", new { ID = idCuon }, transaction);
+                    connection.Execute("UPDATE SACH SET SoLuongConLai = SoLuongConLai - 1 WHERE ID = @ID", new { ID = idSach }, transaction);
                 }
 
-                const string querySelectCT = @"SELECT IDCuonSach FROM CT_PHIEUMUON
-                                           WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                List<int> cuonChuaTra = connection.Query<int>(querySelectCT, new { ID = idPhieuMuon }, transaction).ToList();
-
-                int soNgayTre = Math.Max(0, (ngayTra.Date - ngayTraDuKien.Value.Date).Days);
-                int tienPhatMoiCuon = soNgayTre * donGiaPhatMoiNgay;
-                tongTienPhatLocal = tienPhatMoiCuon * cuonChuaTra.Count;
-
-                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
-                                          SET NgayTraThucTe = @NgayTra, SoNgayTre = @SoNgayTre, TienPhat = @TienPhat
-                                          WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NULL";
-                connection.Execute(queryUpdateCT, new
+                if (tongPhatPhieuTra > 0)
                 {
-                    NgayTra = ngayTra,
-                    SoNgayTre = soNgayTre,
-                    TienPhat = tienPhatMoiCuon,
-                    ID = idPhieuMuon
-                }, transaction);
-
-                foreach (int idCuon in cuonChuaTra)
-                {
-                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 1 WHERE ID = @ID";
-                    connection.Execute(queryUpdateCuon, new { ID = idCuon }, transaction);
+                    connection.Execute("UPDATE DOCGIA SET TongNoHienTai = TongNoHienTai - @Tien WHERE ID = @ID", new { Tien = tongPhatPhieuTra, ID = idDocGia }, transaction);
+                    connection.Execute("UPDATE PHIEUMUON SET TongPhat = TongPhat - @Tien WHERE ID = @ID", new { Tien = tongPhatPhieuTra, ID = idPhieuMuon }, transaction);
                 }
 
-                return true;
-            });
+                connection.Execute("UPDATE PHIEUMUON SET TrangThai = 1 WHERE ID = @ID", new { ID = idPhieuMuon }, transaction);
+                int rows = connection.Execute("DELETE FROM PHIEUTRA WHERE ID = @ID", new { ID = id }, transaction);
 
-            tongTienPhat = tongTienPhatLocal;
-            return success;
-        }
-
-        public static BindingList<PhieuTraDTO> LayTatCaPhieuTra()
-        {
-            const string query = @"SELECT pm.ID AS IDPhieuMuon, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen AS HoTenDocGia,
-                                    MAX(cp.NgayTraThucTe) AS NgayTra,
-                                    SUM(CASE WHEN cp.NgayTraThucTe IS NOT NULL THEN 1 ELSE 0 END) AS TongSachTra,
-                                    SUM(cp.TienPhat) AS TongTienPhat
-                             FROM PHIEUMUON pm
-                             INNER JOIN DOCGIA dg ON pm.IDDocGia = dg.ID
-                             INNER JOIN CT_PHIEUMUON cp ON cp.IDPhieuMuon = pm.ID
-                             WHERE cp.NgayTraThucTe IS NOT NULL
-                             GROUP BY pm.ID, pm.MaPhieuMuon, dg.MaDocGia, dg.HoTen
-                             ORDER BY NgayTra DESC";
-
-            using var connection = OpenConnection();
-            var list = connection.Query<PhieuTraDTO>(query).ToList();
-            return new BindingList<PhieuTraDTO>(list);
-        }
-
-        public static BindingList<ChiTietPhieuTraDTO> LayChiTietPhieuTra(int idPhieuMuon)
-        {
-            const string query = @"SELECT cp.IDCuonSach, cs.MaCuonSach, ts.TenTuaSach AS TenSach, pm.NgayTraDuKien, cp.NgayTraThucTe,
-                                    IFNULL(cp.SoNgayTre, 0) AS SoNgayTre, IFNULL(cp.TienPhat, 0) AS TienPhat
-                             FROM CT_PHIEUMUON cp
-                             INNER JOIN CUONSACH cs ON cp.IDCuonSach = cs.ID
-                             INNER JOIN SACH s ON cs.IDSach = s.ID
-                             INNER JOIN TUASACH ts ON s.IDTuaSach = ts.ID
-                             INNER JOIN PHIEUMUON pm ON pm.ID = cp.IDPhieuMuon
-                             WHERE cp.IDPhieuMuon = @ID AND cp.NgayTraThucTe IS NOT NULL";
-
-            using var connection = OpenConnection();
-            var list = connection.Query<ChiTietPhieuTraDTO>(query, new { ID = idPhieuMuon }).ToList();
-
-            return new BindingList<ChiTietPhieuTraDTO>(list);
-        }
-
-        public static bool XoaPhieuTra(int idPhieuMuon)
-        {
-            return DataProvider.Instance.ExecuteTransaction((connection, transaction) =>
-            {
-                const string querySelect = @"SELECT IDCuonSach FROM CT_PHIEUMUON WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                List<int> cuonDaTra = connection.Query<int>(querySelect, new { ID = idPhieuMuon }, transaction).ToList();
-
-                if (cuonDaTra.Count == 0)
-                    throw new Exception("Phiếu mượn chưa có sách trả để xóa.");
-
-                const string queryUpdateCT = @"UPDATE CT_PHIEUMUON
-                                          SET NgayTraThucTe = NULL, SoNgayTre = NULL, TienPhat = NULL
-                                          WHERE IDPhieuMuon = @ID AND NgayTraThucTe IS NOT NULL";
-                connection.Execute(queryUpdateCT, new { ID = idPhieuMuon }, transaction);
-
-                foreach (int idCuon in cuonDaTra)
-                {
-                    const string queryUpdateCuon = "UPDATE CUONSACH SET TinhTrang = 0 WHERE ID = @ID";
-                    connection.Execute(queryUpdateCuon, new { ID = idCuon }, transaction);
-                }
-
-                return true;
-            });
+                transaction.Commit();
+                return rows > 0;
+            }
+            catch { transaction.Rollback(); throw; }
         }
     }
 }

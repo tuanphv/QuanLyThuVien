@@ -13,7 +13,6 @@ namespace GUI.DocGia
             {
                 _docGiaDTO.HoTen = txtHoTen.Text.Trim();
                 _docGiaDTO.NgaySinh = dtpNgaySinh.Value;
-                _docGiaDTO.DiaChi = txtDiaChi.Text.Trim();
                 _docGiaDTO.NgayLapThe = dtpNgayLapThe.Value;
                 _docGiaDTO.NgayHetHan = dtpNgayHetHan.Value;
 
@@ -34,7 +33,6 @@ namespace GUI.DocGia
                 txtMaDocGia.Text = _docGiaDTO.MaDocGia;
                 txtHoTen.Text = _docGiaDTO.HoTen;
                 dtpNgaySinh.Value = _docGiaDTO.NgaySinh;
-                txtDiaChi.Text = _docGiaDTO.DiaChi;
                 dtpNgayLapThe.Value = _docGiaDTO.NgayLapThe;
                 dtpNgayHetHan.Value = _docGiaDTO.NgayHetHan;
                 txtTongNo.Text = _docGiaDTO.TongNoHienTai.ToString("N0");

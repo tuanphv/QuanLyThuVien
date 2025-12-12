@@ -23,7 +23,7 @@ namespace DAO
                 string sqlSachDangMuon = @"
                     SELECT COUNT(*) 
                     FROM CUONSACH 
-                    WHERE TinhTrang = 0";
+                    WHERE TrangThai = 0";
                 var resultSachDangMuon = DataProvider.Instance.ExecuteScalar(sqlSachDangMuon);
                 thongKe.SachDangMuon = resultSachDangMuon != null && resultSachDangMuon != DBNull.Value 
                     ? Convert.ToInt32(resultSachDangMuon) : 0;

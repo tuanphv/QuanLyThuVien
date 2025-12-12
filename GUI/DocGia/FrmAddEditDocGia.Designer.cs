@@ -18,14 +18,12 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            label4 = new Label();
             label5 = new Label();
             label6 = new Label();
             label7 = new Label();
             label8 = new Label();
             txtMaDocGia = new TextBox();
             txtHoTen = new TextBox();
-            txtDiaChi = new TextBox();
             txtTongNo = new TextBox();
             dtpNgaySinh = new DateTimePicker();
             dtpNgayLapThe = new DateTimePicker();
@@ -65,21 +63,11 @@
             label3.TabIndex = 2;
             label3.Text = "Ngày sinh:";
             // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
-            label4.Location = new Point(35, 124);
-            label4.Name = "label4";
-            label4.Size = new Size(58, 19);
-            label4.TabIndex = 3;
-            label4.Text = "Địa chỉ:";
-            // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
-            label5.Location = new Point(35, 158);
+            label5.Location = new Point(35, 124);
             label5.Name = "label5";
             label5.Size = new Size(99, 19);
             label5.TabIndex = 4;
@@ -89,7 +77,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
-            label6.Location = new Point(35, 191);
+            label6.Location = new Point(35, 157);
             label6.Name = "label6";
             label6.Size = new Size(102, 19);
             label6.TabIndex = 5;
@@ -99,7 +87,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
-            label7.Location = new Point(35, 225);
+            label7.Location = new Point(35, 191);
             label7.Name = "label7";
             label7.Size = new Size(121, 19);
             label7.TabIndex = 6;
@@ -109,7 +97,7 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
-            label8.Location = new Point(35, 259);
+            label8.Location = new Point(35, 225);
             label8.Name = "label8";
             label8.Size = new Size(105, 19);
             label8.TabIndex = 7;
@@ -136,21 +124,11 @@
             txtHoTen.Size = new Size(263, 26);
             txtHoTen.TabIndex = 9;
             // 
-            // txtDiaChi
-            // 
-            txtDiaChi.BorderStyle = BorderStyle.FixedSingle;
-            txtDiaChi.Font = new Font("Segoe UI", 10.2F);
-            txtDiaChi.Location = new Point(192, 122);
-            txtDiaChi.Margin = new Padding(3, 2, 3, 2);
-            txtDiaChi.Name = "txtDiaChi";
-            txtDiaChi.Size = new Size(263, 26);
-            txtDiaChi.TabIndex = 11;
-            // 
             // txtTongNo
             // 
             txtTongNo.BorderStyle = BorderStyle.FixedSingle;
             txtTongNo.Font = new Font("Segoe UI", 10.2F);
-            txtTongNo.Location = new Point(192, 224);
+            txtTongNo.Location = new Point(192, 190);
             txtTongNo.Margin = new Padding(3, 2, 3, 2);
             txtTongNo.Name = "txtTongNo";
             txtTongNo.ReadOnly = true;
@@ -172,7 +150,7 @@
             // 
             dtpNgayLapThe.Font = new Font("Segoe UI", 10.2F);
             dtpNgayLapThe.Format = DateTimePickerFormat.Short;
-            dtpNgayLapThe.Location = new Point(192, 156);
+            dtpNgayLapThe.Location = new Point(192, 122);
             dtpNgayLapThe.Margin = new Padding(3, 2, 3, 2);
             dtpNgayLapThe.Name = "dtpNgayLapThe";
             dtpNgayLapThe.Size = new Size(263, 26);
@@ -183,7 +161,7 @@
             // 
             dtpNgayHetHan.Font = new Font("Segoe UI", 10.2F);
             dtpNgayHetHan.Format = DateTimePickerFormat.Short;
-            dtpNgayHetHan.Location = new Point(192, 190);
+            dtpNgayHetHan.Location = new Point(192, 156);
             dtpNgayHetHan.Margin = new Padding(3, 2, 3, 2);
             dtpNgayHetHan.Name = "dtpNgayHetHan";
             dtpNgayHetHan.Size = new Size(263, 26);
@@ -195,7 +173,7 @@
             cboNguoiDung.DropDownStyle = ComboBoxStyle.DropDownList;
             cboNguoiDung.Font = new Font("Segoe UI", 10.2F);
             cboNguoiDung.FormattingEnabled = true;
-            cboNguoiDung.Location = new Point(192, 256);
+            cboNguoiDung.Location = new Point(192, 222);
             cboNguoiDung.Margin = new Padding(3, 2, 3, 2);
             cboNguoiDung.Name = "cboNguoiDung";
             cboNguoiDung.Size = new Size(263, 27);
@@ -209,7 +187,7 @@
             btnLuu.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnLuu.ForeColor = Color.White;
             btnLuu.Image = Properties.Resources.save;
-            btnLuu.Location = new Point(122, 300);
+            btnLuu.Location = new Point(122, 266);
             btnLuu.Margin = new Padding(3, 2, 3, 2);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(96, 34);
@@ -226,7 +204,7 @@
             btnThoat.FlatStyle = FlatStyle.Flat;
             btnThoat.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnThoat.ForeColor = Color.White;
-            btnThoat.Location = new Point(271, 300);
+            btnThoat.Location = new Point(271, 266);
             btnThoat.Margin = new Padding(3, 2, 3, 2);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(96, 34);
@@ -240,7 +218,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(490, 352);
+            ClientSize = new Size(490, 319);
             Controls.Add(btnThoat);
             Controls.Add(btnLuu);
             Controls.Add(cboNguoiDung);
@@ -248,14 +226,12 @@
             Controls.Add(dtpNgayLapThe);
             Controls.Add(dtpNgaySinh);
             Controls.Add(txtTongNo);
-            Controls.Add(txtDiaChi);
             Controls.Add(txtHoTen);
             Controls.Add(txtMaDocGia);
             Controls.Add(label8);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(label5);
-            Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -271,14 +247,12 @@
         private Label label1;
         private Label label2;
         private Label label3;
-        private Label label4;
         private Label label5;
         private Label label6;
         private Label label7;
         private Label label8;
         private TextBox txtMaDocGia;
         private TextBox txtHoTen;
-        private TextBox txtDiaChi;
         private TextBox txtTongNo;
         private DateTimePicker dtpNgaySinh;
         private DateTimePicker dtpNgayLapThe;

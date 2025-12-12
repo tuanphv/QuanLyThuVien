@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using BUS;
+using DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,8 +7,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -18,6 +17,7 @@ namespace GUI.PhieuThu
     public partial class UCPhieuThu : UserControl
     {
         private BindingList<DTO.PhieuThuDTO> phieuThuList = new BindingList<DTO.PhieuThuDTO>();
+
         public UCPhieuThu()
         {
             InitializeComponent();
@@ -26,20 +26,39 @@ namespace GUI.PhieuThu
 
         private void UCPhieuThu_Load(object sender, EventArgs e)
         {
-            // Load dữ liệu phiếu thu khi control được tải
             dgvPhieuThu.AutoGenerateColumns = false;
             LoadPhieuThuData();
 
-            List <(int ID, string HoTen)> docGiaWithPhieuThu = BUS.PhieuThuBUS.GetAllDocGiaCoPhieuThu();
-            docGiaWithPhieuThu.Insert(0, (0, "Tất cả") );
-            cbDocGia.DataSource = docGiaWithPhieuThu.Select(x => new { ID = x.ID, HoTen = x.HoTen }).ToList();
-            cbDocGia.DisplayMember = "HoTen";
-            cbDocGia.ValueMember = "ID";
+            // --- KHẮC PHỤC LỖI CAST ---
+            LoadDocGiaCombobox();
 
             cbDocGia.SelectedIndexChanged += cbDocGia_SelectedIndexChanged;
 
             dgvPhieuThu.DeleteButtonClicked += DeleteButtonClicked;
             dgvPhieuThu.PrintButtonClicked += PrintButtonClicked;
+        }
+
+        private void LoadDocGiaCombobox()
+        {
+            // Lấy danh sách từ BUS (đang trả về Tuple)
+            var rawList = BUS.PhieuThuBUS.GetAllDocGiaCoPhieuThu();
+
+            // Chuyển sang List<DocGiaSimpleDTO>
+            List<DocGiaSimpleDTO> displayList = new List<DocGiaSimpleDTO>();
+
+            // Thêm mục mặc định
+            displayList.Add(new DocGiaSimpleDTO { ID = 0, HoTen = "Tất cả" });
+
+            // Map dữ liệu
+            foreach (var item in rawList)
+            {
+                displayList.Add(new DocGiaSimpleDTO { ID = item.ID, HoTen = item.HoTen });
+            }
+
+            // Gán DataSource
+            cbDocGia.DataSource = displayList;
+            cbDocGia.DisplayMember = "HoTen";
+            cbDocGia.ValueMember = "ID";
         }
 
         private void LoadPhieuThuData()
@@ -50,6 +69,8 @@ namespace GUI.PhieuThu
 
         private void DeleteButtonClicked(object? sender, int index)
         {
+            if (index < 0 || index >= phieuThuList.Count) return;
+
             PhieuThuDTO? selectedPhieuThu = phieuThuList[index];
             if (selectedPhieuThu != null)
             {
@@ -72,6 +93,8 @@ namespace GUI.PhieuThu
 
         private void PrintButtonClicked(object? sender, int index)
         {
+            if (index < 0 || index >= phieuThuList.Count) return;
+
             PhieuThuDTO? selectedPhieuThu = phieuThuList[index];
             if (selectedPhieuThu == null) return;
             using (var sfd = new SaveFileDialog())
@@ -89,12 +112,7 @@ namespace GUI.PhieuThu
                         doc.Open();
 
                         string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
-
-                        BaseFont bf = BaseFont.CreateFont(
-                            fontPath,
-                            BaseFont.IDENTITY_H,
-                            BaseFont.EMBEDDED
-                        );
+                        BaseFont bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
                         iTextSharp.text.Font fontTitle = new iTextSharp.text.Font(bf, 16, iTextSharp.text.Font.BOLD);
                         iTextSharp.text.Font fontLabel = new iTextSharp.text.Font(bf, 12);
@@ -123,61 +141,69 @@ namespace GUI.PhieuThu
             var frmAddPhieuThu = new FrmAddPhieuThu();
             if (frmAddPhieuThu.ShowDialog() == DialogResult.OK)
             {
-                PhieuThuDTO newPhieuThu = frmAddPhieuThu.GetPhieuThu();
-                phieuThuList.Add(newPhieuThu);
-                // nếu tên độc giả mới được thêm không có trong cbDocGia thì thêm vào
-                if (!KiemTraTenDocGiaTonTai(newPhieuThu.TenDocGia))
+                PhieuThuDTO? newPhieuThu = frmAddPhieuThu.GetPhieuThu();
+                if (newPhieuThu != null)
                 {
-                    var currentList = (List<dynamic>)cbDocGia.DataSource;
-                    currentList.Add(new { ID = newPhieuThu.IDDocGia, HoTen = newPhieuThu.TenDocGia });
-                    cbDocGia.DataSource = null;
-                    cbDocGia.DataSource = currentList;
-                    cbDocGia.DisplayMember = "HoTen";
-                    cbDocGia.ValueMember = "ID";
+                    phieuThuList.Add(newPhieuThu);
+
+                    // Cập nhật Combobox nếu độc giả mới chưa có
+                    if (!KiemTraTenDocGiaTonTai(newPhieuThu.TenDocGia))
+                    {
+                        // SỬA LỖI TẠI ĐÂY: Cast sang List<DocGiaSimpleDTO>
+                        var currentList = cbDocGia.DataSource as List<DocGiaSimpleDTO>;
+
+                        if (currentList != null)
+                        {
+                            currentList.Add(new DocGiaSimpleDTO
+                            {
+                                ID = newPhieuThu.IDDocGia,
+                                HoTen = newPhieuThu.TenDocGia
+                            });
+
+                            // Refresh binding
+                            cbDocGia.DataSource = null;
+                            cbDocGia.DataSource = currentList;
+                            cbDocGia.DisplayMember = "HoTen";
+                            cbDocGia.ValueMember = "ID";
+                        }
+                        else
+                        {
+                            // Fallback: reload từ đầu
+                            LoadDocGiaCombobox();
+                        }
+                    }
+                    MessageBox.Show("Thêm phiếu thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                MessageBox.Show("Thêm phiếu thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         public bool KiemTraTenDocGiaTonTai(string ten)
         {
-            foreach (var item in cbDocGia.Items)
+            // Kiểm tra dựa trên DTO mới
+            if (cbDocGia.DataSource is List<DocGiaSimpleDTO> list)
             {
-                dynamic d = item;
-                if (string.Equals(d.HoTen, ten, StringComparison.OrdinalIgnoreCase))
-                    return true;
+                return list.Any(d => d.HoTen.Equals(ten, StringComparison.OrdinalIgnoreCase));
             }
             return false;
         }
-
 
         private void cbDocGia_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                var val = cbDocGia.SelectedValue;
-                if (val == null)
-                    return;
+                if (cbDocGia.SelectedValue == null) return;
 
-                int selectedId;
-                if (val is int i) selectedId = i;
-                else
+                if (int.TryParse(cbDocGia.SelectedValue.ToString(), out int selectedId))
                 {
-                    // sometimes ValueMember returns string
-                    if (!int.TryParse(val.ToString(), out selectedId)) return;
-                }
-
-                Debug.WriteLine($"Selected DocGia changed. Selected ID: {selectedId}");
-
-                if (selectedId == 0)
-                {
-                    // show all
-                    dgvPhieuThu.DataSource = phieuThuList;
-                }
-                else
-                {
-                    var filtered = phieuThuList.Where(p => p.IDDocGia == selectedId).ToList();
-                    dgvPhieuThu.DataSource = new BindingList<PhieuThuDTO>(filtered);
+                    if (selectedId == 0) // Tất cả
+                    {
+                        dgvPhieuThu.DataSource = phieuThuList;
+                    }
+                    else
+                    {
+                        var filtered = phieuThuList.Where(p => p.IDDocGia == selectedId).ToList();
+                        dgvPhieuThu.DataSource = new BindingList<DTO.PhieuThuDTO>(filtered);
+                    }
                 }
             }
             catch (Exception ex)
