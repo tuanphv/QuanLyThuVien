@@ -181,7 +181,7 @@ namespace GUI.DocGia
                         worksheet.Cell(1, 7).Value = "Tên đăng nhập";
 
                         // Định dạng Header cho đẹp (In đậm, nền xanh)
-                        var headerRow = worksheet.Range("A1:H1");
+                        var headerRow = worksheet.Range("A1:G1");
                         headerRow.Style.Font.Bold = true;
                         headerRow.Style.Fill.BackgroundColor = XLColor.LightBlue;
                         headerRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -206,7 +206,7 @@ namespace GUI.DocGia
                         }
 
                         // Thêm border cho toàn bộ dữ liệu
-                        var dataRange = worksheet.Range($"A1:H{list.Count + 1}");
+                        var dataRange = worksheet.Range($"A1:G{list.Count + 1}");
                         dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                         dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
 

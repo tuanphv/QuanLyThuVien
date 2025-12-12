@@ -28,7 +28,7 @@ namespace GUI.Sach
         private void FrmChiTietCuonSach_Load(object sender, EventArgs e)
         {
             // 1. Hiển thị thông tin lô sách lên tiêu đề
-            lblTieuDe.Text = $"Chi tiết lô: {_loSachHienTai.MaSach} - {_loSachHienTai.TenTuaSach}";
+            lblTieuDe.Text = $"Chi tiết phiên bản sách: {_loSachHienTai.MaSach} - {_loSachHienTai.TenTuaSach}";
 
             // 2. Cấu hình ComboBox Tình trạng
             LoadComboBoxTinhTrang();

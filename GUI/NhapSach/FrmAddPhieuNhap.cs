@@ -137,6 +137,11 @@ namespace GUI.NhapSach
                         }
                     }
                     existing.SoLuong += (int)nudSoLuong.Value;
+                    existing.MaCuonSach.Add(new Range
+                    {
+                        Start = (int)nudMaDau.Value,
+                        End = (int)nudMaCuoi.Value
+                    });
                 }
                 else
                 {

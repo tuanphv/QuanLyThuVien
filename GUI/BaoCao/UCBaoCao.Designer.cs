@@ -108,7 +108,7 @@
             label1.Font = new Font("Segoe UI", 19.8F, FontStyle.Bold);
             label1.Location = new Point(20, 19);
             label1.Name = "label1";
-            label1.Size = new Size(296, 37);
+            label1.Size = new Size(274, 37);
             label1.TabIndex = 0;
             label1.Text = "Báo cáo && Thống kê";
             // 
@@ -131,10 +131,10 @@
             tabBaoCaoNo.BackColor = SystemColors.ControlLight;
             tabBaoCaoNo.Controls.Add(dgvQuaHan);
             tabBaoCaoNo.Controls.Add(panel2);
-            tabBaoCaoNo.Location = new Point(4, 28);
+            tabBaoCaoNo.Location = new Point(4, 26);
             tabBaoCaoNo.Name = "tabBaoCaoNo";
             tabBaoCaoNo.Padding = new Padding(3);
-            tabBaoCaoNo.Size = new Size(1585, 612);
+            tabBaoCaoNo.Size = new Size(1585, 614);
             tabBaoCaoNo.TabIndex = 0;
             tabBaoCaoNo.Text = "📊 Báo cáo nợ độc giả";
             // 
@@ -255,10 +255,10 @@
             tabThongKeSach.BackColor = SystemColors.ControlLight;
             tabThongKeSach.Controls.Add(dgvThongKeSach);
             tabThongKeSach.Controls.Add(panel3);
-            tabThongKeSach.Location = new Point(4, 28);
+            tabThongKeSach.Location = new Point(4, 26);
             tabThongKeSach.Name = "tabThongKeSach";
             tabThongKeSach.Padding = new Padding(3);
-            tabThongKeSach.Size = new Size(1585, 612);
+            tabThongKeSach.Size = new Size(1585, 614);
             tabThongKeSach.TabIndex = 1;
             tabThongKeSach.Text = "📚 Thống kê sách";
             // 
@@ -338,10 +338,10 @@
             tabThongKeMuonTra.BackColor = SystemColors.ControlLight;
             tabThongKeMuonTra.Controls.Add(dgvThongKeMuonTra);
             tabThongKeMuonTra.Controls.Add(panel4);
-            tabThongKeMuonTra.Location = new Point(4, 28);
+            tabThongKeMuonTra.Location = new Point(4, 26);
             tabThongKeMuonTra.Name = "tabThongKeMuonTra";
             tabThongKeMuonTra.Padding = new Padding(3);
-            tabThongKeMuonTra.Size = new Size(1585, 612);
+            tabThongKeMuonTra.Size = new Size(1585, 614);
             tabThongKeMuonTra.TabIndex = 2;
             tabThongKeMuonTra.Text = "📈 Thống kê mượn/trả";
             // 
@@ -397,7 +397,7 @@
             label5.Font = new Font("Segoe UI", 10F);
             label5.Location = new Point(285, 13);
             label5.Name = "label5";
-            label5.Size = new Size(69, 19);
+            label5.Size = new Size(71, 19);
             label5.TabIndex = 4;
             label5.Text = "Đến ngày:";
             // 
@@ -417,7 +417,7 @@
             label4.Font = new Font("Segoe UI", 10F);
             label4.Location = new Point(76, 13);
             label4.Name = "label4";
-            label4.Size = new Size(63, 19);
+            label4.Size = new Size(61, 19);
             label4.TabIndex = 2;
             label4.Text = "Từ ngày:";
             // 
@@ -457,10 +457,10 @@
             // 
             tabTopStatistics.BackColor = SystemColors.ControlLight;
             tabTopStatistics.Controls.Add(splitContainer1);
-            tabTopStatistics.Location = new Point(4, 28);
+            tabTopStatistics.Location = new Point(4, 26);
             tabTopStatistics.Name = "tabTopStatistics";
             tabTopStatistics.Padding = new Padding(3);
-            tabTopStatistics.Size = new Size(1585, 612);
+            tabTopStatistics.Size = new Size(1585, 614);
             tabTopStatistics.TabIndex = 3;
             tabTopStatistics.Text = "🏆 Top sách & độc giả";
             // 
@@ -480,7 +480,7 @@
             // 
             splitContainer1.Panel2.Controls.Add(dgvTopDocGia);
             splitContainer1.Panel2.Controls.Add(panel6);
-            splitContainer1.Size = new Size(1579, 606);
+            splitContainer1.Size = new Size(1579, 608);
             splitContainer1.SplitterDistance = 300;
             splitContainer1.TabIndex = 0;
             // 
@@ -520,12 +520,13 @@
             // 
             // btnRefreshTopSach
             // 
+            btnRefreshTopSach.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefreshTopSach.BackColor = Color.RoyalBlue;
             btnRefreshTopSach.FlatAppearance.BorderSize = 0;
             btnRefreshTopSach.FlatStyle = FlatStyle.Flat;
             btnRefreshTopSach.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnRefreshTopSach.ForeColor = Color.White;
-            btnRefreshTopSach.Location = new Point(580, 7);
+            btnRefreshTopSach.Location = new Point(1478, 6);
             btnRefreshTopSach.Name = "btnRefreshTopSach";
             btnRefreshTopSach.Size = new Size(80, 26);
             btnRefreshTopSach.TabIndex = 3;
@@ -535,22 +536,24 @@
             // 
             // cboTimePeriodSach
             // 
+            cboTimePeriodSach.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cboTimePeriodSach.DropDownStyle = ComboBoxStyle.DropDownList;
             cboTimePeriodSach.Font = new Font("Segoe UI", 10F);
             cboTimePeriodSach.FormattingEnabled = true;
             cboTimePeriodSach.Items.AddRange(new object[] { "Toàn thời gian", "7 ngày qua", "30 ngày qua" });
-            cboTimePeriodSach.Location = new Point(380, 8);
+            cboTimePeriodSach.Location = new Point(1278, 7);
             cboTimePeriodSach.Name = "cboTimePeriodSach";
             cboTimePeriodSach.Size = new Size(180, 25);
             cboTimePeriodSach.TabIndex = 2;
             // 
             // label8
             // 
+            label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 10F);
-            label8.Location = new Point(280, 11);
+            label8.Location = new Point(1145, 10);
             label8.Name = "label8";
-            label8.Size = new Size(94, 19);
+            label8.Size = new Size(117, 19);
             label8.TabIndex = 1;
             label8.Text = "Khoảng thời gian:";
             // 
@@ -560,7 +563,7 @@
             label6.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label6.Location = new Point(10, 10);
             label6.Name = "label6";
-            label6.Size = new Size(229, 21);
+            label6.Size = new Size(222, 21);
             label6.TabIndex = 0;
             label6.Text = "🏆 Top 10 sách mượn nhiều";
             // 
@@ -582,7 +585,7 @@
             dgvTopDocGia.RowHeadersVisible = false;
             dgvTopDocGia.RowTemplate.Height = 50;
             dgvTopDocGia.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvTopDocGia.Size = new Size(1567, 243);
+            dgvTopDocGia.Size = new Size(1567, 245);
             dgvTopDocGia.TabIndex = 1;
             // 
             // panel6
@@ -600,12 +603,13 @@
             // 
             // btnRefreshTopDocGia
             // 
+            btnRefreshTopDocGia.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnRefreshTopDocGia.BackColor = Color.RoyalBlue;
             btnRefreshTopDocGia.FlatAppearance.BorderSize = 0;
             btnRefreshTopDocGia.FlatStyle = FlatStyle.Flat;
             btnRefreshTopDocGia.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             btnRefreshTopDocGia.ForeColor = Color.White;
-            btnRefreshTopDocGia.Location = new Point(580, 7);
+            btnRefreshTopDocGia.Location = new Point(1478, 7);
             btnRefreshTopDocGia.Name = "btnRefreshTopDocGia";
             btnRefreshTopDocGia.Size = new Size(80, 26);
             btnRefreshTopDocGia.TabIndex = 3;
@@ -615,22 +619,24 @@
             // 
             // cboTimePeriodDocGia
             // 
+            cboTimePeriodDocGia.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cboTimePeriodDocGia.DropDownStyle = ComboBoxStyle.DropDownList;
             cboTimePeriodDocGia.Font = new Font("Segoe UI", 10F);
             cboTimePeriodDocGia.FormattingEnabled = true;
             cboTimePeriodDocGia.Items.AddRange(new object[] { "Toàn thời gian", "7 ngày qua", "30 ngày qua" });
-            cboTimePeriodDocGia.Location = new Point(380, 8);
+            cboTimePeriodDocGia.Location = new Point(1278, 8);
             cboTimePeriodDocGia.Name = "cboTimePeriodDocGia";
             cboTimePeriodDocGia.Size = new Size(180, 25);
             cboTimePeriodDocGia.TabIndex = 2;
             // 
             // label9
             // 
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 10F);
-            label9.Location = new Point(280, 11);
+            label9.Location = new Point(1145, 10);
             label9.Name = "label9";
-            label9.Size = new Size(94, 19);
+            label9.Size = new Size(117, 19);
             label9.TabIndex = 1;
             label9.Text = "Khoảng thời gian:";
             // 
@@ -640,7 +646,7 @@
             label7.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label7.Location = new Point(10, 10);
             label7.Name = "label7";
-            label7.Size = new Size(242, 21);
+            label7.Size = new Size(249, 21);
             label7.TabIndex = 0;
             label7.Text = "🏆 Top 10 độc giả tích cực nhất";
             // 

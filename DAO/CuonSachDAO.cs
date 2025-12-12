@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DTO;
 using MySql.Data.MySqlClient;
 using System.ComponentModel;
 using System.Data;
@@ -70,5 +71,25 @@ namespace DAO
             ));
             return count > 0;
         }
+
+        public static int GetLastBookCopyCode(int idSach)
+        {
+            string query = @"
+                SELECT MaCuonSach
+                FROM CUONSACH
+                WHERE IDSach = @IDSach
+                ORDER BY MaCuonSach DESC
+                LIMIT 1;";
+            string code = DataProvider.Instance.ExecuteScalar(query,
+                new MySqlParameter("@MaCuonSach", idSach)
+            ).ToString();
+
+            int dashIndex = code.IndexOf('-');
+            string numberPart = code.Substring(dashIndex + 1); // "0011"
+            int number = int.Parse(numberPart); // 11
+
+            return number;
+        }
+
     }
 }

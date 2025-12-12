@@ -36,6 +36,11 @@ namespace BUS
         {
             return CuonSachDAO.AddCuonSach(dto);
         }
+
+        public static int GetLastBookCopyCode(int idSach)
+        {
+            return CuonSachDAO.GetLastBookCopyCode(idSach);
+        }
     }
 
 }
