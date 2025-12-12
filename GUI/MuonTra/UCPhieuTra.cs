@@ -40,6 +40,13 @@ namespace GUI.MuonTra
             if (dgvPhieuTra.Columns[nameof(colNgayTra)] != null)
                 dgvPhieuTra.Columns[nameof(colNgayTra)].DefaultCellStyle.Format = "dd/MM/yyyy";
 
+            if (dgvPhieuTra.Columns[nameof(colTienPhat)] != null)
+            {
+                // N0: Số nguyên có dấu phân cách hàng nghìn (250,000)
+                dgvPhieuTra.Columns[nameof(colTienPhat)].DefaultCellStyle.Format = "N0";
+                dgvPhieuTra.Columns[nameof(colTienPhat)].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
             LoadData();
             _isInitialized = true;
         }
