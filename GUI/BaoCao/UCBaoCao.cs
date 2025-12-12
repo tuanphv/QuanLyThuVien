@@ -71,18 +71,25 @@ namespace GUI.BaoCao
 
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Khi chuyển sang tab "Thống kê mượn/trả" (index 2)
-            if (tabControl1.SelectedIndex == 2)
+            switch (tabControl1.SelectedIndex)
             {
-                // Tự động load dữ liệu với khoảng thời gian đã chọn
-                btnLoadThongKe_Click(sender, e);
-            }
-            // Nếu chuyển về tab Nợ (index 0 hoặc tương ứng), reload lại
-            else if (tabControl1.SelectedIndex == 0) // Giả sử tab Nợ là tab đầu tiên
-            {
-                LoadBaoCaoNoDocGia();
+                case 0: // Tab Báo cáo nợ độc giả
+                    LoadBaoCaoNoDocGia();
+                    break;
+
+                case 1: // Tab Thống kê sách
+                    LoadThongKeSach();
+                    break;
+
+                case 2: // Tab Thống kê mượn/trả
+                    btnLoadThongKe_Click(sender, e);
+                    break;
+
+                default:
+                    break;
             }
         }
+
 
         private void dtpTuNgay_ValueChanged(object sender, EventArgs e)
         {
