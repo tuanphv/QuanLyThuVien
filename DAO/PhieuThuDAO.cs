@@ -1,110 +1,121 @@
-﻿using DTO;
+﻿using Dapper;
+using DTO;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace DAO
 {
     public class PhieuThuDAO
     {
+        private static MySqlConnection OpenConnection()
+        {
+            return DataProvider.Instance.GetOpenConnection();
+        }
+
         public static List<PhieuThuDTO> GetAllPhieuThu()
         {
-            var list = new List<PhieuThuDTO>();
-            try
-            {
-                string sql = @"SELECT pt.ID, MaPhieuThu, IDDocGia, dg.HoTen AS TenDocGia, SoTienThu, NgayLap 
-                               FROM PHIEUTHU pt
-                               JOIN DOCGIA dg ON dg.ID = IDDocGia
-                               ORDER BY NgayLap DESC";
-                var dt = DataProvider.Instance.ExecuteQuery(sql);
-                foreach (DataRow row in dt.Rows)
-                {
-                    var phieuThu = new PhieuThuDTO
-                    {
-                        ID = Convert.ToInt32(row["ID"]),
-                        MaPhieuThu = row["MaPhieuThu"].ToString() ?? string.Empty,
-                        IDDocGia = Convert.ToInt32(row["IDDocGia"]),
-                        TenDocGia = row["TenDocGia"].ToString() ?? string.Empty,
-                        SoTienThu = Convert.ToInt32(row["SoTienThu"]),
-                        NgayLapPhieu = Convert.ToDateTime(row["NgayLap"])
-                    };
-                    list.Add(phieuThu);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Lỗi khi lấy danh sách phiếu thu: {ex.Message}", ex);
-            }
-            return list;
+            string sql = @"SELECT pt.ID, pt.MaPhieuThu, pt.IDDocGia, dg.HoTen AS TenDocGia, pt.SoTienThu, pt.NgayLap 
+                           FROM PHIEUTHU pt
+                           JOIN DOCGIA dg ON dg.ID = pt.IDDocGia
+                           ORDER BY pt.NgayLap DESC";
+
+            using var connection = OpenConnection();
+            return connection.Query<PhieuThuDTO>(sql).ToList();
         }
 
+        // --- HÀM THÊM PHIẾU THU (DÙNG DAPPER + TRANSACTION) ---
         public static string AddPhieuThu(PhieuThuDTO phieuThu)
         {
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+
             try
             {
-                string sql = @"INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
-                               VALUES (@IDDocGia, @SoTienThu, @NgayLapPhieu);
-                               SELECT MaPhieuThu FROM PHIEUTHU WHERE ID = LAST_INSERT_ID()";
+                // 1. Insert Phiếu Thu
+                string sqlInsert = @"INSERT INTO PHIEUTHU (IDDocGia, SoTienThu, NgayLap)
+                                     VALUES (@IDDocGia, @SoTienThu, @NgayLapPhieu);
+                                     SELECT LAST_INSERT_ID();";
 
-                var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
+                // Dùng Dapper: connection.ExecuteScalar (đúng cú pháp)
+                int idPhieu = connection.ExecuteScalar<int>(sqlInsert, new
                 {
-                    new MySql.Data.MySqlClient.MySqlParameter("@IDDocGia", phieuThu.IDDocGia),
-                    new MySql.Data.MySqlClient.MySqlParameter("@SoTienThu", phieuThu.SoTienThu),
-                    new MySql.Data.MySqlClient.MySqlParameter("@NgayLapPhieu", phieuThu.NgayLapPhieu)
-                };
+                    phieuThu.IDDocGia,
+                    phieuThu.SoTienThu,
+                    phieuThu.NgayLapPhieu
+                }, transaction);
 
-                object result = DataProvider.Instance.ExecuteScalar(sql, parameters);
-                return result?.ToString() ?? string.Empty;
+                if (idPhieu <= 0) throw new Exception("Không thể tạo phiếu thu.");
+
+                // Lấy mã phiếu vừa sinh (Trigger sinh mã PM...)
+                string maPhieu = connection.ExecuteScalar<string>("SELECT MaPhieuThu FROM PHIEUTHU WHERE ID = @ID", new { ID = idPhieu }, transaction);
+
+                // 2. CẬP NHẬT NỢ ĐỘC GIẢ (TRỪ TIỀN)
+                string sqlUpdateNo = @"UPDATE DOCGIA 
+                                       SET TongNoHienTai = TongNoHienTai - @TienThu 
+                                       WHERE ID = @IDDocGia";
+
+                connection.Execute(sqlUpdateNo, new { TienThu = phieuThu.SoTienThu, IDDocGia = phieuThu.IDDocGia }, transaction);
+
+                transaction.Commit();
+                return maPhieu;
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Lỗi khi thêm phiếu thu: {ex.Message}", ex);
+                transaction.Rollback();
+                throw;
             }
         }
 
-        // Trả về List<DocGiaSimpleDTO> để dễ binding và cast
-        public static List<DocGiaSimpleDTO> GetAllDocGiaCoPhieuThu()
-        {
-            var list = new List<DocGiaSimpleDTO>();
-            try
-            {
-                string sql = @"SELECT DISTINCT dg.ID, dg.HoTen
-                               FROM DOCGIA dg
-                               JOIN PHIEUTHU pt ON dg.ID = pt.IDDocGia
-                               ORDER BY dg.HoTen";
-                DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
-                foreach (DataRow row in dt.Rows)
-                {
-                    list.Add(new DocGiaSimpleDTO
-                    {
-                        ID = Convert.ToInt32(row["ID"]),
-                        HoTen = row["HoTen"].ToString() ?? string.Empty
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Lỗi khi lấy danh sách độc giả có phiếu thu: {ex.Message}", ex);
-            }
-            return list;
-        }
+        // Giữ lại hàm này để tương thích nếu BUS gọi tên cũ, nhưng trỏ về hàm mới
+        public static string AddPhieuThu_Fixed(PhieuThuDTO phieuThu) => AddPhieuThu(phieuThu);
 
+        // --- CẬP NHẬT: XÓA PHIẾU THU ---
         public static bool DeletePhieuThu(int idPhieuThu)
         {
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+
             try
             {
-                string sql = "DELETE FROM PHIEUTHU WHERE ID = @IDPhieuThu";
-                var parameters = new MySql.Data.MySqlClient.MySqlParameter[]
+                // 1. Lấy thông tin phiếu trước khi xóa
+                var phieu = connection.QueryFirstOrDefault<PhieuThuDTO>("SELECT IDDocGia, SoTienThu FROM PHIEUTHU WHERE ID = @ID", new { ID = idPhieuThu }, transaction);
+
+                if (phieu == null) return false;
+
+                // 2. Xóa phiếu
+                int rows = connection.Execute("DELETE FROM PHIEUTHU WHERE ID = @ID", new { ID = idPhieuThu }, transaction);
+
+                // 3. Hoàn tác nợ (Cộng lại tiền vào nợ)
+                if (rows > 0)
                 {
-                    new MySql.Data.MySqlClient.MySqlParameter("@IDPhieuThu", idPhieuThu)
-                };
-                int rowsAffected = DataProvider.Instance.ExecuteNonQuery(sql, parameters);
-                return rowsAffected > 0;
+                    string sqlUpdateNo = @"UPDATE DOCGIA 
+                                           SET TongNoHienTai = TongNoHienTai + @SoTien 
+                                           WHERE ID = @IDDocGia";
+                    connection.Execute(sqlUpdateNo, new { SoTien = phieu.SoTienThu, IDDocGia = phieu.IDDocGia }, transaction);
+                }
+
+                transaction.Commit();
+                return rows > 0;
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Lỗi khi xóa phiếu thu: {ex.Message}", ex);
+                transaction.Rollback();
+                throw;
             }
+        }
+
+        public static List<DocGiaSimpleDTO> GetAllDocGiaCoPhieuThu()
+        {
+            string sql = @"SELECT DISTINCT dg.ID, dg.HoTen
+                           FROM DOCGIA dg
+                           JOIN PHIEUTHU pt ON dg.ID = pt.IDDocGia
+                           ORDER BY dg.HoTen";
+
+            using var connection = OpenConnection();
+            return connection.Query<DocGiaSimpleDTO>(sql).ToList();
         }
     }
 }
