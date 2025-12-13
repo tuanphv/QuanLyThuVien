@@ -200,51 +200,84 @@ namespace DAO
             return list;
         }
 
-        // --- HERE IS THE DEBT REPORT METHOD ---
         public static List<BaoCaoNoDocGiaDTO> GetBaoCaoNoDocGia()
         {
             var list = new List<BaoCaoNoDocGiaDTO>();
 
             try
             {
-                // This query fetches NoHienTai directly from DOCGIA
-                string sql = @"
-                    SELECT 
-                        dg.MaDocGia,
-                        dg.HoTen,
-                        dg.TongNoHienTai as NoHienTai,
-                        COALESCE(sach_qh.SoSachQuaHan, 0) as SoSachQuaHan,
-                        (dg.TongNoHienTai + COALESCE(sach_qh.TienPhatUocTinh, 0)) as TongNoUocTinh
-                    FROM DOCGIA dg
-                    LEFT JOIN (
-                        SELECT 
-                            p.IDDocGia,
-                            COUNT(DISTINCT cp.IDCuonSach) as SoSachQuaHan,
-                            SUM(
-                                GREATEST(0, DATEDIFF(CURDATE(), p.NgayTraDuKien)) * (SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1)
-                            ) as TienPhatUocTinh
-                        FROM CT_PHIEUMUON cp
-                        INNER JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
-                        LEFT JOIN PHIEUTRA pt ON p.ID = pt.IDPhieuMuon
-                        WHERE pt.ID IS NULL 
-                          AND p.NgayTraDuKien < CURDATE()
-                        GROUP BY p.IDDocGia
-                    ) sach_qh ON dg.ID = sach_qh.IDDocGia
-                    WHERE dg.TongNoHienTai > 0 OR COALESCE(sach_qh.SoSachQuaHan, 0) > 0
-                    ORDER BY TongNoUocTinh DESC, SoSachQuaHan DESC";
+                // BƯỚC 1: Lấy đơn giá phạt hiện tại từ DB (Tránh lỗi nếu subquery trong SQL không lấy được)
+                decimal donGiaPhat = 0;
+                try
+                {
+                    DataTable dtThamSo = DataProvider.Instance.ExecuteQuery("SELECT DonGiaPhatMoiNgay FROM THAMSO LIMIT 1");
+                    if (dtThamSo != null && dtThamSo.Rows.Count > 0)
+                    {
+                        donGiaPhat = Convert.ToDecimal(dtThamSo.Rows[0]["DonGiaPhatMoiNgay"]);
+                    }
+                }
+                catch { donGiaPhat = 1000; } // Giá trị mặc định nếu lỗi
 
-                DataTable dt = DataProvider.Instance.ExecuteQuery(sql);
+                // BƯỚC 2: Truy vấn SQL với logic tách biệt
+                // - Subquery 'TienPhatDuKien': Tính riêng tiền phạt cho các sách đang mượn quá hạn
+                // - DOCGIA: Lấy TongNoHienTai (Nợ cũ)
+                // - Cộng 2 cái lại: IFNULL(Nợ cũ, 0) + IFNULL(Nợ mới, 0)
+
+                string sql = @"
+            SELECT 
+                dg.MaDocGia,
+                dg.HoTen,
+                
+                -- 1. Nợ thực tế (Đã chốt)
+                IFNULL(dg.TongNoHienTai, 0) as NoThucTe,
+
+                -- 2. Số sách đang quá hạn
+                IFNULL(TempPhat.SoLuongSachQuaHan, 0) as SoSachQuaHan,
+
+                -- 3. Nợ dự kiến (Đang chạy)
+                IFNULL(TempPhat.TienPhatDuKien, 0) as TienPhatDuKien
+
+            FROM DOCGIA dg
+            LEFT JOIN (
+                -- Subquery: Chỉ tính toán trên những cuốn sách chưa trả và đã quá hạn
+                SELECT 
+                    p.IDDocGia,
+                    COUNT(*) as SoLuongSachQuaHan,
+                    SUM(DATEDIFF(CURDATE(), p.NgayTraDuKien) * @DonGiaPhat) as TienPhatDuKien
+                FROM CT_PHIEUMUON cp
+                JOIN PHIEUMUON p ON cp.IDPhieuMuon = p.ID
+                WHERE cp.NgayTraThucTe IS NULL          -- Chưa trả
+                  AND p.NgayTraDuKien < CURDATE()       -- Đã quá hạn
+                GROUP BY p.IDDocGia
+            ) TempPhat ON dg.ID = TempPhat.IDDocGia
+            
+            -- Chỉ lấy những người có nợ (cũ hoặc mới)
+            WHERE IFNULL(dg.TongNoHienTai, 0) > 0 OR IFNULL(TempPhat.TienPhatDuKien, 0) > 0
+            
+            ORDER BY (IFNULL(dg.TongNoHienTai, 0) + IFNULL(TempPhat.TienPhatDuKien, 0)) DESC";
+
+                var parameter = new MySqlParameter("@DonGiaPhat", donGiaPhat);
+                DataTable dt = DataProvider.Instance.ExecuteQuery(sql, new MySqlParameter[] { parameter });
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
+                        // Lấy dữ liệu thô
+                        decimal noThucTe = row["NoThucTe"] != DBNull.Value ? Convert.ToDecimal(row["NoThucTe"]) : 0;
+                        decimal noDuKien = row["TienPhatDuKien"] != DBNull.Value ? Convert.ToDecimal(row["TienPhatDuKien"]) : 0;
+                        int soSach = row["SoSachQuaHan"] != DBNull.Value ? Convert.ToInt32(row["SoSachQuaHan"]) : 0;
+
+                        // TÍNH TỔNG: Cộng dồn 2 khoản nợ lại
+                        // Đây là con số quan trọng nhất
+                        decimal tongNoUocTinh = noThucTe + noDuKien;
+
                         var item = new BaoCaoNoDocGiaDTO(
                             row["MaDocGia"]?.ToString() ?? "",
                             row["HoTen"]?.ToString() ?? "",
-                            row["NoHienTai"] != DBNull.Value ? Convert.ToInt32(row["NoHienTai"]) : 0,
-                            row["SoSachQuaHan"] != DBNull.Value ? Convert.ToInt32(row["SoSachQuaHan"]) : 0,
-                            row["TongNoUocTinh"] != DBNull.Value ? Convert.ToInt32(row["TongNoUocTinh"]) : 0
+                            (int)noThucTe,      // Cột 3: Nợ hiện tại (trong DB)
+                            soSach,             // Cột 4: Số sách quá hạn
+                            (int)tongNoUocTinh  // Cột 5: Tổng nợ ước tính (Nợ hiện tại + Phạt dự kiến)
                         );
                         list.Add(item);
                     }
@@ -252,7 +285,7 @@ namespace DAO
             }
             catch (Exception ex)
             {
-                throw new Exception($"Lỗi khi lấy báo cáo nợ độc giả: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi lấy báo cáo nợ: {ex.Message}", ex);
             }
 
             return list;

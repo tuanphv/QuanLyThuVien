@@ -47,10 +47,9 @@ namespace DAO
             int count = connection.ExecuteScalar<int>(query, new { IDSach = idSach });
             return count > 0;
         }
-
         public static bool UpdateTinhTrang(int idCuonSach, int tinhTrangMoi)
         {
-            string query = "UPDATE CUONSACH SET TrangThai = @TinhTrang WHERE ID = @ID";
+            string query = "UPDATE CUONSACH SET TinhTrang = @TinhTrang WHERE ID = @ID";
             using var connection = GetOpenConnection();
             int result = connection.Execute(query, new { TinhTrang = tinhTrangMoi, ID = idCuonSach });
             return result > 0;

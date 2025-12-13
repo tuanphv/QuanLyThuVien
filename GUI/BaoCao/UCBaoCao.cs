@@ -349,10 +349,10 @@ namespace GUI.BaoCao
 
             if (selectedItem.SoSachQuaHan > 0)
             {
-                // Kiểm tra xem form chi tiết có tồn tại không trước khi gọi
-                // FrmChiTietSachQuaHan frm = new FrmChiTietSachQuaHan(selectedItem.MaDocGia, selectedItem.HoTen);
-                // frm.ShowDialog();
-                MessageBox.Show($"Độc giả {selectedItem.HoTen} đang giữ {selectedItem.SoSachQuaHan} cuốn sách quá hạn.", "Chi tiết");
+
+                FrmChiTietSachQuaHan frm = new FrmChiTietSachQuaHan(selectedItem.MaDocGia, selectedItem.HoTen);
+                frm.ShowDialog();
+              
             }
             else
             {

@@ -36,7 +36,7 @@
             panel3 = new Panel();
             grpXuLy = new GroupBox();
             label1 = new Label();
-            cboTinhTrang = new ComboBox();
+            cboTrangThai = new ComboBox();
             lblMaDangChon = new Label();
             btnThoat = new Button();
             btnCapNhat = new Button();
@@ -106,7 +106,7 @@
             // grpXuLy
             // 
             grpXuLy.Controls.Add(label1);
-            grpXuLy.Controls.Add(cboTinhTrang);
+            grpXuLy.Controls.Add(cboTrangThai);
             grpXuLy.Controls.Add(lblMaDangChon);
             grpXuLy.Controls.Add(btnThoat);
             grpXuLy.Controls.Add(btnCapNhat);
@@ -130,15 +130,15 @@
             label1.TabIndex = 30;
             label1.Text = "Trạng thái:";
             // 
-            // cboTinhTrang
+            // cboTrangThai
             // 
-            cboTinhTrang.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboTinhTrang.FormattingEnabled = true;
-            cboTinhTrang.Location = new Point(166, 97);
-            cboTinhTrang.Margin = new Padding(3, 2, 3, 2);
-            cboTinhTrang.Name = "cboTinhTrang";
-            cboTinhTrang.Size = new Size(194, 29);
-            cboTinhTrang.TabIndex = 29;
+            cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboTrangThai.FormattingEnabled = true;
+            cboTrangThai.Location = new Point(166, 97);
+            cboTrangThai.Margin = new Padding(3, 2, 3, 2);
+            cboTrangThai.Name = "cboTrangThai";
+            cboTrangThai.Size = new Size(194, 29);
+            cboTrangThai.TabIndex = 29;
             // 
             // lblMaDangChon
             // 
@@ -222,7 +222,7 @@
         private Button btnThoat;
         private Button btnCapNhat;
         private Label label1;
-        private ComboBox cboTinhTrang;
+        private ComboBox cboTrangThai;
         private Label lblMaDangChon;
     }
 }

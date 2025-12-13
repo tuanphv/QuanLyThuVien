@@ -31,7 +31,7 @@ namespace GUI.Sach
             lblTieuDe.Text = $"Chi tiết phiên bản sách: {_loSachHienTai.MaSach} - {_loSachHienTai.TenTuaSach}";
 
             // 2. Cấu hình ComboBox Tình trạng
-            LoadComboBoxTinhTrang();
+            LoadComboBoxTrangThai();
 
             // 3. Cấu hình DataGridView cột
             SetupDataGridView();
@@ -42,7 +42,7 @@ namespace GUI.Sach
             btnCapNhat.Visible = SessionManager.HasPermission((int)Helpers.Permission.Sach, Helpers.Action.Edit);
         }
 
-        private void LoadComboBoxTinhTrang()
+        private void LoadComboBoxTrangThai()
         {
             List<TrangThaiItem> listTrangThai = new List<TrangThaiItem>()
             {
@@ -51,9 +51,9 @@ namespace GUI.Sach
                 // Lưu ý: Không cho chọn '0 - Đang mượn' ở đây vì trạng thái đó do quy trình Mượn/Trả quản lý
             };
 
-            cboTinhTrang.DataSource = listTrangThai;
-            cboTinhTrang.DisplayMember = "Text";
-            cboTinhTrang.ValueMember = "Value";
+            cboTrangThai.DataSource = listTrangThai;
+            cboTrangThai.DisplayMember = "Text";
+            cboTrangThai.ValueMember = "Value";
         }
 
         private void SetupDataGridView()
@@ -72,12 +72,12 @@ namespace GUI.Sach
             dgvCuonSach.Columns.Add(colMa);
 
             // Thêm cột Tình trạng (Hiển thị chữ)
-            DataGridViewTextBoxColumn colTinhTrang = new DataGridViewTextBoxColumn();
-            colTinhTrang.Name = "TenTinhTrang";
-            colTinhTrang.HeaderText = "Tình trạng";
-            colTinhTrang.DataPropertyName = "TenTinhTrang"; // Property này bạn đã viết trong DTO
-            colTinhTrang.Width = 150;
-            dgvCuonSach.Columns.Add(colTinhTrang);
+            DataGridViewTextBoxColumn colTrangThai= new DataGridViewTextBoxColumn();
+            colTrangThai.Name = "TenTrangThai";
+            colTrangThai.HeaderText = "Trạng Thái";
+            colTrangThai.DataPropertyName = "TenTrangThai"; // Property này bạn đã viết trong DTO
+            colTrangThai.Width = 150;
+            dgvCuonSach.Columns.Add(colTrangThai);
         }
 
         private void LoadData()
@@ -112,15 +112,15 @@ namespace GUI.Sach
 
                 // Gán giá trị lên ComboBox
                 // Nếu đang mượn (0) thì có thể không có trong list combo, cần xử lý khéo
-                if (selectedItem.TinhTrang == 0)
+                if (selectedItem.TrangThai == 0)
                 {
-                    cboTinhTrang.SelectedIndex = -1; // Không chọn gì cả
+                    cboTrangThai.SelectedIndex = -1; // Không chọn gì cả
                     lblMaDangChon.Text += " (Đang được mượn - Không thể sửa)";
                     btnCapNhat.Enabled = false; // Khóa nút sửa
                 }
                 else
                 {
-                    cboTinhTrang.SelectedValue = selectedItem.TinhTrang;
+                    cboTrangThai.SelectedValue = selectedItem.TrangThai;
                     btnCapNhat.Enabled = true;
                 }
             }
@@ -130,17 +130,17 @@ namespace GUI.Sach
         {
             if (_idCuonSachDangChon == -1) return;
 
-            if (cboTinhTrang.SelectedValue == null)
+            if (cboTrangThai.SelectedValue == null)
             {
                 MessageBox.Show("Vui lòng chọn tình trạng mới.");
                 return;
             }
 
-            int tinhTrangMoi = (int)cboTinhTrang.SelectedValue;
+            int TrangThaiMoi = (int)cboTrangThai.SelectedValue;
 
             try
             {
-                if (CuonSachBUS.CapNhatTinhTrang(_idCuonSachDangChon, tinhTrangMoi))
+                if (CuonSachBUS.CapNhatTinhTrang(_idCuonSachDangChon, TrangThaiMoi))
                 {
                     MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadData(); // Load lại lưới để thấy thay đổi

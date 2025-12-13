@@ -276,6 +276,9 @@ CREATE TRIGGER ai_CUONSACH AFTER INSERT ON CUONSACH FOR EACH ROW BEGIN
     DECLARE v_id_macdinh INT;
     SELECT ID INTO v_id_macdinh FROM THAMSOPHAT WHERE CoLaMacDinh = 1 LIMIT 1;
     IF v_id_macdinh IS NOT NULL THEN INSERT INTO CUONSACH_TINHTRANG(IDCuonSach, IDThamSoPhat) VALUES (NEW.ID, v_id_macdinh); END IF;
+    
+    -- Sách mới tạo, mặc định TrangThai=1, nên cộng vào SoLuongConLai
+    CALL SP_Sync_SoLuongConLai(NEW.IDSach);
 END //
 
 -- 3. Procedure: Thêm Tình Trạng Thông Minh (Dọn dẹp trạng thái cũ)
@@ -329,13 +332,40 @@ BEGIN
     INSERT INTO CT_PHIEUMUON (IDPhieuMuon, IDCuonSach) VALUES (p_IDPhieuMuon, p_IDCuonSach);
 END //
 
--- 5. Trigger Mượn
-CREATE TRIGGER ai_CT_PHIEUMUON AFTER INSERT ON CT_PHIEUMUON FOR EACH ROW BEGIN
-    UPDATE SACH SET SoLuongConLai = SoLuongConLai - 1 WHERE ID = (SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach);
-    UPDATE CUONSACH SET TrangThai = 0 WHERE ID = NEW.IDCuonSach;
-    INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
-    SELECT NEW.IDPhieuMuon, NEW.IDCuonSach, IDThamSoPhat FROM CUONSACH_TINHTRANG WHERE IDCuonSach = NEW.IDCuonSach;
+CREATE PROCEDURE SP_Sync_SoLuongConLai(IN p_IDSach INT)
+BEGIN
+    UPDATE SACH 
+    SET SoLuongConLai = (
+        SELECT COUNT(*) 
+        FROM CUONSACH 
+        WHERE IDSach = p_IDSach AND TrangThai = 1
+    )
+    WHERE ID = p_IDSach;
 END //
+
+
+-- 5. Trigger Mượn
+CREATE TRIGGER ai_CT_PHIEUMUON 
+AFTER INSERT ON CT_PHIEUMUON 
+FOR EACH ROW 
+BEGIN
+    -- Khi mượn thì đổi trạng thái cuốn sách thành 0 (đã mượn)
+    UPDATE CUONSACH 
+    SET TrangThai = 0 
+    WHERE ID = NEW.IDCuonSach;
+
+    -- Cập nhật số lượng còn lại
+    CALL SP_Sync_SoLuongConLai((SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach));
+
+    -- Thêm tình trạng cuốn sách vào bảng CT_PHIEUMUON_TINHTRANG
+    INSERT INTO CT_PHIEUMUON_TINHTRANG (IDPhieuMuon, IDCuonSach, IDThamSoPhat)
+    SELECT NEW.IDPhieuMuon, NEW.IDCuonSach, IDThamSoPhat 
+    FROM CUONSACH_TINHTRANG 
+    WHERE IDCuonSach = NEW.IDCuonSach;
+END; //
+
+
+
 
 -- 6. Trigger Trả (Sync & Phạt)
 CREATE TRIGGER ai_CT_PHIEUTRA_TINHTRANG AFTER INSERT ON CT_PHIEUTRA_TINHTRANG FOR EACH ROW BEGIN
@@ -375,15 +405,74 @@ CREATE TRIGGER ai_CT_PHIEUTRA_TINHTRANG AFTER INSERT ON CT_PHIEUTRA_TINHTRANG FO
     END IF;
 END //
 
-CREATE TRIGGER ai_CT_PHIEUTRA AFTER INSERT ON CT_PHIEUTRA FOR EACH ROW BEGIN
-    UPDATE SACH SET SoLuongConLai = SoLuongConLai + 1 WHERE ID = (SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach);
-    UPDATE CT_PHIEUMUON SET NgayTraThucTe = NOW() WHERE IDPhieuMuon = (SELECT IDPhieuMuon FROM PHIEUTRA WHERE ID = NEW.IDPhieuTra) AND IDCuonSach = NEW.IDCuonSach;
+DELIMITER //
+
+-- 2. Tạo Trigger mới: BEFORE INSERT
+CREATE TRIGGER bi_PHIEUTRA_TinhTienTre 
+BEFORE INSERT ON PHIEUTRA 
+FOR EACH ROW 
+BEGIN
+    DECLARE v_NgayTraDuKien DATETIME;
+    DECLARE v_DonGiaPhat INT DEFAULT 1000;
+    DECLARE v_SoNgayTre INT;
+    DECLARE v_TienPhatTre DECIMAL(15,2);
+    DECLARE v_IDDocGia INT;
+
+    -- Lấy thông tin từ Phiếu Mượn
+    SELECT NgayTraDuKien, IDDocGia INTO v_NgayTraDuKien, v_IDDocGia
+    FROM PHIEUMUON WHERE ID = NEW.IDPhieuMuon;
+
+    -- Lấy đơn giá phạt
+    SELECT DonGiaPhatMoiNgay INTO v_DonGiaPhat FROM THAMSO LIMIT 1;
+
+    -- Tính số ngày trễ
+    SET v_SoNgayTre = DATEDIFF(NEW.NgayTra, v_NgayTraDuKien);
+
+    -- Nếu trễ hạn (> 0)
+    IF v_SoNgayTre > 0 THEN
+        SET v_TienPhatTre = v_SoNgayTre * v_DonGiaPhat;
+
+        -- [KHẮC PHỤC LỖI 1442]: 
+        -- Thay vì UPDATE PHIEUTRA, ta gán trực tiếp giá trị cho dòng sắp insert
+        SET NEW.TongTienPhat = IFNULL(NEW.TongTienPhat, 0) + v_TienPhatTre;
+
+        -- Các bảng khác (PHIEUMUON, DOCGIA) vẫn dùng UPDATE bình thường
+        UPDATE PHIEUMUON SET TongPhat = TongPhat + v_TienPhatTre WHERE ID = NEW.IDPhieuMuon;
+        UPDATE DOCGIA SET TongNoHienTai = TongNoHienTai + v_TienPhatTre WHERE ID = v_IDDocGia;
+    END IF;
 END //
 
-CREATE TRIGGER ai_CT_PHIEUNHAP AFTER INSERT ON CT_PHIEUNHAP FOR EACH ROW BEGIN
-	UPDATE PHIEUNHAPSACH SET TongTien = TongTien + NEW.ThanhTien WHERE ID = NEW.IDPhieuNhap;
-	UPDATE SACH SET SoLuongTong = SoLuongTong + NEW.SoLuongNhap, SoLuongConLai = SoLuongConLai + NEW.SoLuongNhap WHERE ID = NEW.IDSach;
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER ai_CT_PHIEUTRA AFTER INSERT ON CT_PHIEUTRA FOR EACH ROW BEGIN
+    -- 1. Cập nhật Ngày Trả Thực Tế bên CT_PHIEUMUON
+    UPDATE CT_PHIEUMUON 
+    SET NgayTraThucTe = NOW() 
+    WHERE IDPhieuMuon = (SELECT IDPhieuMuon FROM PHIEUTRA WHERE ID = NEW.IDPhieuTra) 
+    AND IDCuonSach = NEW.IDCuonSach;
+    
+    -- 2. Cập nhật trạng thái CUONSACH về 'Sẵn sàng' (1)
+    -- Vì đã trả rồi thì sách phải về kho, bất kể tình trạng gì (trừ khi mất/hỏng nặng sẽ xử lý sau)
+    UPDATE CUONSACH SET TrangThai = 1 WHERE ID = NEW.IDCuonSach;
+    
+    -- 3. Đồng bộ Số lượng còn lại
+    CALL SP_Sync_SoLuongConLai((SELECT IDSach FROM CUONSACH WHERE ID = NEW.IDCuonSach));
+    
+    -- LƯU Ý: ĐÃ BỎ ĐOẠN TỰ ĐỘNG INSERT VÀO CT_PHIEUTRA_TINHTRANG 
+    -- ĐỂ TRÁNH XUNG ĐỘT VỚI CODE C#
 END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER ai_CT_PHIEUNHAP AFTER INSERT ON CT_PHIEUNHAP FOR EACH ROW BEGIN
+    UPDATE PHIEUNHAPSACH SET TongTien = TongTien + NEW.ThanhTien WHERE ID = NEW.IDPhieuNhap; -- ĐÃ THÊM DẤU CHẤM PHẨY
+    UPDATE SACH SET SoLuongTong = SoLuongTong + NEW.SoLuongNhap WHERE ID = NEW.IDSach;      -- ĐÃ THÊM DẤU CHẤM PHẨY
+END //
+
 DELIMITER ;
 
 -- =========================================================================
@@ -427,10 +516,10 @@ INSERT INTO NGUOIDUNG (ID, TenNguoiDung, NgaySinh, TenDangNhap, MatKhau, IDNhomN
 (6, 'Trần Nhật Huy', '2003-01-03', 'docgia4', '123', 3); 
 
 INSERT INTO DOCGIA (HoTen, NgaySinh, NgayLapThe, NgayHetHan, IDNguoiDung, TongNoHienTai) VALUES 
-('Nguyễn Mai Anh', '2003-06-11', '2025-01-01', '2025-07-01', 3, 0), -- ID 1
-('Lê Thành Đô', '2003-01-08', '2024-12-10', '2025-06-10', 4, 5000), -- ID 2
-('Huỳnh Hồng Thu Giang', '2003-02-24', '2025-02-05', '2025-08-05', 5, 0), -- ID 3
-('Trần Nhật Huy', '2003-01-03', '2025-03-15', '2025-09-15', 6, 0); -- ID 4
+('Nguyễn Mai Anh', '2003-06-11', '2025-01-01', '2026-07-01', 3, 0), -- ID 1
+('Lê Thành Đô', '2003-01-08', '2024-12-10', '2026-06-10', 4, 5000), -- ID 2
+('Huỳnh Hồng Thu Giang', '2003-02-24', '2025-02-05', '2026-08-05', 5, 0), -- ID 3
+('Trần Nhật Huy', '2003-01-03', '2025-03-15', '2026-09-15', 6, 0); -- ID 4
 
 -- 4. DỮ LIỆU SÁCH (GỐC + MỞ RỘNG)
 INSERT INTO THELOAI (MaTheLoai, TenTheLoai) VALUES ('KH01', 'Khoa học máy tính'), ('TL01', 'Tài liệu tham khảo'), ('TT01', 'Tiểu thuyết'), ('KT01', 'Kinh tế');
@@ -474,9 +563,6 @@ INSERT INTO CUONSACH (IDSach) VALUES (4),(4),(4),(4),(4),(4),(4),(4),(4),(4); --
 INSERT INTO CUONSACH (IDSach) VALUES (5),(5),(5),(5),(5),(5),(5),(5),(5),(5); -- 41-50
 
 -- Cập nhật tình trạng xấu ban đầu (Để test mượn sách không mới)
-CALL SP_ThemTinhTrang(1, 2);  -- Cuốn 1 Bẩn
-CALL SP_ThemTinhTrang(11, 4); -- Cuốn 11 Rách < 3
-CALL SP_ThemTinhTrang(16, 7); -- Cuốn 16 Mất (Loại khỏi kho)
 
 -- 5. MASSIVE TRANSACTION DATA (DỮ LIỆU LỊCH SỬ)
 
@@ -489,7 +575,7 @@ INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-01-09');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 2);
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 31);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 2, 1), (@PT, 31, 1);
+INSERT IGNORE INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 2, 1), (@PT, 31, 1);
 
 -- Tháng 1: Mượn trả tốt
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (2, '2025-01-10', '2025-01-15'); -- PM2
@@ -498,7 +584,7 @@ CALL SP_ThemSachVaoPhieuMuon(@PM, 41, NULL);
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-01-14');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 41);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 41, 1);
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 41, 1);
 
 -- Tháng 2: Bắt đầu có phạt (Rách)
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (3, '2025-02-05', '2025-02-10'); -- PM3
@@ -506,8 +592,6 @@ SET @PM = LAST_INSERT_ID();
 CALL SP_ThemSachVaoPhieuMuon(@PM, 12, NULL); -- KP (Mới)
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-12'); -- Trễ 2 ngày (2000đ)
 SET @PT = LAST_INSERT_ID();
-INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 12);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 12, 4); -- Bị Rách < 3 (Phạt 10% = 12k) -> Tổng 14k
 
 -- Tháng 2: Mượn nhiều, Trả lắt nhắt
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (4, '2025-02-15', '2025-02-20'); -- PM4
@@ -519,13 +603,13 @@ CALL SP_ThemSachVaoPhieuMuon(@PM, 5, NULL);
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-18');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 3);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 3, 1);
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 3, 1);
 -- Trả cuốn 4, 5 (Trễ)
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-02-22');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 4);
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 5);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 4, 1), (@PT, 5, 2); -- 5 bị bẩn
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 4, 1), (@PT, 5, 2); -- 5 bị bẩn
 
 -- Tháng 3: Mượn sách Bẩn -> Trả Bẩn (Ko phạt)
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (1, '2025-03-01', '2025-03-05'); -- PM5
@@ -535,9 +619,9 @@ CALL SP_ThemSachVaoPhieuMuon(@PM, 32, NULL);
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-03-05');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 1);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 1, 2); -- Trả Bẩn (Ko phạt)
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 1, 2); -- Trả Bẩn (Ko phạt)
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 32);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 32, 1);
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 32, 1);
 
 -- Tháng 3: Mất sách
 INSERT INTO PHIEUMUON (IDDocGia, NgayMuon, NgayTraDuKien) VALUES (2, '2025-03-10', '2025-03-15'); -- PM6
@@ -546,7 +630,7 @@ CALL SP_ThemSachVaoPhieuMuon(@PM, 42, NULL);
 INSERT INTO PHIEUTRA (IDPhieuMuon, NgayTra) VALUES (@PM, '2025-03-15');
 SET @PT = LAST_INSERT_ID();
 INSERT INTO CT_PHIEUTRA (IDPhieuTra, IDCuonSach) VALUES (@PT, 42);
-INSERT INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 42, 7); -- Mất (Phạt 100%)
+INSERT IGNORE  INTO CT_PHIEUTRA_TINHTRANG VALUES (@PT, 42, 7); -- Mất (Phạt 100%)
 
 -- HIỆN TẠI: Đang mượn (Chưa trả)
 -- DG3 mượn Clean Code & Design Patterns
